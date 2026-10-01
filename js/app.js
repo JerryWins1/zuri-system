@@ -2,12 +2,17 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.3 · 2026-10-01';
+  Z.version = 'v2.4 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
-  const PFX = Z.practice ? 'zuri_practice_' : 'zuri_';
-  Z.sb = supabase.createClient(C.supabaseUrl, C.supabaseKey, {
+  // Training mode (?training): the same app on the Zuri Training database — pretend data, real shared teamwork.
+  Z.training = !!window.ZURI_TRAINING && !!C.training;
+  const PFX = Z.practice ? 'zuri_practice_' : Z.training ? 'zuri_training_' : 'zuri_';
+  // Where "this app" lives, so emails and links come back to the same copy.
+  Z.homeHref = () => location.origin + location.pathname + (Z.training ? '?training' : Z.practice ? '?practice' : '');
+  const DB = Z.training ? C.training : C;
+  Z.sb = supabase.createClient(DB.supabaseUrl, DB.supabaseKey, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
   });
 
@@ -222,8 +227,14 @@
   Z.applyTheme = () => { const t = Z.get('theme', 'auto'); if (t === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.dataset.theme = t; };
   Z.start = async () => {
     Z.applyTheme();
-    Z.$('#zver').textContent = 'Zuri System ' + Z.version + (Z.practice ? ' · practice' : '');
-    Z.$('#h-test').hidden = C.env !== 'test' && !Z.practice;
+    Z.$('#zver').textContent = 'Zuri System ' + Z.version + (Z.practice ? ' · practice' : Z.training ? ' · training' : '');
+    Z.$('#h-test').hidden = C.env !== 'test' && !Z.practice && !Z.training;
+    if (Z.training) {
+      document.body.classList.add('training');
+      Z.$('#h-test').textContent = 'TRAINING';
+      Z.$('#login-sub').textContent = 'Zuri Fiber · TRAINING copy';
+      Z.$('#training-note').hidden = false;
+    }
     if (Z.practice) {
       Z.$('#h-test').textContent = 'PRACTICE';
       Z.$('#login-sub').textContent = 'Zuri Fiber · practice';
@@ -248,7 +259,7 @@
       e.preventDefault();
       const { error } = await Z.sb.auth.signUp({
         email: Z.$('#s-email').value.trim(), password: Z.$('#s-pass').value,
-        options: { data: { full_name: Z.$('#s-name').value.trim(), phone: Z.$('#s-phone').value.trim() }, emailRedirectTo: location.origin + location.pathname },
+        options: { data: { full_name: Z.$('#s-name').value.trim(), phone: Z.$('#s-phone').value.trim() }, emailRedirectTo: Z.homeHref() },
       });
       if (error) return Z.toast(Z.errText(error));
       e.target.reset();
@@ -258,7 +269,7 @@
       e.preventDefault();
       const email = Z.$('#l-email').value.trim();
       if (!email) return Z.toast('Type your email above first.');
-      const { error } = await Z.sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+      const { error } = await Z.sb.auth.resetPasswordForEmail(email, { redirectTo: Z.homeHref() });
       Z.toast(error ? Z.errText(error) : 'Check your email for a reset link.');
     };
     Z.$('#f-newpass').onsubmit = async (e) => {
@@ -266,7 +277,7 @@
       const { data, error } = await Z.sb.auth.updateUser({ password: Z.$('#np').value });
       if (error) return Z.toast(Z.errText(error));
       Z.toast('Password saved.');
-      history.replaceState(null, '', location.pathname);
+      history.replaceState(null, '', Z.homeHref());
       const { data: s } = await Z.sb.auth.getSession();
       if (s.session) enter(s.session).catch(Z.fail); else show('login');
     };
@@ -284,7 +295,7 @@
     let data = { session: null }, sessErr = null;
     try { const r = await Z.sb.auth.getSession(); data = r.data || data; sessErr = r.error; } catch (e) { sessErr = e; }
     if (recovering) return show('newpass');
-    if (/access_token|error_description/.test(location.hash)) history.replaceState(null, '', location.pathname);
+    if (/access_token|error_description/.test(location.hash)) history.replaceState(null, '', Z.homeHref());
     // No signal and the sign-in needs refreshing: open with what this phone already knows, so field work carries on.
     const cachedMe = Z.get('me', null);
     if (!data.session && cachedMe && (!navigator.onLine || Z.isNet(sessErr))) {
@@ -297,7 +308,7 @@
 
   // ---------- photo store (photos are too big for the queue; they wait here until they upload) ----------
   const idbOpen = () => new Promise((ok, no) => {
-    const r = indexedDB.open(Z.practice ? 'zuri_practice' : 'zuri', 1);
+    const r = indexedDB.open(Z.practice ? 'zuri_practice' : Z.training ? 'zuri_training' : 'zuri', 1);
     r.onupgradeneeded = () => r.result.createObjectStore('blobs');
     r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error);
   });
@@ -448,7 +459,7 @@
         <p class="hint">Light is easiest to read in sunshine.</p></div>
       ${Z.practice ? `<h3>🎓 Practice mode</h3><div class="card">
         <p class="hint" style="margin-top:0">Everything here is pretend and stays on this phone. Break things — that's how you learn.</p>
-        <div class="row"><button class="btn sec" id="pr-role">🔄 Try another job</button><button class="btn sec" id="pr-reset">🧹 Start over</button><a class="btn sec" href="${location.pathname}">🚪 Leave practice</a></div></div>` : ''}
+        <div class="row"><button class="btn sec" id="pr-role">🔄 Try another job</button><button class="btn sec" id="pr-reset">🧹 Start over</button><a class="btn sec" href="${location.pathname}${Z.get('from_training', false) ? '?training' : ''}">🚪 Leave practice</a></div></div>` : ''}
       <div class="card"><button class="btn sec" id="me-out">Sign out</button> <span class="hint">Zuri System ${Z.version}</span></div>`;
     if (Z.practice) {
       Z.$('#pr-role', el).onclick = () => Z.logout();
