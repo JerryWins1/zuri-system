@@ -24,7 +24,7 @@ window.ZURI_CHECKLIST = [
     { "id": "c-follow", "t": "Work a payment follow-up: No answer", "how": "Jobs → a Payment follow-up → 📵 No answer. It should come back tomorrow.", "lesson": "cc-followups" },
     { "id": "c-promise", "t": "Record a promise to pay", "how": "Another follow-up → 🤝 Will pay → pick a day → Save.", "lesson": "cc-followups" },
     { "id": "c-paid", "t": "Record “says paid” and “wants to stop”", "how": "✅ Says paid on one; ✋ Wants to stop on another.", "lesson": "cc-followups" },
-    { "id": "c-remind", "t": "Send a WhatsApp reminder", "how": "In a follow-up: 💬 Send a reminder on WhatsApp. (Send it to yourself in training.)", "lesson": "cc-followups" },
+    { "id": "c-remind", "t": "Send a reminder by text and by WhatsApp", "how": "In a follow-up: 📩 Text a reminder, then 💬 WhatsApp it. (Send them to yourself in training.)", "lesson": "cc-followups" },
     { "id": "c-newjob", "t": "Make a fault job from a customer call", "how": "Jobs → ＋ New job → find the customer → Fault → describe → tech + day → Save job.", "lesson": "cc-newjob" },
     { "id": "c-tell", "t": "Tell the tech on WhatsApp", "how": "In the job you made: 💬 Tell … on WhatsApp.", "lesson": "cc-newjob" },
     { "id": "c-find", "t": "Find a customer by phone number", "how": "Customers → type the number → open them → check Payments and Jobs.", "lesson": "customers" },
