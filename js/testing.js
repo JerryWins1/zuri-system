@@ -27,39 +27,17 @@
 
   Z.routes.test = async (args, el) => {
     if (args[0] === 'board' && Z.isAdmin()) return board(el);
-    const ticks = await loadTicks();
-    const groups = mine();
-    const done = groups.reduce((n, g) => n + g.items.filter((i) => ticks[i.id] && ticks[i.id].done).length, 0);
-    const all = total(groups);
+    const sum = await Z.testerSummary().catch(() => null);
     el.innerHTML = `
-      <h2>🧪 Tester checklist</h2>
+      <h2>🧪 Testing Zuri</h2>
       <div class="card" style="border-left:4px solid var(--accent)" id="test-head">
-        <div class="row" style="justify-content:space-between"><b>Try every line for your job. Tick it. Say what was wrong.</b><span class="pill ${done === all ? 'ok' : 'brand'}" id="test-progress">${done} of ${all}</span></div>
-        <div class="bar" style="height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin:8px 0"><i style="display:block;height:100%;width:${all ? Math.round((done / all) * 100) : 0}%;background:var(--ok)"></i></div>
-        <div class="row"><button class="btn small" id="test-video">▶ How to test (2 min)</button><a class="btn sec small" href="guides/testers.html" target="_blank" rel="noopener">🖨 Print the list</a>${Z.isAdmin() ? '<a class="btn sec small" href="#test/board">📊 Everyone\'s progress</a>' : ''}</div>
+        <b>Your Testers' List is one page, one step at a time.</b>
+        <p class="hint" style="margin:4px 0 10px">It walks you through the videos, the things to try for your job, joining the training copy, and how to tell us what you found. Tick each step there; your ticks and notes reach Jerry and Claude straight away.</p>
+        <div class="row"><a class="btn" href="testers/" id="test-open">🧪 Open my Testers' List</a><button class="btn sec small" id="test-video">▶ How to test (2 min)</button>${Z.isAdmin() ? '<a class="btn sec small" href="testers/?board" target="_blank" rel="noopener">📊 Everyone\'s progress</a>' : ''}</div>
       </div>
-      <div class="card" id="test-fs"><b>🎙 Talking is the best report.</b><p class="hint" style="margin:4px 0 0">If you opened Zuri inside <b>Feedback Studio</b>, press the red button and say what you think as you go. Point at anything wrong. At the end: <b>I'm done → Send to Claude</b>. Not in Feedback Studio? Use the 📝 Note on each line.</p></div>
-      <div id="test-list">${groups.map((g) => `<h3>${Z.esc(g.label)} · ${g.items.filter((i) => ticks[i.id] && ticks[i.id].done).length} of ${g.items.length}</h3>
-        <div class="card list">${g.items.map((i) => { const t = ticks[i.id] || {}; return `
-          <div class="item" data-item="${i.id}" style="align-items:flex-start;flex-wrap:wrap">
-            <input type="checkbox" class="tk-tick" aria-label="Done: ${Z.esc(i.t)}" ${t.done ? 'checked' : ''} style="margin-top:4px">
-            <div class="grow" style="min-width:220px"><div class="t" style="${t.done ? 'opacity:.6' : ''}">${Z.esc(i.t)}</div><div class="m">${Z.esc(i.how)}</div>
-              <div class="row" style="margin-top:6px">${i.lesson ? `<button class="btn sec small tk-show" data-lesson="${i.lesson}">▶ Show me</button>` : ''}<button class="btn sec small tk-note">📝 ${t.note ? 'Edit note' : 'Note'}</button></div>
-              ${t.note ? `<div class="hint" style="margin:4px 0 0">📝 ${Z.esc(t.note)}</div>` : ''}
-              <div class="tk-notebox" hidden><textarea rows="2" placeholder="What was wrong, confusing or slow?">${Z.esc(t.note || '')}</textarea><div class="row" style="margin-top:6px"><button class="btn small tk-save">Save note</button></div></div>
-            </div></div>`; }).join('')}</div>`).join('')}</div>`;
+      <div class="card" id="test-fs"><b>🎙 Talking is the best report.</b><p class="hint" style="margin:4px 0 0">Open Zuri inside <b>Feedback Studio</b> (the Testers' List has the link), press the red button and say what you think as you go. Point at anything wrong. At the end: <b>I'm done → Send to Claude</b>.</p></div>
+      ${sum && sum.total ? `<p class="hint">Earlier ticks on this phone: ${sum.done} of ${sum.total}. The Testers' List keeps its own count.</p>` : ''}`;
     Z.$('#test-video', el).onclick = () => Z.learn('howtest');
-    Z.$$('.tk-show', el).forEach((b) => (b.onclick = () => Z.learn(b.dataset.lesson)));
-    Z.$$('.tk-tick', el).forEach((cb) => (cb.onchange = async () => {
-      const box = cb.closest('[data-item]'); const id = box.dataset.item;
-      try { await saveTick(id, cb.checked, (ticks[id] || {}).note); ticks[id] = { ...(ticks[id] || {}), done: cb.checked }; Z.toast(cb.checked ? 'Ticked ✓' : 'Unticked.'); Z.route(); }
-      catch (e) { cb.checked = !cb.checked; Z.fail(e); }
-    }));
-    Z.$$('.tk-note', el).forEach((b) => (b.onclick = () => { const nb = Z.$('.tk-notebox', b.closest('[data-item]')); nb.hidden = !nb.hidden; if (!nb.hidden) Z.$('textarea', nb).focus(); }));
-    Z.$$('.tk-save', el).forEach((b) => (b.onclick = async () => {
-      const box = b.closest('[data-item]'); const id = box.dataset.item; const note = Z.$('textarea', box).value.trim();
-      try { await saveTick(id, !!(ticks[id] && ticks[id].done), note); Z.toast('Note saved — thank you.'); Z.route(); } catch (e) { Z.fail(e); }
-    }));
   };
 
   // The partners' view: who has done what, and every note.
