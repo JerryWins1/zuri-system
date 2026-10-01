@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.12 · 2026-10-01';
+  Z.version = 'v2.13 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -458,7 +458,7 @@
           <button class="btn sec small" data-retry="${q.qid}">Retry</button><button class="btn sec small" data-drop="${q.qid}">Discard</button></div>`).join('')}</div>` : ''}
       <h3>More</h3><div class="card list">
         <a class="item" href="#learn"><span style="font-size:22px">🎓</span><div class="grow"><div class="t">Learn Zuri</div><div class="m">Short videos for your job, and a practice area</div></div><span>›</span></a>
-        <a class="item" href="#test"><span style="font-size:22px">🧪</span><div class="grow"><div class="t">Tester checklist</div><div class="m">Everything to try for your job — tick it, note what was wrong</div></div><span>›</span></a>
+        <a class="item" href="#test"><span style="font-size:22px">🧪</span><div class="grow"><div class="t">Testing Zuri</div><div class="m">Your Testers' List: one step at a time, and how to tell us</div></div><span>›</span></a>
         ${Z.isAdmin() ? '<a class="item" href="#admin"><span style="font-size:22px">⚙️</span><div class="grow"><div class="t">Admin</div><div class="m">Switch people on, roles, areas, who sees what</div></div><span>›</span></a>' : ''}
         ${Z.isStaff() ? '<a class="item" href="#import"><span style="font-size:22px">📥</span><div class="grow"><div class="t">Bring in a file</div><div class="m">Customers or payments from the billing website (Excel)</div></div><span>›</span></a>' : ''}
       </div>
