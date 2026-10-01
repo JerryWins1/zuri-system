@@ -114,11 +114,18 @@
       { el: 'input[name=amount]', say: 'Amount, and where it was received: M-Pesa, bank or cash.' },
       { el: 'input[name=from_name]', say: 'From whom, the M-Pesa code, and a note. Save cash in.' },
     ]),
-    C('fields-bills', '10 · Bills', 2, 'fields-collections', [
+    C('fields-bills', '10 · Bills', 2, 'fields-payrun', [
       { go: 'money/bills', el: '#m-body .row', say: 'Chapter ten: Bills. The arrows move between months.' },
       { el: '#m-body table', say: 'Each bill: name and category, the due day, the amount, what is paid, what is owing. Pay opens the pay sheet; the pencil changes the amount or removes the bill.' },
       { el: '[data-copy]', say: 'Copy last month\'s bills makes the new month in one tap.' },
-      { el: '#mb input[name=name]', say: 'Add a bill: area, the name, the amount, the due day of the month, the category.' },
+      { el: '#mb input[name=name]', say: 'Add a bill: area, the name, the amount, the due day of the month, the category, and Pay to: the paybill and account, or the phone number the money goes to.' },
+    ]),
+    C('fields-payrun', '10b · Pay run', 2, 'fields-collections', [
+      { go: 'money/payrun', el: '#pr-build', say: 'The Pay run: what to pay today. Build today\'s list collects the bills that are due and the staff whose pay day has come.', do: tap('#pr-build') },
+      { el: '#m-body .kpis', say: 'To pay now, coming in three days, and sent this month.' },
+      { el: '#m-body .list .item', say: 'Each line: a bill or a person, the amount, and the number to pay. Copy number, then send it in the M-Pesa app.' },
+      { el: '.pr-sent', say: 'Back in Zuri, tap Sent, type the M-Pesa code, and it is recorded as an expense. Skip puts it off for now.' },
+      { go: 'admin/staff', el: '#sf-add', say: 'Staff and pay, under Admin: everyone Zuri pays, with their M-Pesa number, salary and pay day. Only finance and the partners see it.' },
     ]),
     C('fields-collections', '11 · Who paid', 2, 'fields-projection', [
       { go: 'money/collections', el: '#m-body .kpis', say: 'Chapter eleven: Who paid. Collected against expected, how many paid in full, late or part-paid and what they still owe, and not due yet.' },
