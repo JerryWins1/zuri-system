@@ -66,7 +66,7 @@
       { el: 'label.btn::Add photo', say: 'Photos: add a picture of the problem and the finished work.' },
       { el: '#jd-note', say: 'Notes: everything that happened on this job, by whom and when. Add a note at the bottom.' },
       { go: 'jobs', el: '#j-list .item::Payment follow-up', say: 'A payment follow-up has one more card.', do: tap('#j-list .item::Payment follow-up') },
-      { el: '#jd-out', say: 'After the call: No answer, Will pay with a day, Says paid, or Wants to stop. And a ready-made WhatsApp reminder.' },
+      { el: '#jd-out', say: 'After the call: No answer, Will pay with a day, Says paid, or Wants to stop. And a ready-made reminder: Text it, or WhatsApp it.' },
     ]),
     C('fields-customers', '5 · Customers', 4, 'fields-money-today', [
       { go: 'customers', el: '#c-q', say: 'Chapter five: Customers. Search by name, phone or account number.' },
