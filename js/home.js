@@ -57,7 +57,7 @@
       <h3>Needs attention</h3>
       ${alerts.slice(0, 7).map(([k, t, h]) => h ? `<a class="alert ${k}" href="${h}" style="display:block;text-decoration:none">${Z.esc(t)}</a>` : `<div class="alert ${k}">${Z.esc(t)}</div>`).join('')}
 
-      <h3>Customers</h3>
+      <h3 style="display:flex;justify-content:space-between;align-items:center">Customers <a href="#customers/map" style="text-transform:none;letter-spacing:0;font-weight:700">🗺️ Map →</a></h3>
       <div class="kpis">
         ${tile('Active customers', Z.fmt(c.active), `${Z.fmt(c.disconnected)} disconnected${N(c.leads) ? ' · ' + c.leads + ' leads' : ''}`, '', '#customers')}
         ${tile('Paid up', `${pct(c.paid_up, c.active)}%`, `${Z.fmt(c.paid_up)} of ${Z.fmt(c.active)}`, pct(c.paid_up, c.active) >= 90 ? 'ok' : 'warn', '#money/collections')}
