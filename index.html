@@ -150,12 +150,22 @@
 <section id="scr-login" class="center-box" hidden>
   <p class="brand-mark">Zuri System</p>
   <p class="muted" style="margin-top:0" id="login-sub">Zuri Fiber · staff sign-in</p>
+<div class="card" id="login-videos" style="border-left:4px solid var(--accent)">
+    <p style="margin:0 0 2px;font-weight:800;font-size:17px">🎓 New here? Watch these first</p>
+    <p class="hint" style="margin:0 0 10px">Sound on. Each video plays on the real screens and shows you where to tap. No account needed.</p>
+    <a class="btn block" style="justify-content:flex-start;margin-bottom:8px" href="?practice&role=callcenter&play=howtest#learn">▶ How to test Zuri <span class="hint" style="margin:0 0 0 auto;color:inherit;opacity:.8">2 min</span></a>
+    <a class="btn block" style="justify-content:flex-start;margin-bottom:8px" href="?practice&role=admin&play=tour#learn">▶ What Zuri is — the whole system <span class="hint" style="margin:0 0 0 auto;color:inherit;opacity:.8">5 min</span></a>
+    <a class="btn block" style="justify-content:flex-start;margin-bottom:8px" href="?practice&role=finance&play=day-1#learn">▶ A day in the life <span class="hint" style="margin:0 0 0 auto;color:inherit;opacity:.8">17 min</span></a>
+    <div class="row"><a class="btn sec small" href="?practice#learn">All the videos</a><a class="btn sec small" href="testers/">🧪 My Testers' List</a></div>
+  </div>
   <div class="card real-only" id="training-note" hidden style="border-left:4px solid #B5651D"><b>🟠 This is the TRAINING copy.</b><p class="hint" style="margin:4px 0 0">Pretend customers and pretend money, but a real shared system: what you do here, your teammates see. Make your account below, then ask a partner to switch you on.</p></div>
   <div class="card" id="practice-pick" hidden>
     <p style="margin:0 0 4px;font-weight:800;font-size:17px">🎓 Practice Zuri</p>
     <p class="hint" style="margin-top:0">Pretend customers, pretend money. Nothing you do here is real or sent anywhere. Who are you today? Pick a job — you can switch any time under <b>Me</b>.</p>
     <div class="seg" id="practice-mode" style="margin-bottom:10px"><button type="button" data-mode="running">🏢 Company already running</button><button type="button" data-mode="empty">🏗️ Empty — I set it all up</button></div>
     <div id="practice-roles"></div>
+    <p class="hint" style="margin:10px 0 4px;font-weight:700">Or watch first:</p>
+    <div class="row"><a class="btn sec small" href="?practice&role=callcenter&play=howtest#learn">▶ How to test (2 min)</a><a class="btn sec small" href="?practice&role=admin&play=tour#learn">▶ What Zuri is (5 min)</a><a class="btn sec small" href="?practice&role=finance&play=day-1#learn">▶ A day in the life (17 min)</a></div>
     <p class="hint" style="text-align:center"><a href="./">← Back to the real sign-in</a></p>
   </div>
   <div class="card real-only">
@@ -233,30 +243,30 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=33"></script>
+<script src="js/config.js?v=34"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=33"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=34"><\/script>');
 </script>
-<script src="js/app.js?v=33"></script>
-<script src="js/home.js?v=33"></script>
-<script src="js/tasks.js?v=33"></script>
-<script src="js/jobs.js?v=33"></script>
-<script src="js/customers.js?v=33"></script>
-<script src="js/map.js?v=33"></script>
-<script src="js/money.js?v=33"></script>
-<script src="js/statements.js?v=33"></script>
-<script src="js/imports.js?v=33"></script>
-<script src="js/admin.js?v=33"></script>
-<script src="js/staffpay.js?v=33"></script>
-<script src="js/checklist_data.js?v=33"></script>
-<script src="js/testing.js?v=33"></script>
-<script src="js/training.js?v=33"></script>
-<script src="js/lessons_fields.js?v=33"></script>
-<script src="js/lessons_day.js?v=33"></script>
+<script src="js/app.js?v=34"></script>
+<script src="js/home.js?v=34"></script>
+<script src="js/tasks.js?v=34"></script>
+<script src="js/jobs.js?v=34"></script>
+<script src="js/customers.js?v=34"></script>
+<script src="js/map.js?v=34"></script>
+<script src="js/money.js?v=34"></script>
+<script src="js/statements.js?v=34"></script>
+<script src="js/imports.js?v=34"></script>
+<script src="js/admin.js?v=34"></script>
+<script src="js/staffpay.js?v=34"></script>
+<script src="js/checklist_data.js?v=34"></script>
+<script src="js/testing.js?v=34"></script>
+<script src="js/training.js?v=34"></script>
+<script src="js/lessons_fields.js?v=34"></script>
+<script src="js/lessons_day.js?v=34"></script>
 <script>Z.start();</script>
 </body>
 </html>
