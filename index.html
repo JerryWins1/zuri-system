@@ -154,6 +154,7 @@
   <div class="card" id="practice-pick" hidden>
     <p style="margin:0 0 4px;font-weight:800;font-size:17px">🎓 Practice Zuri</p>
     <p class="hint" style="margin-top:0">Pretend customers, pretend money. Nothing you do here is real or sent anywhere. Who are you today? Pick a job — you can switch any time under <b>Me</b>.</p>
+    <div class="seg" id="practice-mode" style="margin-bottom:10px"><button type="button" data-mode="running">🏢 Company already running</button><button type="button" data-mode="empty">🏗️ Empty — I set it all up</button></div>
     <div id="practice-roles"></div>
     <p class="hint" style="text-align:center"><a href="./">← Back to the real sign-in</a></p>
   </div>
@@ -232,27 +233,27 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=26"></script>
+<script src="js/config.js?v=27"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=26"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=27"><\/script>');
 </script>
-<script src="js/app.js?v=26"></script>
-<script src="js/home.js?v=26"></script>
-<script src="js/tasks.js?v=26"></script>
-<script src="js/jobs.js?v=26"></script>
-<script src="js/customers.js?v=26"></script>
-<script src="js/money.js?v=26"></script>
-<script src="js/statements.js?v=26"></script>
-<script src="js/imports.js?v=26"></script>
-<script src="js/admin.js?v=26"></script>
-<script src="js/checklist_data.js?v=26"></script>
-<script src="js/testing.js?v=26"></script>
-<script src="js/training.js?v=26"></script>
-<script src="js/lessons_fields.js?v=26"></script>
+<script src="js/app.js?v=27"></script>
+<script src="js/home.js?v=27"></script>
+<script src="js/tasks.js?v=27"></script>
+<script src="js/jobs.js?v=27"></script>
+<script src="js/customers.js?v=27"></script>
+<script src="js/money.js?v=27"></script>
+<script src="js/statements.js?v=27"></script>
+<script src="js/imports.js?v=27"></script>
+<script src="js/admin.js?v=27"></script>
+<script src="js/checklist_data.js?v=27"></script>
+<script src="js/testing.js?v=27"></script>
+<script src="js/training.js?v=27"></script>
+<script src="js/lessons_fields.js?v=27"></script>
 <script>Z.start();</script>
 </body>
 </html>
