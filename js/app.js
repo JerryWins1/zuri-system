@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.6 · 2026-10-01';
+  Z.version = 'v2.7 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -246,6 +246,10 @@
       Z.$('#practice-roles').innerHTML = Object.entries(window.ZP.roles).map(([k, r]) => `<button class="btn sec block" data-role="${k}" style="justify-content:flex-start;text-align:left;margin-bottom:8px;flex-wrap:wrap;${k === last ? 'border-color:var(--brand)' : ''}">
           <span style="flex:1 1 auto">${r.label} <span class="hint" style="margin:0">as ${Z.esc(r.who)}${k === last ? ' · last time' : ''}</span>${r.does ? `<br><span class="hint" style="margin:0;font-weight:500">${Z.esc(r.does)}</span>` : ''}</span></button>`).join('');
       Z.$$('[data-role]', pick).forEach((b) => (b.onclick = () => { window.ZP.pickRole(b.dataset.role); enter(window.ZP.session()).catch(Z.fail); }));
+      // Start with a company already running, or an empty one you set up yourself.
+      const modeBox = Z.$('#practice-mode');
+      const curMode = window.ZP.mode ? window.ZP.mode() : 'running';
+      Z.$$('[data-mode]', modeBox).forEach((b) => { b.classList.toggle('on', b.dataset.mode === curMode); b.onclick = () => { window.ZP.fresh(b.dataset.mode); Z.$$('[data-mode]', modeBox).forEach((x) => x.classList.toggle('on', x === b)); Z.toast(b.dataset.mode === 'empty' ? 'Empty company — sign in as the partner and set it up.' : 'Pretend company loaded.'); }; });
     }
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
     const recovering = /type=recovery/.test(location.hash);
@@ -461,11 +465,12 @@
         <p class="hint">Light is easiest to read in sunshine.</p></div>
       ${Z.practice ? `<h3>🎓 Practice mode</h3><div class="card">
         <p class="hint" style="margin-top:0">Everything here is pretend and stays on this phone. Break things — that's how you learn.</p>
-        <div class="row"><button class="btn sec" id="pr-role">🔄 Try another job</button><button class="btn sec" id="pr-reset">🧹 Start over</button><a class="btn sec" href="${location.pathname}${(() => { try { return localStorage.getItem('zuri_from_training') ? '?training' : ''; } catch (e) { return ''; } })()}">🚪 Leave practice</a></div></div>` : ''}
+        <div class="row"><button class="btn sec" id="pr-role">🔄 Try another job</button><button class="btn sec" id="pr-reset">🧹 Start over (pretend company)</button><button class="btn sec" id="pr-empty">🏗️ Start over (empty company)</button><a class="btn sec" href="${location.pathname}${(() => { try { return localStorage.getItem('zuri_from_training') ? '?training' : ''; } catch (e) { return ''; } })()}">🚪 Leave practice</a></div></div>` : ''}
       <div class="card"><button class="btn sec" id="me-out">Sign out</button> <span class="hint">Zuri System ${Z.version}</span></div>`;
     if (Z.practice) {
       Z.$('#pr-role', el).onclick = () => Z.logout();
-      Z.$('#pr-reset', el).onclick = () => { if (!confirm('Throw away all practice changes and start again with fresh pretend data?')) return; window.ZP.reset(); location.reload(); };
+      Z.$('#pr-reset', el).onclick = () => { if (!confirm('Throw away all practice changes and start again with the pretend company?')) return; window.ZP.reset(); window.ZP.fresh('running'); location.reload(); };
+      Z.$('#pr-empty', el).onclick = () => { if (!confirm('Throw away all practice changes and start with an EMPTY company — you enter the areas, staff, customers and bills yourself?')) return; window.ZP.reset(); window.ZP.fresh('empty'); location.reload(); };
     }
     Z.$$('#me-theme [data-theme]', el).forEach((b) => (b.onclick = () => { Z.set('theme', b.dataset.theme); Z.applyTheme(); Z.route(); }));
     const s = Z.$('#me-send', el); if (s) s.onclick = async () => { await Z.flush(); Z.route(); };
