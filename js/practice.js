@@ -26,12 +26,21 @@
     { id: 'p-faith', full_name: 'Faith Achieng', role: 'field', dept: null, area: 'B', phone: '0744700700' },
   ];
   const ROLES = {
-    field: { id: 'p-peter', label: '🛠️ Field tech', who: 'Peter' },
-    callcenter: { id: 'p-mary', label: '📞 Call center', who: 'Mary' },
-    finance: { id: 'p-kelvin', label: '💰 Finance', who: 'Kelvin' },
-    technical: { id: 'p-dickson', label: '🔧 Technical office', who: 'Dickson' },
-    admin: { id: 'p-jerry', label: '⭐ Partner / admin', who: 'Jerry' },
+    admin: { id: 'p-jerry', label: '⭐ Partner / admin', who: 'Jerry', does: 'Set up staff and areas · sees everything' },
+    finance: { id: 'p-kelvin', label: '💰 Finance', who: 'Kelvin', does: 'Cash, bills, statements, the Friday report' },
+    technical: { id: 'p-dickson', label: '🔧 Technical office', who: 'Dickson', does: 'Jobs, customers, sending techs out' },
+    callcenter: { id: 'p-mary', label: '📞 Call center', who: 'Mary', does: 'Customer calls, new jobs, payment calls' },
+    field: { id: 'p-peter', label: '🛠️ Field tech', who: 'Peter', does: 'Jobs at customers\' houses' },
   };
+  // Every fresh open starts at "who are you today?" — practice is for trying different jobs.
+  // (A training video switching person keeps its choice, so it can carry on playing.)
+  try {
+    if (!sessionStorage.getItem('zp_open') && !localStorage.getItem('zuri_learn_autoplay')) {
+      const last = localStorage.getItem(ROLE_KEY); if (last) localStorage.setItem('zuri_practice_last', last);
+      localStorage.removeItem(ROLE_KEY);
+    }
+    sessionStorage.setItem('zp_open', '1');
+  } catch (e) { /* storage blocked: the picker shows anyway */ }
   const FIRST = ['Grace', 'John', 'Mercy', 'Joseph', 'Faith', 'Samuel', 'Esther', 'David', 'Lucy', 'Peter', 'Ann', 'James', 'Mary', 'Daniel', 'Ruth', 'Paul', 'Jane', 'Stephen', 'Naomi', 'Moses', 'Susan', 'Isaac', 'Purity', 'Kevin', 'Beatrice'];
   const LAST = ['Njeri', 'Mwangi', 'Wanjiru', 'Kariuki', 'Otieno', 'Chebet', 'Mutua', 'Wambui', 'Kamau', 'Achieng', 'Kiprono', 'Nyambura', 'Odhiambo', 'Gitau', 'Muthoni', 'Kibet', 'Atieno', 'Ndungu', 'Wairimu', 'Omondi'];
   const PLACES = ['Behind the Total petrol station', 'Near Maai Mahiu market', 'Opposite St. Mary\'s church', 'Satellite estate, blue gate', 'Near the matatu stage', 'Kamuyu road, after the posho mill', 'Next to the primary school', 'Above the M-Pesa shop', 'Green house near the water tank', 'Off the old Naivasha road', 'Near the health centre', 'Behind the police post'];
@@ -436,6 +445,7 @@
   // Used by the sign-in screen and Me page in practice.
   window.ZP = {
     roles: ROLES,
+    last: () => { try { return localStorage.getItem('zuri_practice_last'); } catch (e) { return null; } },
     role: () => localStorage.getItem(ROLE_KEY),
     pickRole: (r) => localStorage.setItem(ROLE_KEY, r),
     session: () => (meId() ? { user: { id: meId() } } : null),
