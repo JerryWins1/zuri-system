@@ -72,7 +72,7 @@
       { go: 'customers', el: '#c-q', say: 'Chapter five: Customers. Search by name, phone or account number.' },
       { el: '#c-st', say: 'Filter by status: active, lead, suspended, disconnected, or any.' },
       { el: '#view .list .item', say: 'A customer row: name, phone, account, package, area, landmark, and a warning if there is no map pin. Fifty per page.' },
-      { el: 'a[href="#customers/new"]', say: 'New customer adds one by hand. Most come in from the billing website.' },
+      { el: 'a[href="#customers/map"]', say: 'Map shows every customer with a pin, green if paid up, red if they ran out, for the area chosen at the top. New customer adds one by hand; most come in from the billing website.' },
       { el: '#view .list .item', say: 'Open one.', do: tap('#view .list .item') },
       { el: 'h2', say: 'The customer: name and status, area and landmark.' },
       { el: '#cp-pin', say: 'Call, Map, Send pin, Drop pin here, New job for this customer, and Edit.' },
