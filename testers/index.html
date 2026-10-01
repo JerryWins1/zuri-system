@@ -55,7 +55,7 @@
 <script src="../js/checklist_data.js"></script>
 <script>
 (function () {
-  const VERSION = 'v1.1 · 2026-10-01';
+  const VERSION = 'v1.2 · 2026-10-01';
   const C = window.ZURI_CONFIG.training;                                   // the Testers' List always talks to the training copy
   const sb = supabase.createClient(C.supabaseUrl, C.supabaseKey, { auth: { persistSession: false } });
   const APP = 'https://jerrywins1.github.io/zuri-system/';
@@ -74,11 +74,11 @@
   function stepsFor(role) {
     const vid = (id, title, mins, why, vrole) => ({ id: 'v-' + id, sec: 'Watch', t: '▶ ' + title + ' (' + mins + ' min)', why, how: ['Tap the link — practice opens and the video starts by itself (sound on).', 'After it ends, a “Your turn” list appears: do it, then come back here and tap Done.'], links: [['▶ Play it', practice(vrole || role, id)]] });
     const S = [
-      { id: 's-install', sec: 'Get ready', t: '📱 Put Zuri on your phone', why: 'Opened from an icon, Zuri works like an app, even with weak signal.', how: ['Open the practice link below in Chrome.', 'Tap ⋮ (top right) → Add to Home screen → Add.', 'From now on, open Zuri from the icon.'], links: [['🎓 Open practice', APP + '?practice']] },
-      { id: 's-pick', sec: 'Get ready', t: '🙂 Open practice and pick your job', why: 'Practice is pretend customers and pretend money, on your phone only. Nothing you do is real.', how: ['Tap 🏢 Company already running.', 'Pick ' + ROLES[role] + '.', 'Look around for a minute, then come back here.'], links: [['🎓 Open practice as ' + ROLES[role].split(' ')[1], practice(role)]] },
       vid('howtest', 'How to test Zuri', 2, 'What we need from you, and the three ways to tell us.'),
       vid('tour', 'What Zuri is — the whole system', 5, 'Who it is for, and one job followed from the call to the fix.', 'admin'),
       vid('day-1', 'A day in the life (5 chapters)', 17, 'One working day through Kelvin, Mary, Peter and the partners. It switches person by itself; just watch.', 'finance'),
+      { id: 's-install', sec: 'Get ready', t: '📱 Put Zuri on your phone', why: 'Opened from an icon, Zuri works like an app, even with weak signal.', how: ['Open the practice link below in Chrome.', 'Tap ⋮ (top right) → Add to Home screen → Add.', 'From now on, open Zuri from the icon.'], links: [['🎓 Open practice', APP + '?practice']] },
+      { id: 's-pick', sec: 'Get ready', t: '🙂 Open practice and pick your job', why: 'Practice is pretend customers and pretend money, on your phone only. Nothing you do is real.', how: ['Tap 🏢 Company already running.', 'Pick ' + ROLES[role] + '.', 'Look around for a minute, then come back here.'], links: [['🎓 Open practice as ' + ROLES[role].split(' ')[1], practice(role)]] },
     ];
     const mine = { field: ['start', 'tasks', 'field-jobs', 'field-extras'], callcenter: ['start', 'tasks', 'cc-followups', 'cc-newjob', 'customers'], finance: ['start', 'tasks', 'fin-daily', 'fin-bills', 'fin-statements'], admin: ['start', 'tasks', 'partners', 'admin', 'fin-daily', 'fin-bills'] }[role];
     const NAMES = { start: ['Welcome to Zuri', 2, null], tasks: ['Your task list', 2, 'field'], 'field-jobs': ['Doing a job, start to finish', 3, 'field'], 'field-extras': ['Photos, parts, map pins, new jobs', 3, 'field'], 'cc-followups': ['Payment follow-up calls', 3, 'callcenter'], 'cc-newjob': ['A customer calls with a problem', 2, 'callcenter'], customers: ['Finding a customer', 2, 'callcenter'], 'fin-daily': ['Daily money: count, record, check', 3, 'finance'], 'fin-bills': ['Paying the monthly bills', 2, 'finance'], 'fin-statements': ['Bank & M-Pesa statements', 3, 'finance'], partners: ['Running the company from Home', 3, 'admin'], admin: ['Adding a new staff member', 2, 'admin'] };
@@ -142,11 +142,30 @@
       const name = $('#w-name').value.trim();
       if (!name) return toast('Type your name first.');
       if (!role) return toast('Pick your job.');
-      set('me', { name, role }); location.reload();
+      set('me', { name, role }); set('intro_done', false); location.reload();
     };
   }
 
+  // First time here: the three videos, before anything else.
+  function intro() {
+    const V = [['howtest', '⭐ How to test Zuri', 2, 'What we need from you, and how to tell us.', me.role], ['tour', '⭐ What Zuri is — the whole system', 5, 'Who it is for, and one job from the call to the fix.', 'admin'], ['day-1', '🌅 A day in the life', 17, 'One working day through Kelvin, Mary, Peter and the partners.', 'finance']];
+    $('#prog').hidden = true; $('#sub').textContent = `${me.name} · ${ROLES[me.role]}`;
+    $('#main').innerHTML = `
+      <div class="now"><div class="lbl"><span>Before you start</span><span>about 25 minutes</span></div>
+        <h2>Watch these first, ${esc(me.name.split(' ')[0])}</h2>
+        <div class="why">Sound on. Each one plays on the real screens and shows you where to tap. Tap ▶, watch, come back here and tick it.</div>
+        ${V.map(([id, t, m, w, r]) => `<div class="card" style="margin:8px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap" data-v="${id}">
+          <div style="flex:1;min-width:180px"><b>${esc(t)}</b> <span style="color:var(--faint);font-size:13px">${m} min</span><div style="color:var(--soft);font-size:14px">${esc(w)}</div></div>
+          <a class="links" style="margin:0" href="${esc(practice(r, id))}" target="_blank" rel="noopener"><span style="font-size:15px;font-weight:800;text-decoration:none;color:#fff;background:var(--brand);border-radius:999px;padding:10px 15px;min-height:44px;display:inline-flex;align-items:center">▶ Watch</span></a>
+          <button type="button" class="seen" style="font:inherit;font-weight:700;font-size:14px;padding:9px 12px;border-radius:999px;border:1.5px solid var(--line-strong);background:${state['v-' + id] === 'done' ? 'var(--ok)' : 'var(--surface)'};color:${state['v-' + id] === 'done' ? '#fff' : 'var(--ink)'};cursor:pointer;min-height:44px">${state['v-' + id] === 'done' ? '✓ Watched' : 'I watched it'}</button></div>`).join('')}
+        <button class="big" id="i-go" style="margin-top:8px">Show me my list →</button>
+        <p style="text-align:center;font-size:13px;color:var(--faint);margin:8px 0 0">You can come back to the videos any time from the bottom of your list.</p></div>`;
+    $$('[data-v]').forEach((c) => ($('.seen', c).onclick = async (e) => { const id = 'v-' + c.dataset.v; const on = state[id] !== 'done'; if (on) { state[id] = 'done'; await log('done', id); } else { delete state[id]; } set('state', state); intro(); }));
+    $('#i-go').onclick = () => { set('intro_done', true); render(); };
+  }
+
   function render() {
+    if (!get('intro_done', false)) return intro();
     const steps = planned(stepsFor(me.role));
     const done = steps.filter((s) => state[s.id] === 'done').length;
     const open = steps.filter((s) => !state[s.id]);
@@ -169,7 +188,7 @@
       : `<div class="win"><div style="font-size:40px">🎉</div><h2>You finished the list, ${esc(me.name.split(' ')[0])}!</h2><p>Asante sana. Keep using the training copy as a real day — and keep the notes coming.</p></div>`}
       ${secs.map((sec) => { const ss = steps.filter((s) => s.sec === sec); const d = ss.filter((s) => state[s.id] === 'done').length;
         return `<h3><span>${esc(sec)}</span><span>${d} / ${ss.length}</span></h3><div class="card">${ss.map((s) => `<div class="row ${state[s.id] === 'done' ? 'done' : state[s.id] === 'skip' ? 'skip' : s === cur ? 'cur' : ''}" data-id="${s.id}"><div class="chk">${state[s.id] === 'done' ? '✓' : ''}</div><span class="t">${esc(s.t)}</span></div>`).join('')}</div>`; }).join('')}
-      <p class="foot">Zuri Testers' List ${VERSION} · <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button> <a href="../guides/welcome.html" target="_blank" rel="noopener">Read the welcome page</a></p>`;
+      <p class="foot">Zuri Testers' List ${VERSION} · <button id="b-videos">🎓 The videos again</button> <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button> <a href="../guides/welcome.html" target="_blank" rel="noopener">Read the welcome page</a></p>`;
     if (cur) {
       $('#b-done').onclick = async () => { state[cur.id] = 'done'; set('state', state); const ok = await log('done', cur.id); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); render(); };
       $('#b-skip').onclick = () => { state[cur.id] = 'skip'; set('state', state); render(); };
@@ -180,6 +199,7 @@
       if (state[id] === 'done') { delete state[id]; await log('undone', id); } else if (state[id] === 'skip') { delete state[id]; } else { state[id] = 'done'; await log('done', id); }
       set('state', state); render();
     }));
+    $('#b-videos').onclick = () => { set('intro_done', false); render(); };
     $('#b-who').onclick = () => { if (confirm('Change who you are? Your ticks stay on this phone.')) { localStorage.removeItem('zt_me'); location.reload(); } };
   }
 
