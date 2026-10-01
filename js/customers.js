@@ -27,6 +27,7 @@
 
   Z.routes.customers = async (args, el) => {
     if (args[0] === 'new') return edit(null, el);
+    if (args[0] === 'map') return Z.customerMap(el);
     if (args[0] && args[1] === 'edit') return edit(args[0], el);
     if (args[0]) return profile(args[0], el);
 
@@ -42,7 +43,7 @@
 
     el.innerHTML = `
       <div class="row" style="justify-content:space-between"><h2>Customers${Z.area ? ' · ' + Z.esc(Z.areaName(Z.area)) : ''} <span class="muted" style="font-size:15px">${Z.fmt(count)}</span></h2>
-        <a class="btn" href="#customers/new">＋ New customer</a></div>
+        <div class="row"><a class="btn sec" href="#customers/map">🗺️ Map</a><a class="btn" href="#customers/new">＋ New customer</a></div></div>
       <div class="row" style="margin-bottom:10px">
         <input id="c-q" placeholder="Search name, phone, account" value="${Z.esc(f.q)}" style="flex:1">
         <select id="c-st" style="width:auto"><option value="">Any status</option>${Z.opts(STATUSES.map(([k, t]) => [k, t.split(' (')[0]]), f.status)}</select>
