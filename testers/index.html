@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zuri Testers' List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#23504F">
+<style>
+  :root { --bg:#F7F4EC; --surface:#fff; --surface-2:#EFEAE0; --ink:#1F2622; --soft:#55605B; --faint:#6E7873; --brand:#23504F; --brand-soft:#23504F14; --now:#D96C4F; --now-soft:#D96C4F1C; --ok:#2F6E52; --ok-soft:#2F6E521C; --line:#E2DCCF; --line-strong:#C9C1AE; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#15191A; --surface:#1D2224; --surface-2:#262C2E; --ink:#ECEAE3; --soft:#B2B8B2; --faint:#8F9893; --brand:#7FB4B1; --brand-soft:#7FB4B122; --now:#F08A6A; --now-soft:#F08A6A22; --ok:#6DC296; --ok-soft:#6DC29622; --line:#2E3537; --line-strong:#45504F; } }
+  :root[data-theme="dark"] { --bg:#15191A; --surface:#1D2224; --surface-2:#262C2E; --ink:#ECEAE3; --soft:#B2B8B2; --faint:#8F9893; --brand:#7FB4B1; --brand-soft:#7FB4B122; --now:#F08A6A; --now-soft:#F08A6A22; --ok:#6DC296; --ok-soft:#6DC29622; --line:#2E3537; --line-strong:#45504F; }
+  * { box-sizing:border-box; } html,body { margin:0; }
+  body { background:var(--bg); color:var(--ink); font-family:-apple-system,"Segoe UI",Roboto,system-ui,sans-serif; font-size:16px; line-height:1.45; padding-bottom:40px; }
+  header { max-width:640px; margin:0 auto; padding:16px 16px 6px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  header h1 { margin:0; font-size:21px; font-weight:800; color:var(--brand); } header h1 small { display:block; font-size:12.5px; font-weight:600; color:var(--faint); }
+  .prog { font-size:13px; font-weight:800; color:var(--ok); background:var(--ok-soft); border-radius:999px; padding:6px 12px; white-space:nowrap; }
+  main { max-width:640px; margin:0 auto; padding:6px 14px 20px; }
+  .bar { height:8px; background:var(--surface-2); border-radius:999px; overflow:hidden; margin:4px 0 12px; } .bar i { display:block; height:100%; background:var(--ok); width:0; transition:width .4s; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px; }
+  .now { background:var(--now-soft); border:2px solid var(--now); border-radius:22px; padding:18px; margin-bottom:12px; }
+  .now .lbl { font-size:12px; letter-spacing:.12em; text-transform:uppercase; font-weight:800; color:var(--now); display:flex; justify-content:space-between; }
+  .now h2 { margin:6px 0 2px; font-size:24px; line-height:1.2; } .now .why { color:var(--soft); font-size:15px; margin-bottom:10px; }
+  .now ol { margin:0 0 10px 18px; padding:0; font-size:15.5px; } .now li { margin:7px 0; }
+  .links { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; } .links a { font-size:15px; font-weight:800; text-decoration:none; color:#fff; background:var(--brand); border-radius:999px; padding:10px 15px; min-height:44px; display:inline-flex; align-items:center; }
+  .btns { display:flex; gap:8px; } .btns button { font:inherit; font-weight:800; font-size:16px; padding:13px; border-radius:14px; border:none; cursor:pointer; min-height:48px; }
+  .btns .done { flex:1; background:var(--ok); color:#fff; } .btns .skip { background:var(--surface); color:var(--soft); border:1px solid var(--line-strong); }
+  .tell { margin-top:12px; } .tell textarea { width:100%; font:inherit; font-size:15px; padding:10px 12px; border:1.5px solid var(--line-strong); border-radius:12px; background:var(--surface); color:var(--ink); min-height:64px; resize:vertical; }
+  .tell .row { display:flex; gap:8px; margin-top:6px; align-items:center; } .tell button { font:inherit; font-weight:700; padding:9px 14px; border-radius:10px; border:1px solid var(--line-strong); background:var(--surface); color:var(--brand); cursor:pointer; min-height:40px; }
+  .next { background:var(--brand-soft); border:1px dashed var(--brand); border-radius:14px; padding:10px 14px; margin-bottom:14px; font-size:14px; } .next b { color:var(--brand); font-size:11px; letter-spacing:.1em; text-transform:uppercase; display:block; }
+  h3 { margin:16px 0 6px; font-size:12.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--faint); display:flex; justify-content:space-between; }
+  .row { display:flex; gap:10px; align-items:center; padding:9px 0; border-top:1px solid var(--line); font-size:14.5px; cursor:pointer; }
+  .row:first-of-type { border-top:none; }
+  .row .chk { width:26px; height:26px; border-radius:7px; border:2px solid var(--line-strong); flex:none; display:flex; align-items:center; justify-content:center; font-size:15px; color:#fff; }
+  .row.done .chk { background:var(--ok); border-color:var(--ok); } .row.done span.t { text-decoration:line-through; color:var(--faint); }
+  .row.cur .chk { border-color:var(--now); } .row.cur span.t { color:var(--now); font-weight:800; }
+  .row.skip span.t { color:var(--faint); font-style:italic; } .row span.t { flex:1; } .row .m { font-size:12px; color:var(--faint); white-space:nowrap; }
+  label { display:block; font-size:13px; font-weight:700; color:var(--soft); margin:10px 0 4px; }
+  input, select { width:100%; font:inherit; font-size:16px; padding:11px 12px; border:1.5px solid var(--line-strong); border-radius:12px; background:var(--surface); color:var(--ink); }
+  .seg { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 12px; } .seg button { flex:1 1 45%; font:inherit; font-weight:700; font-size:15px; padding:12px; min-height:48px; border-radius:12px; border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink); cursor:pointer; text-align:left; }
+  .seg button.on { border-color:var(--brand); background:var(--brand-soft); color:var(--brand); }
+  .big { width:100%; font:inherit; font-weight:800; font-size:17px; padding:14px; border-radius:14px; border:none; background:var(--brand); color:#fff; cursor:pointer; min-height:50px; }
+  .win { background:linear-gradient(160deg,#F2B134,#D96C4F 55%,#23504F); color:#fff; border-radius:22px; padding:24px; text-align:center; margin-bottom:12px; } .win h2 { margin:6px 0; font-size:26px; }
+  .foot { font-size:12px; color:var(--faint); text-align:center; margin-top:18px; } .foot button, .foot a { font:inherit; font-size:12px; border:1px solid var(--line-strong); background:var(--surface); color:var(--ink); border-radius:8px; padding:4px 9px; cursor:pointer; text-decoration:none; }
+  .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:10px; font-weight:600; font-size:14px; z-index:50; max-width:90vw; opacity:0; transition:opacity .2s; pointer-events:none; } .toast.show { opacity:1; }
+  table { width:100%; border-collapse:collapse; font-size:14px; } th, td { text-align:left; padding:7px 6px; border-bottom:1px solid var(--line); vertical-align:top; } th { font-size:12px; color:var(--faint); text-transform:uppercase; }
+  .pill { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--surface-2); color:var(--soft); } .pill.ok { background:var(--ok-soft); color:var(--ok); }
+</style>
+</head>
+<body>
+<header><h1>🧪 Zuri Testers' List <small id="sub">One step at a time · tick as you go</small></h1><span class="prog" id="prog" hidden>0 / 0</span></header>
+<main id="main"><div class="card">Loading…</div></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/checklist_data.js"></script>
+<script>
+(function () {
+  const VERSION = 'v1 · 2026-10-01';
+  const C = window.ZURI_CONFIG.training;                                   // the Testers' List always talks to the training copy
+  const sb = supabase.createClient(C.supabaseUrl, C.supabaseKey, { auth: { persistSession: false } });
+  const APP = 'https://jerrywins1.github.io/zuri-system/';
+  const FS = 'https://jerrywins1.github.io/daraja-apps/feedback-studio/?app=';
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const get = (k, d) => { try { const v = localStorage.getItem('zt_' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+  const set = (k, v) => { try { localStorage.setItem('zt_' + k, JSON.stringify(v)); } catch (e) {} };
+  let toastT; const toast = (m) => { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3000); };
+  const $ = (s, r = document) => r.querySelector(s); const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const ROLES = { field: '🛠️ Field tech', callcenter: '📞 Call center', finance: '💰 Finance (office)', admin: '⭐ Partner / manager' };
+  const me = get('me', null);                                              // { name, role, device }
+  const practice = (role, play) => APP + '?practice&role=' + role + (play ? '&play=' + play : '') + '#learn';
+  const fsLink = (role) => FS + encodeURIComponent(APP + '?practice&role=' + role);
+
+  // ---------- the steps, in order, for one job ----------
+  function stepsFor(role) {
+    const vid = (id, title, mins, why, vrole) => ({ id: 'v-' + id, sec: 'Watch', t: '▶ ' + title + ' (' + mins + ' min)', why, how: ['Tap the link — practice opens and the video starts by itself (sound on).', 'After it ends, a “Your turn” list appears: do it, then come back here and tap Done.'], links: [['▶ Play it', practice(vrole || role, id)]] });
+    const S = [
+      { id: 's-install', sec: 'Get ready', t: '📱 Put Zuri on your phone', why: 'Opened from an icon, Zuri works like an app, even with weak signal.', how: ['Open the practice link below in Chrome.', 'Tap ⋮ (top right) → Add to Home screen → Add.', 'From now on, open Zuri from the icon.'], links: [['🎓 Open practice', APP + '?practice']] },
+      { id: 's-pick', sec: 'Get ready', t: '🙂 Open practice and pick your job', why: 'Practice is pretend customers and pretend money, on your phone only. Nothing you do is real.', how: ['Tap 🏢 Company already running.', 'Pick ' + ROLES[role] + '.', 'Look around for a minute, then come back here.'], links: [['🎓 Open practice as ' + ROLES[role].split(' ')[1], practice(role)]] },
+      vid('howtest', 'How to test Zuri', 2, 'What we need from you, and the three ways to tell us.'),
+      vid('tour', 'What Zuri is — the whole system', 5, 'Who it is for, and one job followed from the call to the fix.', 'admin'),
+      vid('day-1', 'A day in the life (5 chapters)', 17, 'One working day through Kelvin, Mary, Peter and the partners. It switches person by itself; just watch.', 'finance'),
+    ];
+    const mine = { field: ['start', 'tasks', 'field-jobs', 'field-extras'], callcenter: ['start', 'tasks', 'cc-followups', 'cc-newjob', 'customers'], finance: ['start', 'tasks', 'fin-daily', 'fin-bills', 'fin-statements'], admin: ['start', 'tasks', 'partners', 'admin', 'fin-daily', 'fin-bills'] }[role];
+    const NAMES = { start: ['Welcome to Zuri', 2, null], tasks: ['Your task list', 2, 'field'], 'field-jobs': ['Doing a job, start to finish', 3, 'field'], 'field-extras': ['Photos, parts, map pins, new jobs', 3, 'field'], 'cc-followups': ['Payment follow-up calls', 3, 'callcenter'], 'cc-newjob': ['A customer calls with a problem', 2, 'callcenter'], customers: ['Finding a customer', 2, 'callcenter'], 'fin-daily': ['Daily money: count, record, check', 3, 'finance'], 'fin-bills': ['Paying the monthly bills', 2, 'finance'], 'fin-statements': ['Bank & M-Pesa statements', 3, 'finance'], partners: ['Running the company from Home', 3, 'admin'], admin: ['Adding a new staff member', 2, 'admin'] };
+    mine.forEach((id) => { const [t, m, r] = NAMES[id]; S.push(vid(id, t, m, 'The video for your job. Watch, then do the Your-turn list.', r || role)); });
+    // the checklist lines for this job, from the same list the app uses
+    const groups = (window.ZURI_CHECKLIST || []).filter((g) => g.roles.includes(role === 'finance' ? 'internal' : role) && (!g.dept || role === 'finance' || role === 'admin'));
+    groups.forEach((g) => g.items.forEach((i) => S.push({ id: 'c-' + i.id, sec: 'Try it yourself', t: '🧪 ' + i.t, why: g.label + '. Do it in practice, then tick it. If anything was confusing, slow or wrong, write it in the box below.', how: [i.how], links: [['🎓 Open practice', practice(role)]].concat(i.lesson ? [['▶ Show me', practice(role === 'finance' && /fin|partners|admin/.test(i.lesson) ? (/partners|admin/.test(i.lesson) ? 'admin' : 'finance') : role, i.lesson)]] : []) })));
+    S.push(
+      { id: 's-signup', sec: 'Join the training copy', t: '🟠 Make your account on the TRAINING copy', why: 'Training is a real shared system on pretend data: what you do, your teammates see. This is where you work like a real day.', how: ['Open the training link. Tap Create my account.', 'Your name, your phone number, your email, a password. Tap Create account.', 'Open the email we send and tap the link.'], links: [['🟠 Open the training copy', APP + '?training']] },
+      { id: 's-tell', sec: 'Join the training copy', t: '🙋 Tell Jerry “signed up”', why: 'A partner switches your account on and gives you your job. Until then the app says “Almost there”.', how: ['WhatsApp Jerry: “signed up”.', 'When he says done, open the training copy and sign in.'], links: [] },
+      { id: 's-realday', sec: 'Join the training copy', t: '📅 Do one real day on the training copy', why: 'Jobs, calls, counts and payments — the way you would on a real day. Your teammates will see them.', how: ['Do your normal work in the training copy for one day.', 'Note anything that slowed you down.'], links: [['🟠 Open the training copy', APP + '?training']] },
+      { id: 's-fs', sec: 'Tell us', t: '🎙 Talk through one session in Feedback Studio', why: 'Talking while you use it is the best report there is. Point at anything wrong.', how: ['Open the link: Zuri on top, the red button underneath.', 'Press the red button and say what you think as you tap around. 👆 Point, then tap the thing that is wrong.', '✅ I\'m done → 📨 Send to Claude → send it to Jerry.'], links: [['🎙 Open Zuri in Feedback Studio', fsLink(role)]] },
+      { id: 's-three', sec: 'Tell us', t: '✍️ Write the three most confusing things', why: 'Even three words each helps. Write them in the box below and tap Send to Claude.', how: ['What confused you most?', 'What was slow?', 'What would you change first?'], links: [] },
+    );
+    return S;
+  }
+
+  // ---------- saving: on the phone, and up to the training copy ----------
+  const device = get('device', null) || (() => { const d = 'd' + Math.random().toString(36).slice(2, 10); set('device', d); return d; })();
+  let state = get('state', {});                                             // stepId → 'done' | 'skip'
+  async function log(kind, step, note) {
+    if (!me) return;
+    const row = { tester: me.name, role: me.role, device, step, kind, note: note || null, version: VERSION };
+    try { const { error } = await sb.from('tester_log').insert(row); if (error) throw error; return true; }
+    catch (e) { const q = get('queue', []); q.push(row); set('queue', q); return false; }
+  }
+  async function flush() { const q = get('queue', []); if (!q.length) return; const { error } = await sb.from('tester_log').insert(q); if (!error) set('queue', []); }
+  window.addEventListener('online', flush);
+
+  // ---------- screens ----------
+  function askWho() {
+    $('#prog').hidden = true;
+    $('#main').innerHTML = `
+      <div class="card">
+        <h2 style="margin:0 0 4px">Karibu! Who are you?</h2>
+        <p style="color:var(--soft);margin:0 0 8px">This list walks you through testing Zuri, one step at a time. Your name goes with your ticks and notes, so Jerry and Claude know who found what.</p>
+        <label>Your name</label><input id="w-name" placeholder="e.g. Peter Kamau" autocomplete="name">
+        <label>Your job at Zuri</label>
+        <div class="seg" id="w-role">${Object.entries(ROLES).map(([k, t]) => `<button type="button" data-role="${k}">${t}</button>`).join('')}</div>
+        <button class="big" id="w-go">Start my list →</button>
+      </div>`;
+    let role = null;
+    $$('#w-role button').forEach((b) => (b.onclick = () => { role = b.dataset.role; $$('#w-role button').forEach((x) => x.classList.toggle('on', x === b)); }));
+    $('#w-go').onclick = async () => {
+      const name = $('#w-name').value.trim();
+      if (!name) return toast('Type your name first.');
+      if (!role) return toast('Pick your job.');
+      set('me', { name, role }); location.reload();
+    };
+  }
+
+  function render() {
+    const steps = stepsFor(me.role);
+    const done = steps.filter((s) => state[s.id] === 'done').length;
+    const open = steps.filter((s) => !state[s.id]);
+    const cur = open[0];
+    const next = open[1];
+    $('#prog').hidden = false; $('#prog').textContent = `${done} / ${steps.length}`;
+    $('#sub').textContent = `${me.name} · ${ROLES[me.role]}`;
+    const secs = [...new Set(steps.map((s) => s.sec))];
+    $('#main').innerHTML = `
+      <div class="bar"><i style="width:${Math.round((done / steps.length) * 100)}%"></i></div>
+      ${cur ? `<div class="now"><div class="lbl"><span>Now · step ${steps.indexOf(cur) + 1} of ${steps.length}</span><span>${esc(cur.sec)}</span></div>
+        <h2>${esc(cur.t)}</h2><div class="why">${esc(cur.why)}</div>
+        <ol>${cur.how.map((h) => `<li>${esc(h)}</li>`).join('')}</ol>
+        <div class="links">${cur.links.map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join('')}</div>
+        <div class="btns"><button class="done" id="b-done">✓ Done</button><button class="skip" id="b-skip">Skip for now</button></div>
+        <div class="tell"><textarea id="tell" placeholder="✍️ Tell Claude anything about this step: what was confusing, slow, or wrong"></textarea>
+          <div class="row"><button id="b-tell">Send to Claude</button><span style="font-size:12.5px;color:var(--faint)">Goes straight to Jerry and Claude, with your name.</span></div></div></div>
+        ${next ? `<div class="next"><b>Then</b>${esc(next.t)}</div>` : ''}`
+      : `<div class="win"><div style="font-size:40px">🎉</div><h2>You finished the list, ${esc(me.name.split(' ')[0])}!</h2><p>Asante sana. Keep using the training copy as a real day — and keep the notes coming.</p></div>`}
+      ${secs.map((sec) => { const ss = steps.filter((s) => s.sec === sec); const d = ss.filter((s) => state[s.id] === 'done').length;
+        return `<h3><span>${esc(sec)}</span><span>${d} / ${ss.length}</span></h3><div class="card">${ss.map((s) => `<div class="row ${state[s.id] === 'done' ? 'done' : state[s.id] === 'skip' ? 'skip' : s === cur ? 'cur' : ''}" data-id="${s.id}"><div class="chk">${state[s.id] === 'done' ? '✓' : ''}</div><span class="t">${esc(s.t)}</span></div>`).join('')}</div>`; }).join('')}
+      <p class="foot">Zuri Testers' List ${VERSION} · <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button> <a href="../guides/welcome.html" target="_blank" rel="noopener">Read the welcome page</a></p>`;
+    if (cur) {
+      $('#b-done').onclick = async () => { state[cur.id] = 'done'; set('state', state); const ok = await log('done', cur.id); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); render(); };
+      $('#b-skip').onclick = () => { state[cur.id] = 'skip'; set('state', state); render(); };
+      $('#b-tell').onclick = async () => { const n = $('#tell').value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', cur.id, n); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
+    }
+    $$('.row[data-id]').forEach((r) => (r.onclick = async () => {
+      const id = r.dataset.id;
+      if (state[id] === 'done') { delete state[id]; await log('undone', id); } else if (state[id] === 'skip') { delete state[id]; } else { state[id] = 'done'; await log('done', id); }
+      set('state', state); render();
+    }));
+    $('#b-who').onclick = () => { if (confirm('Change who you are? Your ticks stay on this phone.')) { localStorage.removeItem('zt_me'); location.reload(); } };
+  }
+
+  // ---------- the board (Jerry): ?board ----------
+  async function board() {
+    $('#sub').textContent = "Everyone's progress and notes";
+    const { data, error } = await sb.from('tester_log').select('*').order('at', { ascending: false }).limit(2000);
+    if (error) { $('#main').innerHTML = `<div class="card">Could not load: ${esc(error.message)}</div>`; return; }
+    const people = {};
+    data.forEach((r) => { const p = people[r.tester + '|' + r.role] = people[r.tester + '|' + r.role] || { name: r.tester, role: r.role, done: new Set(), notes: [], last: r.at, first: r.at }; if (r.kind === 'done') p.done.add(r.step); if (r.kind === 'undone') p.done.delete(r.step); if (r.kind === 'note') p.notes.push(r); p.first = r.at; });
+    const fmt = (t) => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const title = (p, id) => (stepsFor(p.role).find((s) => s.id === id) || {}).t || id;
+    $('#main').innerHTML = `<div class="card"><b>📊 Testers' board</b><p style="color:var(--soft);margin:4px 0 0">Every tick and note from the Testers' List, newest first. Say “read the testers' list” to Claude and it reads this too.</p></div>
+      <div class="card"><table><tr><th>Tester</th><th>Job</th><th>Done</th><th>Last seen</th></tr>${Object.values(people).map((p) => { const n = stepsFor(p.role).length; return `<tr><td>${esc(p.name)}</td><td>${ROLES[p.role]}</td><td><span class="pill ${p.done.size === n ? 'ok' : ''}">${p.done.size} / ${n}</span></td><td>${fmt(p.last)}</td></tr>`; }).join('') || '<tr><td colspan="4" style="color:var(--faint)">Nobody yet.</td></tr>'}</table></div>
+      <h3><span>Notes to Claude</span><span>${data.filter((r) => r.kind === 'note').length}</span></h3>
+      <div class="card">${data.filter((r) => r.kind === 'note').map((r) => `<div class="row" style="cursor:default;align-items:flex-start"><div style="flex:1"><div>${esc(r.note)}</div><div class="m" style="white-space:normal">${esc(r.tester)} · ${esc(title({ role: r.role }, r.step))} · ${fmt(r.at)}</div></div></div>`).join('') || '<div style="color:var(--faint)">No notes yet.</div>'}</div>`;
+  }
+
+  // ---------- start ----------
+  if (new URLSearchParams(location.search).has('board')) board();
+  else if (!me) askWho();
+  else { render(); if (!get('hello', false)) { log('hello', 'start').then(() => set('hello', true)); } flush(); }
+})();
+</script>
+</body>
+</html>
