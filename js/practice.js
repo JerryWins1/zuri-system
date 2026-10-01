@@ -133,7 +133,8 @@
     D.bills = [
       ['A', 'Safaricom backhaul', 45000, 45000, 5, 'Internet / backhaul'], ['A', 'Office rent', 15000, 15000, 1, 'Rent'], ['A', 'KPLC prepaid', 3500, 0, 20, 'Power'],
       ['A', 'Staff transport', 6000, 2000, 25, 'Transport'], ['B', 'Bayobab backhaul', 28000, 0, 10, 'Internet / backhaul'], ['B', 'Pole rent', 4000, 0, 28, 'Rent'],
-    ].map(([area, name, amount, paid_amount, due_day, category]) => ({ id: uuid(), area, month: m, name, amount, paid_amount, paid: paid_amount >= amount, due_day, category, paid_date: paid_amount ? dayOff(-3) : null }));
+    ].map(([area, name, amount, paid_amount, due_day, category]) => ({ id: uuid(), area, month: m, name, amount, paid_amount, paid: paid_amount >= amount, due_day, category, paid_date: paid_amount ? dayOff(-3) : null,
+      pay_to: /KPLC/.test(name) ? 'Paybill 888880 · Acc 54123456' : /Safaricom|Bayobab/.test(name) ? 'Paybill 100100 · Acc ZF-' + area : /rent/i.test(name) ? '0711 222 333' : null }));
     D.cash_counts = [
       { id: uuid(), area: 'A', date: dayOff(-3), bank: 182000, mpesa: 41000, counted_by: 'Kelvin', note: null, created_at: tsOff(-3) },
       { id: uuid(), area: 'B', date: dayOff(-3), bank: 64000, mpesa: 21000, counted_by: 'Kelvin', note: null, created_at: tsOff(-3) },
@@ -147,6 +148,14 @@
       { id: uuid(), area: 'A', date: dayOff(-4), category: 'Installation fee', amount: 3500, received_to: 'M-Pesa', from_name: 'Daniel Ndungu', ref: 'UJ4MZ81QPA', note: null, recorded_by: 'Kelvin' },
     ];
     D.expense_categories = ['Internet / backhaul', 'Power', 'Rent', 'Salaries', 'Transport', 'Materials', 'Equipment', 'Airtime & data', 'Bank & M-Pesa fees', 'Other'].map((name, i) => ({ name, sort: i }));
+    D.staff = [
+      { id: 's-peter', profile_id: 'p-peter', full_name: 'Peter Kamau', job_title: 'Field technician', area: 'A', phone: '0722500500', mpesa_number: '0722500500', mpesa_name: 'PETER KAMAU', pay_type: 'monthly', salary: 25000, pay_day: 28, active: true, start_date: dayOff(-400) },
+      { id: 's-brian', profile_id: 'p-brian', full_name: 'Brian Otieno', job_title: 'Field technician', area: 'A', phone: '0733600600', mpesa_number: '0733600600', mpesa_name: 'BRIAN OTIENO', pay_type: 'monthly', salary: 22000, pay_day: 28, active: true, start_date: dayOff(-200) },
+      { id: 's-faith', profile_id: 'p-faith', full_name: 'Faith Achieng', job_title: 'Field technician', area: 'B', phone: '0744700700', mpesa_number: '0744700700', mpesa_name: 'FAITH ACHIENG', pay_type: 'monthly', salary: 22000, pay_day: 28, active: true, start_date: dayOff(-150) },
+      { id: 's-mary', profile_id: 'p-mary', full_name: 'Mary Wanjiku', job_title: 'Call center', area: null, phone: '0711400400', mpesa_number: null, mpesa_name: null, pay_type: 'monthly', salary: 18000, pay_day: 28, active: true, start_date: dayOff(-90) },
+      { id: 's-casual', profile_id: null, full_name: 'Joseph Mutua', job_title: 'Casual (pole work)', area: 'A', phone: '0755900900', mpesa_number: '0755900900', mpesa_name: 'JOSEPH MUTUA', pay_type: 'daily', salary: 800, pay_day: 28, active: true, start_date: null },
+    ];
+    D.pay_items = [];
     D.payees = [{ name: 'KPLC prepaid', category: 'Power' }, { name: 'Safaricom backhaul', category: 'Internet / backhaul' }, { name: 'Mama Njeri Hardware', category: 'Materials' }];
 
     // statements
@@ -188,7 +197,7 @@
     D._ticket_no = no;
     if (mode === 'empty') {
       Object.assign(D, { v_customers: [], payments: [], tickets: [], ticket_events: [], ticket_parts: [], tasks: [], task_comments: [], agent_runs: [], nudges: [],
-        bills: [], cash_counts: [], expenses: [], cash_in: [], money_accounts: [], statement_lines: [], sort_rules: [], v_books: [], billing_snapshots: [], custom_field_defs: [] });
+        bills: [], cash_counts: [], expenses: [], cash_in: [], money_accounts: [], statement_lines: [], sort_rules: [], v_books: [], billing_snapshots: [], custom_field_defs: [], staff: [], pay_items: [] });
       D.profiles = D.profiles.map((p) => ({ ...p, active: p.role === 'admin' })); // only the partner is switched on; you switch the others on
       D._ticket_no = 100;
     }
@@ -214,6 +223,7 @@
     tickets: (r) => isOffice() || r.assigned_to === meId() || r.opened_by === meId(),
     tasks: (r) => r.visibility === 'team' || (r.visibility === 'office' && isOffice()) || isFinance(),
     nudges: () => isFinance(), agent_runs: () => isFinance(),
+    staff: () => isFinance(), pay_items: () => isFinance(),
     bills: () => isFinance(), expenses: () => isFinance(), cash_in: () => isFinance(), cash_counts: () => isFinance(), payments: () => isOffice(),
     statement_lines: () => isFinance(), money_accounts: () => isFinance(), v_books: () => isFinance(),
   };
@@ -414,6 +424,30 @@
       return c.id;
     },
     refresh_payment_followups: () => ({ opened: 0, closed: 0 }),
+    build_pay_run: () => {
+      if (!isFinance()) throw new Error('Only finance can build the pay run.');
+      const period = ym(), now = new Date(), until = dayOff(3), last = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      const dueOn = (d) => ymd(new Date(now.getFullYear(), now.getMonth(), Math.min(d, last)));
+      let nb = 0, ns = 0;
+      const put = (kind, ref_id, name, pay_to, amount, area, due_date) => {
+        const ex = D.pay_items.find((p) => p.kind === kind && p.ref_id === ref_id && p.period === period);
+        if (ex) { if (ex.status === 'due') Object.assign(ex, { amount, pay_to }); return; }
+        D.pay_items.push({ id: uuid(), period, due_date, kind, ref_id, name, pay_to, amount, area, status: 'due', created_at: new Date().toISOString() });
+      };
+      D.bills.filter((b) => b.month === period && !b.paid && b.amount - b.paid_amount > 0 && dueOn(b.due_day) <= until).forEach((b) => { put('bill', b.id, b.name, b.pay_to, b.amount - b.paid_amount, b.area, dueOn(b.due_day)); nb++; });
+      D.staff.filter((s) => s.active && s.pay_type === 'monthly' && s.salary > 0 && dueOn(s.pay_day) <= until).forEach((s) => { put('staff', s.id, s.full_name + ' · salary ' + now.toLocaleDateString('en-GB', { month: 'short' }), s.mpesa_number || s.phone, s.salary, s.area, dueOn(s.pay_day)); ns++; });
+      return { bills: nb, staff: ns, due: D.pay_items.filter((p) => p.period === period && p.status === 'due').length };
+    },
+    record_pay_item: (a) => {
+      if (!isFinance()) throw new Error('Only finance can record payments.');
+      const it = D.pay_items.find((p) => p.id === a.p_item); if (!it) throw new Error('Not on the pay run.');
+      if (it.status === 'sent') throw new Error('Already recorded.');
+      const amt = Number(a.p_amount || it.amount);
+      if (it.kind === 'bill') RPC.pay_bill({ p_bill: it.ref_id, p_amount: amt, p_from: a.p_from, p_ref: a.p_ref });
+      else D.expenses.push({ id: uuid(), area: it.area || 'A', date: today(), category: 'Salaries', payee: it.name, amount: amt, paid_from: a.p_from, ref: a.p_ref ? String(a.p_ref).toUpperCase() : null, approved_by: me().full_name, receipt: 'Digital / M-Pesa msg', note: 'Pay run ' + it.period, recorded_by: me().full_name, vat_amount: 0 });
+      Object.assign(it, { status: 'sent', paid_from: a.p_from, ref_code: a.p_ref ? String(a.p_ref).toUpperCase() : null, amount: amt, sent_at: new Date().toISOString(), sent_by: meId() });
+      return { ok: true, name: it.name, amount: amt };
+    },
     manager_run: () => ({ run: uuid(), rules: 9, new_tasks: 0, closed: 0, escalated: 0, nudges: 0, note: 'Practice: the manager looked and everything is already on the list.' }),
     match_payments: () => ({ matched: 0 }),
     apply_sort_rules: () => {
