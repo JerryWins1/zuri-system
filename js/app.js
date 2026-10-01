@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.14 · 2026-10-01';
+  Z.version = 'v2.15 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -36,6 +36,9 @@
   Z.$$ = (s, r = document) => [...r.querySelectorAll(s)];
   Z.when = (ts) => { if (!ts) return ''; const d = new Date(ts); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); };
   Z.day = (s) => { if (!s) return ''; const d = new Date(s.length === 10 ? s + 'T12:00:00' : s); return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }); };
+  // A plain text message: opens the phone's own SMS app with the number and the words filled in (works without WhatsApp or data).
+  Z.phone254 = (p) => { let d = String(p || '').replace(/\D/g, ''); if (d.startsWith('0')) d = '254' + d.slice(1); else if (d.length === 9) d = '254' + d; return d; };
+  Z.smsHref = (phone, text) => 'sms:+' + Z.phone254(phone) + '?body=' + encodeURIComponent(text);
   Z.formData = (form) => Object.fromEntries(new FormData(form).entries());
   Z.opts = (arr, sel) => arr.map((o) => { const [v, t] = Array.isArray(o) ? o : [o, o]; return `<option value="${Z.esc(v)}"${String(v) === String(sel ?? '') ? ' selected' : ''}>${Z.esc(t)}</option>`; }).join('');
   let toastT;
