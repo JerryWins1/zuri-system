@@ -268,6 +268,7 @@
     ticket_events: () => ({ at: new Date().toISOString() }), ticket_parts: () => ({ added_at: new Date().toISOString(), added_by: meId() }),
     cash_counts: () => ({ created_at: new Date().toISOString() }), money_accounts: () => ({ active: true }),
     bills: () => ({ paid_amount: 0, paid: false }),
+    access_codes: () => ({ active: true, kind: 'tester', max_uses: 10 }), staff: () => ({ active: true, pay_type: 'monthly', salary: 0, pay_day: 28 }),
   };
   function afterWrite(table, row, before) {
     if (table === 'tickets') {
