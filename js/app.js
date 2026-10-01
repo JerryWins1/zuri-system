@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.11 · 2026-10-01';
+  Z.version = 'v2.12 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -213,6 +213,8 @@
     buildChrome();
     show('app');
     Z.syncBadge();
+    // Arrived with a video to play (from the Testers' List)? Go to Learn, where it starts by itself.
+    try { if (Z.practice && localStorage.getItem('zuri_learn_autoplay') && location.hash !== '#learn') location.hash = 'learn'; } catch (e) {}
     Z.route();
     Z.flush();
   }
