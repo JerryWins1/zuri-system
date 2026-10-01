@@ -35,6 +35,10 @@
   // Every fresh open starts at "who are you today?" — practice is for trying different jobs.
   // (A training video switching person keeps its choice, so it can carry on playing.)
   try {
+    // The Testers' List hands us the job (and a video) in the address, so the person never has to pick.
+    const qp = new URLSearchParams(location.search);
+    if (qp.get('role') && ROLES[qp.get('role')]) { localStorage.setItem(ROLE_KEY, qp.get('role')); sessionStorage.setItem('zp_open', '1'); }
+    if (qp.get('play')) localStorage.setItem('zuri_learn_autoplay', qp.get('play').replace(/[^a-z0-9-]/gi, ''));
     if (!sessionStorage.getItem('zp_open') && !localStorage.getItem('zuri_learn_autoplay')) {
       const last = localStorage.getItem(ROLE_KEY); if (last) localStorage.setItem('zuri_practice_last', last);
       localStorage.removeItem(ROLE_KEY);
