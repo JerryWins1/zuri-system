@@ -243,30 +243,32 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=37"></script>
+<script src="js/config.js?v=38"></script>
+<script src="js/gate.js?v=38"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=37"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=38"><\/script>');
 </script>
-<script src="js/app.js?v=37"></script>
-<script src="js/home.js?v=37"></script>
-<script src="js/tasks.js?v=37"></script>
-<script src="js/jobs.js?v=37"></script>
-<script src="js/customers.js?v=37"></script>
-<script src="js/map.js?v=37"></script>
-<script src="js/money.js?v=37"></script>
-<script src="js/statements.js?v=37"></script>
-<script src="js/imports.js?v=37"></script>
-<script src="js/admin.js?v=37"></script>
-<script src="js/staffpay.js?v=37"></script>
-<script src="js/checklist_data.js?v=37"></script>
-<script src="js/testing.js?v=37"></script>
-<script src="js/training.js?v=37"></script>
-<script src="js/lessons_fields.js?v=37"></script>
-<script src="js/lessons_day.js?v=37"></script>
-<script>Z.start();</script>
+<script src="js/app.js?v=38"></script>
+<script src="js/home.js?v=38"></script>
+<script src="js/tasks.js?v=38"></script>
+<script src="js/jobs.js?v=38"></script>
+<script src="js/customers.js?v=38"></script>
+<script src="js/map.js?v=38"></script>
+<script src="js/money.js?v=38"></script>
+<script src="js/statements.js?v=38"></script>
+<script src="js/imports.js?v=38"></script>
+<script src="js/admin.js?v=38"></script>
+<script src="js/staffpay.js?v=38"></script>
+<script src="js/codes.js?v=38"></script>
+<script src="js/checklist_data.js?v=38"></script>
+<script src="js/testing.js?v=38"></script>
+<script src="js/training.js?v=38"></script>
+<script src="js/lessons_fields.js?v=38"></script>
+<script src="js/lessons_day.js?v=38"></script>
+<script>(window.ZG ? window.ZG.ready : Promise.resolve()).then(() => Z.start());</script>
 </body>
 </html>
