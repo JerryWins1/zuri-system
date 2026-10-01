@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.4 · 2026-10-01';
+  Z.version = 'v2.5 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -139,6 +139,7 @@
     { id: 'import', ic: '📥', label: 'Import', ok: () => Z.isStaff(), nav: () => !Z.isFinance() },
     { id: 'admin', ic: '⚙️', label: 'Admin', ok: () => Z.isAdmin(), nav: () => false },
     { id: 'learn', ic: '🎓', label: 'Learn', ok: () => true, nav: () => false },
+    { id: 'test', ic: '🧪', label: 'Testing', ok: () => true, nav: () => false },
     { id: 'me', ic: '🙂', label: 'Me', ok: () => true },
   ];
   // Field techs live in Jobs, so it comes first for them.
@@ -147,7 +148,7 @@
     return Z.isField() ? ['jobs', 'tasks', 'me'].map((id) => t.find((x) => x.id === id)).filter(Boolean) : t;
   };
   // Which bottom tab lights up for a page that has no tab of its own.
-  const PARENT = { import: 'money', admin: 'me', learn: 'me' };
+  const PARENT = { import: 'money', admin: 'me', learn: 'me', test: 'me' };
   Z.routes = {};
 
   function buildChrome() {
@@ -451,6 +452,7 @@
           <button class="btn sec small" data-retry="${q.qid}">Retry</button><button class="btn sec small" data-drop="${q.qid}">Discard</button></div>`).join('')}</div>` : ''}
       <h3>More</h3><div class="card list">
         <a class="item" href="#learn"><span style="font-size:22px">🎓</span><div class="grow"><div class="t">Learn Zuri</div><div class="m">Short videos for your job, and a practice area</div></div><span>›</span></a>
+        <a class="item" href="#test"><span style="font-size:22px">🧪</span><div class="grow"><div class="t">Tester checklist</div><div class="m">Everything to try for your job — tick it, note what was wrong</div></div><span>›</span></a>
         ${Z.isAdmin() ? '<a class="item" href="#admin"><span style="font-size:22px">⚙️</span><div class="grow"><div class="t">Admin</div><div class="m">Switch people on, roles, areas, who sees what</div></div><span>›</span></a>' : ''}
         ${Z.isStaff() ? '<a class="item" href="#import"><span style="font-size:22px">📥</span><div class="grow"><div class="t">Bring in a file</div><div class="m">Customers or payments from the billing website (Excel)</div></div><span>›</span></a>' : ''}
       </div>
@@ -459,7 +461,7 @@
         <p class="hint">Light is easiest to read in sunshine.</p></div>
       ${Z.practice ? `<h3>🎓 Practice mode</h3><div class="card">
         <p class="hint" style="margin-top:0">Everything here is pretend and stays on this phone. Break things — that's how you learn.</p>
-        <div class="row"><button class="btn sec" id="pr-role">🔄 Try another job</button><button class="btn sec" id="pr-reset">🧹 Start over</button><a class="btn sec" href="${location.pathname}${Z.get('from_training', false) ? '?training' : ''}">🚪 Leave practice</a></div></div>` : ''}
+        <div class="row"><button class="btn sec" id="pr-role">🔄 Try another job</button><button class="btn sec" id="pr-reset">🧹 Start over</button><a class="btn sec" href="${location.pathname}${(() => { try { return localStorage.getItem('zuri_from_training') ? '?training' : ''; } catch (e) { return ''; } })()}">🚪 Leave practice</a></div></div>` : ''}
       <div class="card"><button class="btn sec" id="me-out">Sign out</button> <span class="hint">Zuri System ${Z.version}</span></div>`;
     if (Z.practice) {
       Z.$('#pr-role', el).onclick = () => Z.logout();
