@@ -1,4 +1,4 @@
-// Zuri System · Learn: talking training videos that play on the real screens (in practice mode) · v1 · 2026-09-30
+// Zuri System · Learn: talking training videos that play on the real screens (in practice mode) · v2 · 2026-10-01
 // Each "video" is a list of steps: go to a page, light up one thing, say one or two short sentences, maybe tap it.
 // It plays on pretend data, so it can tap real buttons safely. Captions always show, so it works with the sound off.
 (function () {
@@ -32,6 +32,27 @@
   // ---------- the lessons ----------
   // role = which pretend person the video plays as. el = what to light up. say = the words. do = what it taps after speaking.
   const LESSONS = [
+    { id: 'tour', group: 'Everyone', title: 'What Zuri is — the whole system in 5 minutes', mins: 5, role: 'admin', star: true, steps: [
+      { go: 'home', el: '#hdr', say: 'Welcome to Zuri. In the next few minutes you will see the whole system, so you know how everything fits together. After this, watch the short videos for your own job.' },
+      { el: '#nav', say: 'Zuri is one app for the whole Zuri Fiber team: the partners, the office, the call center, and the technicians in the field. It works on any phone, in Chrome, and on the office computer.' },
+      { el: '#view .kpis', say: 'Everyone works from the same information. This is Home. It shows the whole company on one page: our customers, who has paid, our service jobs, and our money.' },
+      { el: '#view a.card', say: 'Every morning at half past six, the Zuri manager looks at everything and writes each person\'s list for the day. It also warns us early when something is going wrong, like customers who have not paid, or cash running low.' },
+      { el: '#view .alert', say: 'Needs attention shows the most important problems first. Tap one, and it takes you straight there.' },
+      { go: 'customers', el: '#view .list', say: 'Customers is everyone we serve: their package, their phone number, where they live, and when their payment runs out. The list comes from our billing website every morning.' },
+      { go: 'jobs', el: '#j-list', say: 'Jobs is the work at customers\' houses: faults, new installs, moving a router, and payment calls. Each job goes to a technician, with a day to visit.' },
+      { el: '#j-list .item::Payment follow-up', say: 'When a customer\'s internet runs out, Zuri opens a payment follow-up job by itself. The call center phones the customer, and writes down what they said.' },
+      { el: '#j-list .item', say: 'Let\'s follow one job from start to finish. A customer called: no internet. The call center made this job, and sent it to Peter.', do: tap('#j-list .item') },
+      { el: 'a[href^="tel:"]', say: 'Peter sees the job on his phone, with the customer\'s number, and a map to the house.' },
+      { el: '#jd-work', say: 'At the house, he taps what he found, what he did, and whether the customer paid him. Then he taps Job finished. If there is no signal, the phone keeps it, and sends it later.' },
+      { el: 'h3::Photos', say: 'He adds photos, and the parts he used, so the office knows what happened, and what stock is left.' },
+      { go: 'tasks/mine', el: '.subtabs', say: 'Tasks is everyone\'s to-do list. Anyone can give anyone a task, and the Zuri manager adds tasks too. When you finish one, tick it, and the person who asked can see it is done.' },
+      { go: 'money/today', el: '#m-body .kpis', say: 'Money is for the finance team and the partners only. It shows the cash in the bank and on M-Pesa, the bills still to pay, and what is left after the bills.' },
+      { go: 'money/projection', el: '#mp-chart', say: 'Zuri also looks thirty days ahead: money coming in from renewals, and bills going out. If cash will run short, it warns us weeks before, not on the day.' },
+      { go: 'money/report', el: '#mr-copy', say: 'Every Friday, the report for the partners writes itself, ready to send on WhatsApp.' },
+      { go: 'tasks/nudges', el: '#tk-body .item', say: 'Each morning, the manager also writes a short WhatsApp message for every staff member, with their most important jobs for the day.' },
+      { go: 'me', el: '#view .card', say: 'Each person only sees what their job needs. A technician sees only their own jobs. The call center sees jobs and customers. Only finance and the partners see the money.' },
+      { el: 'a[href="#learn"]', say: 'That is Zuri. Now watch the short videos for your own job, and try everything in practice. Practice uses pretend customers, so you cannot break anything.' },
+    ], turn: ['Open Home and find how many customers are late', 'Open a job and find the customer\'s phone number', 'Watch the videos for your own job'] },
     { id: 'start', group: 'Everyone', title: 'Welcome to Zuri', mins: 2, role: null, steps: [
       { go: 'me', el: '#nav', say: 'Welcome to Zuri. This is the one app for the whole Zuri Fiber team. Your tabs are at the bottom. You only see the tabs your job needs.' },
       { el: '#nav a[data-tab=jobs]', say: 'Jobs is the work at customers\' houses: faults, new installs, and calls about payment.' },
@@ -160,10 +181,17 @@
   Z.lessons = LESSONS;
 
   // ---------- the player ----------
+  // Softer voices first (Jerry: "that guy is too firm"). Names differ by phone, so this is a ranked wish-list.
+  const SOFT = [/samantha/i, /karen/i, /moira/i, /tessa/i, /serena/i, /kate/i, /fiona/i, /google uk english female/i, /libby|sonia|aria|jenny|natasha|clara|emma/i, /female/i];
+  const rank = (v) => { const i = SOFT.findIndex((re) => re.test(v.name)); return i < 0 ? 99 : i; };
+  // Phones and Macs also carry joke and robot voices — never offer those for training.
+  const SILLY = /albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|fred|hysterical|deranged|grandma|grandpa|rocko|eddy|flo\b|reed|sandy|shelley/i;
+  const englishVoices = () => ((window.speechSynthesis && speechSynthesis.getVoices()) || []).filter((v) => /^en/i.test(v.lang) && !SILLY.test(v.name))
+    .sort((a, b) => rank(a) - rank(b) || (/en[-_](GB|KE|IE|AU)/i.test(b.lang) ? 1 : 0) - (/en[-_](GB|KE|IE|AU)/i.test(a.lang) ? 1 : 0));
   let voice = null;
   const pickVoice = () => {
-    const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
-    voice = vs.find((v) => /en[-_]KE/i.test(v.lang)) || vs.find((v) => /en[-_]GB/i.test(v.lang)) || vs.find((v) => /^en/i.test(v.lang)) || null;
+    const vs = englishVoices();
+    voice = vs.find((v) => v.name === Z.get('learn_voice', '')) || vs[0] || null;
   };
   if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
   const muted = () => Z.get('learn_mute', false);
@@ -175,7 +203,7 @@
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       if (voice) u.voice = voice;
-      u.rate = 0.9; // a little slow: English is many people's second language
+      u.rate = 0.86; u.pitch = 1.05; // calm and a little slow: English is many people's second language
       let done = false; const fin = () => { if (!done) { done = true; res(); } };
       u.onend = fin; u.onerror = fin;
       setTimeout(fin, min * 2.5); // some phones never fire onend
@@ -252,7 +280,7 @@
     const next = LESSONS[LESSONS.indexOf(lesson) + 1];
     const sh = Z.sheet('✅ ' + lesson.title + ' — your turn', `
       <p class="hint" style="margin-top:0">Now try it yourself — this is practice, nothing is real. Tick each one when you've done it.</p>
-      <div class="list">${lesson.turn.map((t, i) => `<label class="item" style="gap:12px"><input type="checkbox" data-t="${i}" ${(Z.get('learn_turn', {})[lesson.id] || []).includes(i) ? 'checked' : ''}><span>${Z.esc(t)}</span></label>`).join('')}</div>
+      <div class="list">${lesson.turn.map((t, i) => `<label class="item" style="gap:12px"><input type="checkbox" data-t="${i}" aria-label="Done: ${Z.esc(t)}" value="${Z.esc(t)}" ${(Z.get('learn_turn', {})[lesson.id] || []).includes(i) ? 'checked' : ''}><span>${Z.esc(t)}</span></label>`).join('')}</div>
       <div class="row" style="margin-top:14px"><button class="btn sec" id="yt-again">↺ Watch again</button>${next ? `<button class="btn" id="yt-next">Next: ${Z.esc(next.title)} ▶</button>` : ''}</div>`);
     Z.$$('[data-t]', sh.el).forEach((c) => (c.onchange = () => {
       const all = Z.get('learn_turn', {}); const s = new Set(all[lesson.id] || []);
@@ -277,6 +305,22 @@
 
   // ---------- the Learn page ----------
   const GROUP_FOR = () => (Z.isField() ? 'Field techs' : Z.me.role === 'callcenter' ? 'Call center' : Z.isFinance() && !Z.isAdmin() ? 'Finance' : Z.isAdmin() ? 'Partners & admin' : 'Everyone');
+  // Pick the voice: hear a few, keep the one you like. Remembered on this phone.
+  function chooseVoice() {
+    pickVoice();
+    const vs = englishVoices().slice(0, 6);
+    if (!vs.length) return Z.toast('This phone has no voices to choose from — the captions still show.');
+    const sh = Z.sheet('🔊 Choose the voice', `<p class="hint" style="margin-top:0">Tap ▶ to hear each one. Then tap the one you like.</p>
+      <div class="list">${vs.map((v, i) => `<div class="item"><button class="btn sec small" data-hear="${i}" aria-label="Hear ${Z.esc(v.name)}">▶</button>
+        <div class="grow"><div class="t">${Z.esc(v.name.replace(/\s*\(.*\)$/, ''))}${voice && v.name === voice.name ? ' <span class="pill ok">chosen</span>' : ''}</div><div class="m">${Z.esc(v.lang)}</div></div>
+        <button class="btn small" data-use="${i}">Use this</button></div>`).join('')}</div>`);
+    Z.$$('[data-hear]', sh.el).forEach((b) => (b.onclick = () => {
+      speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Hello. I am the voice for your Zuri training videos.');
+      u.voice = vs[+b.dataset.hear]; u.rate = 0.86; u.pitch = 1.05; speechSynthesis.speak(u);
+    }));
+    Z.$$('[data-use]', sh.el).forEach((b) => (b.onclick = () => { Z.set('learn_voice', vs[+b.dataset.use].name); pickVoice(); speechSynthesis.cancel(); sh.close(); Z.toast('Voice saved.'); }));
+  }
+
   Z.routes.learn = async (_, el) => {
     const done = Z.get('learn_done', {});
     const mine = GROUP_FOR();
@@ -287,20 +331,22 @@
       <h2>🎓 Learn Zuri</h2>
       <div class="card" style="border-left:4px solid var(--accent)">
         <b>Short talking videos that play on the real screens.</b>
-        <p class="hint">Turn your sound on. Each one is 2–3 minutes and plays in <b>practice</b>, with pretend customers — so nothing real changes. After each video, try it yourself.</p>
+        <p class="hint">New here? Start with <b>⭐ What Zuri is</b>. Turn your sound on. Each one is 2–5 minutes and plays in <b>practice</b>, with pretend customers — so nothing real changes. After each video, try it yourself.</p>
         <div class="row"><span class="pill ${n === LESSONS.length ? 'ok' : 'brand'}">${n} of ${LESSONS.length} watched</span>
+          ${window.speechSynthesis ? '<button class="btn sec small" id="ln-voice">🔊 Choose the voice</button>' : ''}
           ${Z.practice ? '<span class="pill warn">You are in practice</span>' : '<a class="btn sec small" href="?practice">Open practice without a video</a>'}</div>
       </div>
       ${order.map((g) => {
         const ls = LESSONS.filter((l) => l.group === g); if (!ls.length) return '';
         return `<h3>${g}${g === mine && g !== 'Everyone' ? ' · your job' : ''}</h3><div class="card list">${ls.map((l) => `
-          <div class="item"><span style="font-size:24px">${done[l.id] ? '✅' : '▶️'}</span><div class="grow"><div class="t">${Z.esc(l.title)}</div><div class="m">${l.mins} min · ${l.steps.length} steps</div></div>
+          <div class="item"><span style="font-size:24px">${done[l.id] ? '✅' : '▶️'}</span><div class="grow"><div class="t">${l.star ? '⭐ ' : ''}${Z.esc(l.title)}${l.star && !done[l.id] ? ' <span class="pill warn">start here</span>' : ''}</div><div class="m">${l.mins} min · ${l.steps.length} steps</div></div>
           <button class="btn small" data-learn="${l.id}">${done[l.id] ? 'Watch again' : '▶ Watch'}</button></div>`).join('')}</div>`;
       }).join('')}
       <h3>Print & keep</h3>
       <div class="card list">${[['field', '🛠️ Field tech quick card'], ['callcenter', '📞 Call center quick card'], ['finance', '💰 Finance quick card'], ['partners', '⭐ Partners quick card'], ['trainer', '🧑‍🏫 Trainer\'s guide: running a training day']].map(([k, t]) =>
         `<a class="item" href="guides/${k}.html" target="_blank" rel="noopener"><div class="grow"><div class="t">${t}</div><div class="m">One page · print it or keep it on your phone</div></div><span>›</span></a>`).join('')}</div>`;
     Z.$$('[data-learn]', el).forEach((b) => (b.onclick = () => start(b.dataset.learn)));
+    const vb = Z.$('#ln-voice', el); if (vb) vb.onclick = chooseVoice;
     // Arrived here to play a video (just switched into practice / person)?
     let auto = null; try { auto = localStorage.getItem(AUTO); localStorage.removeItem(AUTO); } catch (e) {}
     if (auto && Z.practice) { const l = LESSONS.find((x) => x.id === auto); if (l) setTimeout(() => play(l), 400); }
