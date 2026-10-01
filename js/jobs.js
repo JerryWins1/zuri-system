@@ -273,7 +273,8 @@
           <button type="button" data-out="paid">✅ Says paid</button>
           <button type="button" data-out="stop">✋ Wants to stop</button>
         </div>
-        ${c && c.phone ? `<div class="row" style="margin-top:10px"><a class="btn sec" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, `Hello ${c.full_name.split(' ')[0]}, this is Zuri Fiber. Your internet package ${c.paid_until && new Date(c.paid_until) < new Date() ? 'ran out on ' + Z.day(c.paid_until.slice(0, 10)) : 'is due'}.${c.monthly_rate ? ' To stay connected please pay KES ' + Z.fmt(c.monthly_rate) : ' Please renew'} by M-Pesa${c.account_no ? ' (account ' + c.account_no + ')' : ''}. Thank you!`))}">💬 Send a reminder on WhatsApp</a></div>` : ''}
+        ${c && c.phone ? (() => { const msg = `Hello ${c.full_name.split(' ')[0]}, this is Zuri Fiber. Your internet package ${c.paid_until && new Date(c.paid_until) < new Date() ? 'ran out on ' + Z.day(c.paid_until.slice(0, 10)) : 'is due'}.${c.monthly_rate ? ' To stay connected please pay KES ' + Z.fmt(c.monthly_rate) : ' Please renew'} by M-Pesa${c.account_no ? ' (account ' + c.account_no + ')' : ''}. Thank you!`;
+          return `<div class="row" style="margin-top:10px"><a class="btn sec" id="jd-sms" href="${Z.esc(Z.smsHref(c.phone, msg))}">📩 Text a reminder</a><a class="btn sec" id="jd-wa" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, msg))}">💬 WhatsApp it</a></div><p class="hint" style="margin:6px 0 0">The message is written for you — just press send. Text works for customers without WhatsApp.</p>`; })() : ''}
       </div>` : ''}
       ${Z.isOffice() ? `
       <h3>Who's going, and when</h3>
@@ -409,6 +410,9 @@
 
     Z.$('#jd-note', el).onsubmit = (e) => { e.preventDefault(); note(e.target.body.value.trim()); Z.route(); };
 
+    // A reminder sent is part of the story of this job.
+    const smsB = Z.$('#jd-sms', el); if (smsB) smsB.onclick = () => { note('📩 Reminder text sent'); setTimeout(Z.route, 1500); };
+    const waB = Z.$('#jd-wa', el); if (waB) waB.onclick = () => { note('💬 WhatsApp reminder sent'); setTimeout(Z.route, 1500); };
     Z.$$('#jd-out [data-out]', el).forEach((b) => (b.onclick = () => {
       const k = b.dataset.out;
       if (k === 'noanswer') { note('📵 Called — no answer'); return update({ scheduled_for: Z.ymd(new Date(Date.now() + 864e5)) }, 'Noted. It comes back tomorrow.'); }
