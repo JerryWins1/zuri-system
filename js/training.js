@@ -226,7 +226,7 @@
   async function play(lesson, from = 0) {
     stop(true);
     // Same starting point every time, so the jobs and bills the video taps are always there.
-    if (Z.practice && window.ZP && from === 0 && !lesson.safe) { window.ZP.fresh(); Z.queue.length = 0; Z.saveQueue(); Z.syncBadge(); await Z.route(); }
+    if (Z.practice && window.ZP && from === 0 && !lesson.safe && !lesson.keep) { window.ZP.fresh(); Z.queue.length = 0; Z.saveQueue(); Z.syncBadge(); await Z.route(); }
     P = { lesson, i: from, paused: false, token: {} };
     const block = Object.assign(document.createElement('div'), { className: 'tour-block' });
     const ring = Object.assign(document.createElement('div'), { className: 'tour-ring' });
@@ -342,7 +342,7 @@
   Z.routes.learn = async (_, el) => {
     const done = Z.get('learn_done', {});
     const mine = GROUP_FOR();
-    const groups = ['Everyone', 'Field techs', 'Call center', 'Finance', 'Partners & admin', 'Every screen, every field'];
+    const groups = ['Everyone', 'A day in the life', 'Field techs', 'Call center', 'Finance', 'Partners & admin', 'Every screen, every field'];
     const order = [ 'Everyone', mine, ...groups.filter((g) => g !== 'Everyone' && g !== mine)];
     const n = LESSONS.filter((l) => done[l.id]).length;
     el.innerHTML = `
@@ -356,7 +356,8 @@
       </div>
       ${order.map((g) => {
         const ls = LESSONS.filter((l) => l.group === g); if (!ls.length) return '';
-        const all = g === 'Every screen, every field' ? `<div class="card row" style="border-left:4px solid var(--brand)"><div class="grow"><b>📖 The whole system, one chapter per screen</b><div class="hint" style="margin:0">About ${ls.reduce((n, l) => n + l.mins, 0)} minutes. Explains every field. Chapters play one after another; ✕ stops.</div></div><button class="btn small" data-learn="${ls[0].id}">▶ Play all</button></div>` : '';
+        const blurb = { 'Every screen, every field': '📖 The whole system, one chapter per screen — explains every field.', 'A day in the life': '🌅 One working day through four people: Kelvin, Mary, Peter and a partner. The story carries from one chapter to the next.' }[g];
+        const all = blurb ? `<div class="card row" style="border-left:4px solid var(--brand)"><div class="grow"><b>${blurb}</b><div class="hint" style="margin:0">About ${ls.reduce((n, l) => n + l.mins, 0)} minutes. Chapters play one after another; ✕ stops.</div></div><button class="btn small" data-learn="${ls[0].id}">▶ Play all</button></div>` : '';
         return `<h3>${g}${g === mine && g !== 'Everyone' ? ' · your job' : ''}</h3>${all}<div class="card list">${ls.map((l) => `
           <div class="item"><span style="font-size:24px">${done[l.id] ? '✅' : '▶️'}</span><div class="grow"><div class="t">${l.star ? '⭐ ' : ''}${Z.esc(l.title)}${l.star && !done[l.id] ? ' <span class="pill warn">start here</span>' : ''}</div><div class="m">${l.mins} min · ${l.steps.length} steps</div></div>
           <button class="btn small" data-learn="${l.id}">${done[l.id] ? 'Watch again' : '▶ Watch'}</button></div>`).join('')}</div>`;
