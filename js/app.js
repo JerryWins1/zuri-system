@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.1 · 2026-09-30';
+  Z.version = 'v2.2 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -187,6 +187,7 @@
       box.innerHTML = `<div class="card"><b>Couldn't load this page.</b><p class="hint">${Z.esc(Z.errText(e))}</p><button class="btn sec" onclick="Z.route()">Try again</button></div>`;
     } finally {
       if (seq === routeSeq) { if (samePage) window.scrollTo(0, y); view.style.minHeight = ''; }
+      nameTicks(box);
     }
   };
 
@@ -210,9 +211,18 @@
     Z.flush();
   }
 
+  // Every tick box says what it is (screen readers, and Feedback Studio reports say "ticked: …" instead of "on").
+  function nameTicks(root) {
+    Z.$$('input[type=checkbox]:not([aria-label])', root).forEach((cb) => {
+      const l = cb.closest('label') || (cb.id && Z.$('label[for="' + cb.id + '"]'));
+      const t = ((l && l.textContent) || cb.name || '').replace(/\s+/g, ' ').trim();
+      if (t) cb.setAttribute('aria-label', t);
+    });
+  }
   Z.applyTheme = () => { const t = Z.get('theme', 'auto'); if (t === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.dataset.theme = t; };
   Z.start = async () => {
     Z.applyTheme();
+    Z.$('#zver').textContent = 'Zuri System ' + Z.version + (Z.practice ? ' · practice' : '');
     Z.$('#h-test').hidden = C.env !== 'test' && !Z.practice;
     if (Z.practice) {
       Z.$('#h-test').textContent = 'PRACTICE';
