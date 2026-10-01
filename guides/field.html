@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🛠️ Field Tech Quick Card</title><style>
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; }
+body { font: 14px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: #152322; background: #fff; margin: 0; padding: 16px; max-width: 760px; margin: 0 auto; }
+h1 { font-size: 24px; margin: 0; color: #0F6E5C; }
+.sub { color: #56645F; font-size: 12.5px; margin: 2px 0 12px; }
+h2 { font-size: 15px; margin: 14px 0 6px; color: #0F6E5C; border-bottom: 2px solid #0F6E5C; padding-bottom: 2px; text-transform: uppercase; letter-spacing: .4px; }
+ol, ul { margin: 4px 0 4px 20px; padding: 0; } li { margin: 3px 0; }
+.big { font-size: 15.5px; }
+.box { border-radius: 10px; padding: 10px 12px; margin: 8px 0; }
+.ok { background: #E8F4EE; border-left: 5px solid #2E8B57; } .warn { background: #FDF1E4; border-left: 5px solid #D9822B; } .bad { background: #FBEAE8; border-left: 5px solid #C0392B; } .info { background: #E7F1EF; border-left: 5px solid #0F6E5C; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+.btn { display: inline-block; background: #0F6E5C; color: #fff; border-radius: 6px; padding: 0 6px; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+.chip { display: inline-block; border: 1px solid #B9C4C0; border-radius: 99px; padding: 0 7px; font-size: 12.5px; white-space: nowrap; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; } th, td { border: 1px solid #D8DFDC; padding: 5px 7px; text-align: left; vertical-align: top; } th { background: #EDF1EF; }
+.foot { margin-top: 12px; border-top: 1px solid #D8DFDC; padding-top: 6px; font-size: 11px; color: #56645F; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.print { position: fixed; right: 12px; bottom: 12px; background: #0F6E5C; color: #fff; border: none; border-radius: 10px; padding: 12px 16px; font: inherit; font-weight: 700; }
+@media print { .print { display: none; } body { padding: 0; font-size: 12.5px; } h1 { font-size: 21px; } }
+</style></head><body>
+<h1>🛠️ Field Tech Quick Card</h1><div class="sub">Keep this in the van. Everything a tech does in Zuri · v1 · 30 September 2026</div>
+
+<div class="box info big"><b>Your three tabs:</b> 🛠️ <b>Jobs</b> (your work) · ✅ <b>Tasks</b> (your to-do list) · 🙂 <b>Me</b> (videos, sync, sign out)</div>
+<h2>Every job, every time</h2>
+<ol class="big">
+<li>Open <b>Jobs</b>. <b>Today</b> is at the top. 🔴 = urgent — do it first.</li>
+<li>Tap the job → <span class="btn">📞 Call</span> the customer before you go → <span class="btn">🗺️ Open map</span>.</li>
+<li>Arrive → tap <span class="btn">▶ I'm starting now</span>.</li>
+<li>Done → tap what you <b>found</b> and what you <b>did</b> (the round buttons), or type.</li>
+<li><b>Did the customer pay you?</b> Tap <span class="chip">🙅 No</span> <span class="chip">💵 Cash</span> or <span class="chip">📱 M-Pesa</span>. Type the amount. For M-Pesa, type the <b>code</b> from their message.</li>
+<li>Tap <span class="btn">✅ Job finished</span>.</li>
+</ol>
+<div class="grid">
+<div class="box ok"><b>📷 Photos</b><br>Before and after. Tap <span class="btn">📷 Add photo</span>. No signal is fine — it uploads later.</div>
+<div class="box ok"><b>🔧 Parts</b><br>Write every router, cable and connector you use. Routers: add the serial number.</div>
+<div class="box ok"><b>📍 Map pin</b><br>Standing at the house, <b>outside</b>: <span class="btn">📍 Drop pin here</span>. If it says "not accurate", wait a minute and try again.</div>
+<div class="box ok"><b>＋ New problem?</b><br>Found something on the road? Jobs → <span class="btn">＋ Log a job</span>.</div>
+</div>
+<h2>No signal?</h2>
+<div class="box warn">Keep working. Zuri saves everything on your phone. The yellow <b>⏳ waiting to send</b> badge sends by itself when signal comes back. <b>Don't sign out</b> while things are waiting.</div>
+<h2>If something goes wrong</h2>
+<ul><li>A red <b>didn't send</b> badge → tap it → <b>Retry</b>. Still red? Screenshot it and WhatsApp Dickson.</li>
+<li>Can't see a job? It may have been given to another tech. Ask the office.</li>
+<li>Forgot your password? On the sign-in page tap <b>Forgot password?</b></li></ul>
+
+<div class="foot"><span>Zuri System · 🛠️ Field Tech Quick Card</span><span>Practice anytime: open Zuri → <b>Open practice</b> · Videos: <b>Me → 🎓 Learn Zuri</b></span><span>v1 · 30 September 2026</span></div>
+<button class="print" onclick="print()">🖨️ Print</button>
+</body></html>

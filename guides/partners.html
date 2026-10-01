@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>⭐ Partners Quick Card</title><style>
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; }
+body { font: 14px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: #152322; background: #fff; margin: 0; padding: 16px; max-width: 760px; margin: 0 auto; }
+h1 { font-size: 24px; margin: 0; color: #0F6E5C; }
+.sub { color: #56645F; font-size: 12.5px; margin: 2px 0 12px; }
+h2 { font-size: 15px; margin: 14px 0 6px; color: #0F6E5C; border-bottom: 2px solid #0F6E5C; padding-bottom: 2px; text-transform: uppercase; letter-spacing: .4px; }
+ol, ul { margin: 4px 0 4px 20px; padding: 0; } li { margin: 3px 0; }
+.big { font-size: 15.5px; }
+.box { border-radius: 10px; padding: 10px 12px; margin: 8px 0; }
+.ok { background: #E8F4EE; border-left: 5px solid #2E8B57; } .warn { background: #FDF1E4; border-left: 5px solid #D9822B; } .bad { background: #FBEAE8; border-left: 5px solid #C0392B; } .info { background: #E7F1EF; border-left: 5px solid #0F6E5C; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+.btn { display: inline-block; background: #0F6E5C; color: #fff; border-radius: 6px; padding: 0 6px; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+.chip { display: inline-block; border: 1px solid #B9C4C0; border-radius: 99px; padding: 0 7px; font-size: 12.5px; white-space: nowrap; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; } th, td { border: 1px solid #D8DFDC; padding: 5px 7px; text-align: left; vertical-align: top; } th { background: #EDF1EF; }
+.foot { margin-top: 12px; border-top: 1px solid #D8DFDC; padding-top: 6px; font-size: 11px; color: #56645F; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.print { position: fixed; right: 12px; bottom: 12px; background: #0F6E5C; color: #fff; border: none; border-radius: 10px; padding: 12px 16px; font: inherit; font-weight: 700; }
+@media print { .print { display: none; } body { padding: 0; font-size: 12.5px; } h1 { font-size: 21px; } }
+</style></head><body>
+<h1>⭐ Partners Quick Card</h1><div class="sub">Running Zuri from your phone in 5 minutes a day · v1 · 30 September 2026</div>
+
+<h2>Every morning (2 minutes)</h2>
+<ol class="big"><li>Open <b>📊 Home</b>. Read the <b>🤖 Zuri manager</b> card: what it noticed overnight.</li>
+<li>Read <b>Needs attention</b> — most important first. Tap one to go straight to it.</li>
+<li>Glance at <b>Lowest in next 30 days</b>. Red = act now, not on the day.</li></ol>
+<h2>What the Zuri manager does by itself</h2>
+<table><tr><th>When (Kenya time)</th><th>What happens</th></tr>
+<tr><td>06:00 daily</td><td>Opens a payment follow-up for each customer whose internet ran out.</td></tr>
+<tr><td>06:30 daily</td><td>Writes everyone's tasks, early warnings, and a WhatsApp nudge for each staff member.</td></tr>
+<tr><td>15:00 daily</td><td>Chases stuck tasks: over 48h → partners, over 72h → Jerry, over 5 days → urgent.</td></tr>
+<tr><td>Friday 16:00</td><td>Writes the weekly report for the partners.</td></tr></table>
+<div class="box ok">It only writes <b>tasks, notes, warnings and reports</b>. It never moves money, changes customers, or messages customers. Everything it did is in <b>Tasks → Manager log</b>.</div>
+<h2>Admin jobs</h2>
+<ul><li><b>New staff member:</b> they sign up themselves (with their phone) → <b>Me → ⚙️ Admin → People</b> → choose their job and area → switch On → Save.</li>
+<li><b>Someone leaves:</b> same place → switch Off. Their work stays.</li>
+<li><b>Hide private details</b> (like ID numbers) from some jobs: Admin → <b>Who sees what</b>.</li></ul>
+<h2>Who sees what</h2>
+<table><tr><th>Job</th><th>Sees</th></tr>
+<tr><td>Field tech</td><td>Only their own jobs, and team tasks</td></tr>
+<tr><td>Call center</td><td>Home, jobs, customers, office tasks — no money</td></tr>
+<tr><td>Office · Technical</td><td>Home, jobs, customers — no money</td></tr>
+<tr><td>Office · Finance</td><td>Everything, including money</td></tr>
+<tr><td>Partner (admin)</td><td>Everything, plus Admin</td></tr></table>
+
+<div class="foot"><span>Zuri System · ⭐ Partners Quick Card</span><span>Practice anytime: open Zuri → <b>Open practice</b> · Videos: <b>Me → 🎓 Learn Zuri</b></span><span>v1 · 30 September 2026</span></div>
+<button class="print" onclick="print()">🖨️ Print</button>
+</body></html>
