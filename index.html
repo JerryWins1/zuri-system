@@ -116,6 +116,10 @@
   .loading { padding:30px; text-align:center; color:var(--ink-faint); }
   pre.report { white-space:pre-wrap; background:var(--surface-2); border-radius:10px; padding:12px; font-size:13.5px; }
   .chart-box { position:relative; height:260px; }
+  /* the version line at the very bottom — so every test report says which build was on the phone */
+  footer.ver { text-align:center; font-size:11px; color:var(--ink-faint); padding:0 16px 16px; }
+  body.app footer.ver { padding-bottom:calc(84px + env(safe-area-inset-bottom)); margin-top:-84px; }
+  @media (min-width: 900px) { body.app footer.ver { grid-column:2; margin-top:0; padding-bottom:16px; } }
   /* a row of choices, one picked (Paid from, theme, outcome) */
   .seg { display:flex; gap:6px; flex-wrap:wrap; }
   .seg > a, .seg > button { flex:1 1 auto; min-height:44px; padding:9px 12px; border-radius:10px; border:1px solid var(--line-strong); background:var(--surface); color:var(--ink); font:inherit; font-weight:600; font-size:14px; text-align:center; text-decoration:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:4px; }
@@ -222,6 +226,7 @@
 </header>
 <nav class="tabs" id="nav" hidden></nav>
 <main id="view" hidden></main>
+<footer class="ver" id="zver"></footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
