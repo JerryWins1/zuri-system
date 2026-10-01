@@ -131,7 +131,7 @@
     // money
     const m = ym();
     D.bills = [
-      ['A', 'Safaricom backhaul', 45000, 45000, 5, 'Internet / backhaul'], ['A', 'Office rent', 15000, 15000, 1, 'Rent'], ['A', 'KPLC prepaid', 3500, 0, 20, 'Power'],
+      ['A', 'Safaricom backhaul', 45000, 45000, 5, 'Internet / backhaul'], ['A', 'Office rent', 15000, 15000, 1, 'Rent'], ['A', 'KPLC prepaid', 3500, 0, new Date().getDate(), 'Power'] /* always due today, so the Pay run has something to show */,
       ['A', 'Staff transport', 6000, 2000, 25, 'Transport'], ['B', 'Bayobab backhaul', 28000, 0, 10, 'Internet / backhaul'], ['B', 'Pole rent', 4000, 0, 28, 'Rent'],
     ].map(([area, name, amount, paid_amount, due_day, category]) => ({ id: uuid(), area, month: m, name, amount, paid_amount, paid: paid_amount >= amount, due_day, category, paid_date: paid_amount ? dayOff(-3) : null,
       pay_to: /KPLC/.test(name) ? 'Paybill 888880 · Acc 54123456' : /Safaricom|Bayobab/.test(name) ? 'Paybill 100100 · Acc ZF-' + area : /rent/i.test(name) ? '0711 222 333' : null }));
@@ -152,7 +152,7 @@
       { id: 's-peter', profile_id: 'p-peter', full_name: 'Peter Kamau', job_title: 'Field technician', area: 'A', phone: '0722500500', mpesa_number: '0722500500', mpesa_name: 'PETER KAMAU', pay_type: 'monthly', salary: 25000, pay_day: 28, active: true, start_date: dayOff(-400) },
       { id: 's-brian', profile_id: 'p-brian', full_name: 'Brian Otieno', job_title: 'Field technician', area: 'A', phone: '0733600600', mpesa_number: '0733600600', mpesa_name: 'BRIAN OTIENO', pay_type: 'monthly', salary: 22000, pay_day: 28, active: true, start_date: dayOff(-200) },
       { id: 's-faith', profile_id: 'p-faith', full_name: 'Faith Achieng', job_title: 'Field technician', area: 'B', phone: '0744700700', mpesa_number: '0744700700', mpesa_name: 'FAITH ACHIENG', pay_type: 'monthly', salary: 22000, pay_day: 28, active: true, start_date: dayOff(-150) },
-      { id: 's-mary', profile_id: 'p-mary', full_name: 'Mary Wanjiku', job_title: 'Call center', area: null, phone: '0711400400', mpesa_number: null, mpesa_name: null, pay_type: 'monthly', salary: 18000, pay_day: 28, active: true, start_date: dayOff(-90) },
+      { id: 's-mary', profile_id: 'p-mary', full_name: 'Mary Wanjiku', job_title: 'Call center', area: null, phone: '0711400400', mpesa_number: '0711400400', mpesa_name: 'MARY WANJIKU', pay_type: 'monthly', salary: 18000, pay_day: new Date().getDate(), active: true, start_date: dayOff(-90) },
       { id: 's-casual', profile_id: null, full_name: 'Joseph Mutua', job_title: 'Casual (pole work)', area: 'A', phone: '0755900900', mpesa_number: '0755900900', mpesa_name: 'JOSEPH MUTUA', pay_type: 'daily', salary: 800, pay_day: 28, active: true, start_date: null },
     ];
     D.pay_items = [];
