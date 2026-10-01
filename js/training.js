@@ -35,14 +35,13 @@
     { id: 'howtest', group: 'Everyone', title: 'How to test Zuri (2 min)', mins: 2, role: null, star: true, safe: true, steps: [
       { go: 'test', el: '#test-head', say: 'Welcome, tester. Thank you for helping. This short video shows how we test Zuri, and what we need from you.' },
       { el: '#hdr', say: 'The orange bar means TRAINING. The customers and the money are pretend, so nothing you do is real. But it is shared: what you do here, your teammates see. Work like it is a real day.' },
-      { el: '#test-list .item', say: 'This is your checklist. Each line is one thing to try. The small words say how. Do it, then tick the box.' },
-      { el: '.tk-show', say: 'Not sure how? Tap Show me, and a short video does it in front of you, in practice. Then come back and do it yourself.' },
-      { el: '.tk-note', say: 'Something wrong, confusing, or slow? Tap Note and write it. Short is fine: the button is too small, or I did not understand this word.' },
+      { el: '#test-open', say: 'Your Testers\' List is one page, one step at a time: the videos, the things to try for your job, joining the training copy. Do a step, tap Done, and the next one appears.' },
+      { el: '#test-open', say: 'Under every step is a box: Tell Claude. Something wrong, confusing, or slow? Write it there. Short is fine: the button is too small, or I did not understand this word.' },
       { el: '#test-fs', say: 'If you opened Zuri inside Feedback Studio, even better: press the red button and talk while you work. Point at what is wrong. At the end, tap I\'m done, then Send to Claude.' },
       { el: '#zver', say: 'At the bottom is the version line. If you report a problem, say which version you had.' },
-      { el: '#test-progress', say: 'The count at the top shows how far you are. Please finish every line for your job. That is how we know Zuri is ready for real customers.' },
+      { el: '#test-head', say: 'The count at the top of your list shows how far you are. Please finish every step for your job. That is how we know Zuri is ready for real customers.' },
       { go: 'learn', el: '#view .list .item', say: 'Before you start: watch What Zuri is, five minutes, then the videos for your own job. Then open the checklist and begin. Thank you!' },
-    ], turn: ['Open the Tester checklist (Me → 🧪)', 'Tick the first line', 'Write one note'] },
+    ], turn: ['Open your Testers\' List (Me → 🧪)', 'Tick the first step', 'Send one note to Claude'] },
     { id: 'tour', group: 'Everyone', title: 'What Zuri is — the whole system in 5 minutes', mins: 5, role: 'admin', star: true, steps: [
       { go: 'home', el: '#hdr', say: 'Welcome to Zuri. In the next few minutes you will see the whole system, so you know how everything fits together. After this, watch the short videos for your own job.' },
       { el: '#nav', say: 'Zuri is one app for the whole Zuri Fiber team: the partners, the office, the call center, and the technicians in the field. It works on any phone, in Chrome, and on the office computer.' },
