@@ -3,5 +3,7 @@
 window.ZURI_CONFIG = {
   supabaseUrl: 'https://wlawjwowdmneatdffpsy.supabase.co',
   supabaseKey: 'sb_publishable_OHwCKJ0eGTS6MtiYX09U7Q_svZsAmmJ',
-  env: 'test'
+  env: 'test',
+  // ?training → the Zuri Training database: a disguised copy of the real data, for the team to learn on.
+  training: { supabaseUrl: 'https://dlpdjdswzfpmqymdswsg.supabase.co', supabaseKey: 'sb_publishable_DiInkgUuq_4vl6M-rC7B_g_whohrpB1' }
 };
