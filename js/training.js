@@ -288,6 +288,12 @@
     }
   }
   function yourTurn(lesson) {
+    // Chapters of the long walkthrough chain straight on; ✕ on the bar stops them.
+    if (!lesson.turn || !lesson.turn.length) {
+      if (lesson.next) { Z.toast('Next chapter…'); setTimeout(() => start(lesson.next), 1200); return; }
+      const sh = Z.sheet('✅ ' + lesson.title, `<p class="hint" style="margin-top:0">That was the whole walkthrough. Watch any chapter again from the Learn page.</p><button class="btn block" id="yt-ok">Done</button>`);
+      Z.$('#yt-ok', sh.el).onclick = sh.close; return;
+    }
     const next = LESSONS[LESSONS.indexOf(lesson) + 1];
     const sh = Z.sheet('✅ ' + lesson.title + ' — your turn', `
       <p class="hint" style="margin-top:0">Now try it yourself — this is practice, nothing is real. Tick each one when you've done it.</p>
@@ -336,7 +342,7 @@
   Z.routes.learn = async (_, el) => {
     const done = Z.get('learn_done', {});
     const mine = GROUP_FOR();
-    const groups = ['Everyone', 'Field techs', 'Call center', 'Finance', 'Partners & admin'];
+    const groups = ['Everyone', 'Field techs', 'Call center', 'Finance', 'Partners & admin', 'Every screen, every field'];
     const order = [ 'Everyone', mine, ...groups.filter((g) => g !== 'Everyone' && g !== mine)];
     const n = LESSONS.filter((l) => done[l.id]).length;
     el.innerHTML = `
@@ -350,7 +356,8 @@
       </div>
       ${order.map((g) => {
         const ls = LESSONS.filter((l) => l.group === g); if (!ls.length) return '';
-        return `<h3>${g}${g === mine && g !== 'Everyone' ? ' · your job' : ''}</h3><div class="card list">${ls.map((l) => `
+        const all = g === 'Every screen, every field' ? `<div class="card row" style="border-left:4px solid var(--brand)"><div class="grow"><b>📖 The whole system, one chapter per screen</b><div class="hint" style="margin:0">About ${ls.reduce((n, l) => n + l.mins, 0)} minutes. Explains every field. Chapters play one after another; ✕ stops.</div></div><button class="btn small" data-learn="${ls[0].id}">▶ Play all</button></div>` : '';
+        return `<h3>${g}${g === mine && g !== 'Everyone' ? ' · your job' : ''}</h3>${all}<div class="card list">${ls.map((l) => `
           <div class="item"><span style="font-size:24px">${done[l.id] ? '✅' : '▶️'}</span><div class="grow"><div class="t">${l.star ? '⭐ ' : ''}${Z.esc(l.title)}${l.star && !done[l.id] ? ' <span class="pill warn">start here</span>' : ''}</div><div class="m">${l.mins} min · ${l.steps.length} steps</div></div>
           <button class="btn small" data-learn="${l.id}">${done[l.id] ? 'Watch again' : '▶ Watch'}</button></div>`).join('')}</div>`;
       }).join('')}
