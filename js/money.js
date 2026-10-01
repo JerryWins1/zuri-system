@@ -8,7 +8,7 @@
   const SECTIONS = [
     ['💵 Today', ['today', 'count']],
     ['✍️ Record', ['expense', 'in']],
-    ['📋 Bills', ['bills']],
+    ['📋 Bills', ['bills', 'payrun']],
     ['👥 Customers', ['collections', 'projection']],
     ['🏦 Statements', ['statements', 'sort', 'books', 'import']],
     ['📊 Report', ['report']],
@@ -318,6 +318,7 @@
           <div><label>Amount (KES)</label><input name="amount" inputmode="numeric" required></div>
           <div><label>Due day of month</label><input name="due_day" type="number" min="1" max="31" value="1" required></div>
           <div><label>Category</label><select name="category">${Z.opts(cats.map((c) => c.name))}</select></div>
+          <div><label>Pay to (paybill · account, or phone)</label><input name="pay_to" placeholder="e.g. Paybill 888880 · Acc 5412"></div>
           <div style="align-self:end"><button class="btn block" type="submit">Add bill</button></div>
         </div>
       </form>`;
@@ -325,14 +326,14 @@
     Z.$('#mb', el).onsubmit = async (e) => {
       e.preventDefault();
       const d = Z.formData(e.target);
-      const { error } = await Z.sb.from('bills').insert({ area: d.area, month: ym, name: d.name.trim(), amount: Z.num(d.amount), due_day: Math.min(31, Math.max(1, parseInt(d.due_day, 10) || 1)), category: d.category });
+      const { error } = await Z.sb.from('bills').insert({ area: d.area, month: ym, name: d.name.trim(), amount: Z.num(d.amount), due_day: Math.min(31, Math.max(1, parseInt(d.due_day, 10) || 1)), category: d.category, pay_to: d.pay_to.trim() || null });
       if (error) return Z.toast(/unique|duplicate/i.test(error.message) ? 'That bill is already on this month\'s list.' : Z.errText(error));
       Z.toast('Bill added.'); Z.route();
     };
     Z.$$('[data-copy]', el).forEach((b) => (b.onclick = async () => {
       const prev = must(await Z.sb.from('bills').select('*').eq('area', b.dataset.copy).eq('month', nextMonth(ym, -1)));
       if (!prev.length) return Z.toast('No bills found for last month.');
-      const { error } = await Z.sb.from('bills').upsert(prev.map((p) => ({ area: p.area, month: ym, name: p.name, amount: p.amount, due_day: p.due_day, category: p.category })), { onConflict: 'area,month,name', ignoreDuplicates: true });
+      const { error } = await Z.sb.from('bills').upsert(prev.map((p) => ({ area: p.area, month: ym, name: p.name, amount: p.amount, due_day: p.due_day, category: p.category, pay_to: p.pay_to })), { onConflict: 'area,month,name', ignoreDuplicates: true });
       if (error) return Z.fail(error);
       Z.toast(`Copied ${prev.length} bills.`); Z.route();
     }));
@@ -342,6 +343,7 @@
       const sh = Z.sheet(`✏️ ${b.name} · ${monthName(ym)}`, `
         <form id="be"><label>Amount for this month (KES)</label><input name="amount" inputmode="numeric" value="${Z.esc(b.amount)}" required>
           <label>Due day of the month</label><input name="due_day" type="number" min="1" max="31" value="${Z.esc(b.due_day)}" required>
+          <label>Pay to (paybill · account, or phone)</label><input name="pay_to" value="${Z.esc(b.pay_to || '')}" placeholder="e.g. Paybill 888880 · Acc 5412">
           <div style="height:14px"></div><button class="btn block">Save</button></form>
         <div style="height:10px"></div><button class="btn sec block" id="be-del">🗑️ Remove this bill from ${monthName(ym)}</button>
         <p class="hint">Payments already made stay in Money out.</p>`);
@@ -349,7 +351,7 @@
         e.preventDefault();
         const amt = Z.num(e.target.amount.value);
         if (amt == null || amt < 0) return Z.toast('Enter an amount.');
-        const { error } = await Z.sb.from('bills').update({ amount: amt, due_day: Math.min(31, Math.max(1, parseInt(e.target.due_day.value, 10) || 1)) }).eq('id', b.id);
+        const { error } = await Z.sb.from('bills').update({ amount: amt, due_day: Math.min(31, Math.max(1, parseInt(e.target.due_day.value, 10) || 1)), pay_to: e.target.pay_to.value.trim() || null }).eq('id', b.id);
         if (error) return Z.fail(error);
         sh.close(); Z.toast('Bill updated.'); Z.route();
       };
