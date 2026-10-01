@@ -46,9 +46,11 @@
   const PLACES = ['Behind the Total petrol station', 'Near Maai Mahiu market', 'Opposite St. Mary\'s church', 'Satellite estate, blue gate', 'Near the matatu stage', 'Kamuyu road, after the posho mill', 'Next to the primary school', 'Above the M-Pesa shop', 'Green house near the water tank', 'Off the old Naivasha road', 'Near the health centre', 'Behind the police post'];
   const PLANS = [['5 Mbps', 1500], ['10 Mbps', 2000], ['10 Mbps', 2000], ['20 Mbps', 3000], ['20 Mbps', 3000], ['30 Mbps Business', 4500]];
 
-  function build() {
+  // mode 'empty': a brand-new company — only the areas, the seed lists and the staff. You enter everything else.
+  function build(mode) {
     seed = 7;
     const D = {};
+    D._mode = mode || 'running';
     D.areas = [{ code: 'A', name: 'Zuri A', float_target: 50000, active: true }, { code: 'B', name: 'Zuri B', float_target: 30000, active: true }, { code: 'C', name: 'Zuri C (coming)', float_target: 30000, active: false }];
     D.profiles = PEOPLE.map((p) => ({ ...p, active: true, created_at: tsOff(-60) }))
       .concat([{ id: 'p-samuel', full_name: 'Samuel Kiprono', role: 'field', dept: null, area: null, phone: '0755800800', active: false, created_at: tsOff(-1) }]);
@@ -184,12 +186,19 @@
     D.billing_snapshots = months.slice(0, 3).map((mo, i) => ({ period: mo.slice(0, 7), fixed: 760000 + i * 12000, hotspot: 140000 + i * 4000 }));
     D.v_people = D.profiles.map(({ id, full_name, role, dept, area, active, phone }) => ({ id, full_name, role, dept, area, active, phone }));
     D._ticket_no = no;
+    if (mode === 'empty') {
+      Object.assign(D, { v_customers: [], payments: [], tickets: [], ticket_events: [], ticket_parts: [], tasks: [], task_comments: [], agent_runs: [], nudges: [],
+        bills: [], cash_counts: [], expenses: [], cash_in: [], money_accounts: [], statement_lines: [], sort_rules: [], v_books: [], billing_snapshots: [], custom_field_defs: [] });
+      D.profiles = D.profiles.map((p) => ({ ...p, active: p.role === 'admin' })); // only the partner is switched on; you switch the others on
+      D._ticket_no = 100;
+    }
     return D;
   }
 
   let D;
   try { D = JSON.parse(localStorage.getItem(KEY)); } catch (e) { D = null; }
-  if (!D || !D.v_customers) D = build();
+  const wantMode = (() => { try { return localStorage.getItem('zuri_practice_mode') || 'running'; } catch (e) { return 'running'; } })();
+  if (!D || !D.v_customers || (D._mode || 'running') !== wantMode) D = build(wantMode);
   let saveT;
   const save = () => { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) { /* full: practice still works this visit */ } }, 150); };
   save();
@@ -449,7 +458,8 @@
     role: () => localStorage.getItem(ROLE_KEY),
     pickRole: (r) => localStorage.setItem(ROLE_KEY, r),
     session: () => (meId() ? { user: { id: meId() } } : null),
-    fresh: () => { D = build(); save(); }, // every training video starts from the same pretend day
+    fresh: (mode) => { D = build(mode || 'running'); try { localStorage.setItem('zuri_practice_mode', mode || 'running'); } catch (e) {} save(); },
+    mode: () => D._mode || 'running',
     reset: () => { localStorage.removeItem(KEY); Object.keys(localStorage).filter((k) => k.startsWith('zuri_practice_') && k !== ROLE_KEY).forEach((k) => localStorage.removeItem(k)); },
   };
 })();
