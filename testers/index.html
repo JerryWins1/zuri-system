@@ -55,7 +55,7 @@
 <script src="../js/checklist_data.js"></script>
 <script>
 (function () {
-  const VERSION = 'v1 · 2026-10-01';
+  const VERSION = 'v1.1 · 2026-10-01';
   const C = window.ZURI_CONFIG.training;                                   // the Testers' List always talks to the training copy
   const sb = supabase.createClient(C.supabaseUrl, C.supabaseKey, { auth: { persistSession: false } });
   const APP = 'https://jerrywins1.github.io/zuri-system/';
@@ -108,6 +108,22 @@
   async function flush() { const q = get('queue', []); if (!q.length) return; const { error } = await sb.from('tester_log').insert(q); if (!error) set('queue', []); }
   window.addEventListener('online', flush);
 
+  // ---------- the plan: what the partners asked this tester to test ----------
+  let plan = null;                                                        // { steps: [...ids] | [], focus }
+  async function loadPlan() {
+    try {
+      const { data } = await sb.from('tester_plan').select('*').order('at', { ascending: false }).limit(200);
+      const rows = data || [];
+      plan = rows.find((r) => r.tester.trim().toLowerCase() === me.name.trim().toLowerCase())
+          || rows.find((r) => r.tester === '*' && (!r.role || r.role === me.role)) || null;
+      set('plan', plan);
+    } catch (e) { plan = get('plan', null); }
+  }
+  function planned(steps) {
+    if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) return steps;
+    return steps.filter((s) => plan.steps.includes(s.id));
+  }
+
   // ---------- screens ----------
   function askWho() {
     $('#prog').hidden = true;
@@ -131,7 +147,7 @@
   }
 
   function render() {
-    const steps = stepsFor(me.role);
+    const steps = planned(stepsFor(me.role));
     const done = steps.filter((s) => state[s.id] === 'done').length;
     const open = steps.filter((s) => !state[s.id]);
     const cur = open[0];
@@ -140,7 +156,8 @@
     $('#sub').textContent = `${me.name} · ${ROLES[me.role]}`;
     const secs = [...new Set(steps.map((s) => s.sec))];
     $('#main').innerHTML = `
-      <div class="bar"><i style="width:${Math.round((done / steps.length) * 100)}%"></i></div>
+      <div class="bar"><i style="width:${Math.round((done / Math.max(1, steps.length)) * 100)}%"></i></div>
+      ${plan && plan.focus ? `<div class="card" style="border-left:4px solid var(--now)"><b>🎯 Jerry asked you to focus on:</b> ${esc(plan.focus)}</div>` : ''}
       ${cur ? `<div class="now"><div class="lbl"><span>Now · step ${steps.indexOf(cur) + 1} of ${steps.length}</span><span>${esc(cur.sec)}</span></div>
         <h2>${esc(cur.t)}</h2><div class="why">${esc(cur.why)}</div>
         <ol>${cur.how.map((h) => `<li>${esc(h)}</li>`).join('')}</ol>
@@ -176,15 +193,45 @@
     const fmt = (t) => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
     const title = (p, id) => (stepsFor(p.role).find((s) => s.id === id) || {}).t || id;
     $('#main').innerHTML = `<div class="card"><b>📊 Testers' board</b><p style="color:var(--soft);margin:4px 0 0">Every tick and note from the Testers' List, newest first. Say “read the testers' list” to Claude and it reads this too.</p></div>
-      <div class="card"><table><tr><th>Tester</th><th>Job</th><th>Done</th><th>Last seen</th></tr>${Object.values(people).map((p) => { const n = stepsFor(p.role).length; return `<tr><td>${esc(p.name)}</td><td>${ROLES[p.role]}</td><td><span class="pill ${p.done.size === n ? 'ok' : ''}">${p.done.size} / ${n}</span></td><td>${fmt(p.last)}</td></tr>`; }).join('') || '<tr><td colspan="4" style="color:var(--faint)">Nobody yet.</td></tr>'}</table></div>
+      <div class="card"><table><tr><th>Tester</th><th>Job</th><th>Done</th><th>Last seen</th><th></th></tr>${Object.values(people).map((p) => { const n = stepsFor(p.role).length; return `<tr><td>${esc(p.name)}</td><td>${ROLES[p.role]}</td><td><span class="pill ${p.done.size === n ? 'ok' : ''}">${p.done.size} / ${n}</span></td><td>${fmt(p.last)}</td><td><a href="?plan=${encodeURIComponent(p.name)}&role=${p.role}" style="font-weight:700;color:var(--brand)">✏️ Plan</a></td></tr>`; }).join('') || '<tr><td colspan="5" style="color:var(--faint)">Nobody yet.</td></tr>'}</table>
+      <p style="margin:10px 0 0;font-size:14px">Plan for everyone with a job: ${Object.entries(ROLES).map(([k, t]) => `<a href="?plan=*&role=${k}" style="font-weight:700;color:var(--brand);margin-right:10px">${t}</a>`).join('')}</p></div>
       <h3><span>Notes to Claude</span><span>${data.filter((r) => r.kind === 'note').length}</span></h3>
       <div class="card">${data.filter((r) => r.kind === 'note').map((r) => `<div class="row" style="cursor:default;align-items:flex-start"><div style="flex:1"><div>${esc(r.note)}</div><div class="m" style="white-space:normal">${esc(r.tester)} · ${esc(title({ role: r.role }, r.step))} · ${fmt(r.at)}</div></div></div>`).join('') || '<div style="color:var(--faint)">No notes yet.</div>'}</div>`;
   }
 
+  // ---------- the plan editor (Jerry): ?plan=<name>&role=<job> ----------
+  async function planEditor() {
+    const q = new URLSearchParams(location.search); const who = q.get('plan') || '*'; const role = ROLES[q.get('role')] ? q.get('role') : 'field';
+    $('#sub').textContent = 'What should ' + (who === '*' ? 'every ' + ROLES[role] : who) + ' test?';
+    const steps = stepsFor(role);
+    let current = null;
+    try { const { data } = await sb.from('tester_plan').select('*').order('at', { ascending: false }).limit(200); current = (data || []).find((r) => r.tester.trim().toLowerCase() === who.trim().toLowerCase() && (who !== '*' || !r.role || r.role === role)) || null; } catch (e) {}
+    const chosen = new Set(current && current.steps && current.steps.length ? current.steps : steps.map((s) => s.id));
+    const secs = [...new Set(steps.map((s) => s.sec))];
+    $('#main').innerHTML = `<p style="margin:0 0 6px"><a href="?board">← Board</a></p>
+      <div class="card"><b>✏️ Plan for ${esc(who === '*' ? 'everyone who is a ' + ROLES[role] : who)}</b><p style="color:var(--soft);margin:4px 0 8px">Tick the steps they should do. Untick to leave something out. Their list shows only the ticked steps, in this order.</p>
+        <label>Focus on (one line they see at the top)</label><input id="p-focus" value="${esc(current && current.focus || '')}" placeholder="e.g. Payment follow-ups and the map — tell us about every call">
+        <div class="seg" style="margin-top:10px"><button type="button" id="p-all">Tick all</button><button type="button" id="p-none">Untick all</button></div></div>
+      ${secs.map((sec) => `<h3><span>${esc(sec)}</span></h3><div class="card">${steps.filter((s) => s.sec === sec).map((s) => `<div class="row ${chosen.has(s.id) ? 'done' : ''}" data-id="${s.id}"><div class="chk">${chosen.has(s.id) ? '✓' : ''}</div><span class="t" style="text-decoration:none;color:var(--ink)">${esc(s.t)}</span></div>`).join('')}</div>`).join('')}
+      <div class="card"><button class="big" id="p-save">Save this plan</button><p style="font-size:13px;color:var(--faint);margin:8px 0 0">${current ? 'Last saved ' + new Date(current.at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + (current.by_who ? ' by ' + esc(current.by_who) : '') : 'No plan yet — they get every step.'}</p></div>`;
+    const paint = () => $$('.row[data-id]').forEach((r) => { const on = chosen.has(r.dataset.id); r.classList.toggle('done', on); $('.chk', r).textContent = on ? '✓' : ''; });
+    $$('.row[data-id]').forEach((r) => (r.onclick = () => { chosen.has(r.dataset.id) ? chosen.delete(r.dataset.id) : chosen.add(r.dataset.id); paint(); }));
+    $('#p-all').onclick = () => { steps.forEach((s) => chosen.add(s.id)); paint(); };
+    $('#p-none').onclick = () => { chosen.clear(); paint(); };
+    $('#p-save').onclick = async () => {
+      const ids = steps.map((s) => s.id).filter((id) => chosen.has(id));
+      if (!ids.length) return toast('Tick at least one step.');
+      const { error } = await sb.from('tester_plan').insert({ tester: who, role: who === '*' ? role : role, steps: ids.length === steps.length ? [] : ids, focus: $('#p-focus').value.trim() || null, by_who: get('me', null) ? get('me', null).name : 'Jerry' });
+      if (error) return toast('Could not save: ' + error.message);
+      toast('Plan saved — their list updates next time they open it.'); setTimeout(() => (location.href = '?board'), 900);
+    };
+  }
+
   // ---------- start ----------
   if (new URLSearchParams(location.search).has('board')) board();
+  else if (new URLSearchParams(location.search).has('plan')) planEditor();
   else if (!me) askWho();
-  else { render(); if (!get('hello', false)) { log('hello', 'start').then(() => set('hello', true)); } flush(); }
+  else { plan = get('plan', null); render(); loadPlan().then(render); if (!get('hello', false)) { log('hello', 'start').then(() => set('hello', true)); } flush(); }
 })();
 </script>
 </body>
