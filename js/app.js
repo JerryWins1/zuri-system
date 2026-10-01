@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.2 · 2026-10-01';
+  Z.version = 'v2.3 · 2026-10-01';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -230,7 +230,9 @@
       Z.$$('.real-only').forEach((x) => (x.hidden = true));
       const pick = Z.$('#practice-pick');
       pick.hidden = false;
-      Z.$('#practice-roles').innerHTML = Object.entries(window.ZP.roles).map(([k, r]) => `<button class="btn sec block" data-role="${k}" style="justify-content:flex-start;margin-bottom:8px">${r.label} <span class="hint" style="margin:0 0 0 auto">as ${Z.esc(r.who)}</span></button>`).join('');
+      const last = typeof window.ZP.last === 'function' ? window.ZP.last() : null; // an older cached practice.js has no last()
+      Z.$('#practice-roles').innerHTML = Object.entries(window.ZP.roles).map(([k, r]) => `<button class="btn sec block" data-role="${k}" style="justify-content:flex-start;text-align:left;margin-bottom:8px;flex-wrap:wrap;${k === last ? 'border-color:var(--brand)' : ''}">
+          <span style="flex:1 1 auto">${r.label} <span class="hint" style="margin:0">as ${Z.esc(r.who)}${k === last ? ' · last time' : ''}</span>${r.does ? `<br><span class="hint" style="margin:0;font-weight:500">${Z.esc(r.does)}</span>` : ''}</span></button>`).join('');
       Z.$$('[data-role]', pick).forEach((b) => (b.onclick = () => { window.ZP.pickRole(b.dataset.role); enter(window.ZP.session()).catch(Z.fail); }));
     }
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
