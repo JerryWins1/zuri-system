@@ -68,7 +68,7 @@
       D.v_customers.push({
         id: 'c' + (i + 1), full_name: `${FIRST[i % FIRST.length]} ${LAST[(i * 7) % LAST.length]}`,
         phone: '07' + String(10000000 + Math.floor(rnd() * 89999999)).slice(0, 8), phone2: null, email: null, national_id: String(20000000 + i * 37171),
-        area, landmark: pick(PLACES), lat: i % 5 === 2 ? null : -0.98 + rnd() * 0.04, lng: i % 5 === 2 ? null : 36.57 + rnd() * 0.05,
+        area, landmark: pick(PLACES), lat: i % 5 === 2 ? null : -0.996 + rnd() * 0.022, lng: i % 5 === 2 ? null : 36.575 + rnd() * 0.03, /* around Maai Mahiu town */
         status, account_no: `Z${area}-${String(101 + i).padStart(4, '0')}`, plan: status === 'lead' ? null : plan, monthly_rate: status === 'lead' ? null : rate,
         billnasi_id: status === 'lead' ? null : String(5000 + i), install_date: status === 'lead' ? null : dayOff(-200 + i * 3),
         paid_until: status === 'active' ? tsOff(off, 23) : status === 'disconnected' ? tsOff(-70) : null,
