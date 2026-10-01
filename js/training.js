@@ -32,6 +32,17 @@
   // ---------- the lessons ----------
   // role = which pretend person the video plays as. el = what to light up. say = the words. do = what it taps after speaking.
   const LESSONS = [
+    { id: 'howtest', group: 'Everyone', title: 'How to test Zuri (2 min)', mins: 2, role: null, star: true, safe: true, steps: [
+      { go: 'test', el: '#test-head', say: 'Welcome, tester. Thank you for helping. This short video shows how we test Zuri, and what we need from you.' },
+      { el: '#hdr', say: 'The orange bar means TRAINING. The customers and the money are pretend, so nothing you do is real. But it is shared: what you do here, your teammates see. Work like it is a real day.' },
+      { el: '#test-list .item', say: 'This is your checklist. Each line is one thing to try. The small words say how. Do it, then tick the box.' },
+      { el: '.tk-show', say: 'Not sure how? Tap Show me, and a short video does it in front of you, in practice. Then come back and do it yourself.' },
+      { el: '.tk-note', say: 'Something wrong, confusing, or slow? Tap Note and write it. Short is fine: the button is too small, or I did not understand this word.' },
+      { el: '#test-fs', say: 'If you opened Zuri inside Feedback Studio, even better: press the red button and talk while you work. Point at what is wrong. At the end, tap I\'m done, then Send to Claude.' },
+      { el: '#zver', say: 'At the bottom is the version line. If you report a problem, say which version you had.' },
+      { el: '#test-progress', say: 'The count at the top shows how far you are. Please finish every line for your job. That is how we know Zuri is ready for real customers.' },
+      { go: 'learn', el: '#view .list .item', say: 'Before you start: watch What Zuri is, five minutes, then the videos for your own job. Then open the checklist and begin. Thank you!' },
+    ], turn: ['Open the Tester checklist (Me → 🧪)', 'Tick the first line', 'Write one note'] },
     { id: 'tour', group: 'Everyone', title: 'What Zuri is — the whole system in 5 minutes', mins: 5, role: 'admin', star: true, steps: [
       { go: 'home', el: '#hdr', say: 'Welcome to Zuri. In the next few minutes you will see the whole system, so you know how everything fits together. After this, watch the short videos for your own job.' },
       { el: '#nav', say: 'Zuri is one app for the whole Zuri Fiber team: the partners, the office, the call center, and the technicians in the field. It works on any phone, in Chrome, and on the office computer.' },
@@ -215,7 +226,7 @@
   async function play(lesson, from = 0) {
     stop(true);
     // Same starting point every time, so the jobs and bills the video taps are always there.
-    if (Z.practice && window.ZP && from === 0) { window.ZP.fresh(); Z.queue.length = 0; Z.saveQueue(); Z.syncBadge(); await Z.route(); }
+    if (Z.practice && window.ZP && from === 0 && !lesson.safe) { window.ZP.fresh(); Z.queue.length = 0; Z.saveQueue(); Z.syncBadge(); await Z.route(); }
     P = { lesson, i: from, paused: false, token: {} };
     const block = Object.assign(document.createElement('div'), { className: 'tour-block' });
     const ring = Object.assign(document.createElement('div'), { className: 'tour-ring' });
@@ -295,8 +306,9 @@
   function start(id) {
     const lesson = LESSONS.find((l) => l.id === id); if (!lesson) return;
     const want = lesson.role || currentPracticeRole() || 'field';
+    if (lesson.safe && !Z.practice) return play(lesson);             // only points, never taps: fine on real data
     if (Z.practice && currentPracticeRole() === want) return play(lesson);
-    try { localStorage.setItem(AUTO, id); localStorage.setItem('zuri_practice_role', want); } catch (e) { /* storage blocked */ }
+    try { localStorage.setItem(AUTO, id); localStorage.setItem('zuri_practice_role', want); if (Z.training) localStorage.setItem('zuri_from_training', '1'); else localStorage.removeItem('zuri_from_training'); } catch (e) { /* storage blocked */ }
     location.href = location.pathname + '?practice#learn';
     if (Z.practice) location.reload();
   }
@@ -331,7 +343,7 @@
       <h2>🎓 Learn Zuri</h2>
       <div class="card" style="border-left:4px solid var(--accent)">
         <b>Short talking videos that play on the real screens.</b>
-        <p class="hint">New here? Start with <b>⭐ What Zuri is</b>. Turn your sound on. Each one is 2–5 minutes and plays in <b>practice</b>, with pretend customers — so nothing real changes. After each video, try it yourself.</p>
+        <p class="hint">New here? Start with <b>⭐ How to test</b>, then <b>⭐ What Zuri is</b>. Turn your sound on. Each one is 2–5 minutes and plays in <b>practice</b>, with pretend customers — so nothing real changes. After each video, try it yourself.</p>
         <div class="row"><span class="pill ${n === LESSONS.length ? 'ok' : 'brand'}">${n} of ${LESSONS.length} watched</span>
           ${window.speechSynthesis ? '<button class="btn sec small" id="ln-voice">🔊 Choose the voice</button>' : ''}
           ${Z.practice ? '<span class="pill warn">You are in practice</span>' : '<a class="btn sec small" href="?practice">Open practice without a video</a>'}</div>
@@ -343,7 +355,7 @@
           <button class="btn small" data-learn="${l.id}">${done[l.id] ? 'Watch again' : '▶ Watch'}</button></div>`).join('')}</div>`;
       }).join('')}
       <h3>Print & keep</h3>
-      <div class="card list">${[['field', '🛠️ Field tech quick card'], ['callcenter', '📞 Call center quick card'], ['finance', '💰 Finance quick card'], ['partners', '⭐ Partners quick card'], ['trainer', '🧑‍🏫 Trainer\'s guide: running a training day']].map(([k, t]) =>
+      <div class="card list">${[['field', '🛠️ Field tech quick card'], ['callcenter', '📞 Call center quick card'], ['finance', '💰 Finance quick card'], ['partners', '⭐ Partners quick card'], ['trainer', '🧑‍🏫 Trainer\'s guide: running a training day'], ['testers', '🧪 Tester checklist (printable)']].map(([k, t]) =>
         `<a class="item" href="guides/${k}.html" target="_blank" rel="noopener"><div class="grow"><div class="t">${t}</div><div class="m">One page · print it or keep it on your phone</div></div><span>›</span></a>`).join('')}</div>`;
     Z.$$('[data-learn]', el).forEach((b) => (b.onclick = () => start(b.dataset.learn)));
     const vb = Z.$('#ln-voice', el); if (vb) vb.onclick = chooseVoice;
