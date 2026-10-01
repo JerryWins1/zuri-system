@@ -232,24 +232,26 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=24"></script>
+<script src="js/config.js?v=25"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=24"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=25"><\/script>');
 </script>
-<script src="js/app.js?v=24"></script>
-<script src="js/home.js?v=24"></script>
-<script src="js/tasks.js?v=24"></script>
-<script src="js/jobs.js?v=24"></script>
-<script src="js/customers.js?v=24"></script>
-<script src="js/money.js?v=24"></script>
-<script src="js/statements.js?v=24"></script>
-<script src="js/imports.js?v=24"></script>
-<script src="js/admin.js?v=24"></script>
-<script src="js/training.js?v=24"></script>
+<script src="js/app.js?v=25"></script>
+<script src="js/home.js?v=25"></script>
+<script src="js/tasks.js?v=25"></script>
+<script src="js/jobs.js?v=25"></script>
+<script src="js/customers.js?v=25"></script>
+<script src="js/money.js?v=25"></script>
+<script src="js/statements.js?v=25"></script>
+<script src="js/imports.js?v=25"></script>
+<script src="js/admin.js?v=25"></script>
+<script src="js/checklist_data.js?v=25"></script>
+<script src="js/testing.js?v=25"></script>
+<script src="js/training.js?v=25"></script>
 <script>Z.start();</script>
 </body>
 </html>
