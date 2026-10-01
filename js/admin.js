@@ -7,10 +7,13 @@
 
   Z.routes.admin = async (args, el) => {
     const sub = SUBS.some(([k]) => k === args[0]) ? args[0] : 'people';
-    el.innerHTML = `<h2>Admin</h2><div class="subtabs">${SUBS.map(([k, t]) => `<a href="#admin/${k}" class="${k === sub ? 'on' : ''}">${t}</a>`).join('')}</div><div id="a-body"><div class="loading">Loading…</div></div>`;
+    const subs = SUBS.filter(([k]) => k !== 'staff' || Z.isFinance());
+    el.innerHTML = `<h2>Admin</h2><div class="subtabs">${subs.map(([k, t]) => `<a href="#admin/${k}" class="${k === sub ? 'on' : ''}">${t}</a>`).join('')}</div><div id="a-body"><div class="loading">Loading…</div></div>`;
     await VIEWS[sub](Z.$('#a-body', el));
   };
   const VIEWS = {};
+  // Other files (staffpay.js) add their own Admin tabs here.
+  Z.adminSubs = SUBS; Z.adminViews = VIEWS;
 
   VIEWS.people = async (el) => {
     const people = must(await Z.sb.from('profiles').select('*').order('active').order('full_name'));
