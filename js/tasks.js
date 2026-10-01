@@ -76,7 +76,7 @@
     const [pLabel, pCls] = PRI[t.priority];
     const href = linkHref(t);
     return `<div class="item" data-id="${t.id}" style="align-items:flex-start;flex-wrap:wrap">
-      <input type="checkbox" class="tk-done" ${t.status === 'done' ? 'checked' : ''} ${canTick(t) ? '' : 'disabled title="Only the person or group it\'s for can tick this"'} style="margin-top:4px">
+      <input type="checkbox" class="tk-done" aria-label="Done: ${Z.esc(t.title)}" value="${Z.esc(t.title)}" ${t.status === 'done' ? 'checked' : ''} ${canTick(t) ? '' : 'disabled title="Only the person or group it\'s for can tick this"'} style="margin-top:4px">
       <div class="grow" style="min-width:220px">
         <div class="t" style="${t.status === 'done' ? 'text-decoration:line-through;opacity:.6' : ''}">${t.kind === 'escalation' ? '⏫ ' : ''}${Z.esc(t.title)}${t._local ? ' <span class="m">⏳ not sent</span>' : ''}</div>
         <div class="m">${pLabel ? `<span class="pill ${pCls}">${pLabel}</span> ` : ''}${Z.esc(who(t))}${t.source === 'agent' ? ' · 🤖 Zuri manager' : t.created_by ? ' · from ' + Z.esc(Z.personName(t.created_by) || 'someone') : ''}${t.due_date ? ' · due ' + Z.day(t.due_date) : ''}${t.visibility === 'finance' ? ' · 🔒 finance' : ''}</div>
@@ -126,7 +126,7 @@
     // New people see the training videos first, until they've watched one or closed this.
     const learnNudge = !Z.get('learn_hide', false) && !Object.keys(Z.get('learn_done', {})).length;
     el.innerHTML = `${offlineNote(all)}
-      ${learnNudge ? `<div class="card row" id="tk-learn" style="border-left:4px solid var(--accent)"><span style="font-size:26px">🎓</span><div class="grow"><b>New to Zuri?</b><div class="hint" style="margin:0">Watch the 2-minute videos for your job.</div></div><a class="btn small" href="#learn">Watch</a><button class="btn sec small" id="tk-learn-x" aria-label="Hide">✕</button></div>` : ''}
+      ${learnNudge ? `<div class="card row" id="tk-learn" style="border-left:4px solid var(--accent)"><span style="font-size:26px">🎓</span><div class="grow"><b>New to Zuri?</b><div class="hint" style="margin:0">Start with the 5-minute tour, then the videos for your job.</div></div><button class="btn small" onclick="Z.learn('tour')">▶ Watch</button><button class="btn sec small" id="tk-learn-x" aria-label="Hide">✕</button></div>` : ''}
       <p class="hint" style="margin-top:0">Hi ${Z.esc(Z.me.full_name.split(' ')[0])} — ${mine.length ? `${mine.length} thing${mine.length > 1 ? 's' : ''} for you. Tick them off as you go; add a note if you're stuck.` : 'nothing on your list right now. 🎉'}</p>
       ${now.length ? `<h3>Today</h3><div class="card list">${now.map(card).join('')}</div>` : ''}
       ${later.length ? `<h3>When you can</h3><div class="card list">${later.map(card).join('')}</div>` : ''}`;
