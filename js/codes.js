@@ -1,4 +1,4 @@
-// Zuri System · Admin → Access codes: make, watch and revoke invite codes · v1 · 2026-10-01
+// Zuri System · Admin → Access codes: make, watch and revoke invite codes · v2 · 2026-10-01
 // Codes live on the training database, so this page works on the training copy (partners only).
 (function () {
   const Z = window.Z;
@@ -39,6 +39,6 @@
     Z.$$('[data-revoke]', el).forEach((b) => (b.onclick = () => { if (confirm('Switch off ' + b.dataset.revoke + '? Those phones stop next time they open Zuri.')) upd(b.dataset.revoke, { active: false }, 'Revoked.'); }));
     Z.$$('[data-restore]', el).forEach((b) => (b.onclick = () => { const u = new Date(); u.setDate(u.getDate() + 30); upd(b.dataset.restore, { active: true, expires_at: Z.ymd(u) }, 'Switched on for 30 days.'); }));
     Z.$$('[data-extend]', el).forEach((b) => (b.onclick = () => { const c = codes.find((x) => x.code === b.dataset.extend); const u = new Date(c.expires_at + 'T12:00:00'); u.setDate(u.getDate() + 30); upd(c.code, { expires_at: Z.ymd(u) }, 'Extended to ' + Z.day(Z.ymd(u)) + '.'); }));
-    Z.$$('[data-share]', el).forEach((b) => (b.onclick = () => navigator.clipboard.writeText(`Your Zuri invite code is ${b.dataset.share} — type it when Zuri asks. Testers' List: https://jerrywins1.github.io/zuri-system/testers/`).then(() => Z.toast('Copied — paste it into WhatsApp.'), () => Z.toast(b.dataset.share))));
+    Z.$$('[data-share]', el).forEach((b) => (b.onclick = () => navigator.clipboard.writeText(`Karibu to Zuri! Tap this link — your invite code ${b.dataset.share} is already inside it: https://jerrywins1.github.io/zuri-system/testers/?code=${b.dataset.share}`).then(() => Z.toast('Copied — paste it into WhatsApp.'), () => Z.toast(b.dataset.share))));
   };
 })();
