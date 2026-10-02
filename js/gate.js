@@ -1,4 +1,5 @@
-// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v1 · 2026-10-01
+// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v2 · 2026-10-01
+// v2: the code can ride in the link (…/testers/?code=ZURI-TEST) so testers just tap — no typing.
 // Codes live on the training database (Admin → Access codes). This phone remembers its code and re-checks it once a day,
 // so weak signal doesn't lock anyone out. The real app keeps its ordinary login; this is for everything without one.
 (function () {
@@ -27,6 +28,20 @@
 
   if (!ALLOWED.includes(location.hostname)) { block('This copy of Zuri is not allowed to run here.', false); return; }
 
+  // a link with ?code=XXXX carries the invite: check it, remember it, then take it out of the address bar
+  const linked = (new URLSearchParams(location.search).get('code') || '').trim().toUpperCase();
+  if (linked) {
+    try { const u = new URL(location.href); u.searchParams.delete('code'); history.replaceState(null, '', u.pathname + (u.search.replace(/=(&|$)/g, '$1')) + u.hash); } catch (e) {}
+    const had = get();
+    if (!had || had.code !== linked) {
+      ask(linked).then((j) => { if (j.ok) { put({ code: linked, until: j.until, label: j.label, checked: today() }); resolve(true); } else if (had && had.code) { start(); } else block(WORDS[j.reason] || 'This code does not work.', true); })
+        .catch(() => start());
+      return;
+    }
+  }
+  start();
+
+  function start() {
   const g = get();
   const fresh = g && g.code && g.checked === today() && g.until >= today();
   if (fresh) { resolve(true); return; }
@@ -37,6 +52,7 @@
     return;
   }
   block(null, true);
+  }
 
   function block(msg, canEnter) {
     document.addEventListener('DOMContentLoaded', () => draw(msg, canEnter));
