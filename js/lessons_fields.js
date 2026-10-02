@@ -72,7 +72,7 @@
       { go: 'customers', el: '#c-q', say: 'Chapter five: Customers. Search by name, phone or account number.' },
       { el: '#c-st', say: 'Filter by status: active, lead, suspended, disconnected, or any.' },
       { el: '#view .list .item', say: 'A customer row: name, phone, account, package, area, landmark, and a warning if there is no map pin. Fifty per page.' },
-      { el: 'a[href="#customers/map"]', say: 'Map shows every customer with a pin, green if paid up, red if they ran out, for the area chosen at the top. New customer adds one by hand; most come in from the billing website.' },
+      { el: 'a[href="#customers/map"]', say: 'Map shows every customer with a pin, green if paid up, red if they ran out, for the area chosen at the top, plus the office, cabinets and towers as square icons. Tap a customer to see how far its nearest hub is. New customer adds one by hand; most come in from the billing website.' },
       { el: '#view .list .item', say: 'Open one.', do: tap('#view .list .item') },
       { el: 'h2', say: 'The customer: name and status, area and landmark.' },
       { el: '#cp-pin', say: 'Call, Map, Send pin, Drop pin here, New job for this customer, and Edit.' },
@@ -166,6 +166,9 @@
       { go: 'admin/visibility', el: '#a-body', say: 'Who sees what: for each customer field, which jobs may see it. Untick ID numbers for field techs, for example.' },
       { go: 'admin/fields', el: '#af input[name=label]', say: 'Custom fields: add your own customer field. A name, a kind: text, number, date, yes or no, or pick from a list, and the choices.' },
       { go: 'admin/areas', el: '#aa input[name=code]', say: 'Areas: each area\'s name, its M-Pesa float target, and whether it is in use. Add Zuri C here when it opens.' },
+      { go: 'admin/company', el: '#co', say: 'Company and hubs. The company card: the name, phones, the M-Pesa Paybill and the KRA PIN. The reminder texts to customers use the name and the Paybill from here.' },
+      { el: '#a-body .list', say: 'Hubs: the office, the OLT room, splitter cabinets, towers and the store. They show on the customer map for everyone.' },
+      { el: '#hb-here', say: 'To add one, stand at the place and tap Where I\'m standing, or tap the map. Give it a name and an area, and save.' },
     ]),
     C('fields-me', '18 · Me', 1, null, [
       { go: 'me', el: '#view .card', say: 'Chapter eighteen: Me. Your job and area, and whether you are online.' },
