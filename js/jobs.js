@@ -258,7 +258,7 @@
           </div>`
         : `<b>No customer linked</b><div class="hint">${Z.esc(Z.areaName(t.area))}</div>`}
         <div class="row" style="margin-top:10px">
-          ${lat != null ? `<a class="btn sec" href="${mapLink(lat, lng)}" target="_blank" rel="noopener">🗺️ Open map</a><button class="btn sec" id="jd-send">📤 Send pin</button>` : `<span class="hint">No map pin yet.</span>${c && c.phone ? `<a class="btn sec" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, `Hello ${c.full_name.split(' ')[0]}, this is Zuri Fiber. So our technician can find you, please send us your location: in WhatsApp tap 📎 → Location → Send your current location. Thank you!`))}">💬 Ask customer for location</a>` : ''}`}
+          ${lat != null ? `<a class="btn sec" href="${mapLink(lat, lng)}" target="_blank" rel="noopener">🗺️ Open map</a><button class="btn sec" id="jd-send">📤 Send pin</button>` : `<span class="hint">No map pin yet.</span>${c && c.phone ? `<a class="btn sec" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, `Hello ${c.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. So our technician can find you, please send us your location: in WhatsApp tap 📎 → Location → Send your current location. Thank you!`))}">💬 Ask customer for location</a>` : ''}`}
           ${canWork ? `<button class="btn sec" id="jd-pin">📍 ${lat != null ? 'Move pin to here' : 'Drop pin here'}</button>` : ''}
         </div>
       </div>
@@ -273,7 +273,7 @@
           <button type="button" data-out="paid">✅ Says paid</button>
           <button type="button" data-out="stop">✋ Wants to stop</button>
         </div>
-        ${c && c.phone ? (() => { const msg = `Hello ${c.full_name.split(' ')[0]}, this is Zuri Fiber. Your internet package ${c.paid_until && new Date(c.paid_until) < new Date() ? 'ran out on ' + Z.day(c.paid_until.slice(0, 10)) : 'is due'}.${c.monthly_rate ? ' To stay connected please pay KES ' + Z.fmt(c.monthly_rate) : ' Please renew'} by M-Pesa${c.account_no ? ' (account ' + c.account_no + ')' : ''}. Thank you!`;
+        ${c && c.phone ? (() => { const msg = `Hello ${c.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. Your internet package ${c.paid_until && new Date(c.paid_until) < new Date() ? 'ran out on ' + Z.day(c.paid_until.slice(0, 10)) : 'is due'}.${c.monthly_rate ? ' To stay connected please pay KES ' + Z.fmt(c.monthly_rate) : ' Please renew'}${Z.payLine && Z.payLine(c.account_no) ? '.' + Z.payLine(c.account_no) : ' by M-Pesa' + (c.account_no ? ' (account ' + c.account_no + ')' : '') + '.'} Thank you!`;
           return `<div class="row" style="margin-top:10px"><a class="btn sec" id="jd-sms" href="${Z.esc(Z.smsHref(c.phone, msg))}">📩 Text a reminder</a><a class="btn sec" id="jd-wa" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, msg))}">💬 WhatsApp it</a></div><p class="hint" style="margin:6px 0 0">The message is written for you — just press send. Text works for customers without WhatsApp.</p>`; })() : ''}
       </div>` : ''}
       ${Z.isOffice() ? `
