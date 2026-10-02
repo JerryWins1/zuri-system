@@ -428,7 +428,7 @@
       <p class="hint">📞 call · 📩 text · 💬 WhatsApp — the reminder is already written; just press send. "Usual day" is learned from each customer's last 6 months of payments. Import the billing websites' exports to keep it accurate.</p>
       <div class="card list">${list.length ? list.map((r) => {
         const owe = Math.max(0, Number(r.monthly_rate || 0) - Number(r.paid_this_month || 0));
-        const msg = `Hello ${r.full_name.split(' ')[0]}, this is Zuri Fiber. A friendly reminder that your internet payment${r.monthly_rate ? ' of KES ' + Z.fmt(owe || r.monthly_rate) : ''} for ${mName} is due. Thank you!`;
+        const msg = `Hello ${r.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. A friendly reminder that your internet payment${r.monthly_rate ? ' of KES ' + Z.fmt(owe || r.monthly_rate) : ''} for ${mName} is due.${Z.payLine ? Z.payLine(r.account_no) : ''} Thank you!`;
         return `<div class="item"><div class="grow"><a class="t" href="#customers/${r.customer_id}" style="text-decoration:none;color:inherit">${Z.esc(r.full_name)}</a>
           <div class="m">${Z.esc(Z.areaName(r.area))}${r.monthly_rate != null ? ' · rate ' + Z.fmt(r.monthly_rate) : ''}${Number(r.paid_this_month) ? ' · paid ' + Z.fmt(r.paid_this_month) : ''}${r.paid_until ? (new Date(r.paid_until) < new Date() ? ' · ran out ' : ' · renews ') + Z.day(r.paid_until) : r.usual_day ? ' · usually pays ~' + ord(r.usual_day) : ''}${r.reliability != null ? ' · pays ' + Math.round(r.reliability * 100) + '% of months' : ''}</div></div>
           <span class="pill ${STATE[r.state][1]}">${STATE[r.state][0]}</span>
