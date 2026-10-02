@@ -197,11 +197,21 @@
     });
     D.v_books.push({ month: months[3], area: 'A', flow: 'unsorted', category: null, money_in: 0, money_out: 0, lines: 12 });
     D.billing_snapshots = months.slice(0, 3).map((mo, i) => ({ period: mo.slice(0, 7), fixed: 760000 + i * 12000, hotspot: 140000 + i * 4000 }));
+    // company card + hubs (pretend places around Maai Mahiu town)
+    D.settings = [{ key: 'company_profile', value: { name: 'Zuri Fiber', town: 'Maai Mahiu', phone: '0700 123 456', whatsapp: '0700 123 456', email: 'info@zurifiber.example', address: 'Main road, next to the stage', paybill: '4012345', till: null, kra_pin: 'P051234567X', website: null } }];
+    D.hubs = [
+      { id: 'h1', name: 'Main office', kind: 'office', area: null, lat: -0.9862, lng: 36.5885, landmark: 'Main road, next to the stage', note: 'Keys with Kelvin', active: true, created_at: tsOff(-90), updated_at: tsOff(-90) },
+      { id: 'h2', name: 'OLT room', kind: 'olt', area: 'A', lat: -0.9878, lng: 36.5871, landmark: 'Behind the office', note: 'Battery backup 4 hours', active: true, created_at: tsOff(-90), updated_at: tsOff(-90) },
+      { id: 'h3', name: 'Cabinet A-1', kind: 'hub', area: 'A', lat: -0.9915, lng: 36.5810, landmark: 'Near the market', note: null, active: true, created_at: tsOff(-60), updated_at: tsOff(-60) },
+      { id: 'h4', name: 'Cabinet B-1', kind: 'hub', area: 'B', lat: -0.9790, lng: 36.5985, landmark: 'Railway crossing', note: null, active: true, created_at: tsOff(-40), updated_at: tsOff(-40) },
+      { id: 'h5', name: 'Hill tower', kind: 'tower', area: 'B', lat: -0.9745, lng: 36.6040, landmark: 'On the escarpment road', note: 'Wireless link to B', active: true, created_at: tsOff(-30), updated_at: tsOff(-30) },
+    ];
     D.v_people = D.profiles.map(({ id, full_name, role, dept, area, active, phone }) => ({ id, full_name, role, dept, area, active, phone }));
     D._ticket_no = no;
     if (mode === 'empty') {
       Object.assign(D, { v_customers: [], payments: [], tickets: [], ticket_events: [], ticket_parts: [], tasks: [], task_comments: [], agent_runs: [], nudges: [],
-        bills: [], cash_counts: [], expenses: [], cash_in: [], money_accounts: [], statement_lines: [], sort_rules: [], v_books: [], billing_snapshots: [], custom_field_defs: [], staff: [], pay_items: [] });
+        bills: [], cash_counts: [], expenses: [], cash_in: [], money_accounts: [], statement_lines: [], sort_rules: [], v_books: [], billing_snapshots: [], custom_field_defs: [], staff: [], pay_items: [], hubs: [] });
+      D.settings = [{ key: 'company_profile', value: { name: 'Zuri Fiber', town: 'Maai Mahiu' } }];
       D.profiles = D.profiles.map((p) => ({ ...p, active: p.role === 'admin' })); // only the partner is switched on; you switch the others on
       D._ticket_no = 100;
     }
@@ -212,6 +222,7 @@
   try { D = JSON.parse(localStorage.getItem(KEY)); } catch (e) { D = null; }
   const wantMode = (() => { try { return localStorage.getItem('zuri_practice_mode') || 'running'; } catch (e) { return 'running'; } })();
   if (!D || !D.v_customers || (D._mode || 'running') !== wantMode) D = build(wantMode);
+  if (!D.hubs) { const f = build(D._mode); D.hubs = f.hubs; D.settings = f.settings; } // phones that started practice before hubs existed
   let saveT;
   const save = () => { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) { /* full: practice still works this visit */ } }, 150); };
   save();
@@ -268,7 +279,7 @@
     ticket_events: () => ({ at: new Date().toISOString() }), ticket_parts: () => ({ added_at: new Date().toISOString(), added_by: meId() }),
     cash_counts: () => ({ created_at: new Date().toISOString() }), money_accounts: () => ({ active: true }),
     bills: () => ({ paid_amount: 0, paid: false }),
-    access_codes: () => ({ active: true, kind: 'tester', max_uses: 10 }), staff: () => ({ active: true, pay_type: 'monthly', salary: 0, pay_day: 28 }),
+    access_codes: () => ({ active: true, kind: 'tester', max_uses: 10 }), hubs: () => ({ active: true, kind: 'hub' }), staff: () => ({ active: true, pay_type: 'monthly', salary: 0, pay_day: 28 }),
   };
   function afterWrite(table, row, before) {
     if (table === 'tickets') {
