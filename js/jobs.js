@@ -95,7 +95,7 @@
       <div class="subtabs">${[['active', 'To do'], ['done', 'Done'], ['all', 'All']].map(([k, t]) => `<a href="#" data-show="${k}" class="${f.show === k ? 'on' : ''}">${t}</a>`).join('')}</div>
       <div class="row" style="margin-bottom:10px">
         <input type="search" id="j-q" placeholder="🔎 Name, phone or job #" value="${Z.esc(f.q)}" style="flex:1;min-width:160px">
-        ${Z.isField() ? '' : `<select id="j-tech" style="width:auto"><option value="">All techs</option>${Z.opts(techOpts, f.tech)}</select>`}
+        ${Z.isField() ? '' : `<select id="j-tech" aria-label="Show jobs for one technician" style="width:auto"><option value="">All techs</option>${Z.opts(techOpts, f.tech)}</select>`}
       </div>
       <div id="j-list"></div>
       ${Z.isOffice() ? `<div class="card" style="margin-top:12px"><div class="row"><div class="grow"><b>💳 Payment follow-ups</b><div class="hint" style="margin:2px 0 0">Open by themselves every morning for customers whose time ran out, and close when they renew.</div></div><button class="btn sec small" id="j-follow">Check now</button></div></div>` : ''}`;
