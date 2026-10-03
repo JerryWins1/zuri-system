@@ -24,10 +24,10 @@
       <div class="card list">${people.map((p) => `
         <form class="item" data-id="${p.id}" style="flex-wrap:wrap">
           <div class="grow" style="min-width:180px"><div class="t">${Z.esc(p.full_name)}${p.id === Z.me.id ? ' (you)' : ''}</div><div class="m">${Z.esc(p.phone || '')} · joined ${Z.day(p.created_at)}</div></div>
-          <select name="role" style="width:auto">${Z.opts(ROLES, p.role)}</select>
-          <select name="dept" style="width:auto" ${p.role === 'internal' ? '' : 'hidden'}>${Z.opts([['', 'No dept'], ['finance', 'Finance'], ['technical', 'Technical']], p.dept || '')}</select>
-          <select name="area" style="width:auto"><option value="">Any area</option>${Z.opts(Z.ref.areas.map((a) => [a.code, a.name]), p.area || '')}</select>
-          <label class="row" style="margin:0;gap:6px"><input type="checkbox" name="active" ${p.active ? 'checked' : ''}> On</label>
+          <select name="role" aria-label="Role for ${Z.esc(p.full_name)}" style="width:auto">${Z.opts(ROLES, p.role)}</select>
+          <select name="dept" aria-label="Department for ${Z.esc(p.full_name)}" style="width:auto" ${p.role === 'internal' ? '' : 'hidden'}>${Z.opts([['', 'No dept'], ['finance', 'Finance'], ['technical', 'Technical']], p.dept || '')}</select>
+          <select name="area" aria-label="Area for ${Z.esc(p.full_name)}" style="width:auto"><option value="">Any area</option>${Z.opts(Z.ref.areas.map((a) => [a.code, a.name]), p.area || '')}</select>
+          <label class="row" style="margin:0;gap:6px"><input type="checkbox" name="active" aria-label="Switched on: ${Z.esc(p.full_name)}" ${p.active ? 'checked' : ''}> On</label>
           <button class="btn small" type="submit">Save</button>
         </form>`).join('')}</div>
       <p class="hint">Office staff in <b>Finance</b> see all the money screens. Office staff in <b>Technical</b> see jobs and customers but not money. Field techs only see their own jobs.</p>`;
@@ -54,7 +54,7 @@
     el.innerHTML = `
       <p class="hint" style="margin-top:0">Tick what each role can see on a customer. The database enforces this — unticked details never reach that person's phone. Name, area, directions and map pin are always shown so the job can be done. Admins see everything.</p>
       <div class="card scroll-x"><table class="t"><tr><th>Customer detail</th>${roles.map(([, t]) => `<th style="text-align:center">${t}</th>`).join('')}</tr>
-        ${core.concat(custom).map(([k, label]) => `<tr><td>${Z.esc(label)}</td>${roles.map(([r]) => `<td style="text-align:center"><input type="checkbox" data-f="${Z.esc(k)}" data-r="${r}" ${cur(k, r) ? 'checked' : ''}></td>`).join('')}</tr>`).join('')}</table></div>`;
+        ${core.concat(custom).map(([k, label]) => `<tr><td>${Z.esc(label)}</td>${roles.map(([r, rt]) => `<td style="text-align:center"><input type="checkbox" aria-label="${Z.esc(label)} — visible to ${rt}" data-f="${Z.esc(k)}" data-r="${r}" ${cur(k, r) ? 'checked' : ''}></td>`).join('')}</tr>`).join('')}</table></div>`;
     Z.$$('input[data-f]', el).forEach((cb) => (cb.onchange = async () => {
       const { error } = await Z.sb.from('field_visibility').upsert({ entity: 'customer', field: cb.dataset.f, role: cb.dataset.r, can_see: cb.checked });
       if (error) { cb.checked = !cb.checked; return Z.fail(error); }
@@ -72,7 +72,7 @@
       <form class="card" id="af">
         <div class="grid3">
           <div><label>Field name</label><input name="label" required placeholder="e.g. Pole number"></div>
-          <div><label>Kind</label><select name="kind">${Z.opts(kinds)}</select></div>
+          <div><label>Kind</label><select name="kind" aria-label="What kind of detail">${Z.opts(kinds)}</select></div>
           <div><label>Choices (for "pick from a list", comma separated)</label><input name="choices" placeholder="Indoor, Outdoor"></div>
         </div>
         <div style="height:12px"></div><button class="btn" type="submit">Add field</button>
@@ -101,15 +101,15 @@
       <div class="card list">${Z.ref.areas.map((a) => `
         <form class="item" data-code="${a.code}" style="flex-wrap:wrap">
           <b style="width:32px">${Z.esc(a.code)}</b>
-          <input name="name" value="${Z.esc(a.name)}" style="flex:1;min-width:120px">
-          <label class="hint" style="margin:0">M-Pesa float target</label><input name="float_target" inputmode="numeric" value="${Z.esc(a.float_target)}" style="width:110px">
+          <input name="name" aria-label="Name of area ${Z.esc(a.code)}" value="${Z.esc(a.name)}" style="flex:1;min-width:120px">
+          <label class="hint" style="margin:0">M-Pesa float target</label><input name="float_target" aria-label="M-Pesa float target for ${Z.esc(a.name)}" inputmode="numeric" value="${Z.esc(a.float_target)}" style="width:110px">
           <label class="row" style="margin:0;gap:6px"><input type="checkbox" name="active" ${a.active ? 'checked' : ''}> In use</label>
           <button class="btn small" type="submit">Save</button>
         </form>`).join('')}</div>
       <form class="card" id="aa"><div class="grid3">
         <div><label>New area code</label><input name="code" required maxlength="3" placeholder="D" style="text-transform:uppercase"></div>
         <div><label>Name</label><input name="name" required placeholder="Zuri D"></div>
-        <div><label>M-Pesa float target</label><input name="float_target" inputmode="numeric" value="50000"></div>
+        <div><label>M-Pesa float target</label><input name="float_target" aria-label="M-Pesa float target for the new area" inputmode="numeric" value="50000"></div>
       </div><div style="height:12px"></div><button class="btn" type="submit">Add area</button></form>`;
     Z.$$('form[data-code]', el).forEach((f) => (f.onsubmit = async (e) => {
       e.preventDefault();
