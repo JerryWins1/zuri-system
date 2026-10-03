@@ -87,7 +87,7 @@
     ], turn: ['Tick one task as done', 'Write a note on a task', 'Add a task for yourself'] },
 
     { id: 'field-jobs', group: 'Field techs', title: 'Doing a job, start to finish', mins: 3, role: 'field', steps: [
-      { go: 'jobs', el: '#j-list h3', say: 'These are your jobs. Today\'s jobs are at the top. A red dot means urgent. Do those first.' },
+      { pre: async () => { Z.set('jobs_filter', { show: 'active', tech: '', q: '' }); if (location.hash === '#jobs') Z.route(); }, go: 'jobs', el: '#j-list h3', say: 'These are your jobs. Today\'s jobs are at the top. A red dot means urgent. Do those first.' },
       { el: '#j-q', say: 'Looking for one job? Type a name, a phone number or the job number here.', do: async () => { await type('#j-q', 'mwangi')(); await sleep(900); await type('#j-q', '')(); } },
       { el: '#j-list .item', say: 'Tap a job to open it.', do: tap('#j-list .item') },
       { el: 'a[href^="tel:"]', say: 'Here is the customer. Tap Call to phone them before you go.' },
@@ -268,6 +268,7 @@
     while (P && P.token === token && P.i < L.steps.length) {
       const s = L.steps[P.i];
       P.bar.querySelector('.prog i').style.width = Math.round(((P.i + 1) / L.steps.length) * 100) + '%';
+      if (s.pre) await s.pre();
       if (s.go && location.hash !== '#' + s.go) { await go(s.go)(); }
       const el = await waitFor(s.el, window.ZURI_LEARN_FAST ? 3500 : 7000);
       if (!P || P.token !== token) return;
