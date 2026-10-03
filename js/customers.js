@@ -46,7 +46,7 @@
         <div class="row"><a class="btn sec" href="#customers/map">🗺️ Map</a><a class="btn" href="#customers/new">＋ New customer</a></div></div>
       <div class="row" style="margin-bottom:10px">
         <input id="c-q" placeholder="Search name, phone, account" value="${Z.esc(f.q)}" style="flex:1">
-        <select id="c-st" style="width:auto"><option value="">Any status</option>${Z.opts(STATUSES.map(([k, t]) => [k, t.split(' (')[0]]), f.status)}</select>
+        <select id="c-st" aria-label="Show customers with this status" style="width:auto"><option value="">Any status</option>${Z.opts(STATUSES.map(([k, t]) => [k, t.split(' (')[0]]), f.status)}</select>
       </div>
       <div class="card list">${data.length ? data.map((c) => `<a class="item" href="#customers/${c.id}"><div class="grow">
           <div class="t">${Z.esc(c.full_name)}</div>
