@@ -144,7 +144,7 @@
     const people = Z.ref.people.filter((p) => p.active);
     el.innerHTML = `${offlineNote(all)}
       <div class="row" style="margin-bottom:10px">
-        <select id="tk-who" style="flex:1"><option value="">Everyone's tasks</option>
+        <select id="tk-who" aria-label="Show tasks for" style="flex:1"><option value="">Everyone's tasks</option>
           <optgroup label="Groups">${Z.opts(GROUPS.map(([k, t]) => ['g:' + k, t]), f.who)}</optgroup>
           <optgroup label="People">${Z.opts(people.map((p) => [p.id, p.full_name]), f.who)}</optgroup></select>
         <label class="row" style="margin:0;gap:6px"><input type="checkbox" id="tk-showdone" ${f.done ? 'checked' : ''}> show done (7 days)</label>
