@@ -1,4 +1,4 @@
-// Zuri System · Learn: talking training videos that play on the real screens (in practice mode) · v2 · 2026-10-01
+// Zuri System · Learn: talking training videos that play on the real screens (in practice mode) · v3 · 2026-10-05
 // Each "video" is a list of steps: go to a page, light up one thing, say one or two short sentences, maybe tap it.
 // It plays on pretend data, so it can tap real buttons safely. Captions always show, so it works with the sound off.
 (function () {
@@ -245,6 +245,18 @@
       P.paused = !P.paused; e.target.textContent = P.paused ? '▶' : '⏸';
       if (window.speechSynthesis) P.paused ? speechSynthesis.pause() : speechSynthesis.resume();
     };
+    // Opened from a link (a new tab), the phone hasn't been tapped yet, and phones refuse to speak until it has.
+    // So wait for one tap; otherwise the video races by in silence and looks like it "doesn't play" (v3, 5 Oct).
+    const ua = navigator.userActivation;
+    if (ua && !ua.hasBeenActive && !muted() && window.speechSynthesis && !window.ZURI_LEARN_FAST) {
+      const go = Object.assign(document.createElement('button'), { className: 'btn block', textContent: '▶ Tap to start (sound on)' });
+      go.style.cssText = 'margin:8px 0 2px;font-size:18px;min-height:52px';
+      bar.querySelector('.cap').textContent = 'Turn your sound up, then tap the green button.';
+      bar.querySelector('.ctl').before(go);
+      const tok = P.token;
+      go.onclick = () => { go.remove(); try { speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } catch (e) {} if (P && P.token === tok) run(tok); };
+      return;
+    }
     run(P.token);
   }
   function jump(i) { if (!P) return; if (window.speechSynthesis) speechSynthesis.cancel(); P.i = i; P.token = {}; P.paused = false; P.bar.querySelector('[data-a=pause]').textContent = '⏸'; run(P.token); }
