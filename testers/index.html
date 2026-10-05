@@ -34,6 +34,7 @@
   .row.done .chk { background:var(--ok); border-color:var(--ok); } .row.done span.t { text-decoration:line-through; color:var(--faint); }
   .row.cur .chk { border-color:var(--now); } .row.cur span.t { color:var(--now); font-weight:800; }
   .row.skip span.t { color:var(--faint); font-style:italic; } .row span.t { flex:1; } .row .m { font-size:12px; color:var(--faint); white-space:nowrap; }
+  .row .chk { width:30px; height:30px; } .row a.play { flex:none; font-weight:800; font-size:13.5px; color:#fff; background:var(--brand); border-radius:999px; padding:7px 12px; text-decoration:none; min-height:34px; display:inline-flex; align-items:center; }
   label { display:block; font-size:13px; font-weight:700; color:var(--soft); margin:10px 0 4px; }
   input, select { width:100%; font:inherit; font-size:16px; padding:11px 12px; border:1.5px solid var(--line-strong); border-radius:12px; background:var(--surface); color:var(--ink); }
   .seg { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 12px; } .seg button { flex:1 1 45%; font:inherit; font-weight:700; font-size:15px; padding:12px; min-height:48px; border-radius:12px; border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink); cursor:pointer; text-align:left; }
@@ -56,7 +57,10 @@
 <script src="../js/checklist_data.js"></script>
 <script>
 (function () {
-  const VERSION = 'v1.3 · 2026-10-01';
+  const VERSION = 'v1.4 · 2026-10-05';
+  // v1.4: tapping a row no longer ticks it (Veronica tapped “▶ How to test” to play it and it ticked instead).
+  //       The box ticks; the words open that step; video rows get their own ▶ Play button.
+  let pick = null;
   const C = window.ZURI_CONFIG.training;                                   // the Testers' List always talks to the training copy
   const sb = supabase.createClient(C.supabaseUrl, C.supabaseKey, { auth: { persistSession: false } });
   const APP = 'https://jerrywins1.github.io/zuri-system/';
@@ -170,8 +174,8 @@
     const steps = planned(stepsFor(me.role));
     const done = steps.filter((s) => state[s.id] === 'done').length;
     const open = steps.filter((s) => !state[s.id]);
-    const cur = open[0];
-    const next = open[1];
+    const cur = (pick && steps.find((s) => s.id === pick)) || open[0];
+    const next = open.filter((s) => s !== cur)[0];
     $('#prog').hidden = false; $('#prog').textContent = `${done} / ${steps.length}`;
     $('#sub').textContent = `${me.name} · ${ROLES[me.role]}`;
     const secs = [...new Set(steps.map((s) => s.sec))];
@@ -188,15 +192,19 @@
         ${next ? `<div class="next"><b>Then</b>${esc(next.t)}</div>` : ''}`
       : `<div class="win"><div style="font-size:40px">🎉</div><h2>You finished the list, ${esc(me.name.split(' ')[0])}!</h2><p>Asante sana. Keep using the training copy as a real day — and keep the notes coming.</p></div>`}
       ${secs.map((sec) => { const ss = steps.filter((s) => s.sec === sec); const d = ss.filter((s) => state[s.id] === 'done').length;
-        return `<h3><span>${esc(sec)}</span><span>${d} / ${ss.length}</span></h3><div class="card">${ss.map((s) => `<div class="row ${state[s.id] === 'done' ? 'done' : state[s.id] === 'skip' ? 'skip' : s === cur ? 'cur' : ''}" data-id="${s.id}"><div class="chk">${state[s.id] === 'done' ? '✓' : ''}</div><span class="t">${esc(s.t)}</span></div>`).join('')}</div>`; }).join('')}
+        return `<h3><span>${esc(sec)}</span><span>${d} / ${ss.length}</span></h3><div class="card">${ss.map((s) => `<div class="row ${state[s.id] === 'done' ? 'done' : state[s.id] === 'skip' ? 'skip' : s === cur ? 'cur' : ''}" data-id="${s.id}"><div class="chk" role="checkbox" aria-checked="${state[s.id] === 'done'}" aria-label="Tick: ${esc(s.t.replace(/^▶ /, ''))}">${state[s.id] === 'done' ? '✓' : ''}</div><span class="t">${esc(s.t.replace(/^▶ /, ''))}</span>${s.sec === 'Watch' ? `<a class="play" href="${esc(s.links[0][1])}" target="_blank" rel="noopener">▶ Play</a>` : ''}</div>`).join('')}</div>`; }).join('')}
       <p class="foot">Zuri Testers' List ${VERSION} · <button id="b-videos">🎓 The videos again</button> <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button> <a href="../guides/welcome.html" target="_blank" rel="noopener">Read the welcome page</a></p>`;
     if (cur) {
-      $('#b-done').onclick = async () => { state[cur.id] = 'done'; set('state', state); const ok = await log('done', cur.id); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); render(); };
-      $('#b-skip').onclick = () => { state[cur.id] = 'skip'; set('state', state); render(); };
+      $('#b-done').onclick = async () => { pick = null; state[cur.id] = 'done'; set('state', state); const ok = await log('done', cur.id); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); render(); };
+      $('#b-skip').onclick = () => { pick = null; state[cur.id] = 'skip'; set('state', state); render(); };
       $('#b-tell').onclick = async () => { const n = $('#tell').value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', cur.id, n); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
     }
-    $$('.row[data-id]').forEach((r) => (r.onclick = async () => {
+    $$('.row[data-id]').forEach((r) => (r.onclick = async (e) => {
       const id = r.dataset.id;
+      if (e.target.closest('a.play')) return;                       // ▶ Play opens the video; it doesn't tick
+      if (!e.target.closest('.chk')) {                                // the words: open this step at the top
+        pick = id; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return;
+      }
       if (state[id] === 'done') { delete state[id]; await log('undone', id); } else if (state[id] === 'skip') { delete state[id]; } else { state[id] = 'done'; await log('done', id); }
       set('state', state); render();
     }));
