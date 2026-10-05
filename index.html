@@ -243,33 +243,56 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=44"></script>
-<script src="js/gate.js?v=44"></script>
+<script src="js/config.js?v=45"></script>
+<script src="js/gate.js?v=45"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=44"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=45"><\/script>');
 </script>
-<script src="js/app.js?v=44"></script>
-<script src="js/home.js?v=44"></script>
-<script src="js/tasks.js?v=44"></script>
-<script src="js/jobs.js?v=44"></script>
-<script src="js/customers.js?v=44"></script>
-<script src="js/map.js?v=44"></script>
-<script src="js/money.js?v=44"></script>
-<script src="js/statements.js?v=44"></script>
-<script src="js/imports.js?v=44"></script>
-<script src="js/admin.js?v=44"></script>
-<script src="js/staffpay.js?v=44"></script>
-<script src="js/codes.js?v=44"></script>
-<script src="js/company.js?v=44"></script>
-<script src="js/checklist_data.js?v=44"></script>
-<script src="js/testing.js?v=44"></script>
-<script src="js/training.js?v=44"></script>
-<script src="js/lessons_fields.js?v=44"></script>
-<script src="js/lessons_day.js?v=44"></script>
-<script>(window.ZG ? window.ZG.ready : Promise.resolve()).then(() => Z.start());</script>
+<script>
+  // Weak signal can drop one file. Practice can't run without practice.js, so try once more with a fresh address (v2.23, 5 Oct).
+  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=45&retry=' + Date.now() + '"><\/script>');
+</script>
+<script src="js/app.js?v=45"></script>
+<script src="js/home.js?v=45"></script>
+<script src="js/tasks.js?v=45"></script>
+<script src="js/jobs.js?v=45"></script>
+<script src="js/customers.js?v=45"></script>
+<script src="js/map.js?v=45"></script>
+<script src="js/money.js?v=45"></script>
+<script src="js/statements.js?v=45"></script>
+<script src="js/imports.js?v=45"></script>
+<script src="js/admin.js?v=45"></script>
+<script src="js/staffpay.js?v=45"></script>
+<script src="js/codes.js?v=45"></script>
+<script src="js/company.js?v=45"></script>
+<script src="js/checklist_data.js?v=45"></script>
+<script src="js/testing.js?v=45"></script>
+<script src="js/training.js?v=45"></script>
+<script src="js/lessons_fields.js?v=45"></script>
+<script src="js/lessons_day.js?v=45"></script>
+<script>
+  // If a file didn't arrive (weak signal, power cut), say so kindly with one button, instead of a confusing error.
+  (function () {
+    const missing = !window.Z || !window.supabase || (window.ZURI_PRACTICE && !window.ZP);
+    if (missing) {
+      const w = document.createElement('div');
+      w.id = 'zboot';
+      w.style.cssText = 'position:fixed;inset:0;z-index:9500;background:#F4F6F5;color:#152322;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;font:16px/1.45 -apple-system,"Segoe UI",Roboto,system-ui,sans-serif';
+      w.innerHTML = '<div style="width:100%;max-width:420px;background:#fff;border:1px solid #D8DFDC;border-radius:16px;padding:18px">'
+        + '<div style="font-size:24px;font-weight:800;color:#0F6E5C;margin-bottom:6px">Zuri didn\'t finish loading</div>'
+        + '<p style="margin:0 0 14px;color:#3F4F4C">The signal dropped while Zuri was opening, so part of it is missing. Nothing is lost. Move to better signal (or wait for the power to come back) and tap the button.</p>'
+        + '<button onclick="location.reload()" style="width:100%;font:inherit;font-weight:800;font-size:17px;padding:14px;border:0;border-radius:10px;background:#0F6E5C;color:#fff;min-height:50px;cursor:pointer">Try again</button>'
+        + '<p style="margin:12px 0 0;font-size:13px;color:#56645F">Still stuck after two tries? Tell Jerry on WhatsApp: "Zuri didn\'t finish loading".</p></div>';
+      const put = () => document.body.appendChild(w);
+      if (document.body) put(); else document.addEventListener('DOMContentLoaded', put);
+      return;
+    }
+    (window.ZG ? window.ZG.ready : Promise.resolve()).then(() => Z.start());
+  })();
+</script>
 </body>
 </html>
