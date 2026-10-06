@@ -57,7 +57,7 @@
 <script src="../js/checklist_data.js"></script>
 <script>
 (function () {
-  const VERSION = 'v1.4 · 2026-10-05';
+  const VERSION = 'v1.5 · 2026-10-06';
   // v1.4: tapping a row no longer ticks it (Veronica tapped “▶ How to test” to play it and it ticked instead).
   //       The box ticks; the words open that step; video rows get their own ▶ Play button.
   let pick = null;
@@ -72,8 +72,12 @@
   const $ = (s, r = document) => r.querySelector(s); const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const ROLES = { field: '🛠️ Field tech', callcenter: '📞 Call center', finance: '💰 Finance (office)', admin: '⭐ Partner / manager' };
   const me = get('me', null);                                              // { name, role, device }
-  const practice = (role, play) => APP + '?practice&role=' + role + (play ? '&play=' + play : '') + '#learn';
-  const fsLink = (role) => FS + encodeURIComponent(APP + '?practice&role=' + role);
+  // v1.5 (6 Oct): every practice link carries the invite code, so a link that opens in another browser
+  // (WhatsApp's own browser → Chrome, phone → computer) doesn't stop at the code screen (Emmanuel: "trouble logging in").
+  const CODE = () => { try { return (window.ZG && ZG.code()) || ''; } catch (e) { return ''; } };
+  const withCode = (q) => (CODE() ? q + '&code=' + encodeURIComponent(CODE()) : q);
+  const practice = (role, play) => APP + withCode('?practice&role=' + role + (play ? '&play=' + play : '')) + '#learn';
+  const fsLink = (role) => FS + encodeURIComponent(APP + withCode('?practice&role=' + role));
 
   // ---------- the steps, in order, for one job ----------
   function stepsFor(role) {
@@ -82,7 +86,7 @@
       vid('howtest', 'How to test Zuri', 2, 'What we need from you, and the three ways to tell us.'),
       vid('tour', 'What Zuri is — the whole system', 5, 'Who it is for, and one job followed from the call to the fix.', 'admin'),
       vid('day-1', 'A day in the life (5 chapters)', 17, 'One working day through Kelvin, Mary, Peter and the partners. It switches person by itself; just watch.', 'finance'),
-      { id: 's-install', sec: 'Get ready', t: '📱 Put Zuri on your phone', why: 'Opened from an icon, Zuri works like an app, even with weak signal.', how: ['Open the practice link below in Chrome.', 'Tap ⋮ (top right) → Add to Home screen → Add.', 'From now on, open Zuri from the icon.'], links: [['🎓 Open practice', APP + '?practice']] },
+      { id: 's-install', sec: 'Get ready', t: '📱 Put Zuri on your phone', why: 'Opened from an icon, Zuri works like an app, even with weak signal.', how: ['Open the practice link below in Chrome.', 'Tap ⋮ (top right) → Add to Home screen → Add.', 'From now on, open Zuri from the icon.'], links: [['🎓 Open practice', APP + withCode('?practice')]] },
       { id: 's-pick', sec: 'Get ready', t: '🙂 Open practice and pick your job', why: 'Practice is pretend customers and pretend money, on your phone only. Nothing you do is real.', how: ['Tap 🏢 Company already running.', 'Pick ' + ROLES[role] + '.', 'Look around for a minute, then come back here.'], links: [['🎓 Open practice as ' + ROLES[role].split(' ')[1], practice(role)]] },
     ];
     const mine = { field: ['start', 'tasks', 'field-jobs', 'field-extras'], callcenter: ['start', 'tasks', 'cc-followups', 'cc-newjob', 'customers'], finance: ['start', 'tasks', 'fin-daily', 'fin-bills', 'fin-statements'], admin: ['start', 'tasks', 'partners', 'admin', 'fin-daily', 'fin-bills'] }[role];
