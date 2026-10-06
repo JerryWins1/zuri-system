@@ -59,6 +59,7 @@
     if (document.readyState !== 'loading') draw(msg, canEnter);
   }
   function draw(msg, canEnter) {
+    try { window.ZSC && ZSC.report('gate', 'Stopped at the invite-code screen' + (msg ? ': ' + msg : ' (no code on this phone)')); } catch (e) {}
     if (document.getElementById('zgate')) { const m = document.getElementById('zgate-msg'); if (m && msg) m.textContent = msg; return; }
     const w = document.createElement('div'); w.id = 'zgate';
     w.style.cssText = 'position:fixed;inset:0;z-index:9000;background:#F4F6F5;color:#152322;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;font:16px/1.45 -apple-system,"Segoe UI",Roboto,system-ui,sans-serif;overflow:auto';
