@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.26 · 2026-10-06';
+  Z.version = 'v2.27 · 2026-10-07';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
