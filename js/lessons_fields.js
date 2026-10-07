@@ -1,4 +1,4 @@
-// Zuri System · "Every screen, every field" — the long walkthrough, one chapter per screen · v1 · 2026-10-01
+// Zuri System · "Every screen, every field" — the long walkthrough, one chapter per screen · v2 · 2026-10-07 (+ 5b The map, 5c A new customer, 17b Access codes)
 // Plays as the partner (sees everything), in practice. Chapters chain into one long video; ✕ stops any time.
 (function () {
   const Z = window.Z;
@@ -68,7 +68,7 @@
       { go: 'jobs', el: '#j-list .item::Payment follow-up', say: 'A payment follow-up has one more card.', do: tap('#j-list .item::Payment follow-up') },
       { el: '#jd-out', say: 'After the call: No answer, Will pay with a day, Says paid, or Wants to stop. And a ready-made reminder: Text it, or WhatsApp it.' },
     ]),
-    C('fields-customers', '5 · Customers', 4, 'fields-money-today', [
+    C('fields-customers', '5 · Customers', 4, 'fields-map', [
       { go: 'customers', el: '#c-q', say: 'Chapter five: Customers. Search by name, phone or account number.' },
       { el: '#c-st', say: 'Filter by status: active, lead, suspended, disconnected, or any.' },
       { el: '#view .list .item', say: 'A customer row: name, phone, account, package, area, landmark, and a warning if there is no map pin. Fifty per page.' },
@@ -86,6 +86,24 @@
       { el: 'input[name=plan]', say: 'Package, monthly rate in shillings, install date.' },
       { el: 'input[name=landmark]', say: 'Directions or landmark: how a technician finds the house. Notes for anything else.' },
       { el: 'select[name=cf__router_model]', say: 'Custom fields the admin added, like the router model. Save customer at the bottom.' },
+    ]),
+    C('fields-map', '5b · The map', 2, 'fields-newcust', [
+      { go: 'customers/map', el: 'h2', say: 'Chapter five b: the map. Every customer who has a pin, for the area chosen at the top. Pick one area at the top to see only that area.' },
+      { el: '.pill.ok', say: 'The colours: green means paid up, red means their package ran out, grey means not active. The numbers are counted for you.' },
+      { el: '#cm-hubs', say: 'Hubs: the office, the OLT room, cabinets, towers and the store, drawn as square icons. Untick this to hide them.' },
+      { el: '#cmap', say: 'Pinch or use plus and minus to zoom. Drag to move around Maai Mahiu.' },
+      { el: '#cmap', say: 'Tap any pin. It shows the customer, their package and rate, the landmark, and how far the nearest hub is — so you know which cabinet serves that house.', do: async () => { const p = document.querySelector('#cmap path.leaflet-interactive, #cmap .leaflet-marker-icon'); if (p) p.dispatchEvent(new MouseEvent('click', { bubbles: true })); await sleep(600); } },
+      { el: () => document.querySelector('#view p.hint:last-of-type'), say: 'Pins come from the technician tapping Drop pin here while standing at the house. This line tells you how many active customers still have no pin. Every job is a chance to add one.' },
+    ]),
+    C('fields-newcust', '5c · A new customer', 2, 'fields-money-today', [
+      { go: 'customers/new', el: 'h2', say: 'Chapter five c: adding a new customer. From Customers, tap New customer. It is the same form as Edit, starting empty.' },
+      { el: 'input[name=full_name]', say: 'Full name first: the name on the account.' },
+      { el: 'select[name=area]', say: 'The area: Zuri A or Zuri B. This decides whose map and lists they appear on.' },
+      { el: 'select[name=status]', say: 'Status: lead if they have only asked, active once they are installed and paying.' },
+      { el: 'input[name=phone]', say: 'Phone numbers: the M-Pesa number first, so payments can be matched to them.' },
+      { el: 'input[name=account_no]', say: 'Account number and billing website ID: the same as in Billnasi, so the two never disagree. Zuri warns you if one is already used.' },
+      { el: 'input[name=landmark]', say: 'Directions or landmark: how a technician finds the house without calling. Be generous: "blue gate after the church".' },
+      { el: '#ce button[type=submit]', say: 'Save customer. The GPS pin comes later, when the technician stands at the house and taps Drop pin here.' },
     ]),
     C('fields-money-today', '6 · Money: Cash today', 2, 'fields-count', [
       { go: 'money/today', el: '#view .subtabs', say: 'Chapter six: Money. Six sections: Today, Record, Bills, Customers, Statements, Report. Some have a second row of pages.' },
@@ -161,7 +179,7 @@
       { go: 'import', el: '#im-kind', say: 'Bring in a file: a customer list or customer payments, from Billnasi or the second billing website.' },
       { el: '#im-file', say: 'Area if the file does not say, then the file. Zuri reads the headings and asks you to check them.' },
     ]),
-    C('fields-admin', '17 · Admin', 3, 'fields-me', [
+    C('fields-admin', '17 · Admin', 3, 'fields-codes', [
       { go: 'admin/people', el: '#a-body form[data-id]', say: 'Chapter seventeen: Admin. People: everyone who signed up. Their job: field tech, call center, office staff with a finance or technical department, or admin. Their area. On or off. Save.' },
       { go: 'admin/visibility', el: '#a-body', say: 'Who sees what: for each customer field, which jobs may see it. Untick ID numbers for field techs, for example.' },
       { go: 'admin/fields', el: '#af input[name=label]', say: 'Custom fields: add your own customer field. A name, a kind: text, number, date, yes or no, or pick from a list, and the choices.' },
@@ -169,6 +187,14 @@
       { go: 'admin/company', el: '#co', say: 'Company and hubs. The company card: the name, phones, the M-Pesa Paybill and the KRA PIN. The reminder texts to customers use the name and the Paybill from here.' },
       { el: '#a-body .list', say: 'Hubs: the office, the OLT room, splitter cabinets, towers and the store. They show on the customer map for everyone.' },
       { el: '#hb-here', say: 'To add one, stand at the place and tap Where I\'m standing, or tap the map. Give it a name and an area, and save.' },
+    ]),
+    C('fields-codes', '17b · Access codes', 2, 'fields-me', [
+      { go: 'admin/codes', el: '#view p.hint', say: 'Chapter seventeen b: access codes, for partners. A code lets a phone into practice, the Testers\' List and the training copy. The real app keeps its own logins.' },
+      { el: '#ac input[name=code]', say: 'Make a code: Zuri suggests one. You can type your own instead.' },
+      { el: '#ac input[name=label]', say: 'Label: who it is for, like October testers, so you remember later.' },
+      { el: '#ac select[name=kind]', say: 'Kind: tester, trainee or partner.' },
+      { el: '#ac input[name=days]', say: 'How many days it works, and how many phones may use it. Then Make the code.' },
+      { el: () => document.querySelector('#view .card.list') || document.querySelector('#ac'), say: 'Every code is listed with who used it and when they were last seen. Copy sends a ready message with the code already inside the link — nobody has to type it. Plus thirty days extends it. Revoke switches it off; those phones stop the next time they open Zuri.' },
     ]),
     C('fields-me', '18 · Me', 1, null, [
       { go: 'me', el: '#view .card', say: 'Chapter eighteen: Me. Your job and area, and whether you are online.' },
