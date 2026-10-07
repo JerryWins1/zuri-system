@@ -377,7 +377,7 @@
           <button class="btn small" data-learn="${l.id}">${done[l.id] ? 'Watch again' : '▶ Watch'}</button></div>`).join('')}</div>`;
       }).join('')}
       <h3>Print & keep</h3>
-      <div class="card list">${[['field', '🛠️ Field tech — one-page guide'], ['callcenter', '📞 Call center — one-page guide'], ['finance', '💰 Finance — one-page guide'], ['partners', '⭐ Partners — one-page guide'], ['trainer', '🧑‍🏫 Trainer\'s guide: running a training day'], ['testers', '🧪 Tester checklist (printable)']].map(([k, t]) =>
+      <div class="card list">${[['field', '🛠️ Field tech — one-page guide'], ['callcenter', '📞 Call center — one-page guide'], ['finance', '💰 Finance — one-page guide'], ['partners', '⭐ Partners — one-page guide'], ['videos', '🎬 Every video, in order — for trainers'], ['trainer', '🧑‍🏫 Trainer\'s guide: running a training day'], ['testers', '🧪 Tester checklist (printable)']].map(([k, t]) =>
         `<a class="item" href="guides/${k}.html" target="_blank" rel="noopener"><div class="grow"><div class="t">${t}</div><div class="m">One page · print it or keep it on your phone</div></div><span>›</span></a>`).join('')}</div>`;
     Z.$$('[data-learn]', el).forEach((b) => (b.onclick = () => start(b.dataset.learn)));
     const vb = Z.$('#ln-voice', el); if (vb) vb.onclick = chooseVoice;
