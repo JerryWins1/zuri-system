@@ -252,42 +252,42 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=51"></script>
-<script src="js/selfcheck.js?v=51"></script>
-<script src="js/gate.js?v=51"></script>
+<script src="js/config.js?v=52"></script>
+<script src="js/selfcheck.js?v=52"></script>
+<script src="js/gate.js?v=52"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=51"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=52"><\/script>');
 </script>
 <script>
   // Weak signal can drop one file. Practice can't run without practice.js, so try once more with a fresh address (v2.23, 5 Oct).
-  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=51&retry=' + Date.now() + '"><\/script>');
+  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=52&retry=' + Date.now() + '"><\/script>');
 </script>
-<script src="js/app.js?v=51"></script>
-<script src="js/home.js?v=51"></script>
-<script src="js/tasks.js?v=51"></script>
-<script src="js/jobs.js?v=51"></script>
-<script src="js/customers.js?v=51"></script>
-<script src="js/map.js?v=51"></script>
-<script src="js/money.js?v=51"></script>
-<script src="js/statements.js?v=51"></script>
-<script src="js/imports.js?v=51"></script>
-<script src="js/admin.js?v=51"></script>
-<script src="js/staffpay.js?v=51"></script>
-<script src="js/codes.js?v=51"></script>
-<script src="js/company.js?v=51"></script>
-<script src="js/checklist_data.js?v=51"></script>
-<script src="js/testing.js?v=51"></script>
-<script src="js/training.js?v=51"></script>
+<script src="js/app.js?v=52"></script>
+<script src="js/home.js?v=52"></script>
+<script src="js/tasks.js?v=52"></script>
+<script src="js/jobs.js?v=52"></script>
+<script src="js/customers.js?v=52"></script>
+<script src="js/map.js?v=52"></script>
+<script src="js/money.js?v=52"></script>
+<script src="js/statements.js?v=52"></script>
+<script src="js/imports.js?v=52"></script>
+<script src="js/admin.js?v=52"></script>
+<script src="js/staffpay.js?v=52"></script>
+<script src="js/codes.js?v=52"></script>
+<script src="js/company.js?v=52"></script>
+<script src="js/checklist_data.js?v=52"></script>
+<script src="js/testing.js?v=52"></script>
+<script src="js/training.js?v=52"></script>
 <script>
   // The videos live in training.js; weak signal can drop it like practice.js, so try once more (v2.25).
-  if (window.Z && typeof Z.learn !== 'function') document.write('<script src="js/training.js?v=51&retry=' + Date.now() + '"><\/script>');
+  if (window.Z && typeof Z.learn !== 'function') document.write('<script src="js/training.js?v=52&retry=' + Date.now() + '"><\/script>');
 </script>
-<script src="js/lessons_fields.js?v=51"></script>
-<script src="js/lessons_day.js?v=51"></script>
+<script src="js/lessons_fields.js?v=52"></script>
+<script src="js/lessons_day.js?v=52"></script>
 <script>
   // If a file didn't arrive (weak signal, power cut), say so kindly with one button, instead of a confusing error.
   (function () {
