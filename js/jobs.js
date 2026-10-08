@@ -3,9 +3,11 @@
   const Z = window.Z;
   const KINDS = [['fault', 'Fault / no internet'], ['install', 'New install'], ['billing', 'Payment follow-up'], ['relocation', 'Move connection'], ['disconnect', 'Disconnect'], ['survey', 'Site survey'], ['other', 'Other']];
   const STATUS = { open: ['Waiting for a tech', 'warn'], assigned: ['Assigned', 'brand'], in_progress: ['In progress', 'brand'], done: ['Done', 'ok'], cancelled: ['Cancelled', ''] };
+  // 7 Oct deep check #26: a payment follow-up is a phone call for the office, not a tech visit.
+  const BILLING_STATUS = { open: ['To call', 'warn'], assigned: ['To call', 'warn'], in_progress: ['Calling', 'brand'], done: ['Renewed', 'ok'], cancelled: ['Closed', ''] };
   const ACTIVE = ['open', 'assigned', 'in_progress'];
   const kindName = (k) => (KINDS.find((x) => x[0] === k) || [k, k])[1];
-  const statusPill = (s) => `<span class="pill ${STATUS[s] ? STATUS[s][1] : ''}">${STATUS[s] ? STATUS[s][0] : Z.esc(s)}</span>`;
+  const statusPill = (s, kind) => { const M = kind === 'billing' ? BILLING_STATUS : STATUS; return `<span class="pill ${M[s] ? M[s][1] : ''}">${M[s] ? M[s][0] : Z.esc(s)}</span>`; };
   const mapLink = (lat, lng) => `https://maps.google.com/?q=${lat},${lng}`;
   const waPhone = (p) => { let d = String(p || '').replace(/\D/g, ''); if (d.startsWith('0')) d = '254' + d.slice(1); else if (d.length === 9) d = '254' + d; return d; };
   const wa = (phone, text) => `https://wa.me/${waPhone(phone)}?text=${encodeURIComponent(text)}`;
@@ -74,7 +76,7 @@
           <div class="t">${t.priority === 'urgent' ? '🔴 ' : ''}${Z.esc(c.full_name || t.caller || (t.customer_id ? 'Customer' : 'No customer yet'))} <span class="m">#${t.ticket_no ?? '…'}</span></div>
           <div class="m">${kindName(t.kind)} · ${Z.esc(t.summary)}</div>
           <div class="m">${Z.esc(Z.areaName(t.area))}${c.landmark ? ' · ' + Z.esc(c.landmark) : ''}${t.assigned_to && !Z.isField() ? ' · 👷 ' + Z.esc(Z.personName(t.assigned_to)) : ''}${t.scheduled_for ? ' · 📅 ' + Z.day(t.scheduled_for) : ''}</div>
-        </div><div style="text-align:right">${statusPill(t.status)}${t._local ? '<div class="m">⏳ not sent</div>' : ''}</div></a>`;
+        </div><div style="text-align:right">${statusPill(t.status, t.kind)}${t._local ? '<div class="m">⏳ not sent</div>' : ''}</div></a>`;
     };
     const today = Z.ymd();
     const draw = () => {
@@ -190,12 +192,23 @@
         scheduled_for: Z.isField() ? Z.ymd() : d.scheduled_for || null,
         opened_by: Z.me.id,
       };
-      Z.enqueue('ticket_insert', { row });
+      if (!Z.enqueue('ticket_insert', { row })) return; // 7 Oct deep check #39: the phone couldn't keep it — never say "saved"
       Z.toast(navigator.onLine ? 'Job saved.' : 'Job saved on this phone — it sends when you have signal.');
       Z.go('jobs/' + row.id);
     };
   }
   const custChip = (c) => `<div class="row card" style="margin:0;padding:10px"><div class="grow"><b>${Z.esc(c.full_name)}</b><div class="hint" style="margin:0">${Z.esc([c.phone, c.account_no, Z.areaName(c.area)].filter(Boolean).join(' · '))}</div></div><a href="#" id="nj-clear" class="btn sec small">Change</a></div>`;
+
+  // 7 Oct deep check #3: the person already on the job is always a choice, even if they moved area or were
+  // switched off — otherwise the box shows "Nobody yet" and saving a new date silently takes the job off them.
+  function techChoices(t) {
+    const list = Z.techs(t.area).map((p) => [p.id, p.full_name]);
+    if (t.assigned_to && !list.some(([id]) => id === t.assigned_to)) {
+      const p = Z.ref.people.find((x) => x.id === t.assigned_to) || {};
+      list.unshift([t.assigned_to, (p.full_name || Z.personName(t.assigned_to) || 'Current tech') + (p.active === false ? ' (switched off)' : p.role && p.role !== 'field' ? '' : ' (other area)')]);
+    }
+    return list;
+  }
 
   // ---------- one job ----------
   async function jobDetail(id, el) {
@@ -234,6 +247,8 @@
 
     const mine = t.assigned_to === Z.me.id;
     const canWork = mine || Z.isOffice();
+    // 7 Oct deep check #4: the database only takes a field tech's pin while the job is open, so don't offer it after.
+    const canPin = canWork && (Z.isOffice() || ACTIVE.includes(t.status));
     const lat = (c && c.lat) || t.site_lat, lng = (c && c.lng) || t.site_lng;
     const techPhone = t.assigned_to ? ((Z.ref.people.find((p) => p.id === t.assigned_to) || {}).phone || '') : '';
     const techText = `Zuri job #${t.ticket_no} — ${kindName(t.kind)}${t.scheduled_for ? ' · ' + Z.day(t.scheduled_for) : ''}${t.priority === 'urgent' ? ' · URGENT' : ''}\n${c ? c.full_name + (c.phone ? ' (' + c.phone + ')' : '') : t.caller || ''}\n${t.summary}${c && c.landmark ? '\n📍 ' + c.landmark : ''}${lat != null ? '\n' + mapLink(lat, lng) : ''}\nOpen Zuri → Jobs for details.`;
@@ -241,9 +256,9 @@
     const localPhotos = Z.queue.filter((q) => q.op === 'photo' && q.data.row.ticket_id === id);
 
     el.innerHTML = `
-      <p style="margin:0 0 6px"><a href="#jobs">← Jobs</a></p>
+      <p style="margin:0 0 6px"><a class="back" href="#jobs">← Jobs</a></p><!-- 7 Oct deep check #37: 44 px back link -->
       ${offline ? '<div class="alert warn">📴 No signal — showing what this phone has saved. Your changes send later.</div>' : ''}
-      <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:4px">Job #${t.ticket_no ?? '…'} · ${kindName(t.kind)}</h2>${statusPill(t.status)}</div>
+      <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:4px">Job #${t.ticket_no ?? '…'} · ${kindName(t.kind)}</h2>${statusPill(t.status, t.kind)}</div>
       <p class="hint" style="margin-top:0">${t.priority === 'urgent' ? '🔴 Urgent · ' : ''}Opened ${Z.when(t.opened_at)}${t.caller ? ' · caller: ' + Z.esc(t.caller) : ''}${t.closed_at ? ' · closed ' + Z.when(t.closed_at) : ''}</p>
       <div class="card"><b>Problem</b><p style="margin:4px 0 0">${Z.esc(t.summary)}</p></div>
 
@@ -259,7 +274,7 @@
         : `<b>No customer linked</b><div class="hint">${Z.esc(Z.areaName(t.area))}</div>`}
         <div class="row" style="margin-top:10px">
           ${lat != null ? `<a class="btn sec" href="${mapLink(lat, lng)}" target="_blank" rel="noopener">🗺️ Open map</a><button class="btn sec" id="jd-send">📤 Send pin</button>` : `<span class="hint">No map pin yet.</span>${c && c.phone ? `<a class="btn sec" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, `Hello ${c.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. So our technician can find you, please send us your location: in WhatsApp tap 📎 → Location → Send your current location. Thank you!`))}">💬 Ask customer for location</a>` : ''}`}
-          ${canWork ? `<button class="btn sec" id="jd-pin">📍 ${lat != null ? 'Move pin to here' : 'Drop pin here'}</button>` : ''}
+          ${canPin ? `<button class="btn sec" id="jd-pin">📍 ${lat != null ? 'Move pin to here' : 'Drop pin here'}</button>` : canWork && Z.isField() ? '<span class="hint">Pins are dropped before the job is finished — ask the office to move it.</span>' : ''}
         </div>
       </div>
 
@@ -280,7 +295,7 @@
       <h3>Who's going, and when</h3>
       <form class="card" id="jd-disp">
         <div class="grid3">
-          <div><label>Tech</label><select name="assigned_to"><option value="">Nobody yet</option>${Z.opts(Z.techs(t.area).map((p) => [p.id, p.full_name]), t.assigned_to)}</select></div>
+          <div><label>Tech</label><select name="assigned_to"><option value="">Nobody yet</option>${Z.opts(techChoices(t), t.assigned_to)}</select></div>
           <div><label>Visit day</label><input type="date" name="scheduled_for" value="${Z.esc(t.scheduled_for || '')}"></div>
           <div><label>Priority</label><select name="priority">${Z.opts([['normal', 'Normal'], ['urgent', 'Urgent'], ['low', 'Low']], t.priority)}</select></div>
         </div>
@@ -308,7 +323,7 @@
           <div id="jd-code" ${t.collection_method === 'mpesa' ? '' : 'hidden'}><label>M-Pesa code</label><input name="collection_ref" value="${Z.esc(t.collection_ref || '')}" placeholder="e.g. SJK3X9ABCD" autocapitalize="characters"></div>
         </div>
         <div style="height:14px"></div>
-        ${t.status !== 'done' ? '<button class="btn block" type="submit" data-status="done" style="min-height:52px;font-size:17px">✅ Job finished</button>' : ''}
+        ${ACTIVE.includes(t.status) ? '<button class="btn block" type="submit" data-status="done" style="min-height:52px;font-size:17px">✅ Job finished</button>' : ''}<!-- 7 Oct deep check #25: not on a cancelled job (Reopen it first) -->
         <div class="row" style="margin-top:8px">
           ${['open', 'assigned'].includes(t.status) ? '<button class="btn sec" type="submit" data-status="in_progress">▶ I\'m starting now</button>' : ''}
           <button class="btn sec" type="submit" data-status="">💾 Save for later</button>
@@ -339,7 +354,8 @@
       </div>`;
 
     const note = (body, kind = 'note') => Z.enqueue('event', { row: { id: Z.uuid(), ticket_id: id, by: Z.me.id, kind, body, at: new Date().toISOString() } });
-    const update = (fields, msg) => { Z.enqueue('ticket_update', { id, fields }); if (msg) Z.toast(msg); Z.route(); };
+    // 7 Oct deep check #39: only say "saved" when the phone really kept it (Z.enqueue already showed "storage is full").
+    const update = (fields, msg) => { if (!Z.enqueue('ticket_update', { id, fields })) return false; if (msg) Z.toast(msg); Z.route(); return true; };
 
     const disp = Z.$('#jd-disp', el);
     if (disp) {
@@ -397,7 +413,7 @@
     if (partF) partF.onsubmit = (e) => {
       e.preventDefault();
       const d = Z.formData(partF);
-      Z.enqueue('part', { row: { id: Z.uuid(), ticket_id: id, item: d.item.trim(), serial: d.serial.trim().toUpperCase() || null, qty: Z.num(d.qty) || 1, added_by: Z.me.id } });
+      if (!Z.enqueue('part', { row: { id: Z.uuid(), ticket_id: id, item: d.item.trim(), serial: d.serial.trim().toUpperCase() || null, qty: Z.num(d.qty) || 1, added_by: Z.me.id } })) return; // #39
       Z.route();
     };
     Z.$$('[data-delpart]', el).forEach((b) => (b.onclick = () => {
@@ -408,7 +424,7 @@
       Z.route();
     }));
 
-    Z.$('#jd-note', el).onsubmit = (e) => { e.preventDefault(); note(e.target.body.value.trim()); Z.route(); };
+    Z.$('#jd-note', el).onsubmit = (e) => { e.preventDefault(); if (!note(e.target.body.value.trim())) return; Z.route(); }; // #39
 
     // A reminder sent is part of the story of this job.
     const smsB = Z.$('#jd-sms', el); if (smsB) smsB.onclick = () => { note('📩 Reminder text sent'); setTimeout(Z.route, 1500); };
