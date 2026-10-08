@@ -20,7 +20,7 @@
       { go: 'money/today', el: '#m-body .kpis', say: 'Money, Cash today. The bank, the M-Pesa float, bills owing, and cash after bills, for each area. The float warning is here too.' },
       { go: 'money/count', el: 'input[name=bank]', say: 'First job: a cash count. He opens the bank app and the M-Pesa account on his phone, and types what each one says.', do: seq(type('input[name=bank]', '186500'), type('input[name=mpesa]', '39800')) },
       { el: '#mc button[type=submit]', say: 'Save. Now the forecast for the next thirty days starts from a true number.', do: tap('#mc button[type=submit]') },
-      { go: 'money/payrun', el: '#pr-build', say: 'Next, the pay run. Build today\'s list collects every bill that is due and every salary whose day has come.', do: tap('#pr-build') },
+      { go: 'money/payrun', el: '#pr-build', say: 'Next, the pay run. Build today\'s list collects every bill that is due and every monthly salary whose day has come. Anything left unpaid from last month stays on the list.', do: tap('#pr-build') }, // 7 Oct deep check #5 + #41
       { el: '#m-body .list .item', say: 'KPLC is due today, and so is Mary\'s salary. He copies the number, sends each one in the M-Pesa app, and comes back.' },
       { el: '.pr-sent', say: 'Then Sent, and the code from the M-Pesa message. Zuri records it as an expense, with his name and the time.', do: seq(tap('.pr-sent'), type('.sheet input[name=ref]', 'SJK3X9ABCD'), tap('.sheet button.block')) },
       { go: 'money/expense', el: '#me-sms', say: 'Dickson forwards an M-Pesa message: cable clips from the hardware shop. Kelvin pastes it in and taps Read the message.', do: seq(type('#me-sms', 'SJK4Q1ZTYU Confirmed. Ksh2,400.00 paid to MAMA NJERI HARDWARE on 1/10/26 at 11:02 AM New M-PESA balance is Ksh37,400.00. Transaction cost, Ksh0.00.'), tap('#me-read')) },
@@ -30,8 +30,9 @@
 
     C('day-2', '2 · 8:30 am — Mary at the call center', 3, 'callcenter', 'day-3', [
       { go: 'jobs', el: '#j-list .item::Payment follow-up', say: 'Half past eight. Mary opens Jobs. Overnight, Zuri opened a payment follow-up for every customer whose internet ran out. These are her calls for the morning.' },
-      { el: '#j-list .item::Payment follow-up', say: 'She opens the first one.', do: tap('#j-list .item::Payment follow-up') },
-      { el: 'a[href^="tel:"]', say: 'The package ran out nine days ago. She taps Call. The customer says: Friday, when the salary comes.' },
+      // 7 Oct deep check #30: open Grace by name, and don't say a day count the screen may not show.
+      { el: '#j-list .item::Grace Njeri', say: 'She opens Grace Njeri, the most overdue.', do: tap('#j-list .item::Grace Njeri') },
+      { el: 'a[href^="tel:"]', say: 'Her package ran out more than a week ago. She taps Call. The customer says: Friday, when the salary comes.' },
       { el: '[data-out=promise]', say: 'So: Will pay, in three days. The job comes back on Friday to be checked.', do: seq(tap('[data-out=promise]'), tap('.sheet [data-d="3"]'), tap('#pp-ok')) },
       { go: 'jobs/new', el: '#nj-q', say: 'The phone rings. John Mwangi, near the market: no internet since morning, the router light is red. Mary starts a new job and finds him.', do: seq(type('#nj-q', 'mwangi'), tap('#nj-res .item')) },
       { el: 'textarea[name=summary]', say: 'Fault. She writes what he said, in his words.', do: seq(choose('select[name=kind]', 'fault'), type('textarea[name=summary]', 'No internet since morning, router light red'), choose('select[name=priority]', 'urgent')) },
@@ -53,7 +54,8 @@
 
     C('day-4', '4 · 2:00 pm — Kelvin\'s afternoon', 3, 'finance', 'day-5', [
       { go: 'money/sort', el: '#view .so-cat', say: 'Two o\'clock. The phones are quiet. Kelvin sorts the statement lines from yesterday\'s bank statement. This one is a customer payment.', do: choose('#view .so-cat', 'Customer payment') },
-      { el: '.so-always', say: 'A KPLC line: he ticks Always, so every KPLC line sorts itself from now on. Twelve lines take five minutes.' },
+      // 7 Oct deep check #18: ring the KPLC line's own Always box, not the next line's.
+      { el: () => { const it = find('#view .list .item::KPLC'); const cb = it && it.querySelector('.so-always'); return cb ? cb.closest('label') || cb : it; }, say: 'A KPLC line: he ticks Always first, then picks Rent and Utilities, so every KPLC line sorts itself from now on. Forgot to tick it? After sorting, tap Always sort like this. Twelve lines take five minutes.' },
       { go: 'money/collections', el: '#m-body .subtabs', say: 'Who paid. Late: the customers who have run out. Each one has a Call button and a ready-made WhatsApp reminder.' },
       { el: '#m-body .list .item a[href*="wa.me"]', say: 'He sends one reminder to a customer who always pays after a nudge.' },
       { go: 'money/projection', el: '#m-body .kpis', say: 'The next thirty days. The lowest point is above zero: good. If it were not, he would tell Jerry today, not on the day it bites.' },
@@ -61,9 +63,10 @@
     ]),
 
     C('day-5', '5 · 5:00 pm — the partners close the day', 3, 'admin', null, [
-      { go: 'home', el: '#view .kpis', say: 'Five o\'clock. Dickson looks at Home before he leaves. Faults fixed today, installs waiting, the late count down by one, cash still fine.' },
+      // 7 Oct deep check #31: this chapter plays as Jerry (the partner login), so the words say Jerry, not Dickson.
+      { go: 'home', el: '#view .kpis', say: 'Five o\'clock. Jerry, a partner, looks at Home from Chicago. Faults fixed today, installs waiting, the late count down by one, cash still fine.' },
       { go: 'tasks/team', el: '#tk-body', say: 'Team: what is still open across everyone. Nothing stuck more than two days, so nothing has escalated.' },
-      { go: 'tasks/add', el: 'input[name=title]', say: 'He gives Peter a task for tomorrow: check the splitter at the market, two customers say it is slow at night.', do: seq(type('input[name=title]', 'Check the splitter box at the market'), choose('select[name=for]', 'p-peter'), tap('#tk-add button[type=submit]')) },
+      { go: 'tasks/add', el: 'input[name=title]', say: 'Jerry gives Peter a task for tomorrow: check the splitter at the market, two customers say it is slow at night.', do: seq(type('input[name=title]', 'Check the splitter box at the market'), choose('select[name=for]', 'p-peter'), tap('#tk-add button[type=submit]')) },
       { go: 'money/report', el: '#mr-copy', say: 'On Friday there is one more step: the report writes itself. Copy, paste into the partners\' WhatsApp group. Jerry reads it in Chicago over breakfast.' },
       { go: 'tasks/nudges', el: '#tk-body .item', say: 'And tomorrow at half past six it starts again: the manager writes everyone\'s list, and a WhatsApp nudge for each person. That is a day with Zuri.' },
     ], { turn: ['Do Kelvin\'s morning: a cash count, the pay run, one expense from a message', 'Do Mary\'s: one follow-up call, one new fault job sent to a tech', 'Do Peter\'s: start a job, finish it with an M-Pesa payment', 'Do the partner\'s: give someone a task, copy the Friday report'] }),
