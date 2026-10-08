@@ -1,10 +1,12 @@
-// Zuri System · offline shell · v4 · 2026-10-05
+// Zuri System · offline shell · v5 · 2026-10-07
+// v5 (7 Oct deep check #40): CDN files are copied BEFORE the page gets the response ("body already used" left
+//     charts, the map and importing broken offline).
 // v4: a missing file is never answered with the home page (that turned a dropped practice.js into "Something went wrong");
 //     on very slow signal, a saved copy is used after 8 seconds instead of waiting forever.
 // App files: network first (always fresh when there's signal), cached copy when there isn't.
 // Libraries from the CDN: cache first (they never change at a pinned version).
 // Database calls are never cached here — the app keeps its own copy of the jobs it needs.
-const CACHE = 'zuri-v36';
+const CACHE = 'zuri-v37';
 const SHELL = ['./', 'index.html', 'manifest.json', 'icon.svg', 'js/config.js', 'js/app.js', 'js/home.js', 'js/tasks.js', 'js/jobs.js', 'js/customers.js', 'js/money.js', 'js/statements.js', 'js/imports.js', 'js/admin.js', 'js/practice.js', 'js/training.js', 'js/checklist_data.js', 'js/testing.js', 'js/lessons_fields.js', 'js/lessons_day.js', 'js/map.js', 'js/staffpay.js', 'js/gate.js', 'js/selfcheck.js', 'js/codes.js', 'js/company.js', 'guides/testers.html', 'guides/welcome.html',
   'guides/field.html', 'guides/callcenter.html', 'guides/finance.html', 'guides/partners.html', 'guides/trainer.html', 'guides/videos.html',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'];
@@ -23,7 +25,7 @@ self.addEventListener('fetch', (e) => {
   if (url.hostname.endsWith('supabase.co')) return;
   const cdn = /(^|\.)(jsdelivr\.net|cloudflare\.com)$/.test(url.hostname);
   if (cdn) {
-    e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((res) => { if (res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone())); return res; })));
+    e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((res) => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); } return res; })));
     return;
   }
   if (url.origin !== location.origin) return;
