@@ -6,6 +6,9 @@
   const ago = (ts) => { if (!ts) return null; const d = (Date.now() - new Date(ts)) / 864e5; return d; };
   const monthLabel = (p) => { const [y, m] = p.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('en-GB', { month: 'short' }); };
   const KIND = { fault: 'Fault', install: 'Install', relocation: 'Move', disconnect: 'Disconnect', survey: 'Survey', other: 'Other' };
+  const ord = (n) => n + ([11, 12, 13].includes(n % 100) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th')); // 7 Oct deep check #23: 1st, 2nd, 3rd…
+  const STALE_DAYS = 7; // 7 Oct deep check #29: one rule everywhere — count the cash at least once a week
+  Z.CASH_STALE_DAYS = STALE_DAYS;
   const tile = (k, v, f, cls = '', href) => `<${href ? `a href="${href}" style="text-decoration:none;color:inherit"` : 'div'} class="kpi"><div class="k">${k}</div><div class="v num ${cls}">${v}</div>${f ? `<div class="f">${f}</div>` : ''}</${href ? 'a' : 'div'}>`;
 
   Z.routes.home = async (_, el) => {
@@ -22,9 +25,9 @@
     if (N(c.late)) alerts.push(['bad', `💳 ${c.late} customers have run out of paid time — KES ${Z.fmt(c.late_owe)} a month waiting. ${j.followups_urgent ? j.followups_urgent + ' are over a week late.' : ''}`, '#jobs']);
     if (m) {
       if (!m.oldest_count) alerts.push(['warn', '💵 No cash count yet — the cash position and projection start from zero until someone counts.', '#money/count']);
-      else if (ago(m.oldest_count) > 3) alerts.push(['warn', `💵 Oldest cash count is ${Math.floor(ago(m.oldest_count))} days old — do a fresh count.`, '#money/count']);
+      else if (ago(m.oldest_count) > STALE_DAYS) alerts.push(['warn', `💵 Oldest cash count is ${Math.floor(ago(m.oldest_count))} days old — do a fresh count.`, '#money/count']);
       (m.floats || []).filter((f) => N(f.mpesa) < N(f.target)).forEach((f) => alerts.push([N(f.mpesa) < N(f.target) * 0.5 ? 'bad' : 'warn', `📱 ${Z.areaName(f.area)} M-Pesa float ${Z.fmt(f.mpesa)} is below the ${Z.fmt(f.target)} target.`, '#money/today']));
-      if (m.bills && m.bills.next && m.bills.next.due_day < new Date().getDate()) alerts.push(['warn', `📅 ${m.bills.next.name} (KES ${Z.fmt(m.bills.next.owing)}) was due on the ${m.bills.next.due_day}th and isn't fully paid.`, '#money/bills']);
+      if (m.bills && m.bills.next && m.bills.next.due_day < new Date().getDate()) alerts.push(['warn', `📅 ${m.bills.next.name} (KES ${Z.fmt(m.bills.next.owing)}) was due on the ${ord(m.bills.next.due_day)} and isn't fully paid.`, '#money/bills']);
       if (N(m.unsorted)) alerts.push(['warn', `🧾 ${Z.fmt(m.unsorted)} bank / M-Pesa transactions still to sort — the books are incomplete until they are.`, '#money/sort']);
       if (m.last_statement && ago(m.last_statement) > 35) alerts.push(['warn', `🏦 Statements only go up to ${Z.day(m.last_statement)} — import the newer bank and M-Pesa statements.`, '#money/statements']);
       if (!(m.bills && N(m.bills.total))) alerts.push(['warn', '📋 No bills entered for this month — the cash projection doesn\'t know what\'s going out.', '#money/bills']);
@@ -45,7 +48,7 @@
     el.innerHTML = `
       <div class="row" style="justify-content:space-between;align-items:baseline">
         <h2 style="margin-bottom:0">Zuri at a glance${Z.area ? ' · ' + Z.esc(Z.areaName(Z.area)) : ''}</h2>
-        <span class="hint">as of ${Z.when(s.as_of)} · <a href="#" id="h-refresh">refresh</a></span>
+        <span class="hint">as of ${Z.when(s.as_of)} · <a href="#" id="h-refresh" class="tap44" style="min-width:0;padding:0 6px">refresh</a></span>
       </div>
 
       ${mgr ? `<a class="card" href="#tasks/mine" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--brand)">
@@ -60,16 +63,16 @@
       <h3 style="display:flex;justify-content:space-between;align-items:center">Customers <a href="#customers/map" style="text-transform:none;letter-spacing:0;font-weight:700">🗺️ Map →</a></h3>
       <div class="kpis">
         ${tile('Active customers', Z.fmt(c.active), `${Z.fmt(c.disconnected)} disconnected${N(c.leads) ? ' · ' + c.leads + ' leads' : ''}`, '', '#customers')}
-        ${tile('Paid up', `${pct(c.paid_up, c.active)}%`, `${Z.fmt(c.paid_up)} of ${Z.fmt(c.active)}`, pct(c.paid_up, c.active) >= 90 ? 'ok' : 'warn', '#money/collections')}
+        ${tile('Paid up', `${pct(c.paid_up, c.active)}%`, `${Z.fmt(c.paid_up)} of ${Z.fmt(c.active)}`, pct(c.paid_up, c.active) >= 90 ? 'ok' : 'warn', Z.isFinance() ? '#money/collections' : '#customers')}<!-- 7 Oct deep check #27: call center can't open Who paid -->
         ${tile('Late (ran out)', Z.fmt(c.late), `KES ${Z.fmt(c.late_owe)} / month`, N(c.late) ? 'bad' : 'ok', Z.isFinance() ? '#money/collections' : '#jobs')}
         ${tile('Monthly recurring revenue (KES)', Z.fmt(c.mrr), 'if every active customer pays')}
         ${tile('Renewals next 7 days', Z.fmt(c.renew_7), `KES ${Z.fmt(c.renew_7_kes)} · 30 days: ${Z.fmt(c.renew_30_kes)}`)}
         ${tile('No map pin', Z.fmt(c.no_pin), 'active customers techs can\'t find', N(c.no_pin) ? 'warn' : 'ok')}
       </div>
       ${plans.length ? `<div class="card"><b>Packages</b>${plans.map((p) => `
-        <div class="row" style="margin-top:8px;gap:10px"><span style="width:130px" class="hint">${Z.esc(p.plan)}</span>
-          <div class="grow" style="flex:1;background:var(--surface-2);border-radius:6px;height:14px"><div style="width:${Math.max(3, (N(p.n) / topPlan) * 100)}%;background:var(--brand);height:14px;border-radius:6px"></div></div>
-          <span class="num" style="width:150px;text-align:right">${Z.fmt(p.n)} · KES ${Z.fmt(p.kes)}</span></div>`).join('')}</div>` : ''}
+        <div style="margin-top:8px"><div class="row" style="justify-content:space-between;gap:6px;flex-wrap:nowrap"><span class="hint" style="margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${Z.esc(p.plan)}</span>
+          <span class="num hint" style="margin:0;white-space:nowrap">${Z.fmt(p.n)} · KES ${Z.fmt(p.kes)}</span></div>
+          <div style="background:var(--surface-2);border-radius:6px;height:12px;margin-top:3px"><div style="width:${Math.max(3, (N(p.n) / topPlan) * 100)}%;background:var(--brand);height:12px;border-radius:6px"></div></div></div>`).join('')}</div>` : ''}<!-- 7 Oct deep check #24: name and numbers above the bar, so a phone keeps one line each -->
 
       <h3>Service</h3>
       <div class="kpis">
@@ -80,7 +83,7 @@
         ${tile('Payment follow-ups', Z.fmt(j.followups), `${Z.fmt(j.followups_paid)} paid this month`, N(j.followups) ? 'warn' : 'ok', '#jobs')}
       </div>
       <div class="card list">${(s.upcoming || []).length ? s.upcoming.map((u) => `<a class="item" href="#jobs/${u.id}"><div class="grow"><div class="t">${u.priority === 'urgent' ? '🔴 ' : ''}${Z.esc(u.customer || 'No customer')} <span class="m">#${u.no} · ${KIND[u.kind] || u.kind}</span></div>
-          <div class="m">${Z.esc(u.summary)}</div></div><div style="text-align:right" class="m">${u.day ? Z.day(u.day) : 'no date'}<br>${u.tech ? '👷 ' + Z.esc(u.tech) : '<span style="color:var(--warn)">no tech</span>'}</div></a>`).join('') : '<div class="muted">No service jobs open.</div>'}</div>
+          <div class="m">${Z.esc(u.summary)}</div></div><div style="text-align:right" class="m">${u.day ? Z.day(u.day) : 'no date'}<br>${u.tech ? '👷 ' + Z.esc(u.tech) : '<span style="color:var(--warn-ink)">no tech</span>'}</div></a>`).join('') : '<div class="muted">No service jobs open.</div>'}</div>
 
       ${m ? `
       <h3>Money</h3>
@@ -88,7 +91,7 @@
         ${tile('Cash now (KES)', m.oldest_count ? Z.fmt(m.cash_now) : '—', m.oldest_count ? `bank ${Z.fmt(m.bank)} · M-Pesa ${Z.fmt(m.mpesa)}` : 'no cash count yet', '', '#money/count')}
         ${tile('Lowest in next 30 days (KES)', Z.fmt(m.proj_low), m.proj_low_day ? Z.day(m.proj_low_day) : '', N(m.proj_low) < 0 ? 'bad' : 'ok', '#money/projection')}
         ${tile('Cash in 30 days (KES)', Z.fmt(m.proj_end), `in ${Z.fmt(m.proj_in)} · bills ${Z.fmt(m.proj_out)}`, '', '#money/projection')}
-        ${tile('Bills still owing (KES)', Z.fmt(m.bills && m.bills.owing), m.bills && m.bills.next ? `next: ${Z.esc(m.bills.next.name)} (${m.bills.next.due_day}th)` : `${N(m.bills && m.bills.total)} bills this month`, '', '#money/bills')}
+        ${tile('Bills still owing (KES)', Z.fmt(m.bills && m.bills.owing), m.bills && m.bills.next ? `next: ${Z.esc(m.bills.next.name)} (${ord(m.bills.next.due_day)})` : `${N(m.bills && m.bills.total)} bills this month`, '', '#money/bills')}
         ${lastBooks ? tile('Profit · ' + monthLabel(lastBooks.month.slice(0, 7)) + ' (KES)', Z.fmt(N(lastBooks.income) - N(lastBooks.expense)), `from sorted statements${N(m.unsorted) ? ' (incomplete)' : ''}`, N(lastBooks.income) - N(lastBooks.expense) < 0 ? 'bad' : 'ok', '#money/books') : ''}
       </div>
       <div class="card"><b>Cash over the next 30 days</b><div class="chart-box"><canvas id="h-cash" aria-label="Cash balance next 30 days"></canvas></div>
