@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.28 · 2026-10-07';
+  Z.version = 'v2.29 · 2026-10-07';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -177,7 +177,10 @@
     const start = Z.isOffice() ? 'home' : 'jobs';
     let name = parts[0] || start;
     const tab = TABS.find((t) => t.id === name);
-    if (!Z.routes[name] || (tab && !tab.ok())) name = start;
+    // 7 Oct deep check #13: a page this person can't open falls back to their start page WITHOUT the rest of the
+    // address (it used to pass e.g. "count" on to Jobs as a job id: "This job isn't available").
+    let args = parts.slice(1);
+    if (!Z.routes[name] || (tab && !tab.ok())) { name = start; args = []; }
     Z.$$('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.tab === (PARENT[name] || name)));
     const view = Z.$('#view');
     const samePage = lastHash === location.hash;
@@ -189,7 +192,7 @@
     view.replaceChildren(box);
     if (!samePage) window.scrollTo(0, 0);
     try {
-      await Z.routes[name](parts.slice(1), box);
+      await Z.routes[name](args, box);
     } catch (e) {
       if (seq !== routeSeq) return;
       console.error(e);
