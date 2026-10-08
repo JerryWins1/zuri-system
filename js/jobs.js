@@ -288,8 +288,25 @@
           <button type="button" data-out="paid">✅ Says paid</button>
           <button type="button" data-out="stop">✋ Wants to stop</button>
         </div>
-        ${c && c.phone ? (() => { const msg = `Hello ${c.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. Your internet package ${c.paid_until && new Date(c.paid_until) < new Date() ? 'ran out on ' + Z.day(c.paid_until.slice(0, 10)) : 'is due'}.${c.monthly_rate ? ' To stay connected please pay KES ' + Z.fmt(c.monthly_rate) : ' Please renew'}${Z.payLine && Z.payLine(c.account_no) ? '.' + Z.payLine(c.account_no) : ' by M-Pesa' + (c.account_no ? ' (account ' + c.account_no + ')' : '') + '.'} Thank you!`;
-          return `<div class="row" style="margin-top:10px"><a class="btn sec" id="jd-sms" href="${Z.esc(Z.smsHref(c.phone, msg))}">📩 Text a reminder</a><a class="btn sec" id="jd-wa" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, msg))}">💬 WhatsApp it</a></div><p class="hint" style="margin:6px 0 0">The message is written for you — just press send. Text works for customers without WhatsApp.</p>`; })() : ''}
+        ${c ? (() => {
+          /* 8 Oct (Jerry): Billnasi already texts every customer 3 days before the package runs out, then switches them off.
+             So our part starts AFTER the cutoff: the right words for each day since, then a kind goodbye at day 30. */
+          const days = c.paid_until ? Math.max(0, Math.floor((Date.now() - new Date(c.paid_until)) / 864e5)) : 0;
+          const step = Z.AFTER_CUTOFF.find((x) => days >= x.from && days <= x.to) || Z.AFTER_CUTOFF[0];
+          const msg = step.msg(c, days);
+          const tl = Z.AFTER_CUTOFF.map((x) => `<span class="pill ${x === step ? 'brand' : days > x.to ? 'ok' : ''}" style="${x === step ? 'font-weight:800' : ''}">${x.short}</span>`).join(' ');
+          return `<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:10px">
+            <div class="hint" style="margin:0 0 6px">Billnasi already texted them 3 days before and switched them off ${c.paid_until ? 'on ' + Z.day(c.paid_until.slice(0, 10)) : ''} — <b>${days === 0 ? 'today' : days === 1 ? '1 day ago' : days + ' days ago'}</b>. Our part starts now.</div>
+            <div class="row" style="gap:4px;flex-wrap:wrap;margin-bottom:8px">${tl}</div>
+            <b>${Z.esc(step.name)}</b>
+            <p class="hint" style="margin:2px 0 8px">${Z.esc(step.how)}</p>
+            <div class="card" style="background:var(--surface-2,#f3f1ec);font-size:14.5px;margin:0 0 8px" id="jd-msgtext">${Z.esc(msg)}</div>
+            ${c.phone ? `<div class="row"><a class="btn sec" id="jd-sms" href="${Z.esc(Z.smsHref(c.phone, msg))}">📩 Text it</a><a class="btn sec" id="jd-wa" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, msg))}">💬 WhatsApp it</a><a class="btn sec" href="tel:${Z.esc(c.phone)}">📞 Call</a></div>` : '<p class="hint">No phone number for this customer — add one on their page.</p>'}
+            <p class="hint" style="margin:6px 0 0">The message is written for you — just press send. ${step.next != null ? 'After you send it, this follow-up comes back on day ' + step.next + ' for the next step.' : ''}</p>
+            <div class="row" style="margin-top:8px;flex-wrap:wrap">
+              <button type="button" class="btn sec small" id="jd-fault">🛠 Service problem — open a fault job</button>
+              ${step.key === 'd30' ? '<button type="button" class="btn small" id="jd-lapse">👋 Goodbye sent — close for this time</button>' : ''}
+            </div></div>`; })() : ''}
       </div>` : ''}
       ${Z.isOffice() ? `
       <h3>Who's going, and when</h3>
@@ -427,8 +444,17 @@
     Z.$('#jd-note', el).onsubmit = (e) => { e.preventDefault(); if (!note(e.target.body.value.trim())) return; Z.route(); }; // #39
 
     // A reminder sent is part of the story of this job.
-    const smsB = Z.$('#jd-sms', el); if (smsB) smsB.onclick = () => { note('📩 Reminder text sent'); setTimeout(Z.route, 1500); };
-    const waB = Z.$('#jd-wa', el); if (waB) waB.onclick = () => { note('💬 WhatsApp reminder sent'); setTimeout(Z.route, 1500); };
+    // 8 Oct: each text belongs to a step of the after-cutoff path; once sent, the job comes back on the next step's day.
+    const cutStep = () => { if (!c || !c.paid_until) return null; const days = Math.max(0, Math.floor((Date.now() - new Date(c.paid_until)) / 864e5)); return Z.AFTER_CUTOFF.find((x) => days >= x.from && days <= x.to) || null; };
+    const sentVia = (how) => { const st = cutStep(); note((how === 'sms' ? '📩 ' : '💬 ') + (st ? st.name + ' — ' : '') + (how === 'sms' ? 'text sent' : 'WhatsApp sent'));
+      if (st && st.next != null) { const back = new Date(new Date(c.paid_until).getTime() + st.next * 864e5); setTimeout(() => update({ scheduled_for: Z.ymd(back) }, 'Sent. It comes back on ' + Z.day(Z.ymd(back)) + ' for the next step.'), 1200); }
+      else setTimeout(Z.route, 1500); };
+    const smsB = Z.$('#jd-sms', el); if (smsB) smsB.onclick = () => sentVia('sms');
+    const waB = Z.$('#jd-wa', el); if (waB) waB.onclick = () => sentVia('wa');
+    const faultB = Z.$('#jd-fault', el); if (faultB && c) faultB.onclick = () => { note('🛠 Customer reports a service problem — fault job opened'); Z.go('jobs/new/' + c.id); };
+    const lapseB = Z.$('#jd-lapse', el); if (lapseB) lapseB.onclick = () => {
+      if (!confirm('Close this follow-up? The customer stays in Zuri, and a new follow-up only opens if they pay and run out again.')) return;
+      note('👋 Day-30 goodbye sent — follow-up closed for this time'); update({ status: 'done', work_done: 'Not renewed after 30 days — kind goodbye sent' }, 'Closed. They are welcome back any time.'); };
     Z.$$('#jd-out [data-out]', el).forEach((b) => (b.onclick = () => {
       const k = b.dataset.out;
       if (k === 'noanswer') { note('📵 Called — no answer'); return update({ scheduled_for: Z.ymd(new Date(Date.now() + 864e5)) }, 'Noted. It comes back tomorrow.'); }
