@@ -22,7 +22,9 @@
   const who = (t) => (t.assigned_to ? Z.personName(t.assigned_to) || 'Someone' : groupName(t.assigned_group));
   // Only plain in-app links (letters, digits, / _ : . -) — anything else is dropped, never put in the page.
   const linkHref = (t) => {
-    const base = { page: '#', customer: '#customers/', ticket: '#jobs/' }[t.link_type];
+    // 7 Oct deep check #19: the manager's "stuck" escalations link to a task, and bill reminders to a bill — open those too.
+    if (t.link_type === 'bill') return '#money/bills';
+    const base = { page: '#', customer: '#customers/', ticket: '#jobs/', task: '#tasks/team/' }[t.link_type];
     return base && /^[A-Za-z0-9/_:.-]{1,80}$/.test(t.link_ref || '') ? base + t.link_ref : '';
   };
   const sortTasks = (a, b) => PRI[a.priority][2] - PRI[b.priority][2] || String(a.due_date || '9').localeCompare(String(b.due_date || '9')) || String(a.opened_at).localeCompare(String(b.opened_at));
@@ -76,7 +78,7 @@
     const [pLabel, pCls] = PRI[t.priority];
     const href = linkHref(t);
     return `<div class="item" data-id="${t.id}" style="align-items:flex-start;flex-wrap:wrap">
-      <input type="checkbox" class="tk-done" aria-label="Done: ${Z.esc(t.title)}" value="${Z.esc(t.title)}" ${t.status === 'done' ? 'checked' : ''} ${canTick(t) ? '' : 'disabled title="Only the person or group it\'s for can tick this"'} style="margin-top:4px">
+      <label class="tap44" style="margin-top:-6px"><input type="checkbox" class="tk-done" aria-label="Done: ${Z.esc(t.title)}" value="${Z.esc(t.title)}" ${t.status === 'done' ? 'checked' : ''} ${canTick(t) ? '' : 'disabled title="Only the person or group it\'s for can tick this"'}></label><!-- 7 Oct deep check #37: thumb-sized tap area -->
       <div class="grow" style="min-width:220px">
         <div class="t" style="${t.status === 'done' ? 'text-decoration:line-through;opacity:.6' : ''}">${t.kind === 'escalation' ? '⏫ ' : ''}${Z.esc(t.title)}${t._local ? ' <span class="m">⏳ not sent</span>' : ''}</div>
         <div class="m">${pLabel ? `<span class="pill ${pCls}">${pLabel}</span> ` : ''}${Z.esc(who(t))}${t.source === 'agent' ? ' · 🤖 Zuri manager' : t.created_by ? ' · from ' + Z.esc(Z.personName(t.created_by) || 'someone') : ''}${t.due_date ? ' · due ' + Z.day(t.due_date) : ''}${t.visibility === 'finance' ? ' · 🔒 finance' : ''}</div>
@@ -138,7 +140,8 @@
   VIEWS.team = async (el, args) => {
     const f = Z.get('tasks_team', { who: '', done: false });
     const all = (await loadTasks(f.done)).sort(sortTasks);
-    const list = f.who ? all.filter((t) => (f.who.startsWith('g:') ? t.assigned_group === f.who.slice(2) : t.assigned_to === f.who)) : all;
+    const focus = /^[0-9a-f-]{8,}$/i.test(args[0] || '') ? args[0] : null; // #19: arrived from an escalation's Open →
+    const list = f.who && !focus ? all.filter((t) => (f.who.startsWith('g:') ? t.assigned_group === f.who.slice(2) : t.assigned_to === f.who)) : all;
     const buckets = {};
     list.forEach((t) => { const k = who(t); (buckets[k] = buckets[k] || []).push(t); });
     const people = Z.ref.people.filter((p) => p.active);
@@ -153,6 +156,11 @@
     Z.$('#tk-who', el).onchange = (e) => { f.who = e.target.value; Z.set('tasks_team', f); Z.route(); };
     Z.$('#tk-showdone', el).onchange = (e) => { f.done = e.target.checked; Z.set('tasks_team', f); Z.route(); };
     wire(el, list);
+    if (focus) {
+      const box = Z.$(`[data-id="${focus}"]`, el);
+      if (box) { box.style.outline = '3px solid var(--accent)'; box.style.borderRadius = '10px'; setTimeout(() => box.scrollIntoView({ block: 'center' }), 50); }
+      else Z.toast('That task is already closed.');
+    }
   };
 
   VIEWS.add = async (el) => {
