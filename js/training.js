@@ -34,7 +34,8 @@
   const LESSONS = [
     { id: 'howtest', group: 'Everyone', title: 'How to test Zuri (2 min)', mins: 2, role: null, star: true, safe: true, steps: [
       { go: 'test', el: '#test-head', say: 'Welcome, tester. Thank you for helping. This short video shows how we test Zuri, and what we need from you.' },
-      { el: '#hdr', say: 'The orange bar means TRAINING. The customers and the money are pretend, so nothing you do is real. But it is shared: what you do here, your teammates see. Work like it is a real day.' },
+      // 7 Oct deep check #14: this video plays in practice (green bar), so explain both bars.
+      { el: '#hdr', say: 'Look at the bar at the top. Green with PRACTICE means pretend and only on your phone: try anything. Orange with TRAINING means the shared training copy: the customers and money are still pretend, but your teammates see what you do. Work there like it is a real day.' },
       { el: '#test-open', say: 'Your Testers\' List is one page, one step at a time: the videos, the things to try for your job, joining the training copy. Do a step, tap Done, and the next one appears.' },
       { el: '#test-open', say: 'Under every step is a box: Tell Claude. Something wrong, confusing, or slow? Write it there. Short is fine: the button is too small, or I did not understand this word.' },
       { el: '#test-fs', say: 'If you opened Zuri inside Feedback Studio, even better: press the red button and talk while you work. Point at what is wrong. At the end, tap I\'m done, then Send to Claude.' },
@@ -105,7 +106,7 @@
       { go: 'jobs', el: '#j-list .item', say: 'Let\'s open a job.', do: tap('#j-list .item') },
       { el: 'label.btn::Add photo', say: 'Take a photo of the problem, and of your finished work. Tap Add photo. It works with no signal too: it uploads later.' },
       { el: '#jd-part', say: 'Write every part you use: routers, cable, connectors. Put the serial number for routers. This is how we keep track of stock.', do: async () => { await type('#jd-part input[name=item]', 'Drop cable 50m')(); await tap('#jd-part button[type=submit]')(); } },
-      { el: '#jd-pin', say: 'Standing at the customer\'s house? Tap Drop pin here. Do it outside. If the phone says the location is not accurate, wait a minute and try again. A good pin saves the next tech an hour.' },
+      { el: '#jd-pin', say: 'Standing at the customer\'s house? Tap Drop pin here. Do it outside. If the phone says the location is not accurate, wait a minute and try again. A good pin saves the next tech an hour. Drop it before you tap Job finished: once the job is done the button goes away.' }, // 7 Oct deep check #4: pin before finishing
       { go: 'jobs', el: 'a[href="#jobs/new"]', say: 'Found a new problem while you are out? Tap Log a job.', do: tap('a[href="#jobs/new"]') },
       { el: 'textarea[name=summary]', say: 'Write what is wrong, in a few words.', do: type('textarea[name=summary]', 'Pole leaning near the market, cable is low') },
       { el: '#nj button[type=submit]', say: 'Tap Save job. It goes on your list, and the office sees it.', do: tap('#nj button[type=submit]') },
@@ -154,7 +155,7 @@
     ], turn: ['Do a cash count', 'Record an expense from an M-Pesa message', 'Record 3,000 of hotspot money'] },
 
     { id: 'fin-bills', group: 'Finance', title: 'Paying the monthly bills', mins: 2, role: 'finance', steps: [
-      { go: 'money/bills', el: '#m-body table', say: 'Every monthly bill is here: the due day, how much is paid, and how much is still owing.' },
+      { go: 'money/bills', el: () => find('#m-body .bill-cards') || find('#m-body table'), say: 'Every monthly bill is here: the due day, how much is paid, and how much is still owing.' },
       { el: '[data-pay]', say: 'When you send the money, tap Pay.', do: tap('[data-pay]') },
       { el: '#pb-from', say: 'Choose where the money came from: M-Pesa, bank or cash. Part payments are fine.', do: tap('#pb-from [data-v=Bank]') },
       { el: '.sheet input[name=ref]', say: 'Type the M-Pesa or bank code.', do: type('.sheet input[name=ref]', 'FT26274QX') },
@@ -166,7 +167,7 @@
       { go: 'money/statements', el: '#m-body .list', say: 'Every account Zuri money passes through is listed here: the bank, the business M-Pesa, and any phone customers pay into.' },
       { el: '#st-file', say: 'Once a month, bring in each statement. Excel, CSV or the M-Pesa PDF all work. Bringing the same one twice is safe: repeats are skipped.' },
       { go: 'money/sort', el: '#view .so-cat', say: 'Then sort the transactions. Choose what each one is: a customer payment, a bill, or money moving between our own accounts.', do: choose('#view .so-cat', 'Customer payment') },
-      { el: '.so-always', say: 'Tick always to teach Zuri. Next time, every transaction like this one is sorted by itself.' },
+      { el: () => find('.so-rule') || find('.so-always'), say: 'Tap Always sort like this, or tick always before you choose, to teach Zuri. Next time, every transaction like this one is sorted by itself.' }, // 7 Oct deep check #9
       { el: '#so-all', say: 'Many the same? Tick them, choose once, and tap Sort ticked.' },
       { go: 'money/books', el: '#m-body .kpis', say: 'Profit by month adds it all up: income, expenses and profit, month by month. The more you sort, the truer it is.' },
     ], turn: ['Sort five transactions', 'Make one always rule', 'Read last month\'s profit'] },
@@ -227,7 +228,13 @@
   async function play(lesson, from = 0) {
     stop(true);
     // Same starting point every time, so the jobs and bills the video taps are always there.
-    if (Z.practice && window.ZP && from === 0 && !lesson.safe && !lesson.keep) { window.ZP.fresh(); Z.queue.length = 0; Z.saveQueue(); Z.syncBadge(); await Z.route(); }
+    // 7 Oct deep check #17: ask first if that would throw away the person's own practice work (e.g. their empty company set-up).
+    if (Z.practice && window.ZP && from === 0 && !lesson.safe && !lesson.keep) {
+      const own = window.ZP.dirty ? window.ZP.dirty() : false;
+      if (own && !confirm(`This video starts from the pretend company, so your own practice changes${window.ZP.mode && window.ZP.mode() === 'empty' ? ' (your empty company)' : ''} will be thrown away. Play it?`)) return;
+      window.ZP.fresh(); Z.queue.length = 0; Z.saveQueue(); Z.syncBadge(); await Z.route();
+    }
+    if (Z.practice) window.ZP_LESSON = true; // a video's own taps don't count as the person's changes
     P = { lesson, i: from, paused: false, token: {} };
     const block = Object.assign(document.createElement('div'), { className: 'tour-block' });
     const ring = Object.assign(document.createElement('div'), { className: 'tour-ring' });
@@ -266,6 +273,7 @@
     [P.block, P.ring, P.bar].forEach((x) => x.remove());
     const lesson = P.lesson, finished = P.i >= lesson.steps.length;
     P = null;
+    window.ZP_LESSON = false; // #17: from here on, changes are the person's own again
     if (!silent && finished) yourTurn(lesson);
   }
   function placeRing(el) {
