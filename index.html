@@ -11,17 +11,17 @@
   :root {
     --bg:#F4F6F5; --surface:#FFFFFF; --surface-2:#EDF1EF; --ink:#152322; --ink-soft:#3F4F4C; --ink-faint:#56645F;
     --brand:#0F6E5C; --brand-soft:#0F6E5C18; --accent:#F2A93B; --accent-soft:#F2A93B22;
-    --ok:#2E8B57; --ok-soft:#2E8B5718; --warn:#D9822B; --warn-soft:#D9822B1E; --bad:#C0392B; --bad-soft:#C0392B1A;
+    --ok:#2E8B57; --ok-soft:#2E8B5718; --warn:#D9822B; --warn-soft:#D9822B1E; --warn-ink:#8F4C00; --bad:#C0392B; --bad-soft:#C0392B1A;
     --line:#D8DFDC; --line-strong:#B9C4C0; --on-brand:#FFFFFF;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) { --bg:#0F1614; --surface:#18221F; --surface-2:#1F2B27; --ink:#E6ECEA; --ink-soft:#B4C2BE; --ink-faint:#93A39F;
       --brand:#3FB79A; --brand-soft:#3FB79A22; --accent:#F2B857; --accent-soft:#F2B85726; --ok:#5DC48A; --ok-soft:#5DC48A22;
-      --warn:#F0A05A; --warn-soft:#F0A05A22; --bad:#E76F5F; --bad-soft:#E76F5F22; --line:#2A3733; --line-strong:#3A4A45; --on-brand:#0F1614; }
+      --warn:#F0A05A; --warn-soft:#F0A05A22; --warn-ink:#F0A05A; --bad:#E76F5F; --bad-soft:#E76F5F22; --line:#2A3733; --line-strong:#3A4A45; --on-brand:#0F1614; }
   }
   :root[data-theme="dark"] { --bg:#0F1614; --surface:#18221F; --surface-2:#1F2B27; --ink:#E6ECEA; --ink-soft:#B4C2BE; --ink-faint:#93A39F;
     --brand:#3FB79A; --brand-soft:#3FB79A22; --accent:#F2B857; --accent-soft:#F2B85726; --ok:#5DC48A; --ok-soft:#5DC48A22;
-    --warn:#F0A05A; --warn-soft:#F0A05A22; --bad:#E76F5F; --bad-soft:#E76F5F22; --line:#2A3733; --line-strong:#3A4A45; --on-brand:#0F1614; }
+    --warn:#F0A05A; --warn-soft:#F0A05A22; --warn-ink:#F0A05A; --bad:#E76F5F; --bad-soft:#E76F5F22; --line:#2A3733; --line-strong:#3A4A45; --on-brand:#0F1614; }
 
   * { box-sizing:border-box; }
   html,body { margin:0; }
@@ -82,7 +82,8 @@
   .muted { color:var(--ink-faint); }
   .hint { font-size:14px; color:var(--ink-faint); margin:6px 0; }
   .pill { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-soft); white-space:nowrap; }
-  .pill.ok { background:var(--ok-soft); color:var(--ok); } .pill.warn { background:var(--warn-soft); color:var(--warn); }
+  /* 7 Oct deep check #11: orange TEXT uses the darker --warn-ink (readable outdoors); the light orange stays as the background */
+  .pill.ok { background:var(--ok-soft); color:var(--ok); } .pill.warn { background:var(--warn-soft); color:var(--warn-ink); }
   .pill.bad { background:var(--bad-soft); color:var(--bad); } .pill.brand { background:var(--brand-soft); color:var(--brand); }
   .list .item { display:flex; gap:10px; align-items:center; padding:12px 2px; border-bottom:1px solid var(--line); text-decoration:none; color:inherit; }
   .list .item:last-child { border-bottom:none; }
@@ -90,12 +91,12 @@
   .list .item .t { font-weight:600; }
   .list .item .m { font-size:14px; color:var(--ink-faint); }
   .alert { border-radius:10px; padding:10px 12px; margin-bottom:8px; font-weight:600; font-size:14px; }
-  .alert.ok { background:var(--ok-soft); color:var(--ok); } .alert.warn { background:var(--warn-soft); color:var(--warn); } .alert.bad { background:var(--bad-soft); color:var(--bad); }
+  .alert.ok { background:var(--ok-soft); color:var(--ok); } .alert.warn { background:var(--warn-soft); color:var(--warn-ink); } .alert.bad { background:var(--bad-soft); color:var(--bad); }
   .kpis { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:10px; margin-bottom:12px; }
   .kpi { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px; }
   .kpi .k { font-size:12px; color:var(--ink-faint); font-weight:600; }
   .kpi .v { font-size:22px; font-weight:800; margin-top:2px; }
-  .kpi .v.ok { color:var(--ok); } .kpi .v.warn { color:var(--warn); } .kpi .v.bad { color:var(--bad); }
+  .kpi .v.ok { color:var(--ok); } .kpi .v.warn { color:var(--warn-ink); } .kpi .v.bad { color:var(--bad); }
   .kpi .f { font-size:12px; color:var(--ink-faint); }
   .subtabs { display:flex; gap:6px; overflow-x:auto; margin:0 -16px 14px; padding:0 16px 4px; scrollbar-width:none; }
   .subtabs a { flex:none; padding:10px 14px; border-radius:999px; background:var(--surface); border:1px solid var(--line); color:var(--ink-soft); font-weight:600; font-size:13.5px; text-decoration:none; }
@@ -105,6 +106,14 @@
   table.t th { font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.3px; }
   table.t td.r, table.t th.r { text-align:right; }
   .scroll-x { overflow-x:auto; }
+  /* 7 Oct deep check #37: small tick boxes and back links get a thumb-sized (44 px) tap area */
+  .tap44 { display:inline-flex !important; align-items:center; justify-content:center; min-width:44px; min-height:44px; margin:0; cursor:pointer; }
+  a.back { display:inline-flex; align-items:center; min-height:44px; padding:0 12px 0 0; font-weight:600; }
+  /* 7 Oct deep check #38: on a phone the Money section pills wrap to two rows instead of hiding off the edge */
+  @media (max-width: 520px) { .subtabs.wrap { flex-wrap:wrap; overflow:visible; } }
+  /* 7 Oct deep check #10: bills as cards on a phone (Pay and ✏️ never cut off) */
+  .bill-cards { display:none; }
+  @media (max-width: 600px) { .bill-table { display:none; } .bill-cards { display:block; } }
   .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:10px; font-weight:600; font-size:14px; z-index:50; max-width:90vw; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
   .center-box { max-width:420px; margin:8vh auto; padding:0 16px; }
@@ -243,42 +252,42 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=50"></script>
-<script src="js/selfcheck.js?v=50"></script>
-<script src="js/gate.js?v=50"></script>
+<script src="js/config.js?v=51"></script>
+<script src="js/selfcheck.js?v=51"></script>
+<script src="js/gate.js?v=51"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=50"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=51"><\/script>');
 </script>
 <script>
   // Weak signal can drop one file. Practice can't run without practice.js, so try once more with a fresh address (v2.23, 5 Oct).
-  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=50&retry=' + Date.now() + '"><\/script>');
+  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=51&retry=' + Date.now() + '"><\/script>');
 </script>
-<script src="js/app.js?v=50"></script>
-<script src="js/home.js?v=50"></script>
-<script src="js/tasks.js?v=50"></script>
-<script src="js/jobs.js?v=50"></script>
-<script src="js/customers.js?v=50"></script>
-<script src="js/map.js?v=50"></script>
-<script src="js/money.js?v=50"></script>
-<script src="js/statements.js?v=50"></script>
-<script src="js/imports.js?v=50"></script>
-<script src="js/admin.js?v=50"></script>
-<script src="js/staffpay.js?v=50"></script>
-<script src="js/codes.js?v=50"></script>
-<script src="js/company.js?v=50"></script>
-<script src="js/checklist_data.js?v=50"></script>
-<script src="js/testing.js?v=50"></script>
-<script src="js/training.js?v=50"></script>
+<script src="js/app.js?v=51"></script>
+<script src="js/home.js?v=51"></script>
+<script src="js/tasks.js?v=51"></script>
+<script src="js/jobs.js?v=51"></script>
+<script src="js/customers.js?v=51"></script>
+<script src="js/map.js?v=51"></script>
+<script src="js/money.js?v=51"></script>
+<script src="js/statements.js?v=51"></script>
+<script src="js/imports.js?v=51"></script>
+<script src="js/admin.js?v=51"></script>
+<script src="js/staffpay.js?v=51"></script>
+<script src="js/codes.js?v=51"></script>
+<script src="js/company.js?v=51"></script>
+<script src="js/checklist_data.js?v=51"></script>
+<script src="js/testing.js?v=51"></script>
+<script src="js/training.js?v=51"></script>
 <script>
   // The videos live in training.js; weak signal can drop it like practice.js, so try once more (v2.25).
-  if (window.Z && typeof Z.learn !== 'function') document.write('<script src="js/training.js?v=50&retry=' + Date.now() + '"><\/script>');
+  if (window.Z && typeof Z.learn !== 'function') document.write('<script src="js/training.js?v=51&retry=' + Date.now() + '"><\/script>');
 </script>
-<script src="js/lessons_fields.js?v=50"></script>
-<script src="js/lessons_day.js?v=50"></script>
+<script src="js/lessons_fields.js?v=51"></script>
+<script src="js/lessons_day.js?v=51"></script>
 <script>
   // If a file didn't arrive (weak signal, power cut), say so kindly with one button, instead of a confusing error.
   (function () {
