@@ -114,7 +114,7 @@
     ]),
     C('fields-count', '7 · Count the cash', 1, 'fields-expense', [
       { go: 'money/count', el: '#mc select[name=area]', say: 'Chapter seven: Count the cash. The area and the date.' },
-      { el: 'input[name=bank]', say: 'Bank balance, from the bank app. M-Pesa balance, from the business account. Either may be left empty.' },
+      { el: 'input[name=bank]', say: 'Bank balance, from the bank app. M-Pesa balance, from the business account. Leave one empty and it keeps the figure from the last count.' }, // 7 Oct deep check #1: matches the screen now
       { el: 'input[name=counted_by]', say: 'Counted by, and a note for Jerry if something needs saying.' },
       { el: 'h3::Recent', say: 'Recent counts below. The × removes a wrong one.' },
     ]),
@@ -134,7 +134,7 @@
     ]),
     C('fields-bills', '10 · Bills', 2, 'fields-payrun', [
       { go: 'money/bills', el: '#m-body .row', say: 'Chapter ten: Bills. The arrows move between months.' },
-      { el: '#m-body table', say: 'Each bill: name and category, the due day, the amount, what is paid, what is owing. Pay opens the pay sheet; the pencil changes the amount or removes the bill.' },
+      { el: () => [...document.querySelectorAll('#m-body .bill-cards, #m-body .bill-table')].find((e) => e.offsetParent !== null) || null, say: 'Each bill: name and category, the due day, the amount, what is paid, what is owing. Pay opens the pay sheet; the pencil changes the amount or removes the bill.' }, // 7 Oct deep check #10: cards on a phone, a table on a computer
       { el: '[data-copy]', say: 'Copy last month\'s bills makes the new month in one tap.' },
       { el: '#mb input[name=name]', say: 'Add a bill: area, the name, the amount, the due day of the month, the category, and Pay to: the paybill and account, or the phone number the money goes to.' },
     ]),
@@ -143,7 +143,7 @@
       { el: '#m-body .kpis', say: 'To pay now, coming in three days, and sent this month.' },
       { el: '#m-body .list .item', say: 'Each line: a bill or a person, the amount, and the number to pay. Copy number, then send it in the M-Pesa app.' },
       { el: '.pr-sent', say: 'Back in Zuri, tap Sent, type the M-Pesa code, and it is recorded as an expense. Skip puts it off for now.' },
-      { go: 'admin/staff', el: '#sf-add', say: 'Staff and pay, under Admin: everyone Zuri pays, with their M-Pesa number, salary and pay day. Only finance and the partners see it.' },
+      { go: 'money/staff', el: '#sf-add', say: 'Staff and pay, next to the Pay run under Bills: everyone Zuri pays, with their M-Pesa number, salary and pay day. Only finance and the partners see it. Casual staff paid by the day or the job are paid by hand in Money out.' }, // 7 Oct deep check #7 + #41
     ]),
     C('fields-collections', '11 · Who paid', 2, 'fields-projection', [
       { go: 'money/collections', el: '#m-body .kpis', say: 'Chapter eleven: Who paid. Collected against expected, how many paid in full, late or part-paid and what they still owe, and not due yet.' },
@@ -166,7 +166,7 @@
       { go: 'money/sort', el: '#so-acct', say: 'Chapter fourteen: Sort them. All accounts or one; to sort, or already sorted.' },
       { el: '#so-bulk', say: 'Tick several, pick one category, Sort ticked.' },
       { el: '#view .so-cat', say: 'Each line: the description, date, account, code, and the amount. Choose the category.' },
-      { el: '.so-always', say: 'Always: teach Zuri so every line like this sorts itself next time.' },
+      { el: '.so-always', say: 'Always: tick it before you choose, and Zuri sorts every line like this by itself next time. Chose first? The line then offers Always sort like this.' }, // 7 Oct deep check #9
     ]),
     C('fields-books', '15 · Profit by month', 1, 'fields-report', [
       { go: 'money/books', el: '#m-body .kpis', say: 'Chapter fifteen: Profit by month. Income, expenses and profit for the latest month.' },
@@ -192,7 +192,7 @@
       { go: 'admin/codes', el: '#view p.hint', say: 'Chapter seventeen b: access codes, for partners. A code lets a phone into practice, the Testers\' List and the training copy. The real app keeps its own logins.' },
       { el: '#ac input[name=code]', say: 'Make a code: Zuri suggests one. You can type your own instead.' },
       { el: '#ac input[name=label]', say: 'Label: who it is for, like October testers, so you remember later.' },
-      { el: '#ac select[name=kind]', say: 'Kind: tester, trainee or partner.' },
+      { el: '#ac select[name=kind]', say: 'Kind: Tester, Demo or trial, or Staff.' }, // 7 Oct deep check #32: the words match the choices
       { el: '#ac input[name=days]', say: 'How many days it works, and how many phones may use it. Then Make the code.' },
       { el: () => document.querySelector('#view .card.list') || document.querySelector('#ac'), say: 'Every code is listed with who used it and when they were last seen. Copy sends a ready message with the code already inside the link — nobody has to type it. Plus thirty days extends it. Revoke switches it off; those phones stop the next time they open Zuri.' },
     ]),
