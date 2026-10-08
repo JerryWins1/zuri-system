@@ -120,7 +120,9 @@
       { el: '[data-out=promise]', say: 'If they promise to pay, tap Will pay, and choose the day.', do: tap('[data-out=promise]') },
       { el: '.sheet [data-d="3"]', say: 'In three days, for example.', do: async () => { await tap('.sheet [data-d="3"]')(); await tap('#pp-ok')(); } },
       { el: '.timeline', say: 'Every call is written here, so anyone can see the whole story of this customer.' },
-      { el: '#jd-sms', say: 'You can also send a friendly reminder: Text it for customers without WhatsApp, or WhatsApp it. The message is already written. Just press send.' },
+      { el: '#jd-msgtext', say: 'Billnasi already texted them three days before and switched them off. Our part starts after the cutoff. The steps on top show where this customer is: day one, help them reconnect. Day three, is anything wrong? Day seven, we miss you. Day fourteen, a last check-in. Day thirty, a kind goodbye.' },
+      { el: '#jd-sms', say: 'The message for today\'s step is written for you. Tap Text it, or WhatsApp it, and press send. The job then comes back on the day of the next step.' },
+      { el: '#jd-fault', say: 'If they say the internet was not working, tap Service problem. A fault job opens for them, so a technician goes.' },
       { el: '#nav a[data-tab=jobs]', say: 'When the customer pays, the job closes by itself. You never need to close it.' },
     ], turn: ['Open a follow-up and tap No answer', 'Record a promise to pay for Friday'] },
 
