@@ -41,7 +41,7 @@ window.ZURI_CHECKLIST = [
     { "id": "m-books", "t": "Read Profit by month", "how": "Money → Statements → Profit by month. Does last month make sense?", "lesson": "fin-statements" },
     { "id": "m-who", "t": "Chase a late payer from Who paid", "how": "Money → Customers → Who paid → Late → 📞 or 💬." },
     { "id": "m-report", "t": "Copy the Friday report", "how": "Money → Report → Copy for WhatsApp → paste it somewhere.", "lesson": "partners" },
-    { "id": "m-staff", "t": "Add a staff member with an M-Pesa number", "how": "Me → ⚙️ Admin → Staff & pay → ＋ Add → name, M-Pesa number, salary, pay day → Save." },
+    { "id": "m-staff", "t": "Add a staff member with an M-Pesa number", "how": "Money → 📋 Bills → Staff & pay → ＋ Add → name, M-Pesa number, salary, pay day → Save." },
     { "id": "m-payrun", "t": "Build the pay run and record one payment", "how": "Money → Bills → Pay run → 🔄 Build today's list → ✅ Sent on one → code → Record it.", "lesson": "fields-payrun" },
     { "id": "m-nudge", "t": "Send one morning nudge", "how": "Tasks → WhatsApp nudges → Open WhatsApp → send to yourself → Mark sent.", "lesson": "partners" }
   ]},
