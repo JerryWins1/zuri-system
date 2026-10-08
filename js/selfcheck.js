@@ -40,6 +40,8 @@
   let sent = 0; const mem = new Set(); // memory too, in case this phone won't store anything
   function report(where, msg) {
     msg = clean(msg); if (!msg || /ResizeObserver loop/i.test(msg)) return;
+    /* 8 Oct: Veronica's Firefox (iPhone) injects its own scripts into every page and they throw on their own — not Zuri's fault, not worth a report */
+    if (/window\.ethereum|selectedAddress|__firefox__|user-script:|webkit-masked-url|^Script error\.?$/i.test(msg)) return;
     const day = new Date().toISOString().slice(0, 10), key = day + '|' + where + '|' + msg.slice(0, 120);
     const seen = json('zsc_seen', {}); if (seen[key] || mem.has(key) || sent >= 5) return; mem.add(key);
     Object.keys(seen).forEach((k) => { if (k.slice(0, 10) !== day) delete seen[k]; }); seen[key] = 1; put('zsc_seen', JSON.stringify(seen)); sent++;
