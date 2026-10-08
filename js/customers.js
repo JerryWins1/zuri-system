@@ -16,11 +16,19 @@
   const visible = (f) => ALWAYS.includes(f) || Z.canSee('customer', f);
 
   const clean = (q) => String(q || '').replace(/[,()*%\\]/g, ' ').trim();
+  // 7 Oct deep check #12: a phone number typed as +254 7.., 254 7.., 07.. or with spaces finds the same customer.
+  // Numbers are matched on their last 9 digits, which every Kenyan format shares.
+  const findOr = (q) => {
+    const digits = q.replace(/\D/g, '');
+    const isPhone = /^[+\d\s\-()]+$/.test(q) && digits.length >= 6;
+    const ph = isPhone ? (digits.length >= 9 ? digits.slice(-9) : digits.replace(/^254/, '').replace(/^0/, '')) : q;
+    return `full_name.ilike.*${q}*,phone.ilike.*${ph}*,phone2.ilike.*${ph}*,account_no.ilike.*${q}*`;
+  };
   Z.searchCustomers = async (q, limit = 30) => {
     q = clean(q);
     if (!q) return [];
     const { data, error } = await Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status')
-      .or(`full_name.ilike.*${q}*,phone.ilike.*${q}*,account_no.ilike.*${q}*`).order('full_name').limit(limit);
+      .or(findOr(q)).order('full_name').limit(limit);
     if (error) throw error;
     return data;
   };
@@ -34,7 +42,7 @@
     const f = Z.get('cust_filter', { q: '', status: 'active', page: 0 });
     const per = 50;
     let q = Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status,plan,lat', { count: 'exact' });
-    if (clean(f.q)) q = q.or(`full_name.ilike.*${clean(f.q)}*,phone.ilike.*${clean(f.q)}*,account_no.ilike.*${clean(f.q)}*`);
+    if (clean(f.q)) q = q.or(findOr(clean(f.q))); // #12
     if (f.status) q = q.eq('status', f.status);
     if (Z.area) q = q.eq('area', Z.area);
     const { data, count, error } = await q.order('full_name').range(f.page * per, f.page * per + per - 1);
@@ -51,7 +59,7 @@
       <div class="card list">${data.length ? data.map((c) => `<a class="item" href="#customers/${c.id}"><div class="grow">
           <div class="t">${Z.esc(c.full_name)}</div>
           <div class="m">${Z.esc([c.phone, c.account_no, c.plan].filter(Boolean).join(' · '))}</div>
-          <div class="m">${Z.esc(Z.areaName(c.area))}${c.landmark ? ' · ' + Z.esc(c.landmark) : ''}${c.lat == null ? ' · <span style="color:var(--warn)">no pin</span>' : ''}</div>
+          <div class="m">${Z.esc(Z.areaName(c.area))}${c.landmark ? ' · ' + Z.esc(c.landmark) : ''}${c.lat == null ? ' · <span style="color:var(--warn-ink)">no pin</span>' : ''}</div>
         </div>${statusPill(c.status)}</a>`).join('') : '<div class="empty">No customers found. Import your billing list under <a href="#import">Import</a>, or add one.</div>'}</div>
       ${pages > 1 ? `<div class="row" style="justify-content:center"><button class="btn sec small" id="c-prev" ${f.page ? '' : 'disabled'}>← Prev</button><span class="hint">Page ${f.page + 1} of ${pages}</span><button class="btn sec small" id="c-next" ${f.page + 1 < pages ? '' : 'disabled'}>Next →</button></div>` : ''}`;
 
@@ -78,7 +86,7 @@
     const pin = c.lat != null ? `https://maps.google.com/?q=${c.lat},${c.lng}` : null;
 
     el.innerHTML = `
-      <p style="margin:0 0 6px"><a href="#customers">← Customers</a></p>
+      <p style="margin:0 0 6px"><a class="back" href="#customers">← Customers</a></p>
       <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:2px">${Z.esc(c.full_name)}</h2>${statusPill(c.status)}</div>
       <p class="hint" style="margin-top:0">${Z.esc(Z.areaName(c.area))}${c.landmark ? ' · 📍 ' + Z.esc(c.landmark) : ''}</p>
       <div class="row" style="margin-bottom:12px">
@@ -102,12 +110,17 @@
       const b = e.currentTarget;
       if (!navigator.geolocation) return Z.toast('This device can\'t share its location.');
       if (!confirm('Only do this while standing at the customer\'s house. Use this spot as their pin?')) return;
-      b.disabled = true;
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const { error } = await Z.sb.rpc('save_customer', { p: { id, lat: +pos.coords.latitude.toFixed(6), lng: +pos.coords.longitude.toFixed(6) } });
-        if (error) { b.disabled = false; return Z.fail(error); }
-        Z.toast('Pin saved.'); Z.route();
-      }, () => { b.disabled = false; Z.toast('Couldn\'t get a location.'); }, { enableHighAccuracy: true, timeout: 25000 });
+      b.disabled = true; b.textContent = '📍 Finding you…';
+      // 7 Oct deep check #20: same as the job page — warn when the phone's location is rough, and save through the
+      // offline queue so it works with no signal.
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const acc = Math.round(pos.coords.accuracy);
+        if (acc > 50 && !confirm(`Your location is only accurate to about ${acc} m. Step outside, wait a minute and try again for a better pin.\n\nSave this rough pin anyway?`)) { b.disabled = false; b.textContent = '📍 Try the pin again'; return; }
+        Z.onSynced = () => { if (location.hash === '#customers/' + id) Z.route(); }; // show the new pin once it has gone up
+        if (!Z.enqueue('customer_save', { p: { id, lat: +pos.coords.latitude.toFixed(6), lng: +pos.coords.longitude.toFixed(6) } })) { b.disabled = false; b.textContent = '📍 Drop pin here'; return; }
+        Z.toast(navigator.onLine ? `Pin saved (accurate to about ${acc} m).` : 'Pin saved on this phone — it sends when you have signal.');
+        setTimeout(Z.route, 400);
+      }, (err) => { b.disabled = false; b.textContent = '📍 Drop pin here'; Z.toast(err && err.code === 1 ? 'Allow location for this app in the phone settings.' : 'Couldn\'t get a location — step outside and try again.'); }, { enableHighAccuracy: true, timeout: 25000, maximumAge: 0 });
     };
     const sb = Z.$('#cp-send', el);
     if (sb) sb.onclick = async () => {
