@@ -467,14 +467,18 @@
         <div class="kpi"><div class="k">Not due yet</div><div class="v num">${by('due_later').length}</div><div class="f">usually pay later in the month</div></div>
       </div>
       <div class="subtabs">${[['late', 'Late'], ['part', 'Part paid'], ['unpaid', 'No history'], ['due_later', 'Not due yet'], ['paid', 'Paid'], ['all', 'All']].map(([k, t]) => `<a href="#money/collections/${ym}/${k}" class="${k === show ? 'on' : ''}">${t} (${k === 'all' ? rows.length : by(k).length})</a>`).join('')}</div>
-      <p class="hint">📞 call · 📩 text · 💬 WhatsApp — the reminder is already written; just press send. "Usual day" is learned from each customer's last 6 months of payments. Import the billing websites' exports to keep it accurate.</p>
+      <p class="hint">Billnasi texts everyone 3 days before their package runs out. 📩 and 💬 appear once someone has been switched off — the message fits how many days it has been (day 1 reconnect help · day 3 anything wrong? · day 7 we miss you · day 14 last check-in · day 30 goodbye). "Usual day" is learned from each customer's last 6 months of payments. Import the billing websites' exports to keep it accurate.</p>
       <div class="card list">${list.length ? list.map((r) => {
         const owe = Math.max(0, Number(r.monthly_rate || 0) - Number(r.paid_this_month || 0));
-        const msg = `Hello ${r.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. A friendly reminder that your internet payment${r.monthly_rate ? ' of KES ' + Z.fmt(owe || r.monthly_rate) : ''} for ${mName} is due.${Z.payLine ? Z.payLine(r.account_no) : ''} Thank you!`;
+        /* 8 Oct (Jerry): Billnasi texts everyone 3 days before the package runs out — we don't send "it's due" reminders.
+           Once they're cut off, the text is the after-cutoff step for how many days it has been. */
+        const cutDays = r.paid_until && new Date(r.paid_until) < new Date() ? Math.floor((Date.now() - new Date(r.paid_until)) / 864e5) : null;
+        const cutStep = cutDays == null || !Z.AFTER_CUTOFF ? null : (Z.AFTER_CUTOFF.find((x) => cutDays >= x.from && cutDays <= x.to) || null);
+        const msg = cutStep ? cutStep.msg({ full_name: r.full_name, account_no: r.account_no, monthly_rate: owe || r.monthly_rate }) : '';
         return `<div class="item"><div class="grow"><a class="t" href="#customers/${r.customer_id}" style="text-decoration:none;color:inherit">${Z.esc(r.full_name)}</a>
           <div class="m">${Z.esc(Z.areaName(r.area))}${r.monthly_rate != null ? ' · rate ' + Z.fmt(r.monthly_rate) : ''}${Number(r.paid_this_month) ? ' · paid ' + Z.fmt(r.paid_this_month) : ''}${r.paid_until ? (new Date(r.paid_until) < new Date() ? ' · ran out ' : ' · renews ') + Z.day(r.paid_until) : r.usual_day ? ' · usually pays ~' + ord(r.usual_day) : ''}${r.reliability != null ? ' · pays ' + Math.round(r.reliability * 100) + '% of months' : ''}</div></div>
           <span class="pill ${STATE[r.state][1]}">${STATE[r.state][0]}</span>
-          ${r.phone && ['late', 'part', 'unpaid'].includes(r.state) ? `<a class="btn sec small" href="tel:${Z.esc(r.phone)}" aria-label="Call">📞</a><a class="btn sec small" href="${Z.esc(Z.smsHref(r.phone, msg))}" aria-label="Text a reminder">📩</a><a class="btn sec small" target="_blank" rel="noopener" href="https://wa.me/${waPhone(r.phone)}?text=${encodeURIComponent(msg)}" aria-label="WhatsApp a reminder">💬</a>` : ''}</div>`;
+          ${r.phone && ['late', 'part', 'unpaid'].includes(r.state) ? `<a class="btn sec small" href="tel:${Z.esc(r.phone)}" aria-label="Call">📞</a>${msg ? `<a class="btn sec small" href="${Z.esc(Z.smsHref(r.phone, msg))}" aria-label="Text: ${Z.esc(cutStep.name)}">📩</a><a class="btn sec small" target="_blank" rel="noopener" href="https://wa.me/${waPhone(r.phone)}?text=${encodeURIComponent(msg)}" aria-label="WhatsApp: ${Z.esc(cutStep.name)}">💬</a>` : ''}` : ''}</div>`;
       }).join('') : '<div class="empty">Nobody in this group.</div>'}</div>`;
   };
 
