@@ -66,7 +66,8 @@
       { el: 'label.btn::Add photo', say: 'Photos: add a picture of the problem and the finished work.' },
       { el: '#jd-note', say: 'Notes: everything that happened on this job, by whom and when. Add a note at the bottom.' },
       { go: 'jobs', el: '#j-list .item::Payment follow-up', say: 'A payment follow-up has one more card.', do: tap('#j-list .item::Payment follow-up') },
-      { el: '#jd-out', say: 'After the call: No answer, Will pay with a day, Says paid, or Wants to stop. And a ready-made reminder: Text it, or WhatsApp it.' },
+      { el: '#jd-out', say: 'After the call: No answer, Will pay with a day, Says paid, or Wants to stop.' },
+      { el: '#jd-msgtext', say: 'Below it, the path after the cutoff. Billnasi texts customers before their package runs out; we follow up after: day one reconnect help, day three is anything wrong, day seven we miss you, day fourteen last check-in, day thirty a kind goodbye. Today\'s message is written for you: Text it or WhatsApp it, and the job comes back on the next step\'s day. Service problem opens a fault job.' },
     ]),
     C('fields-customers', '5 · Customers', 4, 'fields-map', [
       { go: 'customers', el: '#c-q', say: 'Chapter five: Customers. Search by name, phone or account number.' },
