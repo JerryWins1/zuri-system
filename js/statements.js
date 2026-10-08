@@ -184,7 +184,7 @@
     const dates = rows.map((r) => r.date).sort();
     const tin = rows.reduce((t, r) => t + r.money_in, 0), tout = rows.reduce((t, r) => t + r.money_out, 0);
     box.innerHTML = `
-      <div style="margin-top:12px"><b>${Z.fmt(rows.length)} transactions</b> · ${Z.day(dates[0])} → ${Z.day(dates[dates.length - 1])} · <span style="color:var(--ok)">in ${Z.fmt(tin)}</span> · <span style="color:var(--bad)">out ${Z.fmt(tout)}</span>${badCount ? ` · <span style="color:var(--warn)">${badCount} rows with unreadable dates skipped</span>` : ''}
+      <div style="margin-top:12px"><b>${Z.fmt(rows.length)} transactions</b> · ${Z.day(dates[0])} → ${Z.day(dates[dates.length - 1])} · <span style="color:var(--ok)">in ${Z.fmt(tin)}</span> · <span style="color:var(--bad)">out ${Z.fmt(tout)}</span>${badCount ? ` · <span style="color:var(--warn-ink)">${badCount} rows with unreadable dates skipped</span>` : ''}
         <div class="hint">${Z.esc(how)} → ${Z.esc(acct.name)}</div></div>
       <div class="scroll-x"><table class="t"><tr><th>Date</th><th>Details</th><th>Ref</th><th class="r">In</th><th class="r">Out</th><th class="r">Balance</th></tr>
         ${rows.slice(0, 6).map((r) => `<tr><td>${Z.esc(r.date)}</td><td>${Z.esc(r.details.slice(0, 60))}</td><td>${Z.esc(r.ref)}</td><td class="r num">${r.money_in ? Z.fmt(r.money_in) : ''}</td><td class="r num">${r.money_out ? Z.fmt(r.money_out) : ''}</td><td class="r num">${Z.fmt(r.balance)}</td></tr>`).join('')}</table></div>
@@ -240,13 +240,13 @@
       </div>` : ''}
       <div class="card list">${lines.length ? lines.map((l) => `
         <div class="item" data-id="${l.id}" style="flex-wrap:wrap">
-          <input type="checkbox" class="so-tick">
+          <label class="tap44" aria-label="Select this line"><input type="checkbox" class="so-tick"></label>
           <div class="grow" style="min-width:200px"><div class="t">${Z.esc(l.details)}</div>
             <div class="m">${Z.day(l.date)}${l.time ? ' ' + Z.esc(l.time.slice(0, 5)) : ''} · ${Z.esc(acctName(l.account_id))}${l.ref ? ' · ' + Z.esc(l.ref) : ''}${l.expense_id ? ' · <span style="color:var(--ok)">matches a logged expense</span>' : ''}${l.payment_id ? ' · <span style="color:var(--ok)">customer payment' + (l.customer_id ? ' (matched)' : ' (not matched — link it under Import)') + '</span>' : ''}</div></div>
           <b class="num" style="color:var(--${l.money_in ? 'ok' : 'bad'});min-width:80px;text-align:right">${l.money_in ? '+' + Z.fmt(l.money_in) : '−' + Z.fmt(l.money_out)}</b>
           <div class="row" style="width:100%;justify-content:flex-end">
+            <label class="row tap44" style="gap:4px;font-size:13px;padding-right:6px"><input type="checkbox" class="so-always"> always</label>
             ${catSelect(cats, l.category, 'class="so-cat" style="flex:1;max-width:320px"')}
-            <label class="row" style="margin:0;gap:4px;font-size:13px"><input type="checkbox" class="so-always"> always</label>
           </div>
         </div>`).join('') : `<div class="empty">${f.show === 'todo' ? 'Nothing to sort. 🎉' : 'Nothing sorted yet.'}</div>`}</div>
       ${count > lines.length ? `<p class="hint">Showing the newest ${lines.length}. Sort these and the next batch appears.</p>` : ''}`;
@@ -254,22 +254,24 @@
     Z.$('#so-acct', el).onchange = (e) => { f.acct = e.target.value; Z.set('sort_filter', f); Z.go('money/sort'); };
     Z.$('#so-show', el).onchange = (e) => { f.show = e.target.value; Z.set('sort_filter', f); Z.route(); };
 
-    const sortLine = async (id, cat, always) => {
-      const l = lines.find((x) => x.id === id);
-      const { error: e1 } = await Z.sb.from('statement_lines').update({ category: cat || null, sorted_by: Z.me.id, sorted_at: new Date().toISOString() }).eq('id', id);
-      if (e1) throw e1;
-      if (cat === 'Customer payment') await Z.sb.rpc('match_payments');
-      if (always && cat) {
+    // 7 Oct deep check #9: the "always" rule is its own step, so it also works AFTER the category is picked.
+    const makeRule = async (l, cat) => {
         const kw = prompt('Always sort transactions containing this text the same way. Shorten it to the part that stays the same:', keywordFor(l.details));
         if (kw && kw.trim().length >= 3) {
           const { error: e2 } = await Z.sb.from('sort_rules').upsert({ match: kw.trim(), direction: l.money_in ? 'in' : 'out', category: cat }, { onConflict: 'match,direction' });
           if (e2) throw e2;
           const n = must(await Z.sb.rpc('apply_sort_rules', { p_account: null }));
-          if (n) Z.toast(`Rule saved — ${n} more transaction${n === 1 ? '' : 's'} sorted the same way.`);
+          Z.toast(n ? `Rule saved — ${n} more transaction${n === 1 ? '' : 's'} sorted the same way.` : 'Rule saved — next time it sorts itself.');
           return true;
         }
-      }
-      return false;
+        return false;
+    };
+    const sortLine = async (id, cat, always) => {
+      const l = lines.find((x) => x.id === id);
+      const { error: e1 } = await Z.sb.from('statement_lines').update({ category: cat || null, sorted_by: Z.me.id, sorted_at: new Date().toISOString() }).eq('id', id);
+      if (e1) throw e1;
+      if (cat === 'Customer payment') await Z.sb.rpc('match_payments');
+      return always && cat ? makeRule(l, cat) : false;
     };
 
     Z.$$('.so-cat', el).forEach((s) => (s.onchange = async () => {
@@ -277,7 +279,13 @@
       try {
         const reloaded = await sortLine(item.dataset.id, s.value, Z.$('.so-always', item).checked);
         if (reloaded) return Z.route();
-        if (f.show === 'todo' && s.value) item.remove();
+        if (f.show === 'todo' && s.value) {
+          // Keep the line for a moment with an "always" offer, instead of it vanishing (#9).
+          const l = lines.find((x) => x.id === item.dataset.id), cat = s.value;
+          item.innerHTML = `<div class="grow"><div class="t">✓ ${Z.esc(cat)}</div><div class="m">${Z.esc(l.details)}</div></div><button class="btn sec small so-rule">Always sort like this?</button>`;
+          item.style.opacity = '.75';
+          Z.$('.so-rule', item).onclick = async () => { try { if (await makeRule(l, cat)) Z.route(); } catch (err) { Z.fail(err); } };
+        }
         Z.toast('Sorted.');
       } catch (err) { Z.fail(err); }
     }));
@@ -301,7 +309,7 @@
     const since = new Date(); since.setMonth(since.getMonth() - 11, 1);
     let q = Z.sb.from('v_books').select('*').gte('month', Z.ymd(since));
     if (Z.area) q = q.eq('area', Z.area);
-    const rows = must(await q);
+    const [rows, lastLine] = await Promise.all([q.then(must), Z.sb.from('statement_lines').select('date').order('date', { ascending: false }).limit(1).then(must)]);
     if (!rows.length) { el.innerHTML = '<div class="empty">No statements imported yet. Start under <a href="#money/statements">Statements</a>.</div>'; return; }
     const months = [...new Set(rows.map((r) => r.month))].sort();
     const cell = (flow, cat, m) => rows.filter((r) => r.flow === flow && r.category === cat && r.month === m)
@@ -310,19 +318,25 @@
     const total = (flow, m) => catsOf(flow).reduce((t, c) => t + cell(flow, c, m), 0);
     const unsorted = rows.filter((r) => r.flow === 'unsorted').reduce((t, r) => t + Number(r.lines), 0);
     const block = (flow) => catsOf(flow).map((c) => `<tr><td>${Z.esc(c)}</td>${months.map((m) => `<td class="r num">${Z.fmt(cell(flow, c, m)) === '0' ? '' : Z.fmt(cell(flow, c, m))}</td>`).join('')}</tr>`).join('');
-    const last = months[months.length - 1];
+    // 7 Oct deep check #21: the top numbers use the latest month the statements fully cover (same rule as Home);
+    // a month the statements only partly cover is marked "(so far)" instead of looking like a slump.
+    const lastStmt = (lastLine[0] || {}).date || '';
+    const monthEnd = (mo) => { const d = new Date(mo.slice(0, 7) + '-01T12:00:00'); d.setMonth(d.getMonth() + 1, 0); return Z.ymd(d); };
+    const partial = (m) => !lastStmt || lastStmt < monthEnd(m);
+    const last = [...months].reverse().find((m) => !partial(m)) || months[months.length - 1];
+    const mLabel = (m) => monthName(m) + (partial(m) ? ' (so far)' : '');
     const pie = catsOf('expense').map((c) => [c, cell('expense', c, last)]).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
 
     el.innerHTML = `
       ${unsorted ? `<div class="alert warn">${Z.fmt(unsorted)} transactions aren't sorted yet, so these numbers are incomplete. <a href="#money/sort">Sort them →</a></div>` : ''}
       <div class="kpis">
-        <div class="kpi"><div class="k">Income · ${monthName(last)}</div><div class="v num ok">${Z.fmt(total('income', last))}</div></div>
-        <div class="kpi"><div class="k">Expenses · ${monthName(last)}</div><div class="v num">${Z.fmt(total('expense', last))}</div></div>
-        <div class="kpi"><div class="k">Profit · ${monthName(last)}</div><div class="v num ${total('income', last) - total('expense', last) < 0 ? 'bad' : 'ok'}">${Z.fmt(total('income', last) - total('expense', last))}</div></div>
+        <div class="kpi"><div class="k">Income · ${mLabel(last)}</div><div class="v num ok">${Z.fmt(total('income', last))}</div></div>
+        <div class="kpi"><div class="k">Expenses · ${mLabel(last)}</div><div class="v num">${Z.fmt(total('expense', last))}</div></div>
+        <div class="kpi"><div class="k">Profit · ${mLabel(last)}</div><div class="v num ${total('income', last) - total('expense', last) < 0 ? 'bad' : 'ok'}">${Z.fmt(total('income', last) - total('expense', last))}</div></div>
       </div>
-      <div class="card"><b>Where the money went · ${monthName(last)}</b><div class="chart-box"><canvas id="bk-pie" aria-label="Expenses by category"></canvas></div></div>
+      <div class="card"><b>Where the money went · ${mLabel(last)}</b><div class="chart-box"><canvas id="bk-pie" aria-label="Expenses by category"></canvas></div></div>
       <div class="card scroll-x"><table class="t">
-        <tr><th>KES</th>${months.map((m) => `<th class="r">${monthName(m)}</th>`).join('')}</tr>
+        <tr><th>KES</th>${months.map((m) => `<th class="r">${mLabel(m)}</th>`).join('')}</tr>
         <tr><th colspan="${months.length + 1}" style="color:var(--ok)">Income</th></tr>${block('income')}
         <tr style="font-weight:700"><td>Total income</td>${months.map((m) => `<td class="r num">${Z.fmt(total('income', m))}</td>`).join('')}</tr>
         <tr><th colspan="${months.length + 1}" style="color:var(--bad)">Expenses</th></tr>${block('expense')}
