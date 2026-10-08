@@ -132,11 +132,12 @@
     D.nudges = PEOPLE.filter((p) => p.phone && p.role !== 'admin').slice(0, 4).map((p) => ({ id: uuid(), day: new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10) /* Kenya's day */, profile_id: p.id, phone: p.phone, sent_at: null,
       message: `Good morning ${p.full_name.split(' ')[0]} 👋\nYour Zuri list today:\n${D.tasks.filter((t) => t.assigned_to === p.id || (t.assigned_group === ({ field: 'field', callcenter: 'callcenter', internal: p.dept }[p.role]))).slice(0, 3).map((t) => '• ' + t.title).join('\n') || '• Check your jobs'}\nOpen Zuri → Tasks` }));
 
+    // 7 Oct deep check #35: the same category names as the real database (supabase/4_seed.sql, 7_statements.sql).
     // money
     const m = ym();
     D.bills = [
-      ['A', 'Safaricom backhaul', 45000, 45000, 5, 'Internet / backhaul'], ['A', 'Office rent', 15000, 15000, 1, 'Rent'], ['A', 'KPLC prepaid', 3500, 0, new Date().getDate(), 'Power'] /* always due today, so the Pay run has something to show */,
-      ['A', 'Staff transport', 6000, 2000, 25, 'Transport'], ['B', 'Bayobab backhaul', 28000, 0, 10, 'Internet / backhaul'], ['B', 'Pole rent', 4000, 0, 28, 'Rent'],
+      ['A', 'Safaricom backhaul', 45000, 45000, 5, 'Telecom / Network'], ['A', 'Office rent', 15000, 15000, 1, 'Rent & Utilities'], ['A', 'KPLC prepaid', 3500, 0, new Date().getDate(), 'Rent & Utilities'] /* always due today, so the Pay run has something to show */,
+      ['A', 'Staff transport', 6000, 2000, 25, 'Transport / Fuel'], ['B', 'Bayobab backhaul', 28000, 0, 10, 'Telecom / Network'], ['B', 'Pole rent', 4000, 0, 28, 'Rent & Utilities'],
     ].map(([area, name, amount, paid_amount, due_day, category]) => ({ id: uuid(), area, month: m, name, amount, paid_amount, paid: paid_amount >= amount, due_day, category, paid_date: paid_amount ? dayOff(-3) : null,
       pay_to: /KPLC/.test(name) ? 'Paybill 888880 · Acc 54123456' : /Safaricom|Bayobab/.test(name) ? 'Paybill 100100 · Acc ZF-' + area : /rent/i.test(name) ? '0711 222 333' : null }));
     D.cash_counts = [
@@ -144,14 +145,14 @@
       { id: uuid(), area: 'B', date: dayOff(-3), bank: 64000, mpesa: 21000, counted_by: 'Kelvin', note: null, created_at: tsOff(-3) },
     ];
     D.expenses = [
-      { id: uuid(), area: 'A', date: dayOff(-3), payee: 'Safaricom backhaul', category: 'Internet / backhaul', amount: 45000, paid_from: 'Bank', ref: 'FT26273XK', approved_by: 'Pre-approved (bill)', receipt: 'Digital / M-Pesa msg', note: 'Bill payment', recorded_by: 'Kelvin', vat_amount: 0, supplier_pin: null },
-      { id: uuid(), area: 'A', date: dayOff(-2), payee: 'Mama Njeri Hardware', category: 'Materials', amount: 2400, paid_from: 'Cash', ref: null, approved_by: 'Dickson', receipt: 'No — chase it', note: 'Cable clips', recorded_by: 'Kelvin', vat_amount: 0, supplier_pin: null },
+      { id: uuid(), area: 'A', date: dayOff(-3), payee: 'Safaricom backhaul', category: 'Telecom / Network', amount: 45000, paid_from: 'Bank', ref: 'FT26273XK', approved_by: 'Pre-approved (bill)', receipt: 'Digital / M-Pesa msg', note: 'Bill payment', recorded_by: 'Kelvin', vat_amount: 0, supplier_pin: null },
+      { id: uuid(), area: 'A', date: dayOff(-2), payee: 'Mama Njeri Hardware', category: 'Equipment / Inventory', amount: 2400, paid_from: 'Cash', ref: null, approved_by: 'Dickson', receipt: 'No — chase it', note: 'Cable clips', recorded_by: 'Kelvin', vat_amount: 0, supplier_pin: null },
     ];
     D.cash_in = [
       { id: uuid(), area: 'A', date: dayOff(-1), category: 'Hotspot', amount: 4300, received_to: 'M-Pesa', from_name: 'Hotspot sales', ref: null, note: null, recorded_by: 'Kelvin' },
       { id: uuid(), area: 'A', date: dayOff(-4), category: 'Installation fee', amount: 3500, received_to: 'M-Pesa', from_name: 'Daniel Ndungu', ref: 'UJ4MZ81QPA', note: null, recorded_by: 'Kelvin' },
     ];
-    D.expense_categories = ['Internet / backhaul', 'Power', 'Rent', 'Salaries', 'Transport', 'Materials', 'Equipment', 'Airtime & data', 'Bank & M-Pesa fees', 'Other'].map((name, i) => ({ name, sort: i }));
+    D.expense_categories = ['Payroll', 'Rent & Utilities', 'Telecom / Network', 'Equipment / Inventory', 'Transport / Fuel', 'Bank & M-Pesa Fees', 'Marketing', 'Loan Repayment', 'Other'].map((name, i) => ({ name, sort: i }));
     D.staff = [
       { id: 's-peter', profile_id: 'p-peter', full_name: 'Peter Kamau', job_title: 'Field technician', area: 'A', phone: '0722500500', mpesa_number: '0722500500', mpesa_name: 'PETER KAMAU', pay_type: 'monthly', salary: 25000, pay_day: 28, active: true, start_date: dayOff(-400) },
       { id: 's-brian', profile_id: 'p-brian', full_name: 'Brian Otieno', job_title: 'Field technician', area: 'A', phone: '0733600600', mpesa_number: '0733600600', mpesa_name: 'BRIAN OTIENO', pay_type: 'monthly', salary: 22000, pay_day: 28, active: true, start_date: dayOff(-200) },
@@ -160,14 +161,13 @@
       { id: 's-casual', profile_id: null, full_name: 'Joseph Mutua', job_title: 'Casual (pole work)', area: 'A', phone: '0755900900', mpesa_number: '0755900900', mpesa_name: 'JOSEPH MUTUA', pay_type: 'daily', salary: 800, pay_day: 28, active: true, start_date: null },
     ];
     D.pay_items = [];
-    D.payees = [{ name: 'KPLC prepaid', category: 'Power' }, { name: 'Safaricom backhaul', category: 'Internet / backhaul' }, { name: 'Mama Njeri Hardware', category: 'Materials' }];
+    D.payees = [{ name: 'KPLC prepaid', category: 'Rent & Utilities' }, { name: 'Safaricom backhaul', category: 'Telecom / Network' }, { name: 'Mama Njeri Hardware', category: 'Equipment / Inventory' }];
 
     // statements
     D.categories = [
-      ['Customer payment', 'income'], ['Subscription collections', 'income'], ['Hotspot', 'income'], ['Installation fees', 'income'],
-      ['Internet / backhaul', 'expense'], ['Power', 'expense'], ['Rent', 'expense'], ['Salaries', 'expense'], ['Transport', 'expense'], ['Materials', 'expense'], ['Bank & M-Pesa fees', 'expense'],
-      ['Between Zuri accounts', 'transfer'], ['Partner / owner money', 'owner'], ['Not Zuri money', 'ignore'],
-    ].map(([name, flow], i) => ({ name, flow, sort: i }));
+      ['Customer payment', 'income'], ['Subscription collections', 'income'], ['Hotspot', 'income'], ['Installation fee', 'income'], ['Reconnection fee', 'income'], ['Equipment sale', 'income'], ['Other income', 'income'],
+      ['Transfer between accounts', 'transfer'], ['Cash withdrawal', 'transfer'], ['Cash deposit', 'transfer'], ['Owner funding (Jerry)', 'owner'], ['Partner drawings', 'owner'], ['Ignore (personal / not Zuri)', 'ignore'],
+    ].concat(D.expense_categories.map((c) => [c.name, 'expense'])).map(([name, flow], i) => ({ name, flow, sort: i }));
     D.money_accounts = [{ id: 'acct-a-bank', name: 'Zuri A · KCB bank', kind: 'bank', area: 'A', owner: null, active: true }, { id: 'acct-a-mpesa', name: 'Zuri A · M-Pesa till', kind: 'mpesa', area: 'A', owner: null, active: true }];
     const L = (acct, n, details, inn, out, cat) => ({ id: uuid(), account_id: acct, date: dayOff(-n), time: '10:' + pad(n), ref: 'UJ' + (n * 104729).toString(36).toUpperCase(), details, money_in: inn, money_out: out, balance: null, category: cat, imported_at: tsOff(-1), customer_id: null, payment_id: null, expense_id: null });
     D.statement_lines = [
@@ -184,15 +184,15 @@
       L('acct-a-bank', 9, 'LEDGER FEE', 0, 450, null),
       L('acct-a-bank', 10, 'CASH DEPOSIT - DICKSON', 20000, 0, null),
       L('acct-a-mpesa', 12, 'Customer Payment to Small Business - 0745XXX771 DAVID MUTUA', 3000, 0, 'Customer payment'),
-      L('acct-a-mpesa', 14, 'Pay Bill to 888880 - KPLC PREPAID', 0, 2000, 'Power'),
+      L('acct-a-mpesa', 14, 'Pay Bill to 888880 - KPLC PREPAID', 0, 2000, 'Rent & Utilities'),
     ];
-    D.sort_rules = [{ id: uuid(), match: 'KPLC', direction: 'out', category: 'Power' }];
+    D.sort_rules = [{ id: uuid(), match: 'KPLC', direction: 'out', category: 'Rent & Utilities' }];
     const months = [-3, -2, -1, 0].map((k) => { const d = new Date(); d.setMonth(d.getMonth() + k, 1); return ymd(d); });
     D.v_books = [];
     months.forEach((mo, i) => {
       const grow = 1 + i * 0.05;
-      [['income', 'Subscription collections', 690000 * grow], ['income', 'Hotspot', 120000 * grow], ['income', 'Installation fees', 21000 + i * 3500],
-       ['expense', 'Internet / backhaul', 73000], ['expense', 'Salaries', 180000], ['expense', 'Rent', 19000], ['expense', 'Power', 7000 + i * 300], ['expense', 'Transport', 14000], ['expense', 'Materials', 26000 - i * 2000], ['expense', 'Bank & M-Pesa fees', 4100]]
+      [['income', 'Subscription collections', 690000 * grow], ['income', 'Hotspot', 120000 * grow], ['income', 'Installation fee', 21000 + i * 3500],
+       ['expense', 'Telecom / Network', 73000], ['expense', 'Payroll', 180000], ['expense', 'Rent & Utilities', 19000], ['expense', 'Rent & Utilities', 7000 + i * 300], ['expense', 'Transport / Fuel', 14000], ['expense', 'Equipment / Inventory', 26000 - i * 2000], ['expense', 'Bank & M-Pesa Fees', 4100]]
         .forEach(([flow, category, v]) => D.v_books.push({ month: mo, area: 'A', flow, category, money_in: flow === 'income' ? Math.round(v * (i === 3 ? 0.55 : 1)) : 0, money_out: flow === 'expense' ? Math.round(v * (i === 3 ? 0.55 : 1)) : 0, lines: 20 }));
     });
     D.v_books.push({ month: months[3], area: 'A', flow: 'unsorted', category: null, money_in: 0, money_out: 0, lines: 12 });
@@ -347,6 +347,7 @@
     } else if (st.op === 'delete') {
       const gone = all.filter(match); D[table] = all.filter((r) => !gone.includes(r)); touched.push(...gone);
     }
+    if (!window.ZP_LESSON) D._dirty = true; // 7 Oct deep check #17: the person changed their practice company
     save();
     return { data: st.returning || st.single ? (st.single ? touched[0] || null : touched.map((r) => ({ ...r }))) : null, error: null };
   }
@@ -429,12 +430,17 @@
     pay_bill: (a) => {
       if (!isFinance()) throw new Error('Only finance can pay bills.');
       const b = D.bills.find((x) => x.id === a.p_bill);
-      D.expenses.push({ id: uuid(), area: b.area, date: today(), category: b.category, payee: b.name, amount: a.p_amount, paid_from: a.p_from, ref: a.p_ref ? String(a.p_ref).toUpperCase() : null, approved_by: 'Pre-approved (bill)', receipt: a.p_from === 'Cash' ? 'Paper receipt — filed' : 'Digital / M-Pesa msg', note: 'Bill payment', recorded_by: me().full_name, bill_id: b.id, vat_amount: 0 });
-      b.paid_amount = Number(b.paid_amount) + Number(a.p_amount); b.paid_date = today(); b.paid = b.paid_amount >= b.amount;
-      return { paid_amount: b.paid_amount, amount: b.amount, name: b.name };
+      // 7 Oct deep check #2: like the fixed database — keeps the date, approval, VAT, PIN, note and receipt typed in Money out.
+      const day = a.p_date && a.p_date <= today() ? a.p_date : today();
+      const eid = uuid();
+      D.expenses.push({ id: eid, area: b.area, date: day, category: b.category, payee: b.name, amount: a.p_amount, paid_from: a.p_from, ref: a.p_ref ? String(a.p_ref).toUpperCase() : null, approved_by: a.p_approved_by || 'Pre-approved (bill)', receipt: a.p_receipt || (a.p_from === 'Cash' ? 'Paper receipt — filed' : 'Digital / M-Pesa msg'), note: a.p_note ? 'Bill payment · ' + a.p_note : 'Bill payment', recorded_by: me().full_name, bill_id: b.id, vat_amount: Number(a.p_vat) || 0, supplier_pin: a.p_pin ? String(a.p_pin).toUpperCase() : null });
+      b.paid_amount = Number(b.paid_amount) + Number(a.p_amount); b.paid_date = day; b.paid = b.paid_amount >= b.amount;
+      return { expense: eid, paid_amount: b.paid_amount, amount: b.amount, name: b.name };
     },
     save_customer: (a) => {
       const p = a.p; let c = p.id && D.v_customers.find((x) => x.id === p.id);
+      // 7 Oct deep check #4: same rule as the database — a field tech may only pin customers on their own open jobs.
+      if (me().role === 'field' && !(c && D.tickets.some((t) => t.customer_id === c.id && t.assigned_to === meId() && !['done', 'cancelled'].includes(t.status)))) throw new Error('Field techs can only update customers on their own open jobs.');
       if (c) Object.assign(c, p, { custom: { ...(c.custom || {}), ...(p.custom || {}) }, updated_at: new Date().toISOString() });
       else { c = { id: uuid(), status: 'active', custom: {}, created_at: new Date().toISOString(), ...p }; D.v_customers.push(c); }
       return c.id;
@@ -452,7 +458,21 @@
       };
       D.bills.filter((b) => b.month === period && !b.paid && b.amount - b.paid_amount > 0 && dueOn(b.due_day) <= until).forEach((b) => { put('bill', b.id, b.name, b.pay_to, b.amount - b.paid_amount, b.area, dueOn(b.due_day)); nb++; });
       D.staff.filter((s) => s.active && s.pay_type === 'monthly' && s.salary > 0 && dueOn(s.pay_day) <= until).forEach((s) => { put('staff', s.id, s.full_name + ' · salary ' + now.toLocaleDateString('en-GB', { month: 'short' }), s.mpesa_number || s.phone, s.salary, s.area, dueOn(s.pay_day)); ns++; });
-      return { bills: nb, staff: ns, due: D.pay_items.filter((p) => p.period === period && p.status === 'due').length };
+      // 7 Oct deep check #5: like the fixed database — last month's unpaid bills, and last month's salaries that never
+      // made it onto a list (only for staff who were on the staff list by then), come onto this run.
+      const pd = new Date(now.getFullYear(), now.getMonth() - 1, 1), prev = ymd(pd).slice(0, 7), plast = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+      const pDue = (d) => ymd(new Date(pd.getFullYear(), pd.getMonth(), Math.min(d, plast)));
+      let nOld = 0;
+      const putOld = (kind, ref_id, name, pay_to, amount, area, due_date, update) => {
+        const ex = D.pay_items.find((p) => p.kind === kind && p.ref_id === ref_id && p.period === prev);
+        if (ex) { if (update && ex.status === 'due') Object.assign(ex, { amount, pay_to }); return; }
+        D.pay_items.push({ id: uuid(), period: prev, due_date, kind, ref_id, name, pay_to, amount, area, status: 'due', created_at: new Date().toISOString() }); nOld++;
+      };
+      D.bills.filter((b) => b.month === prev && !b.paid && b.amount - b.paid_amount > 0).forEach((b) => putOld('bill', b.id, b.name, b.pay_to, b.amount - b.paid_amount, b.area, pDue(b.due_day), true));
+      D.staff.filter((s) => s.active && s.pay_type === 'monthly' && s.salary > 0 && s.created_at && s.created_at.slice(0, 10) <= pDue(s.pay_day) && (!s.start_date || s.start_date <= pDue(s.pay_day))
+        && !D.expenses.some((e) => String(e.payee).toLowerCase().startsWith(s.full_name.toLowerCase()) && e.date >= ymd(new Date(new Date(pDue(s.pay_day) + 'T12:00:00').getTime() - 7 * DAY))))
+        .forEach((s) => putOld('staff', s.id, s.full_name + ' · salary ' + pd.toLocaleDateString('en-GB', { month: 'short' }), s.mpesa_number || s.phone, s.salary, s.area, pDue(s.pay_day), false));
+      return { bills: nb, staff: ns, earlier: nOld, due: D.pay_items.filter((p) => p.period <= period && p.status === 'due').length };
     },
     record_pay_item: (a) => {
       if (!isFinance()) throw new Error('Only finance can record payments.');
@@ -460,7 +480,7 @@
       if (it.status === 'sent') throw new Error('Already recorded.');
       const amt = Number(a.p_amount || it.amount);
       if (it.kind === 'bill') RPC.pay_bill({ p_bill: it.ref_id, p_amount: amt, p_from: a.p_from, p_ref: a.p_ref });
-      else D.expenses.push({ id: uuid(), area: it.area || 'A', date: today(), category: 'Salaries', payee: it.name, amount: amt, paid_from: a.p_from, ref: a.p_ref ? String(a.p_ref).toUpperCase() : null, approved_by: me().full_name, receipt: 'Digital / M-Pesa msg', note: 'Pay run ' + it.period, recorded_by: me().full_name, vat_amount: 0 });
+      else D.expenses.push({ id: uuid(), area: it.area || 'A', date: today(), category: 'Payroll', payee: it.name, amount: amt, paid_from: a.p_from, ref: a.p_ref ? String(a.p_ref).toUpperCase() : null, approved_by: me().full_name, receipt: 'Digital / M-Pesa msg', note: 'Pay run ' + it.period, recorded_by: me().full_name, vat_amount: 0 });
       Object.assign(it, { status: 'sent', paid_from: a.p_from, ref_code: a.p_ref ? String(a.p_ref).toUpperCase() : null, amount: amt, sent_at: new Date().toISOString(), sent_by: meId() });
       return { ok: true, name: it.name, amount: amt };
     },
@@ -479,6 +499,7 @@
     import_customers: (a) => { a.rows.forEach((r) => RPC.save_customer({ p: { ...r, id: (D.v_customers.find((c) => r.billnasi_id && c.billnasi_id === r.billnasi_id) || {}).id } })); return a.rows.length; },
     import_payments: (a) => ({ rows: a.rows.length, added: a.rows.length, matched: 0 }),
   };
+  const READ_ONLY = ['dashboard_snapshot', 'collections_month', 'cash_projection']; // #17: these never change anything
   const blobs = new Map();
   const client = {
     auth: {
@@ -492,7 +513,7 @@
     },
     from: query,
     rpc: (name, args) => new Promise((res) => setTimeout(() => {
-      try { const data = RPC[name] ? RPC[name](args || {}) : null; save(); res({ data, error: null }); } catch (e) { res({ data: null, error: { message: e.message } }); }
+      try { const data = RPC[name] ? RPC[name](args || {}) : null; if (!window.ZP_LESSON && !READ_ONLY.includes(name)) D._dirty = true; save(); res({ data, error: null }); } catch (e) { res({ data: null, error: { message: e.message } }); }
     }, 150)),
     storage: { from: () => ({
       upload: async (path, blob) => { blobs.set(path, URL.createObjectURL(blob)); return { error: null }; },
@@ -510,6 +531,8 @@
     session: () => (meId() ? { user: { id: meId() } } : null),
     fresh: (mode) => { D = build(mode || 'running'); try { localStorage.setItem('zuri_practice_mode', mode || 'running'); } catch (e) {} save(); },
     mode: () => D._mode || 'running',
+    // 7 Oct deep check #17: has the person made their own changes since this practice company was fresh?
+    dirty: () => !!D._dirty,
     reset: () => { localStorage.removeItem(KEY); Object.keys(localStorage).filter((k) => k.startsWith('zuri_practice_') && k !== ROLE_KEY).forEach((k) => localStorage.removeItem(k)); },
   };
 })();
