@@ -81,12 +81,17 @@
     }
     return fallback || null;
   }
+  // 7 Oct deep check #22: whole words, "gone" words checked first ("Deactivated" and "Disabled" used to come out
+  // active, "Renewed" lead, "Unpaid" active). A word we don't know is kept as active but listed in the preview.
+  let unknownStatus = new Set();
   function toStatus(v) {
     const s = norm(v);
-    if (!s || /active|paid|online|current/.test(s) && !/inactive/.test(s)) return 'active';
-    if (/suspend|expir|overdue|blocked/.test(s)) return 'suspended';
-    if (/disconn|inactive|terminat|closed|cancel/.test(s)) return 'disconnected';
-    if (/lead|pending|new/.test(s)) return 'lead';
+    if (!s) return 'active';
+    if (/\b(dis ?conn\w*|deactiv\w*|inactive|disabl\w*|terminat\w*|closed|cancel\w*|deleted|removed|churn\w*)\b/.test(s)) return 'disconnected';
+    if (/\b(suspend\w*|expir\w*|overdue|blocked|unpaid|not paid|owing|lapsed)\b/.test(s)) return 'suspended';
+    if (/\b(lead|pending|new|prospect\w*|not installed)\b/.test(s)) return 'lead';
+    if (/\b(active|activated|paid|online|current|renew\w*|enabled|connected|ok)\b/.test(s)) return 'active';
+    unknownStatus.add(String(v).trim());
     return 'active';
   }
   const cell = (row, idx) => (idx == null || idx === '' ? '' : row[idx] ?? '');
@@ -95,6 +100,7 @@
   function mapRows(kind, source, rows, map, defArea) {
     const good = [], bad = [];
     const seen = new Set();
+    unknownStatus = new Set();
     for (const r of rows) {
       if (!r.some((v) => String(v).trim() !== '')) continue;
       if (kind === 'customers') {
@@ -226,11 +232,13 @@
         Z.set(memKey, { sig: headers.join('|'), map });
         const missing = targets.filter(([k, , req]) => req && map[k] == null).map(([, l]) => l);
         const { good, bad } = mapRows(st.kind, st.source, data, map, st.area);
+        const odd = [...unknownStatus].slice(0, 8); // #22
         const cols = st.kind === 'customers' ? ['full_name', 'billnasi_id', 'phone', 'plan', 'status', 'paid_until', 'area'] :['date', 'amount', 'mpesa_ref', 'payer_phone', 'account_ref', 'payer_name'];
         Z.$('#im-prev', box).innerHTML = missing.length ? `<div class="alert warn">Pick a column for: ${missing.map(Z.esc).join(', ')}.</div>` : `
           <div class="card">
-            <b>${Z.fmt(good.length)} ${st.kind === 'customers' ? 'customers' : 'payments'} ready</b>${bad.length ? ` · <span style="color:var(--warn)">${bad.length} rows skipped</span>` : ''}
+            <b>${Z.fmt(good.length)} ${st.kind === 'customers' ? 'customers' : 'payments'} ready</b>${bad.length ? ` · <span style="color:var(--warn-ink)">${bad.length} rows skipped</span>` : ''}
             ${st.kind === 'payments' ? ` · total ${Z.kes(good.reduce((t, r) => t + r.amount, 0))}` : ''}
+            ${odd.length ? `<div class="alert warn" style="margin-top:8px">Status words Zuri doesn't know were kept as <b>Active</b>: ${odd.map(Z.esc).join(', ')}. If any of these means the customer has left or is suspended, fix those customers after the import.</div>` : ''}
             <div class="scroll-x" style="margin-top:8px"><table class="t"><tr>${cols.map((c) => `<th>${Z.esc((targets.find((t) => t[0] === c) || [c, c])[1])}</th>`).join('')}</tr>
               ${good.slice(0, 8).map((r) => `<tr>${cols.map((c) => `<td>${Z.esc(c === 'amount' || c === 'monthly_rate' ? Z.fmt(r[c]) : c === 'paid_until' ? (r[c] ? Z.day(r[c]) : '') : c === 'area' ? Z.areaName(r[c]) : r[c] ?? '')}</td>`).join('')}</tr>`).join('')}</table></div>
             ${bad.length ? `<details style="margin-top:8px"><summary class="hint">Why rows were skipped</summary><div class="hint">${bad.slice(0, 15).map(([r, why]) => Z.esc(why + ': ' + r.filter(Boolean).slice(0, 4).join(' · '))).join('<br>')}</div></details>` : ''}
