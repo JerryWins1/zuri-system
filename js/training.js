@@ -201,14 +201,17 @@
   const rank = (v) => { const i = SOFT.findIndex((re) => re.test(v.name)); return i < 0 ? 99 : i; };
   // Phones and Macs also carry joke and robot voices — never offer those for training.
   const SILLY = /albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|fred|hysterical|deranged|grandma|grandpa|rocko|eddy|flo\b|reed|sandy|shelley/i;
-  const englishVoices = () => ((window.speechSynthesis && speechSynthesis.getVoices()) || []).filter((v) => /^en/i.test(v.lang) && !SILLY.test(v.name))
+  /* 8 Oct: Firefox on Veronica's iPhone swaps in its own voice list, and asking for it throws — which stopped this whole file
+     loading ("Zuri didn't finish loading (videos)"). Every voice call is now wrapped: no voices = captions only, never a dead page. */
+  const safeVoices = () => { try { return (window.speechSynthesis && speechSynthesis.getVoices()) || []; } catch (e) { return []; } };
+  const englishVoices = () => safeVoices().filter((v) => /^en/i.test(v.lang) && !SILLY.test(v.name))
     .sort((a, b) => rank(a) - rank(b) || (/en[-_](GB|KE|IE|AU)/i.test(b.lang) ? 1 : 0) - (/en[-_](GB|KE|IE|AU)/i.test(a.lang) ? 1 : 0));
   let voice = null;
-  const pickVoice = () => {
+  const pickVoice = () => { try {
     const vs = englishVoices();
     voice = vs.find((v) => v.name === Z.get('learn_voice', '')) || vs[0] || null;
-  };
-  if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+  } catch (e) { voice = null; } };
+  try { if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } } catch (e) {}
   const muted = () => Z.get('learn_mute', false);
   function speak(text) {
     const min = Math.max(2600, text.split(/\s+/).length * 420); // reading time when sound is off
