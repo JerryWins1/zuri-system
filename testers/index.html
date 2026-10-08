@@ -55,10 +55,12 @@
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=1"></script>
 <script src="../js/gate.js?v=43"></script>
-<script src="../js/checklist_data.js"></script>
+<script src="../js/checklist_data.js?v=51"></script>
 <script>
 (function () {
-  const VERSION = 'v1.7 · 2026-10-06';
+  const VERSION = 'v1.8 · 2026-10-07';
+  // v1.8 (7 Oct deep check): #16 the board and the plan editor need a partner signed in to the training copy;
+  //       #33 "Open practice as Call center" (was "as Call") and no picker steps — the link already picks the job.
   // v1.4: tapping a row no longer ticks it (Veronica tapped “▶ How to test” to play it and it ticked instead).
   //       The box ticks; the words open that step; video rows get their own ▶ Play button.
   let pick = null;
@@ -72,6 +74,7 @@
   let toastT; const toast = (m) => { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3000); };
   const $ = (s, r = document) => r.querySelector(s); const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const ROLES = { field: '🛠️ Field tech', callcenter: '📞 Call center', finance: '💰 Finance (office)', admin: '⭐ Partner / manager' };
+  const SHORT = { field: 'a field tech', callcenter: 'the call center', finance: 'finance', admin: 'a partner' }; // 7 Oct deep check #33
   const me = get('me', null);                                              // { name, role, device }
   // v1.5 (6 Oct): every practice link carries the invite code, so a link that opens in another browser
   // (WhatsApp's own browser → Chrome, phone → computer) doesn't stop at the code screen (Emmanuel: "trouble logging in").
@@ -88,7 +91,8 @@
       vid('tour', 'What Zuri is — the whole system', 5, 'Who it is for, and one job followed from the call to the fix.', 'admin'),
       vid('day-1', 'A day in the life (5 chapters)', 17, 'One working day through Kelvin, Mary, Peter and the partners. It switches person by itself; just watch.', 'finance'),
       { id: 's-install', sec: 'Get ready', t: '📱 Put Zuri on your phone', why: 'Opened from an icon, Zuri works like an app, even with weak signal.', how: ['Open the practice link below in Chrome.', 'Tap ⋮ (top right) → Add to Home screen → Add.', 'From now on, open Zuri from the icon.'], links: [['🎓 Open practice', APP + withCode('?practice')]] },
-      { id: 's-pick', sec: 'Get ready', t: '🙂 Open practice and pick your job', why: 'Practice is pretend customers and pretend money, on your phone only. Nothing you do is real.', how: ['Tap 🏢 Company already running.', 'Pick ' + ROLES[role] + '.', 'Look around for a minute, then come back here.'], links: [['🎓 Open practice as ' + ROLES[role].split(' ')[1], practice(role)]] },
+      // 7 Oct deep check #33: the link already carries the job, so practice opens as you — no picker to tap.
+      { id: 's-pick', sec: 'Get ready', t: '🙂 Open practice as your job', why: 'Practice is pretend customers and pretend money, on your phone only. Nothing you do is real.', how: ['Tap the button below. Practice opens as ' + SHORT[role] + ' straight away.', 'Look around for a minute, then come back here.'], links: [['🎓 Open practice as ' + SHORT[role], practice(role)]] },
     ];
     const mine = { field: ['start', 'tasks', 'field-jobs', 'field-extras'], callcenter: ['start', 'tasks', 'cc-followups', 'cc-newjob', 'customers'], finance: ['start', 'tasks', 'fin-daily', 'fin-bills', 'fin-statements'], admin: ['start', 'tasks', 'partners', 'admin', 'fin-daily', 'fin-bills'] }[role];
     const NAMES = { start: ['Welcome to Zuri', 2, null], tasks: ['Your task list', 2, 'field'], 'field-jobs': ['Doing a job, start to finish', 3, 'field'], 'field-extras': ['Photos, parts, map pins, new jobs', 3, 'field'], 'cc-followups': ['Payment follow-up calls', 3, 'callcenter'], 'cc-newjob': ['A customer calls with a problem', 2, 'callcenter'], customers: ['Finding a customer', 2, 'callcenter'], 'fin-daily': ['Daily money: count, record, check', 3, 'finance'], 'fin-bills': ['Paying the monthly bills', 2, 'finance'], 'fin-statements': ['Bank & M-Pesa statements', 3, 'finance'], partners: ['Running the company from Home', 3, 'admin'], admin: ['Adding a new staff member', 2, 'admin'] };
@@ -217,10 +221,30 @@
     $('#b-who').onclick = () => { if (confirm('Change who you are? Your ticks stay on this phone.')) { localStorage.removeItem('zt_me'); location.reload(); } };
   }
 
+  // ---------- partners only (7 Oct deep check #16) ----------
+  // The board shows every tester's name and notes, and a plan changes what everyone tests, so both need a partner
+  // signed in to the training copy on this phone (same browser = same sign-in). The database enforces it once
+  // supabase/21_deep_check_fixes.sql is run; until then this check keeps the pages from opening for anyone with a code.
+  async function partner() {
+    try {
+      const a = supabase.createClient(C.supabaseUrl, C.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false } });
+      const { data } = await a.auth.getSession();
+      if (!data || !data.session) return null;
+      const { data: p } = await a.from('profiles').select('full_name,role,active').eq('id', data.session.user.id).maybeSingle();
+      return p && p.active && p.role === 'admin' ? { a, p } : null;
+    } catch (e) { return null; }
+  }
+  function partnersOnly() {
+    $('#prog').hidden = true; $('#sub').textContent = 'Partners only';
+    $('#main').innerHTML = `<div class="card"><b>🔒 For the partners</b><p style="color:var(--soft);margin:4px 0 10px">The testers' board and their plans are for the partners. Sign in to the training copy as a partner on this phone, then come back to this page.</p>
+      <a class="big" style="display:block;text-align:center;text-decoration:none" href="${esc(APP + withCode('?training'))}">🟠 Sign in to the training copy</a></div>`;
+  }
+
   // ---------- the board (Jerry): ?board ----------
   async function board() {
+    const ok = await partner(); if (!ok) return partnersOnly();
     $('#sub').textContent = "Everyone's progress and notes";
-    const { data, error } = await sb.from('tester_log').select('*').order('at', { ascending: false }).limit(2000);
+    const { data, error } = await ok.a.from('tester_log').select('*').order('at', { ascending: false }).limit(2000);
     if (error) { $('#main').innerHTML = `<div class="card">Could not load: ${esc(error.message)}</div>`; return; }
     const people = {};
     data.forEach((r) => { const p = people[r.tester + '|' + r.role] = people[r.tester + '|' + r.role] || { name: r.tester, role: r.role, done: new Set(), notes: [], last: r.at, first: r.at }; if (r.kind === 'done') p.done.add(r.step); if (r.kind === 'undone') p.done.delete(r.step); if (r.kind === 'note') p.notes.push(r); p.first = r.at; });
@@ -235,6 +259,7 @@
 
   // ---------- the plan editor (Jerry): ?plan=<name>&role=<job> ----------
   async function planEditor() {
+    const ok = await partner(); if (!ok) return partnersOnly();
     const q = new URLSearchParams(location.search); const who = q.get('plan') || '*'; const role = ROLES[q.get('role')] ? q.get('role') : 'field';
     $('#sub').textContent = 'What should ' + (who === '*' ? 'every ' + ROLES[role] : who) + ' test?';
     const steps = stepsFor(role);
@@ -255,7 +280,7 @@
     $('#p-save').onclick = async () => {
       const ids = steps.map((s) => s.id).filter((id) => chosen.has(id));
       if (!ids.length) return toast('Tick at least one step.');
-      const { error } = await sb.from('tester_plan').insert({ tester: who, role: who === '*' ? role : role, steps: ids.length === steps.length ? [] : ids, focus: $('#p-focus').value.trim() || null, by_who: get('me', null) ? get('me', null).name : 'Jerry' });
+      const { error } = await ok.a.from('tester_plan').insert({ tester: who, role: who === '*' ? role : role, steps: ids.length === steps.length ? [] : ids, focus: $('#p-focus').value.trim() || null, by_who: ok.p.full_name || 'Jerry' });
       if (error) return toast('Could not save: ' + error.message);
       toast('Plan saved — their list updates next time they open it.'); setTimeout(() => (location.href = '?board'), 900);
     };
