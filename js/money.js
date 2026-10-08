@@ -8,7 +8,7 @@
   const SECTIONS = [
     ['💵 Today', ['today', 'count']],
     ['✍️ Record', ['expense', 'in']],
-    ['📋 Bills', ['bills', 'payrun']],
+    ['📋 Bills', ['bills', 'payrun', 'staff']], // 7 Oct deep check #7: Staff & pay here too (finance can't open Admin)
     ['👥 Customers', ['collections', 'projection']],
     ['🏦 Statements', ['statements', 'sort', 'books', 'import']],
     ['📊 Report', ['report']],
@@ -28,7 +28,7 @@
   const href = (k) => (k === 'import' ? '#import' : '#money/' + k);
   Z.moneyNav = (sub) => {
     const sec = SECTIONS.find(([, ks]) => ks.includes(sub)) || SECTIONS[0];
-    return `<div class="subtabs">${SECTIONS.map(([t, ks]) => `<a href="${href(ks[0])}" class="${sec[0] === t ? 'on' : ''}">${t}</a>`).join('')}</div>
+    return `<div class="subtabs wrap">${SECTIONS.map(([t, ks]) => `<a href="${href(ks[0])}" class="${sec[0] === t ? 'on' : ''}">${t}</a>`).join('')}</div>
       ${sec[1].length > 1 ? `<div class="seg" style="margin-bottom:14px">${sec[1].map((k) => `<a href="${href(k)}" class="${k === sub ? 'on' : ''}">${label(k)}</a>`).join('')}</div>` : ''}`;
   };
   Z.routes.money = async (args, el) => {
@@ -77,7 +77,8 @@
       if (dueToday.length) al.push(['warn', `📅 ${dueToday.length} bill${dueToday.length > 1 ? 's' : ''} due or overdue: ${dueToday.map((b) => b.name).join(', ')}.`]);
       if (today.getDay() === 5 && !(lc && lc.date === Z.ymd())) al.push(['warn', '📊 It\'s Friday — do the cash count, then the Friday report.']);
       if (!lc) al.push(['warn', 'No cash count yet for this area — start with one.']);
-      else { const age = Math.floor((Date.now() - new Date(lc.date + 'T12:00:00')) / 864e5); if (age > 8) al.push(['warn', `⏰ Last cash count was ${age} days ago.`]); }
+      else { const age = Math.floor((Date.now() - new Date(lc.date + 'T12:00:00')) / 864e5); if (age > (Z.CASH_STALE_DAYS || 7)) al.push( // 7 Oct deep check #29: same 7 days as Home
+['warn', `⏰ Last cash count was ${age} days ago.`]); }
       const chase = exp.filter((e) => e.area === a.code && e.receipt === 'No — chase it').length;
       if (chase) al.push(['warn', `🧾 ${chase} expense${chase > 1 ? 's' : ''} this month still missing a receipt.`]);
       if (!al.length) al.push(['ok', `✅ Nothing flagged for ${a.name}. Keep it that way.`]);
@@ -91,7 +92,7 @@
     }).join('');
     el.innerHTML = `
       <div class="kpis">
-        <div class="kpi"><div class="k">Customer payments · ${monthName(ym)}</div><div class="v num ok">${Z.fmt(sum(pays))}</div><div class="f"><a href="#money/collections">who paid →</a></div></div>
+        <div class="kpi"><div class="k">Customer payments · ${monthName(ym)}</div><div class="v num ok">${Z.fmt(sum(pays))}</div><div class="f"><a href="#money/collections" class="tap44" style="min-width:0;min-height:36px">who paid →</a></div></div>
         <div class="kpi"><div class="k">Other cash in</div><div class="v num">${Z.fmt(sum(cin))}</div><div class="f">hotspot, fees…</div></div>
         <div class="kpi"><div class="k">Expenses logged</div><div class="v num">${Z.fmt(sum(exp))}</div><div class="f">this month</div></div>
       </div>
@@ -104,7 +105,7 @@
     const rows = must(await inArea(Z.sb.from('cash_counts').select('*')).order('date', { ascending: false }).order('created_at', { ascending: false }).limit(20));
     el.innerHTML = `
       <form class="card" id="mc">
-        <p class="hint" style="margin-top:0">Look at the bank app and the M-Pesa business account, then type what each says right now.</p>
+        <p class="hint" style="margin-top:0">Look at the bank app and the M-Pesa business account, then type what each says right now. Leave one empty and it keeps the last count's figure.</p>
         <div class="grid2">
           <div><label>Area</label>${areaSelect()}</div>
           <div><label>Date</label><input type="date" name="date" value="${Z.ymd()}" required></div>
@@ -121,7 +122,12 @@
       e.preventDefault();
       const d = Z.formData(e.target);
       if (d.bank === '' && d.mpesa === '') return Z.toast('Enter at least one balance.');
-      const { error } = await Z.sb.from('cash_counts').insert({ area: d.area, date: d.date, bank: Z.num(d.bank) || 0, mpesa: Z.num(d.mpesa) || 0, counted_by: d.counted_by.trim() || null, note: d.note.trim() || null });
+      // 7 Oct deep check #1: a box left empty keeps the last count's figure (it used to be saved as 0).
+      const lc = (d.bank === '' || d.mpesa === '') ? (await latestCounts())[d.area] : null;
+      const keep = (v, k) => (v === '' ? (lc ? Number(lc[k]) || 0 : 0) : Z.num(v) || 0);
+      const kept = [d.bank === '' && lc ? 'bank' : '', d.mpesa === '' && lc ? 'M-Pesa' : ''].filter(Boolean);
+      const note = [d.note.trim(), kept.length ? kept.join(' and ') + ' carried from the ' + lc.date + ' count' : ''].filter(Boolean).join(' · ');
+      const { error } = await Z.sb.from('cash_counts').insert({ area: d.area, date: d.date, bank: keep(d.bank, 'bank'), mpesa: keep(d.mpesa, 'mpesa'), counted_by: d.counted_by.trim() || null, note: note || null });
       if (error) return Z.fail(error);
       Z.toast('Cash count saved.'); Z.go('money/today');
     };
@@ -229,22 +235,27 @@
         vat_amount: Z.num(d.vat_amount) || 0, supplier_pin: d.supplier_pin.trim().toUpperCase() || null, recorded_by: Z.me.full_name };
       if (!row.amount || row.amount <= 0) return Z.toast('Enter the amount.');
       if (matchedBill && d.as_bill) {
-        const { error } = await Z.sb.rpc('pay_bill', { p_bill: matchedBill.id, p_amount: row.amount, p_from: row.paid_from, p_ref: row.ref });
+        // 7 Oct deep check #2: the bill payment keeps the typed date, approval, VAT, PIN, note and receipt.
+        const { error } = await Z.payBill(matchedBill.id, row.amount, row.paid_from, row.ref,
+          { p_date: row.date, p_approved_by: row.approved_by, p_vat: row.vat_amount, p_pin: row.supplier_pin, p_note: row.note, p_receipt: row.receipt });
         if (error) return Z.fail(error);
-        await saveBalance(row.area);
+        await saveBalance(row.area, row.date);
         Z.toast(`Saved and counted against the ${matchedBill.name} bill.`); return Z.route();
       }
       const { error } = await Z.sb.from('expenses').insert(row);
       if (error) return Z.fail(error);
       if (!payees.some((p) => p.name.toLowerCase() === row.payee.toLowerCase())) await Z.sb.from('payees').insert({ name: row.payee, category: row.category });
-      await saveBalance(row.area);
+      await saveBalance(row.area, row.date);
       Z.toast('Expense saved.'); Z.route();
     };
     // The M-Pesa message says the new balance — keep it as a fresh M-Pesa count.
-    async function saveBalance(area) {
+    // 7 Oct deep check #8: dated the day of the message (not today), and skipped when a newer count already exists.
+    async function saveBalance(area, date) {
       if (parsedBalance == null) return;
+      const day = date || Z.ymd();
       const lc = (await latestCounts())[area];
-      await Z.sb.from('cash_counts').insert({ area, date: Z.ymd(), bank: lc ? lc.bank : 0, mpesa: parsedBalance, counted_by: 'M-Pesa message', note: 'M-Pesa balance from confirmation message' });
+      if (lc && lc.date > day) return;
+      await Z.sb.from('cash_counts').insert({ area, date: day, bank: lc ? lc.bank : 0, mpesa: parsedBalance, counted_by: 'M-Pesa message', note: 'M-Pesa balance from confirmation message' });
     }
     delButtons(el, 'expenses');
   };
@@ -303,7 +314,12 @@
         const totalOwing = ab.reduce((t, b) => t + owing(b), 0);
         const after = lc ? Number(lc.bank) + Number(lc.mpesa) - totalOwing : null;
         return `<h3>${Z.esc(a.name)} · owing ${Z.kes(totalOwing)}${after != null ? ` · <span style="color:var(--${after < 0 ? 'bad' : 'ok'})">cash after bills ${Z.fmt(after)}</span>` : ''}</h3>
-        <div class="card">${ab.length ? `<div class="scroll-x"><table class="t"><tr><th>Bill</th><th>Due</th><th class="r">Amount</th><th class="r">Paid</th><th class="r">Owing</th><th></th></tr>
+        <div class="card">${ab.length ? `<div class="bill-cards list">${ab.map((b) => `<div class="item" style="flex-wrap:wrap;${b.paid ? 'opacity:.55' : ''}"><div class="grow" style="min-width:150px"><div class="t" style="${b.paid ? 'text-decoration:line-through' : ''}">${Z.esc(b.name)}</div>
+            <div class="m">Due the ${ord(b.due_day)} · ${Z.esc(b.category || '')}</div><div class="m">Amount ${Z.fmt(b.amount)} · paid ${Z.fmt(b.paid_amount)}</div></div>
+            <div style="text-align:right"><div class="hint" style="margin:0">owing</div><b class="num">${Z.fmt(owing(b))}</b></div>
+            <div class="row" style="width:100%;justify-content:flex-end">${b.paid ? '✅ Paid' : `<button class="btn small" data-pay="${b.id}">💸 Pay</button>`}<button class="btn sec small" data-edit="${b.id}" aria-label="Change ${Z.esc(b.name)}">✏️ Change</button></div></div>`).join('')}</div>
+          <!-- 7 Oct deep check #10: on a phone the cards above show instead of this six-column table -->
+          <div class="scroll-x bill-table"><table class="t"><tr><th>Bill</th><th>Due</th><th class="r">Amount</th><th class="r">Paid</th><th class="r">Owing</th><th></th></tr>
           ${ab.map((b) => `<tr style="${b.paid ? 'opacity:.55;text-decoration:line-through' : ''}"><td>${Z.esc(b.name)}<div class="hint" style="margin:0">${Z.esc(b.category || '')}</div></td><td>${ord(b.due_day)}</td>
             <td class="r num">${Z.fmt(b.amount)}</td><td class="r num">${Z.fmt(b.paid_amount)}</td><td class="r num"><b>${Z.fmt(owing(b))}</b></td>
             <td style="white-space:nowrap">${b.paid ? '✅' : `<button class="btn small" data-pay="${b.id}">Pay</button>`} <button class="btn sec small" data-edit="${b.id}">✏️</button></td></tr>`).join('')}</table></div>`
@@ -362,6 +378,32 @@
         sh.close(); Z.toast('Removed.'); Z.route();
       };
     }));
+  };
+
+  // 7 Oct deep check #2: pay a bill and keep the details typed in Money out. Uses the new pay_bill
+  // (supabase/21_deep_check_fixes.sql); until that is run, falls back to the old pay_bill and then
+  // corrects the expense it made, so nothing typed is lost either way.
+  const NO_FN = /could not find the function|function .*does not exist|PGRST202|schema cache/i;
+  Z.payBill = async (bill, amount, from, ref, extra = {}) => {
+    const clean = Object.fromEntries(Object.entries(extra).filter(([, v]) => v != null && v !== ''));
+    const base = { p_bill: bill, p_amount: amount, p_from: from, p_ref: ref || null };
+    let r = Object.keys(clean).length ? await Z.sb.rpc('pay_bill', { ...base, ...clean }) : await Z.sb.rpc('pay_bill', base);
+    if (!r.error || !Object.keys(clean).length || !NO_FN.test(String(r.error.message || r.error.code || ''))) return r;
+    r = await Z.sb.rpc('pay_bill', base);
+    if (r.error || !r.data || !r.data.expense) return r;
+    const fix = {};
+    if (clean.p_date) fix.date = clean.p_date;
+    if (clean.p_approved_by) fix.approved_by = clean.p_approved_by;
+    if (clean.p_vat) fix.vat_amount = clean.p_vat;
+    if (clean.p_pin) fix.supplier_pin = clean.p_pin;
+    if (clean.p_note) fix.note = 'Bill payment · ' + clean.p_note;
+    if (clean.p_receipt) fix.receipt = clean.p_receipt;
+    if (Object.keys(fix).length) {
+      const u = await Z.sb.from('expenses').update(fix).eq('id', r.data.expense);
+      if (u.error) Z.toast('Paid, but the extra details did not save: ' + Z.errText(u.error));
+      if (fix.date) await Z.sb.from('bills').update({ paid_date: fix.date }).eq('id', bill);
+    }
+    return r;
   };
 
   // One sheet for paying a bill: how much, from where, the code. The database does the sum (no lost updates).
@@ -446,7 +488,8 @@
     const countNote = areas.map((a) => counts[a.code] ? `${a.name}: counted ${Z.day(counts[a.code].date)}` : `${a.name}: no count`).join(' · ');
     const stale = areas.some((a) => !counts[a.code] || counts[a.code].date < Z.ymd());
     const [proj, coll] = await Promise.all([
-      Z.sb.rpc('cash_projection', { p_area: Z.area || null, p_start: Z.num(start), p_extra: extras }).then(must),
+      // 7 Oct deep check #6: ask for 30 days like Home does (the database default stops at month end).
+      Z.sb.rpc('cash_projection', { p_area: Z.area || null, p_start: Z.num(start), p_extra: extras, p_until: Z.ymd(new Date(Date.now() + 29 * 864e5)) }).then(must),
       Z.sb.rpc('collections_month', { p_month: Z.ym() }).then(must),
     ]);
     const late = coll.filter((r) => (!Z.area || r.area === Z.area) && ['late', 'part'].includes(r.state));
@@ -458,12 +501,12 @@
     const totOut = proj.reduce((t, r) => t + Number(r.bills_out), 0);
 
     el.innerHTML = `
-      ${short ? `<div class="alert bad">🚨 Cash runs short on ${Z.day(short.day)} (${Z.fmt(short.balance)}). ${short.note ? Z.esc(short.note) + '.' : ''} Tell Jerry now, not on the day.</div>` : proj.length ? '<div class="alert ok">✅ Cash stays above zero for the rest of the month.</div>' : ''}
+      ${short ? `<div class="alert bad">🚨 Cash runs short on ${Z.day(short.day)} (${Z.fmt(short.balance)}). ${short.note ? Z.esc(short.note) + '.' : ''} Tell Jerry now, not on the day.</div>` : proj.length ? '<div class="alert ok">✅ Cash stays above zero for the next 30 days.</div>' : ''}
       <div class="kpis">
         <div class="kpi"><div class="k">Lowest point</div><div class="v num ${Number(low.balance) < 0 ? 'bad' : 'ok'}">${Z.fmt(low.balance)}</div><div class="f">${low.day ? Z.day(low.day) : ''}</div></div>
-        <div class="kpi"><div class="k">Month end</div><div class="v num">${Z.fmt(end.balance)}</div><div class="f">${end.day ? Z.day(end.day) : ''}</div></div>
+        <div class="kpi"><div class="k">In 30 days</div><div class="v num">${Z.fmt(end.balance)}</div><div class="f">${end.day ? Z.day(end.day) : ''}</div></div>
         <div class="kpi"><div class="k">Expected in</div><div class="v num ok">${Z.fmt(totIn)}</div><div class="f">customers + hotspot etc.</div></div>
-        <div class="kpi"><div class="k">Bills still to pay</div><div class="v num">${Z.fmt(totOut)}</div><div class="f">rest of month</div></div>
+        <div class="kpi"><div class="k">Bills still to pay</div><div class="v num">${Z.fmt(totOut)}</div><div class="f">next 30 days</div></div>
         <div class="kpi"><div class="k">Upside if late payers pay</div><div class="v num">${Z.fmt(upside)}</div><div class="f">${late.length} customer${late.length === 1 ? '' : 's'} · <a href="#money/collections">chase →</a></div></div>
       </div>
       <div class="card"><div class="chart-box"><canvas id="mp-chart" aria-label="Cash balance by day"></canvas></div></div>
@@ -510,7 +553,7 @@
         },
         options: { maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
           plugins: { legend: { labels: { color: col('--ink-soft'), boxWidth: 12 } }, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: KES ${Z.fmt(c.raw)}` } } },
-          scales: { x: { ticks: { color: col('--ink-faint') }, grid: { display: false }, title: { display: true, text: 'Day of month', color: col('--ink-faint') } },
+          scales: { x: { ticks: { color: col('--ink-faint') }, grid: { display: false }, title: { display: true, text: 'Day', color: col('--ink-faint') } },
                     y: { ticks: { color: col('--ink-faint'), callback: (v) => Z.fmt(v) }, grid: { color: col('--line') } } } },
       });
     } catch (e) { Z.$('#mp-chart', el).replaceWith(Object.assign(document.createElement('p'), { className: 'hint', textContent: 'Chart needs a connection the first time.' })); }
@@ -536,7 +579,9 @@
       const unpaid = ab.reduce((t, b) => t + Math.max(0, Number(b.amount) - Number(b.paid_amount)), 0);
       const late = coll.filter((r) => r.area === a.code && ['late', 'part'].includes(r.state));
       L.push(`*${a.name}*`);
-      L.push(lc ? `Bank: KES ${Z.fmt(lc.bank)} | M-Pesa: KES ${Z.fmt(lc.mpesa)}${Number(lc.mpesa) < Number(a.float_target) ? ' ⚠️ below target' : ' ✅'} (counted ${lc.date} by ${lc.counted_by || '—'})` : 'Bank / M-Pesa: no count this week ⚠️');
+      // 7 Oct deep check #28: an old count is flagged, not passed off as this week's.
+      const age = lc ? Math.floor((Date.now() - new Date(lc.date + 'T12:00:00')) / 864e5) : null;
+      L.push(lc ? `Bank: KES ${Z.fmt(lc.bank)} | M-Pesa: KES ${Z.fmt(lc.mpesa)}${Number(lc.mpesa) < Number(a.float_target) ? ' ⚠️ below target' : ' ✅'} (counted ${lc.date} by ${lc.counted_by || '—'})${age > (Z.CASH_STALE_DAYS || 7) ? ` ⚠️ ${age} days old — no count this week` : ''}` : 'Bank / M-Pesa: no count this week ⚠️');
       L.push(`Bills owing: KES ${Z.fmt(unpaid)} (${ab.filter((b) => !b.paid).length} of ${ab.length})`);
       if (lc) { const after = Number(lc.bank) + Number(lc.mpesa) - unpaid; L.push(`Cash after bills: KES ${Z.fmt(after)}${after < 0 ? ' 🚨 NEGATIVE' : ''}`); }
       L.push(`Month to date — customer payments: KES ${Z.fmt(sum(pays, a.code))} | other cash in: KES ${Z.fmt(sum(cin, a.code))} | expenses: KES ${Z.fmt(sum(exp, a.code))}`);
