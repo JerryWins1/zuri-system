@@ -3,7 +3,8 @@
 (function () {
   const Z = window.Z;
   const must = (r) => { if (r.error) throw r.error; return r.data; };
-  const PAY_TYPES = [['monthly', 'Monthly salary'], ['daily', 'Paid per day'], ['per_job', 'Paid per job'], ['none', 'Not paid through Zuri']];
+  // 7 Oct deep check #41: the pay run only builds monthly salaries, so say plainly how the others get paid.
+  const PAY_TYPES = [['monthly', 'Monthly salary (on the Pay run)'], ['daily', 'Paid per day — pay by hand in Money out'], ['per_job', 'Paid per job — pay by hand in Money out'], ['none', 'Not paid through Zuri']];
   const ord = (n) => n + ([11, 12, 13].includes(n % 100) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th'));
 
   // ---------- Admin → Staff & pay ----------
@@ -66,20 +67,25 @@
     };
   }
 
+  // 7 Oct deep check #7: Staff & pay also lives under Money → Bills, so a finance clerk (not an admin) can open it.
+  Z.moneySubs.push(['staff', 'Staff & pay']);
+  Z.moneyViews.staff = (el) => Z.adminViews.staff(el);
+
   // ---------- Money → Bills → Pay run ----------
   Z.moneySubs.push(['payrun', 'Pay run']);
   Z.moneyViews.payrun = async (el) => {
     const period = Z.ym();
-    const items = must(await Z.sb.from('pay_items').select('*').eq('period', period).order('due_date').order('name'));
+    // 7 Oct deep check #5: anything from an earlier month that is still unpaid stays on the list (it used to vanish on the 1st).
+    const items = must(await Z.sb.from('pay_items').select('*').or(`period.eq.${period},and(status.eq.due,period.lt.${period})`).order('due_date').order('name'));
     const today = Z.ymd();
     const due = items.filter((i) => i.status === 'due');
     const now = due.filter((i) => i.due_date <= today), soon = due.filter((i) => i.due_date > today);
-    const sent = items.filter((i) => i.status === 'sent');
+    const sent = items.filter((i) => i.status === 'sent' && i.period === period);
     const sum = (a) => a.reduce((t, i) => t + Number(i.amount), 0);
     const row = (i) => `<div class="item" data-id="${i.id}" style="align-items:flex-start;flex-wrap:wrap">
         <span style="font-size:22px">${i.kind === 'staff' ? '👤' : '📋'}</span>
         <div class="grow" style="min-width:200px"><div class="t">${Z.esc(i.name)}</div>
-          <div class="m">${i.due_date < today ? '<span class="pill bad">overdue</span> ' : i.due_date === today ? '<span class="pill warn">today</span> ' : 'due ' + Z.day(i.due_date) + ' · '}${i.area ? Z.esc(Z.areaName(i.area)) + ' · ' : ''}${i.pay_to ? '📱 ' + Z.esc(i.pay_to) : '<span style="color:var(--warn)">no number — add it to the ' + (i.kind === 'staff' ? 'staff member' : 'bill') + '</span>'}</div>
+          <div class="m">${i.period < period ? '<span class="pill bad">from ' + Z.esc(new Date(i.period + '-01T12:00:00').toLocaleDateString('en-GB', { month: 'long' })) + '</span> ' : ''}${i.due_date < today ? '<span class="pill bad">overdue</span> ' :i.due_date === today ? '<span class="pill warn">today</span> ' : 'due ' + Z.day(i.due_date) + ' · '}${i.area ? Z.esc(Z.areaName(i.area)) + ' · ' : ''}${i.pay_to ? '📱 ' + Z.esc(i.pay_to) : '<span style="color:var(--warn-ink)">no number — add it to the ' + (i.kind === 'staff' ? 'staff member' : 'bill') + '</span>'}</div>
           <div class="row" style="margin-top:6px">${i.pay_to ? `<button class="btn sec small pr-copy" data-copy="${Z.esc(i.pay_to)}">📋 Copy number</button>` : ''}<button class="btn small pr-sent">✅ Sent — record it</button><button class="btn sec small pr-skip">⏭ Skip</button></div>
         </div><b class="num">KES ${Z.fmt(i.amount)}</b></div>`;
     el.innerHTML = `
@@ -92,13 +98,13 @@
       <h3>Pay now · ${now.length}</h3><div class="card list">${now.map(row).join('') || '<div class="muted">Nothing due today. 🎉 Tap Build today\'s list if you expected something.</div>'}</div>
       ${soon.length ? `<h3>Coming up</h3><div class="card list">${soon.map(row).join('')}</div>` : ''}
       <h3>Sent this month</h3><div class="card list">${sent.map((i) => `<div class="item"><div class="grow"><div class="t">${Z.esc(i.name)}</div><div class="m">${Z.when(i.sent_at)} · ${Z.esc(i.paid_from || '')}${i.ref_code ? ' · ' + Z.esc(i.ref_code) : ''} · by ${Z.esc(Z.personName(i.sent_by) || '')}</div></div><b class="num">KES ${Z.fmt(i.amount)}</b></div>`).join('') || '<div class="muted">None yet this month.</div>'}</div>
-      <p class="hint">Staff and their M-Pesa numbers: <a href="#admin/staff">Admin → Staff & pay</a>. Bills' paybill numbers: <a href="#money/bills">Bills → ✏️</a>.</p>`;
+      <p class="hint">Staff and their M-Pesa numbers: <a href="#money/staff">Bills → Staff & pay</a>. Bills' paybill numbers: <a href="#money/bills">Bills → ✏️</a>. Casual staff paid per day or per job are not on the Pay run: pay them, then record it in <a href="#money/expense">Money out</a>.</p>`;
     Z.$('#pr-build', el).onclick = async () => {
       const b = Z.$('#pr-build', el); b.disabled = true;
       const { data, error } = await Z.sb.rpc('build_pay_run');
       b.disabled = false;
       if (error) return Z.fail(error);
-      Z.toast(`${data.bills} bill${data.bills === 1 ? '' : 's'} and ${data.staff} staff on the list · ${data.due} to pay.`); Z.route();
+      Z.toast(`${data.bills} bill${data.bills === 1 ? '' : 's'} and ${data.staff} staff on the list${data.earlier ? ` · ${data.earlier} from last month` : ''} · ${data.due} to pay.`); Z.route();
     };
     Z.$$('.pr-copy', el).forEach((b) => (b.onclick = () => navigator.clipboard.writeText(b.dataset.copy.replace(/^.*?(\d[\d ]{6,}\d).*$/, '$1')).then(() => Z.toast('Number copied — paste it in M-Pesa.'), () => Z.toast(b.dataset.copy))));
     Z.$$('.pr-skip', el).forEach((b) => (b.onclick = async () => {
