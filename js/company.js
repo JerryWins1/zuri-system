@@ -20,6 +20,30 @@
   // " Pay by M-Pesa Paybill 123456, account 0042." — or by Till, or nothing if neither is set yet
   Z.payLine = (account) => { const c = Z.co(); return c.paybill ? ` Pay by M-Pesa Paybill ${c.paybill}${account ? ', account ' + account : ''}.` : c.till ? ` Pay by M-Pesa Buy Goods, Till ${c.till}.` : ''; };
 
+  // 8 Oct 2026 (Jerry): Billnasi texts every customer 3 days BEFORE the package runs out, then switches them off.
+  // Zuri's part is what happens AFTER the cutoff: five steps, the right words for each, a kind goodbye at day 30.
+  // Each step shows on the payment follow-up job; sending its text brings the job back on the next step's day.
+  const first = (c) => String(c.full_name || '').trim().split(/\s+/)[0] || 'there';
+  const coName = () => (Z.co ? Z.co().name : 'Zuri Fiber') || 'Zuri Fiber';
+  const pay = (c) => { const p = Z.payLine ? Z.payLine(c.account_no) : ''; return p || (' Pay by M-Pesa' + (c.account_no ? ', account ' + c.account_no : '') + '.'); };
+  const rate = (c) => (c.monthly_rate ? 'KES ' + Number(c.monthly_rate).toLocaleString('en-US') : 'your package');
+  Z.AFTER_CUTOFF = [
+    { key: 'd1', from: 0, to: 2, next: 3, short: 'Day 1 · reconnect',
+      name: 'Day 1–2 · Help them reconnect', how: 'Send the text first — most people simply forgot. It tells them exactly how to get back online.',
+      msg: (c) => `Hello ${first(c)}, this is ${coName()}. Your internet went off because the package ran out. To reconnect, pay ${rate(c)}.${pay(c)} You'll be back online within minutes. Asante!` },
+    { key: 'd3', from: 3, to: 6, next: 7, short: 'Day 3 · anything wrong?',
+      name: 'Day 3–6 · Is anything wrong?', how: 'Call first and ask if the service was working well. If it wasn’t, tap “Service problem” to open a fault job. Then send the text.',
+      msg: (c) => `Hello ${first(c)}, this is ${coName()}. We noticed your internet is still off. Was everything okay with the service? If something wasn't working, reply and we'll send a technician. To reconnect, pay ${rate(c)}.${pay(c)}` },
+    { key: 'd7', from: 7, to: 13, next: 14, short: 'Day 7 · we miss you',
+      name: 'Day 7–13 · We miss you', how: 'Send the text. If they reply that they need a few days, tap “Will pay” and pick the day.',
+      msg: (c) => `Hello ${first(c)}, ${coName()} here. We miss having you connected! Your account is ready: pay ${rate(c)}.${pay(c)} You'll be back online in minutes. Need a few more days? Just reply and tell us.` },
+    { key: 'd14', from: 14, to: 29, next: 30, short: 'Day 14 · last check-in',
+      name: 'Day 14–29 · Last check-in', how: 'Call. Ask why they stopped (moved, price, the service, something else) and write the answer in a note — it tells us what to fix.',
+      msg: (c) => `Hello ${first(c)}, this is ${coName()}. It's been two weeks since your internet went off. Have you moved, or is there something we could do better? We'd love to have you back. ${pay(c).trim()}` },
+    { key: 'd30', from: 30, to: 1e6, next: null, short: 'Day 30 · goodbye',
+      name: 'Day 30 · A kind goodbye', how: 'Send the goodbye, then close the follow-up. It won’t open again unless they pay and run out another time.',
+      msg: (c) => `Hello ${first(c)}, this is ${coName()}. We've paused your account for now — thank you for being with us. Whenever you're ready, pay ${rate(c)}.${pay(c)} We'll have you back online the same day.` },
+  ];
   const FIELDS = [
     ['name', 'Company name (used in customer texts)', 'Zuri Fiber'], ['town', 'Town', 'Maai Mahiu'],
     ['phone', 'Office phone', '07…'], ['whatsapp', 'WhatsApp number', '07…'], ['email', 'Email', 'info@…'],
