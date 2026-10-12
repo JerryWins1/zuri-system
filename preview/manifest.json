@@ -1,0 +1,13 @@
+{
+  "name": "Zuri System",
+  "short_name": "Zuri",
+  "description": "Zuri Fiber — jobs, customers and money in one place",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F6F5",
+  "theme_color": "#0F6E5C",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
