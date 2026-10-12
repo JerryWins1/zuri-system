@@ -650,6 +650,7 @@
     if (extras && extras.lines.wait.length) L.push(...extras.lines.wait, '');
     if (extras && extras.lines.ai.length) L.push(...extras.lines.ai, '');
     const proj = Z.projectsFriday ? await Z.projectsFriday().catch(() => []) : []; // 📈 v2.34: one line per active project
+    const vat = await vatSummary(ym).catch((e) => { console.warn('vat', e); return null; }); // 🧾 v2.35: VAT box (read only)
     if (proj.length) L.push(...proj, '');
     L.push('_Escalation: anything red above → Jerry same day. >48h stuck items escalate._', '_Written by Zuri System from this week\'s work_');
     const text = L.join('\n');
@@ -666,7 +667,7 @@
       ? `<div class="card" id="fr-print-head"><b style="font-size:20px">Zuri Fiber — Friday report</b><div class="hint" style="margin:2px 0 0">${Z.esc(today)} · written by Zuri System ${Z.esc(Z.version)}</div></div>`
       : `<div class="card" id="fr-head" style="border-left:4px solid var(--brand)"><b>📊 The Friday report writes itself</b><div class="hint" style="margin:2px 0 0">Money, service, payment follow-ups, the team, receipts, payments waiting for an OK and the manager's summary — from what everyone did in Zuri this week. Read it, then <b>Copy for WhatsApp</b> and paste it into the partners' group. Nobody gathers numbers by hand any more.</div></div>`;
     const staleHtml = stale.length ? `<a class="alert warn no-print" id="fr-stale" href="#money/count" style="display:block;text-decoration:none">💵 Do a cash count first — ${Z.esc(stale.join(', '))}. The money part starts from it. Tap to count →</a>` : '';
-    el.innerHTML = `${head}${staleHtml}${extras ? extras.html.wait : ''}${extras ? extras.html.service + extras.html.follow + extras.html.team : ''}${rcCard}${extras ? extras.html.ai : ''}
+    el.innerHTML = `${head}${staleHtml}${extras ? extras.html.wait : ''}${extras ? extras.html.service + extras.html.follow + extras.html.team : ''}${rcCard}${vat ? vatCard(vat) : ''}${extras ? extras.html.ai : ''}
       <h3>The report</h3><div class="card"><pre class="report">${Z.esc(text)}</pre>
       <div class="row no-print"><button class="btn" id="mr-copy">Copy for WhatsApp</button>${print ? '<button class="btn sec" id="mr-print">🖨 Print / save as PDF</button><a class="btn sec" href="#money/report">← Back</a>' : '<a class="btn sec" id="mr-printview" href="#money/report/print">🖨 Printable view</a>'}<button class="btn sec" id="mr-csv">Export ${monthName(ym)} to CSV</button></div></div>`;
     printMode(print);
@@ -675,6 +676,40 @@
     const pr = Z.$('#mr-print', el); if (pr) pr.onclick = () => window.print();
     Z.$$('.mr-photo', el).forEach((b) => (b.onclick = () => Z.receiptPhoto(b.dataset.path, b.dataset.label)));
   };
+
+  // 🧾 v2.35 (Business Week): VAT for last month and this month, from what is already in Zuri. Read only.
+  //   Can claim   = VAT typed on expenses that have a supplier KRA PIN (approved or not needing approval)
+  //   No PIN      = VAT typed on expenses without a PIN — KRA won't let you claim it, so chase the PIN
+  //   On sales    = an ESTIMATE: customer payments + other money in, if every price includes 16% VAT (× 16/116)
+  async function vatSummary(ym) {
+    const months = [nextMonth(ym, -1), ym];
+    return Promise.all(months.map(async (m) => {
+      const m0 = monthStart(m), m1 = monthStart(nextMonth(m));
+      const [exp, pays, cin] = await Promise.all([
+        Z.sb.from('expenses').select('*').gte('date', m0).lt('date', m1).then(must),
+        Z.sb.from('payments').select('amount').gte('date', m0).lt('date', m1).then(must),
+        Z.sb.from('cash_in').select('amount').gte('date', m0).lt('date', m1).then(must),
+      ]);
+      const ok = exp.filter((r) => r.approval !== 'waiting'), v = (r) => Number(r.vat_amount || 0);
+      const sales = pays.concat(cin).reduce((t, r) => t + Number(r.amount || 0), 0);
+      const claim = ok.filter((r) => v(r) > 0 && String(r.supplier_pin || '').trim()).reduce((t, r) => t + v(r), 0);
+      const nopin = ok.filter((r) => v(r) > 0 && !String(r.supplier_pin || '').trim());
+      const out = Math.round(sales * 16 / 116);
+      return { ym: m, sales, out, claim, nopin: nopin.reduce((t, r) => t + v(r), 0), nopinN: nopin.length, waiting: exp.filter((r) => r.approval === 'waiting' && v(r) > 0).length, net: out - claim };
+    }));
+  }
+  function vatCard(vs) {
+    const [a, b] = vs, due = (m) => '20 ' + monthName(nextMonth(m)).replace(/ \d{4}$/, '');
+    const row = (k, f, cls = '') => `<tr><td>${k}</td><td class="r num ${cls}">${Z.fmt(f(a))}</td><td class="r num ${cls}">${Z.fmt(f(b))}</td></tr>`;
+    return `<h3 id="mr-vat-h">🧾 VAT</h3><div class="card" id="mr-vat"><table class="t">
+      <tr><th></th><th class="r">${Z.esc(monthName(a.ym))}<div class="hint" style="margin:0;font-weight:400">return due ${Z.esc(due(a.ym))}</div></th><th class="r">${Z.esc(monthName(b.ym))}<div class="hint" style="margin:0;font-weight:400">so far · due ${Z.esc(due(b.ym))}</div></th></tr>
+      ${row('Money in (customer payments + other)', (x) => x.sales)}
+      ${row('VAT on sales — estimate (× 16/116)', (x) => x.out)}
+      ${row('VAT you can claim (receipts with a supplier PIN)', (x) => x.claim, 'ok')}
+      ${row('VAT with NO supplier PIN (can\'t claim)', (x) => x.nopin, a.nopin || b.nopin ? 'bad' : '')}
+      ${row('To pay KRA — estimate', (x) => x.net)}</table>
+      <p class="hint" style="margin:6px 0 0">${b.nopinN ? `⚠️ ${b.nopinN} expense${b.nopinN === 1 ? '' : 's'} this month ha${b.nopinN === 1 ? 's' : 've'} VAT but no supplier KRA PIN — ask the shop for its PIN. ` : ''}${b.waiting ? `⏳ ${b.waiting} with VAT still wait for a second OK and aren't counted yet. ` : ''}The sales figure is an estimate that assumes every price includes 16% VAT — check with the accountant before filing on iTax. A nil return must still be filed by the 20th.</p></div>`;
+  }
 
   async function exportMonth(ym) {
     const m0 = monthStart(ym), m1 = monthStart(nextMonth(ym));
