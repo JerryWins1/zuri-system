@@ -99,7 +99,13 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.1 · 2026-10-12';
+  const VERSION = 'v2.2 · 2026-10-13';
+  // v2.2 (13 Oct): 🏢 BUSINESS WEEK (16–22 Oct). testers/?bw is the page for the 8 Business Week testers: pick your name and role
+  //       (or ride in the link: ?bw&r=C1&n=Mary), see TODAY's challenges for your role (time, do this, where, “you should end
+  //       with…”), tick ✅ or report ❌, copy the pretend M-Pesa messages, download the billing files. Rows go to tester_log with the
+  //       step tag bw:d<day>:<role>:<challenge>, so the board groups them. The board (?board) gains a 🏢 Business Week part at the
+  //       top: per person per day — challenges done, problems, what they actually did in Zuri, KES earned/paid/owed, confirm
+  //       problems, mark paid. Challenges come from scripts/business_week.json (made by tools/make_business_week.py).
   // v2.1 (12 Oct): ONE-SCRIPT LINKS — testers/?script=projects&n=Nicholas&code=ZURI-TEST opens only the 📈 Projects script
   //       (scripts/projects.json) for someone with no Zuri job or account: practice as finance, a plain-words welcome, his
   //       video, then the steps. Kept apart on the phone (its own name, answers and progress). Everything else is unchanged.
@@ -611,11 +617,13 @@
     const { data, error } = await ok.a.from('tester_log').select('*').order('at', { ascending: false }).limit(2000);
     if (error) { $('#main').innerHTML = `<div class="card">Could not load: ${esc(error.message)}</div>`; return; }
     const people = {};
-    data.forEach((r) => { const p = people[r.tester + '|' + r.role] = people[r.tester + '|' + r.role] || { name: r.tester, role: r.role, done: new Set(), notes: [], last: r.at, first: r.at }; if (r.kind === 'done') p.done.add(r.step); if (r.kind === 'undone') p.done.delete(r.step); if (r.kind === 'note') p.notes.push(r); p.first = r.at; });
+    data.forEach((r) => { if (String(r.step).startsWith('bw:')) return; const p = people[r.tester + '|' + r.role] = people[r.tester + '|' + r.role] || { name: r.tester, role: r.role, done: new Set(), notes: [], last: r.at, first: r.at }; if (r.kind === 'done') p.done.add(r.step); if (r.kind === 'undone') p.done.delete(r.step); if (r.kind === 'note') p.notes.push(r); p.first = r.at; });
     const fmt = (t) => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
     const title = (p, id) => (stepsFor(p.role).find((s) => s.id === id) || {}).t || id;
     const scripts = await boardScripts(ok, data);                            // v2.0: the test-script part (empty string if unavailable)
+    const bwb = await boardBW(ok, data).catch((e) => ({ html: `<div class="banner">🏢 Business Week part didn't load: ${esc(e.message || e)}</div>`, wire: null })); // v2.2
     $('#main').innerHTML = `<div class="card"><b>📊 Testers' board</b><p style="color:var(--soft);margin:4px 0 0">Every answer, tick and note from the Testers' List, newest first. Say “read the testers' list” to Claude and it reads this too.</p></div>
+      ${bwb.html}
       ${scripts.html}
       <h3><span>The old list (videos, getting ready)</span><span></span></h3>
       <div class="card"><table><tr><th>Tester</th><th>Job</th><th>Done</th><th>Last seen</th><th></th></tr>${Object.values(people).map((p) => { const n = stepsFor(p.role).length; return `<tr><td>${esc(p.name)}</td><td>${ROLES[p.role]}</td><td><span class="pill ${p.done.size === n ? 'ok' : ''}">${p.done.size} / ${n}</span></td><td>${fmt(p.last)}</td><td><a href="?plan=${encodeURIComponent(p.name)}&role=${p.role}" style="font-weight:700;color:var(--brand)">✏️ Plan</a></td></tr>`; }).join('') || '<tr><td colspan="5" style="color:var(--faint)">Nobody yet.</td></tr>'}</table>
@@ -623,6 +631,7 @@
       <h3><span>Notes to Claude</span><span>${data.filter((r) => r.kind === 'note').length}</span></h3>
       <div class="card">${data.filter((r) => r.kind === 'note').map((r) => `<div class="row" style="cursor:default;align-items:flex-start"><div style="flex:1"><div>${esc(r.note)}</div><div class="m" style="white-space:normal">${esc(r.tester)} · ${esc(title({ role: r.role }, r.step))} · ${fmt(r.at)}</div></div></div>`).join('') || '<div style="color:var(--faint)">No notes yet.</div>'}</div>`;
     if (scripts.wire) scripts.wire();
+    if (bwb.wire) bwb.wire();
   }
 
   // ---------- v2.0 · the board's test-script part: coverage grid, testers, nudges, rewards, payments ----------
@@ -645,7 +654,7 @@
     const T = {};                                                             // tester key → everything about them
     const tester = (name, role) => (T[who(name, role)] = T[who(name, role)] || { name, role, rows: [], latest: {}, last: 0, logLast: 0, report: null });
     A.data.forEach((r) => { if (!ROLES[r.role]) return; const t = tester(r.tester, r.role); t.rows.push(r); const c = t.latest[r.step]; if (!c || c.client_at <= r.client_at) t.latest[r.step] = r; t.last = Math.max(t.last, Date.parse(r.client_at)); });
-    log.forEach((r) => { if (!ROLES[r.role] || String(r.step).startsWith('auto:')) return; const t = tester(r.tester, r.role); t.logLast = Math.max(t.logLast, Date.parse(r.at));
+    log.forEach((r) => { if (!ROLES[r.role] || String(r.step).startsWith('auto:') || String(r.step).startsWith('bw:')) return; const t = tester(r.tester, r.role); t.logLast = Math.max(t.logLast, Date.parse(r.at));
       if ((r.kind === 'report' || (r.kind === 'note' && String(r.step).startsWith('script:report:'))) && (!t.report || t.report.at < r.at)) t.report = r; });
     const conf = {}; CF.data.forEach((r) => { const k = who(r.tester, r.role) + '|' + r.step; if (!conf[k]) conf[k] = r; });  // newest first
     const phones = {}; PH.data.forEach((r) => { if (!phones[low(r.tester)]) phones[low(r.tester)] = r.phone; });
@@ -785,11 +794,222 @@
     };
   }
 
+
+  // ======================================================================================================
+  // ---------- v2.2 · 🏢 BUSINESS WEEK: ?bw (the testers) and the board's Business Week part ----------
+  // ======================================================================================================
+  const BWKEY = 'bw_json';
+  const kenyaDay = () => new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10);
+  const dayNo = (bw, ymd) => Math.round((Date.parse(ymd) - Date.parse(bw.start)) / 864e5) + 1;
+  const local = ['localhost', '127.0.0.1'].includes(location.hostname);
+  async function bwLoad() {
+    try { const r = await fetch('scripts/business_week.json?v=' + encodeURIComponent(VERSION.split(' ')[0]), { cache: 'no-cache' }); if (!r.ok) throw new Error('json ' + r.status); const j = await r.json(); set(BWKEY, j); return j; }
+    catch (e) { return get(BWKEY, null); }
+  }
+  const bwStep = (n, role, id) => ('bw:d' + n + ':' + role + ':' + id).slice(0, 60);
+  const bwParse = (step) => { const m = /^bw:d(\d+):([A-Z0-9]+):(.+)$/.exec(String(step || '')); return m ? { n: +m[1], role: m[2], id: m[3] } : null; };
+
+  async function bwMain() {
+    $('#prog').hidden = true; $('#sub').textContent = 'Business Week · 16–22 Oct';
+    $('#main').innerHTML = '<div class="card">Loading Business Week…</div>';
+    const bw = await bwLoad();
+    if (!bw) { $('#main').innerHTML = '<div class="card">Business Week could not load. Check your signal and pull down to try again.</div>'; return; }
+    const RL = Object.fromEntries(bw.roles.map((r) => [r.id, r]));
+    let bme = get('bw_me', null);
+    const n = (QS.get('n') || '').trim().replace(/\s+/g, ' ').slice(0, 60), r = (QS.get('r') || '').toUpperCase();
+    if (n && RL[r] && (!bme || bme.name !== n || bme.role !== r)) { bme = { name: n, role: r }; set('bw_me', bme); }
+    if (!bme || !RL[bme.role]) return bwWho(bw, RL);
+    const today = local && QS.get('today') ? +QS.get('today') : dayNo(bw, kenyaDay());
+    let view = Math.min(bw.days.length, Math.max(1, get('bw_view', null) && get('bw_view_on', '') === kenyaDay() ? get('bw_view', 1) : today));
+    const st = get('bw_state', {});                                         // challenge id → 'done' | 'fail'
+    const role = RL[bme.role];
+    const logAs = { tester: bme.name, role: role.log };
+    async function bwLog(kind, step, note) {
+      const row = { ...logAs, device, step, kind, note: note || null, version: VERSION };
+      try { const { error } = await sb.from('tester_log').insert(row); if (error) throw error; return true; }
+      catch (e) { const q = get('queue', []); q.push(row); set('queue', q); return false; }
+    }
+    let confirmed = get('bw_conf', []);
+    sb.from('test_confirmed').select('tester,role,step,status,at').order('at', { ascending: false }).limit(2000).then(({ data }) => {
+      if (!data) return; const seen = {}; const c = [];
+      data.filter((x) => x.tester.trim().toLowerCase() === bme.name.trim().toLowerCase() && String(x.step).startsWith('bw:')).forEach((x) => { if (seen[x.step]) return; seen[x.step] = 1; if (x.status === 'confirmed') c.push(x.step.slice(3)); });
+      confirmed = c; set('bw_conf', c); if ($('#bw-pay')) $('#bw-pay').textContent = payLine();
+    }, () => {});
+    const payLine = () => {
+      let days = 0, probs = 0;
+      bw.days.forEach((d) => { const mine = d.ch.filter((c) => c.role === bme.role); const done = mine.filter((c) => st[c.id] === 'done').length; if (done >= bw.pay.min_done_for_day) days++;
+        probs += Math.min(bw.pay.problems_cap_day, mine.filter((c) => confirmed.includes(c.id)).length); });
+      return `💵 So far: ${days} day${days === 1 ? '' : 's'} × ${bw.pay.day} + ${probs} confirmed problem${probs === 1 ? '' : 's'} × ${bw.pay.problem} = KES ${(days * bw.pay.day + probs * bw.pay.problem).toLocaleString('en-GB')} (Jerry checks it)`;
+    };
+    const draw = () => {
+      set('bw_view', view); set('bw_view_on', kenyaDay());
+      const d = bw.days[view - 1]; const mine = d.ch.filter((c) => c.role === bme.role);
+      const open = today >= 1 && view <= today;
+      const done = mine.filter((c) => st[c.id] === 'done').length;
+      $('#prog').hidden = false; $('#prog').textContent = `${done} / ${mine.length}`;
+      $('#sub').textContent = `${bme.name} · ${role.short} · Business Week`;
+      const when = today < 1 ? `Starts ${new Date(bw.start + 'T09:00:00+03:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' })} — you can read your challenges now.` : today > bw.days.length ? 'The week is over — asante sana! You can still read and send notes.' : `Today is day ${today} of ${bw.days.length}.`;
+      const appLink = role.app === 'no Zuri account' ? '' : `<a class="big" style="display:block;text-align:center;text-decoration:none;margin:8px 0 0" href="${esc(APP + withCode('?training'))}" target="_blank" rel="noopener">🟠 Open Zuri (training copy)</a>`;
+      $('#main').innerHTML = `
+        <div class="now" id="bw-day"><div class="lbl"><span>🏢 Business Week · day ${d.n} of ${bw.days.length}</span><span>${d.db === 'fresh' ? '🆕 FRESH company' : '📚 ongoing company'}</span></div>
+          <h2>${esc(d.dow)} ${esc(new Date(d.date + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }))} · ${esc(d.title)}</h2>
+          <div class="why">${esc(d.story)}</div><div class="why"><b>${esc(d.window)}</b> Kenya time · ${esc(when)}</div>
+          <div class="chips"><span class="chip coin" id="bw-pay" style="white-space:normal">${esc(payLine())}</span></div>${appLink}
+          <div class="nav2"><button type="button" id="bw-prev" ${view <= 1 ? 'disabled' : ''}>← Day ${view - 1}</button><button type="button" id="bw-today">Today</button><button type="button" id="bw-next" ${view >= bw.days.length ? 'disabled' : ''}>Day ${view + 1} →</button></div></div>
+        <h3><span>${esc(role.label)} · ${mine.length} challenge${mine.length === 1 ? '' : 's'}</span><span>${done} done</span></h3>
+        ${mine.map((c) => `<div class="sx bwc" data-c="${esc(c.id)}" style="${st[c.id] === 'done' ? 'border-color:var(--ok)' : st[c.id] === 'fail' ? 'border-color:var(--bad)' : ''}">
+          <div class="lbl"><span>⏰ ${esc(c.at)}</span><span>${st[c.id] === 'done' ? '✅ done' : st[c.id] === 'fail' ? '❌ problem sent' : ''}</span></div>
+          <h2>${esc(c.t)}</h2>
+          <div class="part do"><b class="h">Do this</b><p>${esc(c.do)}</p><p class="tip">📍 ${esc(c.where)}</p>
+            ${c.copy ? `<div class="copy"><span>${esc(c.copy)}</span><button type="button" data-copy="${esc(c.id)}">Copy</button></div>` : ''}
+            ${c.file ? `<a class="open" href="${esc(c.file)}" download>⬇️ Download ${esc(c.file.split('/').pop())}</a>` : ''}</div>
+          <div class="part see"><b class="h">You should end with…</b><p>${esc(c.end)}</p></div>
+          ${open ? `<div class="ans" style="grid-template-columns:1fr 1fr"><button type="button" class="ok ${st[c.id] === 'done' ? 'on' : ''}" data-done="${esc(c.id)}">✅ Done — I ended with this</button><button type="button" class="fail ${st[c.id] === 'fail' ? 'on' : ''}" data-fail="${esc(c.id)}">❌ Problem</button></div>
+            <div class="what" data-what="${esc(c.id)}" hidden><textarea placeholder="What happened? What did you expect? (🎤 tap the microphone on your keyboard to talk)"></textarea><div class="row2"><button type="button" class="save" data-send="${esc(c.id)}">Send the problem</button></div></div>`
+          : `<p class="tip">Ticking opens on day ${d.n}.</p>`}</div>`).join('') || '<div class="card">Nothing for you this day.</div>'}
+        <div class="tell card"><textarea id="tell" placeholder="✍️ Tell Jerry and Claude anything about today: what was confusing, slow, or wrong"></textarea>
+          <div class="row"><button id="b-tell">Send</button><span style="font-size:12.5px;color:var(--faint)">Goes straight to Jerry and Claude, with your name.</span></div></div>
+        <p class="foot">Zuri Testers' List ${VERSION} · Business Week ${esc(bw.version)} · <button id="bw-who">Not ${esc(bme.name.split(' ')[0])}? Change</button> · <a href="?">The full Testers' List</a></p>`;
+      $('#bw-prev').onclick = () => { view = Math.max(1, view - 1); draw(); window.scrollTo(0, 0); };
+      $('#bw-next').onclick = () => { view = Math.min(bw.days.length, view + 1); draw(); window.scrollTo(0, 0); };
+      $('#bw-today').onclick = () => { view = Math.min(bw.days.length, Math.max(1, today)); draw(); window.scrollTo(0, 0); };
+      $$('[data-copy]').forEach((b) => (b.onclick = () => { const c = mine.find((x) => x.id === b.dataset.copy); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(c.copy) : Promise.reject()).then(() => toast('Copied — paste it in Zuri.'), () => toast('Press and hold the words to copy them.')); }));
+      $$('[data-done]').forEach((b) => (b.onclick = async () => {
+        const id = b.dataset.done; const step = bwStep(d.n, bme.role, id);
+        if (st[id] === 'done') { delete st[id]; set('bw_state', st); await bwLog('undone', step); toast('Unticked.'); }
+        else { st[id] = 'done'; set('bw_state', st); const ok = await bwLog('done', step); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); }
+        draw();
+      }));
+      $$('[data-fail]').forEach((b) => (b.onclick = () => { const w = $(`[data-what="${b.dataset.fail}"]`); w.hidden = !w.hidden; if (!w.hidden) $('textarea', w).focus(); }));
+      $$('[data-send]').forEach((b) => (b.onclick = async () => {
+        const id = b.dataset.send; const c = mine.find((x) => x.id === id); const t = $(`[data-what="${id}"] textarea`).value.trim();
+        if (!t) return toast('Write a few words first.');
+        st[id] = 'fail'; set('bw_state', st);
+        const ok = await bwLog('note', bwStep(d.n, bme.role, id), ('❌ ' + c.t + ' — ' + t).slice(0, 1000));
+        toast(ok ? 'Sent — thank you! Jerry checks it tonight.' : 'Saved — sends when you have signal.'); draw();
+      }));
+      $('#b-tell').onclick = async () => { const t = $('#tell').value.trim(); if (!t) return toast('Write something first.'); const ok = await bwLog('note', bwStep(d.n, bme.role, 'tell'), t.slice(0, 1000)); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
+      $('#bw-who').onclick = () => { if (confirm('Change your name or role? Your ticks stay on this phone.')) { localStorage.removeItem('zt_bw_me'); location.href = location.pathname + '?bw'; } };
+    };
+    draw();
+    if (!get('bw_hello', false)) bwLog('hello', bwStep(Math.max(0, today), bme.role, 'start')).then((ok) => ok && set('bw_hello', true));
+    flush();
+  }
+  function bwWho(bw, RL) {
+    $('#main').innerHTML = `<div class="card"><h2 style="margin:0 0 4px">Karibu to Business Week!</h2>
+      <p style="color:var(--soft);margin:0 0 8px">For 7 days you run a pretend Zuri Fiber together. Each day you get your own challenges. Type your name (as in your Zuri account) and pick your role for the week.</p>
+      <label>Your name</label><input id="w-name" placeholder="e.g. Mary Wanjiku" autocomplete="name">
+      <label>Your role this week</label><div class="seg" id="w-role">${bw.roles.map((r) => `<button type="button" data-role="${esc(r.id)}">${esc(r.label)}</button>`).join('')}</div>
+      <button class="big" id="w-go">Show my challenges →</button></div>`;
+    let pickR = null;
+    $$('#w-role button').forEach((b) => (b.onclick = () => { pickR = b.dataset.role; $$('#w-role button').forEach((x) => x.classList.toggle('on', x === b)); }));
+    $('#w-go').onclick = () => { const name = $('#w-name').value.trim(); if (!name) return toast('Type your name first.'); if (!pickR) return toast('Pick your role.'); set('bw_me', { name, role: pickR }); bwMain(); };
+  }
+
+  // ---------- the board's 🏢 Business Week part (partner signed in) ----------
+  async function boardBW(ok, log) {
+    const bw = await bwLoad(); if (!bw) return { html: '', wire: null };
+    const rows = log.filter((r) => String(r.step).startsWith('bw:')).slice().reverse();          // oldest first
+    if (!rows.length && dayNo(bw, kenyaDay()) < -3) return { html: '', wire: null };
+    const RL = Object.fromEntries(bw.roles.map((r) => [r.id, r]));
+    const CH = {}; bw.days.forEach((d) => d.ch.forEach((c) => (CH[c.id] = { ...c, n: d.n })));
+    const low = (x) => String(x || '').trim().toLowerCase();
+    const P = {};                                                                            // name|bwrole → person
+    const person = (name, role) => (P[low(name) + '|' + role] = P[low(name) + '|' + role] || { name, role, days: {}, probs: [], tells: [], last: null });
+    rows.forEach((r) => {
+      const s = bwParse(r.step); if (!s || !RL[s.role]) return;
+      const p = person(r.tester, s.role); p.last = r.at;
+      const day = (p.days[s.n] = p.days[s.n] || { done: new Set(), probs: 0 });
+      if (r.kind === 'done' && CH[s.id]) day.done.add(s.id);
+      if (r.kind === 'undone') day.done.delete(s.id);
+      if (r.kind === 'note' && CH[s.id]) { p.probs.push({ ...r, cid: s.id, n: s.n }); day.probs++; }
+      if (r.kind === 'note' && s.id === 'tell') p.tells.push({ ...r, n: s.n });
+    });
+    const q = async (t, fn) => { try { const x = await fn(ok.a.from(t)); return x.error ? { err: x.error, data: [] } : { data: x.data || [] }; } catch (e) { return { err: e, data: [] }; } };
+    const since = new Date(Date.parse(bw.start + 'T00:00:00+03:00') - 864e5).toISOString();
+    const [CF, PY, PR, TK, EV, EX, PA, CC, CU] = await Promise.all([
+      q('test_confirmed', (t) => t.select('*').order('at', { ascending: false }).limit(5000)),
+      q('test_payments', (t) => t.select('*').order('at', { ascending: false }).limit(2000)),
+      q('profiles', (t) => t.select('id,full_name,role,active')),
+      q('tickets', (t) => t.select('opened_by,opened_at').gte('opened_at', since).limit(5000)),
+      q('ticket_events', (t) => t.select('by,at').gte('at', since).limit(10000)),
+      q('expenses', (t) => t.select('created_by,created_at').gte('created_at', since).limit(5000)),
+      q('payments', (t) => t.select('created_by,created_at').gte('created_at', since).limit(5000)),
+      q('cash_counts', (t) => t.select('created_by,created_at').gte('created_at', since).limit(2000)),
+      q('customers', (t) => t.select('created_by,created_at').gte('created_at', since).limit(5000)),
+    ]);
+    // What each person actually did in Zuri, per Kenya day (evidence for "a day with real activity")
+    const kday = (t) => new Date(Date.parse(t) + 3 * 3600e3).toISOString().slice(0, 10);
+    const acts = {}; const addA = (id, t) => { if (!id || !t) return; const n = dayNo(bw, kday(t)); if (n < 1 || n > bw.days.length) return; acts[id] = acts[id] || {}; acts[id][n] = (acts[id][n] || 0) + 1; };
+    TK.data.forEach((r) => addA(r.opened_by, r.opened_at)); EV.data.forEach((r) => addA(r.by, r.at)); EX.data.forEach((r) => addA(r.created_by, r.created_at));
+    PA.data.forEach((r) => addA(r.created_by, r.created_at)); CC.data.forEach((r) => addA(r.created_by, r.created_at)); CU.data.forEach((r) => addA(r.created_by, r.created_at));
+    const profFor = (name) => { const ex = PR.data.filter((x) => low(x.full_name) === low(name)); if (ex.length === 1) return ex[0]; const f = low(name).split(' ')[0]; const m = PR.data.filter((x) => low(x.full_name).split(' ')[0] === f); return m.length === 1 ? m[0] : null; };
+    const conf = {}; CF.data.forEach((r) => { const k = low(r.tester) + '|' + r.step; if (!conf[k]) conf[k] = r; });  // newest first
+    const order = bw.roles.map((r) => r.id);
+    const list = Object.values(P).sort((a, b) => order.indexOf(a.role) - order.indexOf(b.role) || a.name.localeCompare(b.name)).map((p) => {
+      const prof = p.role === 'V' ? null : profFor(p.name);
+      let worked = 0, cprobs = 0; const cells = [];
+      for (let n = 1; n <= bw.days.length; n++) {
+        const d = p.days[n] || { done: new Set(), probs: 0 }; const a = prof ? (acts[prof.id] || {})[n] || 0 : null;
+        const cp = p.probs.filter((x) => x.n === n && conf[low(p.name) + '|bw:' + x.cid] && conf[low(p.name) + '|bw:' + x.cid].status === 'confirmed').length;
+        const w = d.done.size >= bw.pay.min_done_for_day; if (w) worked++; cprobs += Math.min(bw.pay.problems_cap_day, cp);
+        cells.push({ n, done: d.done.size, total: bw.days[n - 1].ch.filter((c) => c.role === p.role).length, probs: d.probs, cp, acts: a, worked: w });
+      }
+      const earned = worked * bw.pay.day + cprobs * bw.pay.problem;
+      const pays = PY.data.filter((x) => low(x.tester) === low(p.name) && /^Business Week/i.test(x.note || ''));
+      const paid = pays.reduce((t, x) => t + Number(x.amount || 0), 0);
+      return { ...p, prof, cells, worked, cprobs, earned, paid, owed: Math.max(0, earned - paid), pays };
+    });
+    const today = dayNo(bw, kenyaDay());
+    const kes = (x) => 'KES ' + Number(x || 0).toLocaleString('en-GB');
+    const missing = CF.err && isMissing(CF.err);
+    const payText = list.map((p) => `${p.name} (${RL[p.role].short}): ${p.worked} day${p.worked === 1 ? '' : 's'} × ${bw.pay.day} + ${p.cprobs} problem${p.cprobs === 1 ? '' : 's'} × ${bw.pay.problem} = ${kes(p.earned)} · paid ${kes(p.paid)} · owed ${kes(p.owed)}`).join('\n');
+    const probs = list.flatMap((p) => p.probs.map((x) => ({ ...x, p }))).sort((a, b) => (a.at < b.at ? 1 : -1));
+    const html = `
+      <details open id="bw-board"><summary style="cursor:pointer;list-style:none"><h3 style="margin-top:4px"><span>🏢 Business Week · ${today < 1 ? 'starts ' + esc(bw.start) : today > bw.days.length ? 'finished' : 'day ' + today + ' of ' + bw.days.length}</span><span>${list.length} people</span></h3></summary>
+      ${missing ? '<div class="banner">⚙️ Confirming problems and “Mark paid” need <b>supabase/24_test_scripts.sql</b> on the training copy.</div>' : ''}
+      <div class="card scroll-x"><table class="grid" id="bw-grid"><tr><th style="text-align:left">Person</th>${bw.days.map((d) => `<th title="${esc(d.title)}">D${d.n}</th>`).join('')}<th>KES</th></tr>
+        ${list.map((p) => `<tr><td class="s" style="white-space:normal;min-width:120px"><b>${esc(p.name)}</b><br><span style="color:var(--faint)">${esc(RL[p.role].short)}${p.role !== 'V' && !p.prof ? ' · no Zuri account matched' : ''}</span></td>
+          ${p.cells.map((c) => `<td style="text-align:center;padding:3px;border-radius:6px;background:${c.worked ? 'var(--ok-soft)' : c.done ? 'var(--amber-soft)' : 'transparent'}" title="Day ${c.n}: ${c.done}/${c.total} done · ${c.probs} problem(s), ${c.cp} confirmed${c.acts != null ? ' · ' + c.acts + ' things done in Zuri' : ''}">${c.done}/${c.total}${c.probs ? `<br><span style="color:var(--bad)">❌${c.probs}</span>` : ''}${c.acts != null ? `<br><span style="color:var(--faint)">⚙️${c.acts}</span>` : ''}</td>`).join('')}
+          <td style="text-align:right;white-space:nowrap"><b>${kes(p.earned)}</b><br><span style="color:var(--faint)">paid ${kes(p.paid)}</span>${p.owed ? `<br><button class="mini go" data-bwpay="${esc(low(p.name) + '|' + p.role)}">💵 Mark paid</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="${bw.days.length + 2}" style="color:var(--faint)">Nobody has opened Business Week yet. Their link: testers/?bw&code=${esc(bw.code)}</td></tr>`}</table>
+        <p style="font-size:12.5px;color:var(--faint);margin:6px 0 0">Each square: challenges done / given · ❌ problems sent · ⚙️ things they really did in Zuri that day (jobs, notes, money, counts, customers). Green = a paid day (${bw.pay.min_done_for_day}+ done). KES = paid days × ${bw.pay.day} + confirmed problems × ${bw.pay.problem} (max ${bw.pay.problems_cap_day} a day). A green square with ⚙️0 is worth a look before paying.</p>
+        <button class="mini" id="bw-copypay">📋 Copy the pay list</button></div>
+      <h3><span>❌ Business Week problems</span><span>${probs.length}</span></h3>
+      <div class="card">${probs.map((x) => { const c = CH[x.cid] || {}; const k = low(x.p.name) + '|bw:' + x.cid; const cf = conf[k];
+        return `<div class="red" data-bwprob="${esc(x.cid)}" data-who="${esc(low(x.p.name) + '|' + x.p.role)}"><b>Day ${x.n} · ${esc(x.p.name)} (${esc(RL[x.p.role].short)}) · ${esc(c.at || '')} ${esc(c.t || x.cid)}</b><div>${esc(x.note || '')}</div><div style="color:var(--faint);font-size:12px">${esc(fmtWhen(x.at))} · expected: ${esc(c.end || '')}</div>
+          <div>${cf ? (cf.status === 'confirmed' ? `<span class="flag ok">✔ Real problem · ${esc(cf.by_who || '')}</span>` : `<span class="flag amber">Not a problem · ${esc(cf.by_who || '')}</span>`) : '<span class="flag amber">not checked yet</span>'}
+          <button class="mini go" data-bwconf="confirmed">✔ Real problem</button><button class="mini" data-bwconf="rejected">✖ Not a problem</button></div></div>`; }).join('') || '<div style="color:var(--faint)">No problems reported yet.</div>'}</div>
+      ${list.some((p) => p.tells.length) ? `<h3><span>✍️ Business Week notes</span><span></span></h3><div class="card">${list.flatMap((p) => p.tells.map((t) => ({ ...t, p }))).sort((a, b) => (a.at < b.at ? 1 : -1)).map((t) => `<div class="row" style="cursor:default;align-items:flex-start"><div style="flex:1"><div>${esc(t.note)}</div><div class="m" style="white-space:normal">${esc(t.p.name)} · ${esc(RL[t.p.role].short)} · day ${t.n} · ${esc(fmtWhen(t.at))}</div></div></div>`).join('')}</div>` : ''}
+      </details>`;
+    const wire = () => {
+      const by = ok.p.full_name || 'Jerry';
+      const find = (key) => list.find((p) => low(p.name) + '|' + p.role === key);
+      const cp = $('#bw-copypay'); if (cp) cp.onclick = () => (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(payText) : Promise.reject()).then(() => toast('Pay list copied.'), () => toast(payText.slice(0, 120)));
+      $$('[data-bwprob]').forEach((box) => $$('[data-bwconf]', box).forEach((b) => (b.onclick = async () => {
+        const p = find(box.dataset.who); if (!p) return;
+        const r = await ok.a.from('test_confirmed').insert({ tester: p.name, role: RL[p.role].log, step: ('bw:' + box.dataset.bwprob).slice(0, 40), status: b.dataset.bwconf, by_who: by });
+        if (r.error) return toast(isMissing(r.error) ? 'Run supabase/24_test_scripts.sql first.' : 'Could not save: ' + r.error.message);
+        toast(b.dataset.bwconf === 'confirmed' ? `Confirmed — +${bw.pay.problem} KES for ${p.name.split(' ')[0]}.` : 'Marked: not a problem.'); setTimeout(board, 500);
+      })));
+      $$('[data-bwpay]').forEach((b) => (b.onclick = async () => {
+        const p = find(b.dataset.bwpay); if (!p) return;
+        const amt = parseInt(prompt(`How much did you send ${p.name}? (owed ${kes(p.owed)}) — send it in M-Pesa first; this only writes it down.`, String(p.owed)) || '', 10);
+        if (!(amt > 0)) return;
+        const code = (prompt('M-Pesa code (optional)', '') || '').trim().toUpperCase() || null;
+        const r = await ok.a.from('test_payments').insert({ tester: p.name, role: RL[p.role].log, amount: amt, mpesa_code: code, paid_on: ymdL(new Date()), note: 'Business Week', by_who: by });
+        if (r.error) return toast(isMissing(r.error) ? 'Run supabase/24_test_scripts.sql first.' : 'Could not save: ' + r.error.message);
+        toast('Payment written down.'); setTimeout(board, 500);
+      }));
+    };
+    return { html, wire };
+  }
+
   // ---------- start (after the invite code) ----------
   (window.ZG ? window.ZG.ready : Promise.resolve()).then(start);
   function start() {
   if (me && window.ZG) { const st = get('state', {}); window.ZG.report({ name: me.name, role: me.role, progress: Object.values(st).filter((v) => v === 'done').length + ' done' }); }
-  if (new URLSearchParams(location.search).has('board')) board();
+  if (QS.has('bw') && !QS.has('board')) bwMain();                          // v2.2 · 🏢 Business Week
+  else if (new URLSearchParams(location.search).has('board')) board();
   else if (new URLSearchParams(location.search).has('plan')) planEditor();
   else if (!me) askWho();
   else {
