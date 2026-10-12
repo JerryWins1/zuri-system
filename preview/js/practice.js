@@ -53,6 +53,7 @@
   const FIRST = ['Grace', 'John', 'Mercy', 'Joseph', 'Faith', 'Samuel', 'Esther', 'David', 'Lucy', 'Peter', 'Ann', 'James', 'Mary', 'Daniel', 'Ruth', 'Paul', 'Jane', 'Stephen', 'Naomi', 'Moses', 'Susan', 'Isaac', 'Purity', 'Kevin', 'Beatrice'];
   const LAST = ['Njeri', 'Mwangi', 'Wanjiru', 'Kariuki', 'Otieno', 'Chebet', 'Mutua', 'Wambui', 'Kamau', 'Achieng', 'Kiprono', 'Nyambura', 'Odhiambo', 'Gitau', 'Muthoni', 'Kibet', 'Atieno', 'Ndungu', 'Wairimu', 'Omondi'];
   const PLACES = ['Behind the Total petrol station', 'Near Maai Mahiu market', 'Opposite St. Mary\'s church', 'Satellite estate, blue gate', 'Near the matatu stage', 'Kamuyu road, after the posho mill', 'Next to the primary school', 'Above the M-Pesa shop', 'Green house near the water tank', 'Off the old Naivasha road', 'Near the health centre', 'Behind the police post'];
+  const PKGS = () => [['5 Mbps', 1500], ['10 Mbps', 2000], ['20 Mbps', 3000], ['30 Mbps Business', 4500]].map(([name, monthly_rate]) => ({ name, monthly_rate, kind: 'fixed' }));
   const PLANS = [['5 Mbps', 1500], ['10 Mbps', 2000], ['10 Mbps', 2000], ['20 Mbps', 3000], ['20 Mbps', 3000], ['30 Mbps Business', 4500]];
 
   // mode 'empty': a brand-new company — only the areas, the seed lists and the staff. You enter everything else.
@@ -232,6 +233,7 @@
       D.profiles = D.profiles.map((p) => ({ ...p, active: p.role === 'admin' })); // only the partner is switched on; you switch the others on
       D._ticket_no = 100;
     }
+    D.packages = mode === 'empty' ? [] : PKGS(); // 💲 v2.35: the price list (Admin → Price list)
     projSeed(D, mode === 'empty');
     if (mode !== 'empty') { receiptRules(D); tsRules(D); D.nudges.forEach((n) => { const t = D.tasks.find((x) => x.assigned_to === n.profile_id && String(x.ref_key || '').startsWith('rcpt-')); if (t) n.message = n.message.replace('\nOpen Zuri', '\n• ' + t.title + '\nOpen Zuri'); }); }
     return D;
@@ -490,6 +492,7 @@
   if (!D || !D.v_customers || (D._mode || 'running') !== wantMode) D = build(wantMode);
   if (!D.hubs) { const f = build(D._mode); D.hubs = f.hubs; D.settings = f.settings; } // phones that started practice before hubs existed
   if (!D._ts) { tsSeed(D, D._mode === 'empty'); }
+  if (!D.packages) D.packages = D._mode === 'empty' ? [] : PKGS(); // 💲 v2.35: phones that started practice before the price list
   if (!D._pj) projSeed(D, D._mode === 'empty'); // v2.34 // v2.33: phones that started practice before the time savers
   if (!D._rc) { const f = build(D._mode); D.expenses = D.expenses.concat(f.expenses.filter((e) => String(e.id).startsWith('e-'))); if (!D.settings.some((x) => x.key === 'receipts_ai')) D.settings.push({ key: 'receipts_ai', value: { on: false } }); D._rc = 1; } // v2.32
   let saveT;
@@ -554,6 +557,8 @@
     ticket_events: () => ({ at: new Date().toISOString() }), ticket_parts: () => ({ added_at: new Date().toISOString(), added_by: meId() }),
     cash_counts: () => ({ created_at: new Date().toISOString() }), money_accounts: () => ({ active: true }),
     bills: () => ({ paid_amount: 0, paid: false }),
+    areas: () => ({ active: true, float_target: 50000 }), // v2.35: like the database — a new area is in use (it was missing from every picker)
+    packages: () => ({ kind: 'fixed' }),
     projects: () => ({ status: 'plan', updated_at: new Date().toISOString() }),
     access_codes: () => ({ active: true, kind: 'tester', max_uses: 10 }), hubs: () => ({ active: true, kind: 'hub' }), staff: () => ({ active: true, pay_type: 'monthly', salary: 0, pay_day: 28 }),
   };
