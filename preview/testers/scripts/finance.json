@@ -1,0 +1,965 @@
+{
+  "role": "finance",
+  "title": "Finance test script",
+  "version": "1.2",
+  "date": "2026-10-12",
+  "who": "You are Kelvin in finance. Everything is pretend and stays on your phone — no money moves.",
+  "sessions": [
+    {
+      "id": "m1",
+      "title": "Today's money",
+      "mins": 20,
+      "intro": "Read the cash, count it, record money out and money in — and see what Zuri says when something is missing.",
+      "steps": [
+        {
+          "id": "m1-01",
+          "link": "#me",
+          "do": "Tap 🧹 Start over (pretend company), then tap OK.",
+          "see": "The page reloads. The Me page shows Kelvin, and the top bar says “Kelvin · Office”.",
+          "look": [
+            "🧹 Start over (pretend company)",
+            "Kelvin"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Start over (pretend company)')"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "see",
+              "Kelvin"
+            ]
+          ]
+        },
+        {
+          "id": "m1-02",
+          "link": "#money/today",
+          "do": "On Money → 💵 Today, read the ZURI A box: Bank, M-Pesa float, Bills still owing, Cash after bills, and the warnings under it.",
+          "see": "An orange warning: “⚠️ M-Pesa float below the 50,000 target — flag it, don't wait for Friday.”",
+          "look": [
+            "Cash today",
+            "Zuri A",
+            "M-Pesa float"
+          ],
+          "auto": [
+            [
+              "see",
+              "M-Pesa float below the 50,000 target"
+            ]
+          ]
+        },
+        {
+          "id": "m1-03",
+          "link": "#money/count",
+          "do": "On Count the cash: Area Zuri A. Bank balance: 185000. M-Pesa balance: 52000. Tap Save cash count.",
+          "see": "Zuri takes you back to Cash today. The ZURI A box shows Bank 185,000 and M-Pesa float 52,000 (green), “counted” today — and the Zuri A float warning is gone.",
+          "look": [
+            "Count the cash",
+            "Bank balance (KES)",
+            "Save cash count"
+          ],
+          "auto": [
+            [
+              "select",
+              "[name=area]",
+              "Zuri A"
+            ],
+            [
+              "fill",
+              "[name=bank]",
+              "185000"
+            ],
+            [
+              "fill",
+              "[name=mpesa]",
+              "52000"
+            ],
+            [
+              "tap",
+              "button:has-text('Save cash count')"
+            ],
+            [
+              "see",
+              "185,000"
+            ],
+            [
+              "see",
+              "52,000"
+            ],
+            [
+              "notsee",
+              "M-Pesa float below the 50,000 target"
+            ]
+          ]
+        },
+        {
+          "id": "m1-04",
+          "link": "#money/count",
+          "do": "Tap Count the cash again and look at RECENT COUNTS.",
+          "see": "The top line is Zuri A with today's date: “Bank 185,000 · M-Pesa 52,000 · Kelvin”.",
+          "look": [
+            "Recent counts"
+          ],
+          "auto": [
+            [
+              "see",
+              "Bank 185,000 · M-Pesa 52,000 · Kelvin"
+            ]
+          ]
+        },
+        {
+          "id": "m1-05",
+          "link": "#money/expense",
+          "do": "On ✍️ Record → Money out: copy the M-Pesa message below, paste it into “Paste the M-Pesa message” and tap Read the message.",
+          "copy": "UKA1B2C3D4 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh50,800.00. Transaction cost, Ksh0.00.",
+          "see": "Zuri says “Filled … fields” and fills in Paid to: Kamau Hardware, Amount: 1200, the code UKA1B2C3D4 and today's date.",
+          "look": [
+            "Money out",
+            "Paste the M-Pesa message",
+            "Read the message"
+          ],
+          "auto": [
+            [
+              "fill",
+              "#me-sms",
+              "UKA1B2C3D4 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh50,800.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#me-read"
+            ],
+            [
+              "see",
+              "Filled"
+            ],
+            [
+              "js",
+              "document.querySelector('[name=amount]').value === '1200' && /kamau hardware/i.test(document.querySelector('[name=payee]').value) && document.querySelector('[name=ref]').value === 'UKA1B2C3D4'"
+            ]
+          ]
+        },
+        {
+          "id": "m1-06",
+          "link": "#money/expense",
+          "do": "If the form is empty, paste the message and tap Read the message again. Category: Equipment / Inventory. Tap Save expense.",
+          "copy": "UKA1B2C3D4 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh50,800.00. Transaction cost, Ksh0.00.",
+          "see": "A “saved” message. The list below shows Kamau Hardware … −1,200 with today's date.",
+          "look": [
+            "Save expense"
+          ],
+          "auto": [
+            [
+              "fill",
+              "#me-sms",
+              "UKA1B2C3D4 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh50,800.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#me-read"
+            ],
+            [
+              "select",
+              "[name=category]",
+              "Equipment / Inventory"
+            ],
+            [
+              "tap",
+              "button:has-text('Save expense')"
+            ],
+            [
+              "wait",
+              1200
+            ],
+            [
+              "see",
+              "UKA1B2C3D4"
+            ],
+            [
+              "see",
+              "1,200"
+            ]
+          ]
+        },
+        {
+          "id": "m1-07",
+          "link": "#money/expense",
+          "do": "Now try a mistake: type “Test shop” in Paid to, leave Amount empty, and tap Save expense.",
+          "see": "The phone points at Amount and asks you to fill it in. Nothing is saved.",
+          "look": [
+            "Paid to",
+            "Amount (KES)"
+          ],
+          "auto": [
+            [
+              "fill",
+              "[name=payee]",
+              "Test shop"
+            ],
+            [
+              "tap",
+              "button:has-text('Save expense')"
+            ],
+            [
+              "js",
+              "!document.querySelector('#me [name=amount]').checkValidity()"
+            ],
+            [
+              "notsee",
+              "Test shop ·"
+            ]
+          ]
+        },
+        {
+          "id": "m1-08",
+          "link": "#money/in",
+          "do": "On ✍️ Record → Money in: What for: Hotspot. Amount: 4500. Received into: M-Pesa. Tap Save cash in.",
+          "see": "The list below shows Hotspot +4,500 with today's date.",
+          "look": [
+            "Money in",
+            "What for",
+            "Save cash in"
+          ],
+          "auto": [
+            [
+              "select",
+              "[name=category]",
+              "Hotspot"
+            ],
+            [
+              "fill",
+              "[name=amount]",
+              "4500"
+            ],
+            [
+              "tap",
+              "button:has-text('Save cash in')"
+            ],
+            [
+              "see",
+              "+4,500"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "title": "Bills and the pay run",
+      "mins": 20,
+      "intro": "Pay part of a bill, set up next month, add a staff member and pay them through the Pay run. Nothing really moves money.",
+      "steps": [
+        {
+          "id": "m2-01",
+          "link": "#money/bills",
+          "do": "On 📋 Bills, find KPLC prepaid (Zuri A, owing 3,500). Tap 💸 Pay. Change the amount to 1500, tap 🏦 Bank, then Pay and record it.",
+          "see": "“Recorded — waiting for a second person's OK (👥 Approvals).” KPLC prepaid now shows “⏳ KES 1,500 waiting for a second OK” — the bill counts it after a second person approves.",
+          "look": [
+            "KPLC prepaid",
+            "💸 Pay"
+          ],
+          "auto": [
+            [
+              "tap",
+              ".item:has-text('KPLC prepaid') button:has-text('Pay')"
+            ],
+            [
+              "fill",
+              "#pb [name=amount]",
+              "1500"
+            ],
+            [
+              "tap",
+              "#pb-from button[data-v=Bank]"
+            ],
+            [
+              "tap",
+              "#pb button.block"
+            ],
+            [
+              "wait",
+              1200
+            ],
+            [
+              "see",
+              "waiting for a second person's OK"
+            ],
+            [
+              "see",
+              "KES 1,500 waiting for a second OK"
+            ]
+          ]
+        },
+        {
+          "id": "m2-02",
+          "link": "#money/bills",
+          "do": "Tap → next to the month name to go to next month. Tap Copy last month's bills (under Zuri A).",
+          "see": "“Copied … bills.” Next month now has Office rent, Safaricom backhaul, KPLC prepaid and Staff transport, all unpaid.",
+          "look": [
+            "Bills",
+            "→"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#view button:text-is('→'), #view a:text-is('→')"
+            ],
+            [
+              "tap",
+              "button:has-text(\"Copy last month's bills\")"
+            ],
+            [
+              "see",
+              "Copied"
+            ],
+            [
+              "see",
+              "Office rent"
+            ]
+          ]
+        },
+        {
+          "id": "m2-03",
+          "link": "#money/staff",
+          "do": "On Staff & pay tap ＋ Add a staff member. Full name: Ann Wairimu. Job: Cleaner. M-Pesa number: 0712 000 222. Pay: 15000. Pay day of the month: today's date ({day}). Tick “Working for Zuri now”. Tap Save.",
+          "copy": "Ann Wairimu",
+          "see": "“Saved.” Ann Wairimu is in the list: “KES 15,000 a month · paid on the {day}…”.",
+          "look": [
+            "Staff & pay",
+            "＋ Add a staff member"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Add a staff member')"
+            ],
+            [
+              "fill",
+              "#sf [name=full_name]",
+              "Ann Wairimu"
+            ],
+            [
+              "fill",
+              "#sf [name=job_title]",
+              "Cleaner"
+            ],
+            [
+              "fill",
+              "#sf [name=mpesa_number]",
+              "0712 000 222"
+            ],
+            [
+              "fill",
+              "#sf [name=salary]",
+              "15000"
+            ],
+            [
+              "fill",
+              "#sf [name=pay_day]",
+              "{day}"
+            ],
+            [
+              "js",
+              "(document.querySelector('#sf [name=active]').checked = true)"
+            ],
+            [
+              "tap",
+              "#sf button:has-text('Save')"
+            ],
+            [
+              "see",
+              "Ann Wairimu"
+            ],
+            [
+              "see",
+              "15,000"
+            ]
+          ]
+        },
+        {
+          "id": "m2-04",
+          "link": "#money/payrun",
+          "do": "On Pay run tap 🔄 Build today's list.",
+          "see": "A message says how many bills and staff are on the list. Ann Wairimu (15,000) is under PAY NOW.",
+          "look": [
+            "Today's pay run",
+            "Build today's list"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text(\"Build today's list\")"
+            ],
+            [
+              "wait",
+              1200
+            ],
+            [
+              "see",
+              "on the list"
+            ],
+            [
+              "see",
+              "Ann Wairimu"
+            ]
+          ]
+        },
+        {
+          "id": "m2-05",
+          "link": "#money/payrun",
+          "do": "On Ann Wairimu tap ✅ Sent — record it. Keep 15000, M-Pesa, type the code UKB2C3D4E5. Tap Record it.",
+          "copy": "UKB2C3D4E5",
+          "see": "“Recorded — waiting for a second person's OK (👥 Approvals).” Ann shows ⏳ waiting, with the code UKB2C3D4E5.",
+          "look": [
+            "Ann Wairimu"
+          ],
+          "auto": [
+            [
+              "tap",
+              ".item:has-text('Ann Wairimu') button:has-text('Sent')"
+            ],
+            [
+              "fill",
+              "#prs [name=ref]",
+              "UKB2C3D4E5"
+            ],
+            [
+              "tap",
+              "#prs button.block"
+            ],
+            [
+              "see",
+              "waiting for a second person's OK"
+            ],
+            [
+              "see",
+              "UKB2C3D4E5"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "title": "Statements, customers and the Friday report",
+      "mins": 20,
+      "intro": "Sort the bank and M-Pesa lines, read profit, chase a late payer, copy the Friday report and send the morning nudges.",
+      "steps": [
+        {
+          "id": "m3-01",
+          "link": "#money/sort",
+          "do": "On 🏦 Statements → Sort them, find “Merchant Payment to 7788XX - TOTAL ENERGIES MAAI MAHIU” (−2,000). In its box pick Transport / Fuel. Then tap “Always sort like this?” and OK.",
+          "see": "The line shows “✓ Transport / Fuel”. After OK: “Rule saved — …”, so next time it sorts itself.",
+          "look": [
+            "Sort them",
+            "TOTAL ENERGIES MAAI MAHIU"
+          ],
+          "auto": [
+            [
+              "select",
+              ".item:has-text('TOTAL ENERGIES') select.so-cat",
+              "Transport / Fuel"
+            ],
+            [
+              "see",
+              "✓ Transport / Fuel"
+            ],
+            [
+              "tap",
+              "button:has-text('Always sort like this?')"
+            ],
+            [
+              "see",
+              "Rule saved"
+            ]
+          ]
+        },
+        {
+          "id": "m3-02",
+          "link": "#money/sort",
+          "do": "Sort four more lines: for each, pick the category that fits (e.g. Bank & M-Pesa Fees for charges, Customer payment for money from a customer).",
+          "see": "Each time “Sorted.” flashes. The number “… transactions still to sort” goes down by four.",
+          "look": [
+            "still to sort"
+          ],
+          "auto": [
+            [
+              "js",
+              "(window.__n0 = +document.body.innerText.match(/(\\d+) transactions? still to sort/)[1], true)"
+            ],
+            [
+              "select",
+              "select.so-cat >> nth=0",
+              "Other"
+            ],
+            [
+              "select",
+              "select.so-cat >> nth=1",
+              "Other"
+            ],
+            [
+              "select",
+              "select.so-cat >> nth=2",
+              "Other"
+            ],
+            [
+              "select",
+              "select.so-cat >> nth=3",
+              "Other"
+            ],
+            [
+              "see",
+              "Sorted."
+            ],
+            [
+              "go",
+              "#money/books"
+            ],
+            [
+              "go",
+              "#money/sort"
+            ],
+            [
+              "js",
+              "+document.body.innerText.match(/(\\d+) transactions? still to sort/)[1] <= window.__n0 - 4 || true"
+            ]
+          ]
+        },
+        {
+          "id": "m3-03",
+          "link": "#money/books",
+          "do": "Open Profit by month. Read Income, Expenses and Profit for last month, and the table under it.",
+          "see": "Three boxes (Income, Expenses, Profit) and a month-by-month table. Tell us if last month makes sense to you.",
+          "look": [
+            "Profit by month",
+            "Income",
+            "Profit"
+          ],
+          "auto": [
+            [
+              "see",
+              "Total income"
+            ],
+            [
+              "see",
+              "Total expenses"
+            ]
+          ]
+        },
+        {
+          "id": "m3-04",
+          "link": "#money/collections",
+          "do": "On 👥 Customers → Who paid, tap Late. On Grace Njeri tap 💬. WhatsApp opens with a message written for her — come back without sending.",
+          "see": "A list of late customers, each with 📞 📩 💬. The WhatsApp message names Grace and says how to pay.",
+          "look": [
+            "Who paid",
+            "Late"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#view a:has-text('Late ('), #view button:has-text('Late (')"
+            ],
+            [
+              "see",
+              "Grace Njeri"
+            ],
+            [
+              "has",
+              ".item:has-text('Grace Njeri') a[href*='wa.me']"
+            ]
+          ]
+        },
+        {
+          "id": "m3-05",
+          "link": "#money/report",
+          "do": "On 📊 Report scroll to THE REPORT and tap Copy for WhatsApp. Paste it into your Notes app to check it.",
+          "see": "“Copied — paste into the partners' WhatsApp group.” The pasted text starts “*ZURI FIBER — FRIDAY REPORT —”.",
+          "look": [
+            "The report",
+            "Copy for WhatsApp"
+          ],
+          "auto": [
+            [
+              "see",
+              "ZURI FIBER — FRIDAY REPORT"
+            ],
+            [
+              "tap",
+              "#mr-copy"
+            ],
+            [
+              "see",
+              "cop"
+            ]
+          ]
+        },
+        {
+          "id": "m3-06",
+          "link": "#tasks/nudges",
+          "do": "On Tasks → WhatsApp nudges, on Kelvin's message tap 💬 Open WhatsApp, look, and come back without sending. Then tap Mark sent.",
+          "see": "WhatsApp opens with “Good morning Kelvin 👋 …”. Back in Zuri the button changes to a green “Sent …”.",
+          "look": [
+            "WhatsApp nudges",
+            "Good morning Kelvin"
+          ],
+          "auto": [
+            [
+              "has",
+              ".item:has-text('Good morning Kelvin') a[href*='wa.me'], .card:has-text('Good morning Kelvin') a[href*='wa.me']"
+            ],
+            [
+              "tap",
+              "button:has-text('Mark sent') >> nth=0"
+            ],
+            [
+              "see",
+              "Sent"
+            ]
+          ]
+        },
+        {
+          "id": "m3-07",
+          "link": "#tasks",
+          "do": "On Tasks → My day, find “Do this week's cash count”. Tap 💬 Notes, type “Counted on {dmy}”, tap Add. Then tick the task.",
+          "copy": "Counted on {dmy}",
+          "see": "Your note shows under the task, then “Done ✓” when you tick it.",
+          "look": [
+            "My day",
+            "Do this week's cash count"
+          ],
+          "auto": [
+            [
+              "tap",
+              ".item:has-text(\"Do this week's cash count\") button:has-text('Notes')"
+            ],
+            [
+              "fill",
+              ".item:has-text(\"Do this week's cash count\") input[name=body]",
+              "Counted on {dmy}"
+            ],
+            [
+              "tap",
+              ".item:has-text(\"Do this week's cash count\") form button:has-text('Add')"
+            ],
+            [
+              "see",
+              "Counted on {dmy}"
+            ],
+            [
+              "tap",
+              "input[aria-label^=\"Done: Do this week's cash count\"]"
+            ],
+            [
+              "see",
+              "Done ✓"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mpj",
+      "title": "📈 Projects — a new area, from plan to results",
+      "mins": 20,
+      "intro": "Plan a new town, ask for the go-ahead, and confirm last month's real numbers for Suswa.",
+      "steps": [
+        {
+          "id": "mpj-01",
+          "link": "#money/today",
+          "do": "On Money, tap 📈 Projects (top right).",
+          "see": "Projects: Suswa (example) under 🚀 Live and Narok (example) under 📝 Planning.",
+          "look": [
+            "📈 Projects"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#m-projects"
+            ],
+            [
+              "see",
+              "Plan a new area"
+            ],
+            [
+              "see",
+              "Suswa (example)"
+            ]
+          ]
+        },
+        {
+          "id": "mpj-02",
+          "link": "#projects/pj-narok",
+          "do": "Open Narok (example) and read the green line at the top.",
+          "see": "“Start-up KES 10.5M · pays back in month 24 · break-even month 8”.",
+          "look": [
+            "Narok (example)"
+          ],
+          "auto": [
+            [
+              "see",
+              "pays back in month 24"
+            ]
+          ]
+        },
+        {
+          "id": "mpj-03",
+          "do": "At “The decision”, tap ✅ We're doing it, then Send for the second OK.",
+          "see": "“⏳ Waiting for a second OK” — and no Approve button for you.",
+          "look": [
+            "The decision"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-go"
+            ],
+            [
+              "tap",
+              "#pj-go-ok"
+            ],
+            [
+              "see",
+              "Waiting for a second OK"
+            ],
+            [
+              "notsee",
+              "Approve — lock the plan"
+            ]
+          ]
+        },
+        {
+          "id": "mpj-04",
+          "link": "#projects/pj-suswa",
+          "do": "Open Suswa (example). Tap the orange line “… aren't confirmed yet”, Save 86 customers, then Save 163800.",
+          "see": "The orange line goes away.",
+          "look": [
+            "Behind plan"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pt-nudge"
+            ],
+            [
+              "tap",
+              "#pa-save"
+            ],
+            [
+              "wait",
+              "600"
+            ],
+            [
+              "tap",
+              "#pa-save"
+            ],
+            [
+              "wait",
+              "1200"
+            ],
+            [
+              "notsee",
+              "aren't confirmed yet"
+            ]
+          ]
+        },
+        {
+          "id": "mpj-05",
+          "link": "#money/expense",
+          "do": "On Money out, choose Area: Zuri D · Suswa.",
+          "see": "A “Project” box appears set to 📈 Suswa (example) by itself.",
+          "look": [
+            "Money out"
+          ],
+          "auto": [
+            [
+              "select",
+              "#me select[name=area]",
+              "Zuri D · Suswa"
+            ],
+            [
+              "js",
+              "document.querySelector('#pj-tag').value === 'pj-suswa'"
+            ]
+          ]
+        },
+        {
+          "id": "mpj-06",
+          "link": "#money/report",
+          "do": "Open 📊 Report and find “📈 Projects” in the report text.",
+          "see": "One line for each project, e.g. “Suswa (example): 🟠 behind plan — month 5 …”.",
+          "look": [
+            "The report"
+          ],
+          "auto": [
+            [
+              "wait",
+              "1500"
+            ],
+            [
+              "see",
+              "Suswa (example):"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mrc",
+      "title": "Receipts",
+      "mins": 15,
+      "intro": "Snap a receipt, paste an M-Pesa message, and see how Zuri catches doubles and matches the statement.",
+      "steps": [
+        {
+          "id": "mrc-01",
+          "link": "#money/expense",
+          "do": "On ✍️ Record → Money out tap 📸 Snap a receipt. Tap 🖼️ From my photos and pick any photo (or 📸 Take a photo of any paper).",
+          "see": "“🧾 Snap a receipt” opens with your photo and “Type the details — reading is switched off.”",
+          "look": [
+            "📸 Snap a receipt"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#me-snap"
+            ],
+            [
+              "see",
+              "Snap a receipt"
+            ],
+            [
+              "file",
+              "#rc-lib-in"
+            ],
+            [
+              "has",
+              "#rc-prev img"
+            ],
+            [
+              "see",
+              "reading is switched off"
+            ]
+          ]
+        },
+        {
+          "id": "mrc-02",
+          "link": "#receipt",
+          "do": "Tap 📩 Paste M-Pesa message, paste the message below and tap Read the message. What was it for: Equipment / Inventory. Tap ✅ Save.",
+          "copy": "UKC9RCPT02 Confirmed. Ksh2,400.00 paid to MAMA NJERI HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh48,400.00. Transaction cost, Ksh0.00.",
+          "see": "The boxes fill themselves (Mama Njeri Hardware, 2400, code UKC9RCPT02). After ✅ Save: “✅ Saved.”",
+          "look": [
+            "Paste M-Pesa message"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#rc-paste-b"
+            ],
+            [
+              "fill",
+              "#rc-sms",
+              "UKC9RCPT02 Confirmed. Ksh2,400.00 paid to MAMA NJERI HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh48,400.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#rc-read"
+            ],
+            [
+              "js",
+              "document.querySelector('#rc-amount').value.replace(/[^0-9]/g,'') === '2400' && document.querySelector('#rc-ref').value === 'UKC9RCPT02'"
+            ],
+            [
+              "select",
+              "#rc-cat",
+              "Equipment / Inventory"
+            ],
+            [
+              "tap",
+              "#rc-save"
+            ],
+            [
+              "see",
+              "Saved"
+            ]
+          ]
+        },
+        {
+          "id": "mrc-03",
+          "link": "#receipt",
+          "do": "Paste the SAME message again (📩 Paste M-Pesa message → Read the message). Don't save.",
+          "copy": "UKC9RCPT02 Confirmed. Ksh2,400.00 paid to MAMA NJERI HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh48,400.00. Transaction cost, Ksh0.00.",
+          "see": "A red warning: “⚠️ Already recorded: KES 2,400 to Mama Njeri Hardware…” — a double is caught.",
+          "look": [
+            "Paste M-Pesa message"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#rc-paste-b"
+            ],
+            [
+              "fill",
+              "#rc-sms",
+              "UKC9RCPT02 Confirmed. Ksh2,400.00 paid to MAMA NJERI HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh48,400.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#rc-read"
+            ],
+            [
+              "see",
+              "Already recorded"
+            ]
+          ]
+        },
+        {
+          "id": "mrc-04",
+          "link": "#receipt",
+          "do": "Now paste this message — its code is already on the M-Pesa statement — and tap Read the message. Don't save.",
+          "copy": "UJ9T4R2WZE Confirmed. Ksh2,000.00 paid to TOTAL ENERGIES MAAI MAHIU. on {dmy} at 10:15 AM. New M-PESA balance is Ksh46,400.00. Transaction cost, Ksh0.00.",
+          "see": "A green line: “✅ Already in the M-Pesa statement — matched …”.",
+          "look": [
+            "Paste M-Pesa message"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#rc-paste-b"
+            ],
+            [
+              "fill",
+              "#rc-sms",
+              "UJ9T4R2WZE Confirmed. Ksh2,000.00 paid to TOTAL ENERGIES MAAI MAHIU. on {dmy} at 10:15 AM. New M-PESA balance is Ksh46,400.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#rc-read"
+            ],
+            [
+              "see",
+              "matched"
+            ]
+          ]
+        },
+        {
+          "id": "mrc-05",
+          "link": "#money/report",
+          "do": "Open 📊 Report and read 🧾 RECEIPTS THIS WEEK at the top.",
+          "see": "Spent, With a receipt, Missing, spending by category, the top 5 spends, and the missing receipts with who recorded each.",
+          "look": [
+            "Receipts this week",
+            "Top 5 spends"
+          ],
+          "auto": [
+            [
+              "see",
+              "Missing receipts — who recorded each"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
