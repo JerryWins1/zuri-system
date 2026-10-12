@@ -302,7 +302,7 @@
       <p style="margin:0 0 6px"><a class="back" href="#jobs">← Jobs</a></p><!-- 7 Oct deep check #37: 44 px back link -->
       ${offline ? '<div class="alert warn">📴 No signal — showing what this phone has saved. Your changes send later.</div>' : ''}
       <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:4px">Job #${t.ticket_no ?? '…'} · ${kindName(t.kind)}</h2>${statusPill(t.status, t.kind)}</div>
-      <p class="hint" style="margin-top:0">${t.priority === 'urgent' ? '🔴 Urgent · ' : ''}Opened ${Z.when(t.opened_at)}${t.caller ? ' · caller: ' + Z.esc(t.caller) : ''}${t.closed_at ? ' · closed ' + Z.when(t.closed_at) : ''}</p>
+      <p class="hint" style="margin-top:0">${t.priority === 'urgent' ? '🔴 Urgent · ' : ''}Opened ${Z.when(t.opened_at)}${t.opened_by && Z.personName(t.opened_by) ? ' by ' + Z.esc(Z.personName(t.opened_by)) : ''}${t.caller ? ' · caller: ' + Z.esc(t.caller) : ''}${t.closed_at ? ' · closed ' + Z.when(t.closed_at) : ''}</p>
       ${t.kind === 'fault' && ACTIVE.includes(t.status) && c && Z.expiredHtml ? Z.expiredHtml(c, 'job') : ''}
       <div class="card"><b>Problem</b><p style="margin:4px 0 0">${Z.esc(t.summary)}</p></div>
 
