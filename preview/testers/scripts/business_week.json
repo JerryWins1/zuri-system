@@ -1,0 +1,2633 @@
+{
+ "version": "v1 · 2026-10-13",
+ "start": "2026-10-16",
+ "days_total": 7,
+ "code": "ZURI-BW",
+ "training": "https://jerrywins1.github.io/zuri-system/?training",
+ "pay": {
+  "day": 600,
+  "problem": 100,
+  "problems_cap_day": 3,
+  "min_done_for_day": 2
+ },
+ "roles": [
+  {
+   "id": "P",
+   "label": "⭐ Partner (the boss this week)",
+   "short": "Partner",
+   "app": "admin",
+   "log": "admin",
+   "area": "",
+   "what": "You run the pretend company. You set it up on day 1, switch your team on, say yes or no to money going out (the second person), approve customer notices, and decide about the new area.",
+   "screens": [
+    "Home (Needs attention)",
+    "Me → ⚙️ Admin: People · Areas · Company & hubs · Price list · Who sees what · Custom fields · Settings",
+    "Money → 📋 Bills → 👥 Approvals",
+    "Money → 📊 Report",
+    "📈 Projects",
+    "Tasks (🤖 Run the manager now)"
+   ],
+   "routine": [
+    "09:00 Open Home. Read Needs attention first.",
+    "Clear 👥 Approvals before 10:00 and again before 12:00 — nobody's money waits for you.",
+    "Answer any 📡 outage notice within 15 minutes.",
+    "11:45 Read the day's Friday report (Money → 📊 Report) and post one line in the team group: what went well, what went wrong."
+   ]
+  },
+  {
+   "id": "F",
+   "label": "💰 Finance (the money desk)",
+   "short": "Finance",
+   "app": "internal · finance",
+   "log": "finance",
+   "area": "",
+   "what": "You keep the money straight: cash counts, money in and out, bills, staff pay, billing-website files, and the reports.",
+   "screens": [
+    "Money → 💵 Today · Count the cash",
+    "Money → ✍️ Record (Money out · Money in · 🧾 Snap a receipt)",
+    "Money → 📋 Bills (Bills · Pay run · 👥 Approvals · Staff & pay)",
+    "Money → 👥 Customers (Who paid · Next 30 days)",
+    "Money → 🏦 Statements → 📥 Bring in a file (billing-website files)",
+    "Money → 📊 Report",
+    "📈 Projects"
+   ],
+   "routine": [
+    "08:45 Count the cash for both areas (Money → Count the cash).",
+    "Check 👥 Approvals: confirm the techs' receipts.",
+    "Record every payment the same hour it happens — never at the end of the day.",
+    "11:30 Money → 📊 Report: read it. Anything red → tell the Partner."
+   ]
+  },
+  {
+   "id": "C1",
+   "label": "📞 Call center 1 (Town Centre desk)",
+   "short": "Call center 1",
+   "app": "callcenter",
+   "log": "callcenter",
+   "area": "TC",
+   "what": "You answer the Town Centre customers: new sign-ups, problems, questions. You make the jobs and send a technician.",
+   "screens": [
+    "Customers (search · ＋ New customer · 🗺️ Map)",
+    "Jobs (＋ New job · All techs · 📩 Today's texts)",
+    "Tasks (My day · ＋ Add a task)",
+    "Home"
+   ],
+   "routine": [
+    "09:00 Open Jobs → 📩 Today's texts: work every card.",
+    "Every call becomes something in Zuri: a customer, a job, a note or a task. Nothing stays only in your head.",
+    "Before you make a new customer, SEARCH first (name or phone) — no doubles.",
+    "11:50 Jobs → All techs: is any job without a tech or a day? Fix it."
+   ]
+  },
+  {
+   "id": "C2",
+   "label": "📞 Call center 2 (Satellite desk + payment calls)",
+   "short": "Call center 2",
+   "app": "callcenter",
+   "log": "callcenter",
+   "area": "SA",
+   "what": "You answer the Satellite customers and you make the payment calls. In an outage you tell callers what is happening.",
+   "screens": [
+    "Customers",
+    "Jobs (📩 Today's texts · Payment follow-ups · outage banner)",
+    "Tasks",
+    "Home"
+   ],
+   "routine": [
+    "09:00 Jobs → 📩 Today's texts.",
+    "If a red 📡 Possible outage box shows, read it to every caller from that area. No new visit needed.",
+    "A customer says “I paid”? Ask for the M-Pesa code, write it in a note, and make a task for Finance.",
+    "11:50 Tasks → My day: tick what you finished."
+   ]
+  },
+  {
+   "id": "T1",
+   "label": "🛠️ Field tech 1 (Town Centre — installs)",
+   "short": "Tech 1",
+   "app": "field",
+   "log": "field",
+   "area": "TC",
+   "what": "You connect new homes in Town Centre and fix what breaks. Your phone is your office: jobs, pins, photos, parts, money collected, receipts.",
+   "screens": [
+    "Jobs → My jobs (To do · Done · 📍 Nearest first)",
+    "A job: ▶ I'm starting now · 📍 pin · 📷 photo · parts · ✅ Job finished",
+    "🧾 Snap a receipt · Me → 🧾 My receipts",
+    "Tasks"
+   ],
+   "routine": [
+    "08:50 Open My jobs. Tap 📍 Nearest first.",
+    "At every house: ▶ I'm starting now → pin → work → parts with serial → photo → what you found / did (tap at least one “What did you do?”) → money collected → ✅ Job finished.",
+    "Spent Zuri money? Snap the receipt the same minute.",
+    "Before you stop: My jobs → To do should be empty or have a note on each job."
+   ]
+  },
+  {
+   "id": "T2",
+   "label": "🛠️ Field tech 2 (Town Centre — faults & businesses)",
+   "short": "Tech 2",
+   "app": "field",
+   "log": "field",
+   "area": "TC",
+   "what": "You fix faults in Town Centre and look after the business customers (salon, hotel).",
+   "screens": [
+    "Jobs → My jobs",
+    "A job (same as Tech 1)",
+    "🧾 Snap a receipt",
+    "Tasks"
+   ],
+   "routine": [
+    "08:50 Open My jobs, nearest first.",
+    "Business customers first when they are urgent.",
+    "Collected money? Type the M-Pesa code every time.",
+    "Snap every receipt."
+   ]
+  },
+  {
+   "id": "T3",
+   "label": "🛠️ Field tech 3 (Satellite)",
+   "short": "Tech 3",
+   "app": "field",
+   "log": "field",
+   "area": "SA",
+   "what": "You cover Satellite: installs, faults, and the Satellite cabinet. On day 4 you find the cable cut.",
+   "screens": [
+    "Jobs → My jobs",
+    "A job",
+    "🧾 Snap a receipt",
+    "Tasks"
+   ],
+   "routine": [
+    "08:50 Open My jobs.",
+    "If many Satellite customers are down, check the cabinet FIRST — tell the Partner what you find.",
+    "Snap every receipt.",
+    "Pins: stand outside the house, then 📍."
+   ]
+  },
+  {
+   "id": "V",
+   "label": "🎭 Customer voice (you play the customers)",
+   "short": "Customer voice",
+   "app": "no Zuri account",
+   "log": "callcenter",
+   "area": "",
+   "what": "You are every customer. At the time on your script you phone (WhatsApp call) the call-center person named, say your lines, and check what they do. You are our toughest customer — but a fair one.",
+   "screens": [
+    "Your script on the Testers' List (Business Week)",
+    "WhatsApp (to call Call center 1 and 2)"
+   ],
+   "routine": [
+    "Call at the time on the script (± 5 min).",
+    "Say who you are and your pretend phone number. Spell names if asked.",
+    "At the end of each call write what happened on your list: ✅ if they did it right, ❌ if not (say what).",
+    "Never give real numbers or real names of real people."
+   ]
+  }
+ ],
+ "packages": [
+  [
+   "Home 5 Mbps",
+   1500
+  ],
+  [
+   "Home 10 Mbps",
+   2000
+  ],
+  [
+   "Home 20 Mbps",
+   3000
+  ],
+  [
+   "Business 30 Mbps",
+   4500
+  ]
+ ],
+ "install_fee": {
+  "Home": 2500,
+  "Business": 4500
+ },
+ "areas": [
+  [
+   "TC",
+   "Town Centre",
+   30000
+  ],
+  [
+   "SA",
+   "Satellite",
+   15000
+  ]
+ ],
+ "customers": [
+  [
+   "BW-1001",
+   "Grace Wanjiku (Mama Wanjiku)",
+   "0700 000 101",
+   "TC",
+   "Behind the Total petrol station, green gate",
+   "Home 10 Mbps",
+   1
+  ],
+  [
+   "BW-1002",
+   "John Kamau",
+   "0700 000 102",
+   "TC",
+   "Near the matatu stage, blue door",
+   "Home 5 Mbps",
+   1
+  ],
+  [
+   "BW-1003",
+   "Faith Achieng (Faith Salon)",
+   "0700 000 103",
+   "TC",
+   "Market, shop 14",
+   "Business 30 Mbps",
+   1
+  ],
+  [
+   "BW-2001",
+   "Mercy Atieno",
+   "0700 000 201",
+   "SA",
+   "Satellite estate, blue gate",
+   "Home 10 Mbps",
+   1
+  ],
+  [
+   "BW-1004",
+   "Peter Mwangi",
+   "0700 000 104",
+   "TC",
+   "Opposite St. Mary's church",
+   "Home 20 Mbps",
+   2
+  ],
+  [
+   "BW-1005",
+   "Lucy Njeri",
+   "0700 000 105",
+   "TC",
+   "Above the M-Pesa shop",
+   "Home 10 Mbps",
+   2
+  ],
+  [
+   "BW-1006",
+   "Daniel Kiprono (Longonot View Hotel)",
+   "0700 000 106",
+   "TC",
+   "Old Naivasha road, after the bridge",
+   "Business 30 Mbps",
+   2
+  ],
+  [
+   "BW-1007",
+   "Esther Wairimu",
+   "0700 000 107",
+   "TC",
+   "Near the health centre",
+   "Home 5 Mbps",
+   2
+  ],
+  [
+   "BW-2002",
+   "Joseph Kibet",
+   "0700 000 202",
+   "SA",
+   "Satellite, near the borehole",
+   "Home 5 Mbps",
+   2
+  ],
+  [
+   "BW-2003",
+   "Purity Nyambura",
+   "0700 000 203",
+   "SA",
+   "Satellite shops, 2nd floor",
+   "Home 20 Mbps",
+   2
+  ],
+  [
+   "BW-1008",
+   "Samuel Otieno",
+   "0700 000 108",
+   "TC",
+   "Kamuyu road, after the posho mill",
+   "Home 10 Mbps",
+   3
+  ],
+  [
+   "BW-1009",
+   "Ruth Chebet",
+   "0700 000 109",
+   "TC",
+   "Next to the primary school",
+   "Home 10 Mbps",
+   3
+  ],
+  [
+   "BW-1010",
+   "Pastor Moses Gitau",
+   "0700 000 110",
+   "TC",
+   "PCEA church compound",
+   "Home 20 Mbps",
+   3
+  ],
+  [
+   "BW-2004",
+   "Isaac Ndungu (Satellite Academy)",
+   "0700 000 204",
+   "SA",
+   "Satellite Academy, main gate",
+   "Business 30 Mbps",
+   3
+  ],
+  [
+   "BW-2005",
+   "Beatrice Wambui",
+   "0700 000 205",
+   "SA",
+   "Off the Suswa road, mabati house",
+   "Home 10 Mbps",
+   3
+  ],
+  [
+   "BW-1011",
+   "Ann Muthoni",
+   "0700 000 111",
+   "TC",
+   "Behind the police post",
+   "Home 5 Mbps",
+   4
+  ],
+  [
+   "BW-1012",
+   "Kevin Omondi",
+   "0700 000 112",
+   "TC",
+   "Green house near the water tank",
+   "Home 10 Mbps",
+   4
+  ],
+  [
+   "BW-2006",
+   "Stephen Mutua",
+   "0700 000 206",
+   "SA",
+   "Near the chief's camp",
+   "Home 5 Mbps",
+   4
+  ]
+ ],
+ "suswa_leads": [
+  [
+   "Susan Kariuki",
+   "0700 000 301",
+   "Suswa, near the market"
+  ],
+  [
+   "Hassan Ali (Suswa General Shop)",
+   "0700 000 302",
+   "Suswa market, opposite the stage"
+  ],
+  [
+   "Mr. Leshan (Suswa Primary School)",
+   "0700 000 303",
+   "Suswa Primary School"
+  ]
+ ],
+ "staff": [
+  [
+   "F",
+   "Finance officer",
+   25000
+  ],
+  [
+   "C1",
+   "Call center",
+   18000
+  ],
+  [
+   "C2",
+   "Call center",
+   18000
+  ],
+  [
+   "T1",
+   "Field technician",
+   20000
+  ],
+  [
+   "T2",
+   "Field technician",
+   20000
+  ],
+  [
+   "T3",
+   "Field technician",
+   20000
+  ]
+ ],
+ "bills": [
+  [
+   "TC",
+   "Office rent",
+   15000,
+   20,
+   "Rent & Utilities",
+   "Landlord · 0700 000 801"
+  ],
+  [
+   "TC",
+   "Safaricom backhaul",
+   35000,
+   22,
+   "Telecom / Network",
+   "Paybill 888880 · Acc ZBW01"
+  ],
+  [
+   "TC",
+   "KPLC prepaid",
+   4000,
+   18,
+   "Rent & Utilities",
+   "Paybill 888880 · Acc 5412"
+  ],
+  [
+   "TC",
+   "Staff transport",
+   3000,
+   20,
+   "Transport / Fuel",
+   "Cash"
+  ],
+  [
+   "SA",
+   "Pole rent",
+   2500,
+   21,
+   "Rent & Utilities",
+   "Landlord · 0700 000 802"
+  ],
+  [
+   "SA",
+   "KPLC prepaid",
+   2000,
+   18,
+   "Rent & Utilities",
+   "Paybill 888880 · Acc 5413"
+  ]
+ ],
+ "days": [
+  {
+   "n": 1,
+   "date": "2026-10-16",
+   "dow": "Friday",
+   "window": "09:00–12:00",
+   "db": "fresh",
+   "title": "Open the doors",
+   "story": "A brand-new, EMPTY company. No areas, no customers, no money yet. The Partner builds it at 09:00; by 12:00 we have two areas, a price list, a team switched on, staff and bills, opening cash, and our first four customers booked for installs.",
+   "ch": [
+    {
+     "id": "d1-p-01",
+     "at": "09:00",
+     "role": "P",
+     "t": "Sign in and make the company",
+     "do": "Open the training copy and sign in. Me → ⚙️ Admin → Company & hubs. Company name: Zuri Fiber (Business Week). Town: Maai Mahiu. Office phone 0700 000 800. M-Pesa Paybill 600100. KRA PIN P051234567X. Tap Save the company.",
+     "where": "Me → ⚙️ Admin → Company & hubs",
+     "end": "“Company saved.” and the name shows when you open the page again."
+    },
+    {
+     "id": "d1-p-02",
+     "at": "09:10",
+     "role": "P",
+     "t": "Make the two areas",
+     "do": "Admin → Areas. Add: code TC, name Town Centre, M-Pesa float target 30000 → Add area. Then code SA, name Satellite, float target 15000 → Add area.",
+     "where": "Me → ⚙️ Admin → Areas",
+     "end": "Two rows: TC Town Centre (30,000) and SA Satellite (15,000). The area picker at the top shows both (if not, pull down to refresh)."
+    },
+    {
+     "id": "d1-p-03",
+     "at": "09:20",
+     "role": "P",
+     "t": "Switch your team on",
+     "do": "Admin → People. For each tester: pick the job and area, tick On, Save. Finance = Office staff + Finance. Call center 1 = Call center, Town Centre. Call center 2 = Call center, Satellite. Tech 1 and Tech 2 = Field tech, Town Centre. Tech 3 = Field tech, Satellite.",
+     "where": "Me → ⚙️ Admin → People",
+     "end": "No “waiting to be switched on” line. Six people switched on with the right job. Tell the team group: “You are on.”"
+    },
+    {
+     "id": "d1-f-01",
+     "at": "09:30",
+     "role": "F",
+     "t": "Sign in (after the Partner switches you on)",
+     "do": "Open the training copy and sign in. If it says “Almost there”, wait for the Partner's message, then pull down to refresh.",
+     "where": "Training copy",
+     "end": "You see Home and the Money tab."
+    },
+    {
+     "id": "d1-c1-01",
+     "at": "09:30",
+     "role": "C1",
+     "t": "Sign in",
+     "do": "Open the training copy and sign in. Wait for “You are on” from the Partner.",
+     "where": "Training copy",
+     "end": "You see Home, Customers, Jobs and Tasks."
+    },
+    {
+     "id": "d1-c2-01",
+     "at": "09:30",
+     "role": "C2",
+     "t": "Sign in",
+     "do": "Open the training copy and sign in.",
+     "where": "Training copy",
+     "end": "You see Home, Customers, Jobs and Tasks."
+    },
+    {
+     "id": "d1-t1-01",
+     "at": "09:30",
+     "role": "T1",
+     "t": "Sign in and put Zuri on your phone",
+     "do": "Open the training copy in Chrome, sign in. Tap ⋮ → Add to Home screen. Open Zuri from the new icon.",
+     "where": "Training copy",
+     "end": "Zuri opens from the icon. Bottom tabs: Jobs, Tasks, Me."
+    },
+    {
+     "id": "d1-t2-01",
+     "at": "09:30",
+     "role": "T2",
+     "t": "Sign in and put Zuri on your phone",
+     "do": "Open the training copy, sign in, Add to Home screen.",
+     "where": "Training copy",
+     "end": "Zuri opens from the icon."
+    },
+    {
+     "id": "d1-t3-01",
+     "at": "09:30",
+     "role": "T3",
+     "t": "Sign in and put Zuri on your phone",
+     "do": "Open the training copy, sign in, Add to Home screen.",
+     "where": "Training copy",
+     "end": "Zuri opens from the icon."
+    },
+    {
+     "id": "d1-p-04",
+     "at": "09:35",
+     "role": "P",
+     "t": "Type the price list",
+     "do": "Admin → 💲 Price list. Add four packages: Home 5 Mbps 1500 · Home 10 Mbps 2000 · Home 20 Mbps 3000 · Business 30 Mbps 4500 (kind Fixed). The install fee is told to customers: Home 2,500, Business 4,500.",
+     "where": "Me → ⚙️ Admin → Price list",
+     "end": "Four packages in the list. (Call center sees them when they type a package on a new customer.)"
+    },
+    {
+     "id": "d1-p-05",
+     "at": "09:45",
+     "role": "P",
+     "t": "Hubs on the map",
+     "do": "Admin → Company & hubs → ＋ Add a hub. Main office (Office / HQ), area Town Centre, landmark “Above the stage”, tap the map near the town centre. Then OLT room (OLT / server room, Town Centre). Then Satellite cabinet (Splitter cabinet, area Satellite).",
+     "where": "Me → ⚙️ Admin → Company & hubs",
+     "end": "Three hubs with pins (no red “no pin”). Customers → 🗺️ Map shows the three hub icons."
+    },
+    {
+     "id": "d1-f-02",
+     "at": "09:45",
+     "role": "F",
+     "t": "Opening cash count",
+     "do": "Money → 💵 Today → Count the cash. Area Town Centre: Bank 250000, M-Pesa 40000 → Save. Again for Satellite: Bank 60000, M-Pesa 12000 → Save.",
+     "where": "Money → Count the cash",
+     "end": "Cash today shows both areas. Satellite has an orange warning: M-Pesa float below the 15,000 target. Tell the Partner in the group."
+    },
+    {
+     "id": "d1-f-03",
+     "at": "10:00",
+     "role": "F",
+     "t": "Put in the staff",
+     "do": "Money → 📋 Bills → Staff & pay → ＋ Add a staff member, once for each person: Finance officer 25,000 · Call center 18,000 (two) · Field technician 20,000 (three). Use the tester's name, M-Pesa number 0700 000 901 … 906 (pretend), pay day 20, tick “Working for Zuri now”. The Partner is not on the payroll.",
+     "where": "Money → 📋 Bills → Staff & pay",
+     "end": "Six staff, total KES 121,000 a month, all “paid on the 20th”. (PRETEND salaries — your real Business Week pay is separate.)"
+    },
+    {
+     "id": "d1-c1-02",
+     "at": "10:15",
+     "role": "C1",
+     "t": "First customer: Mama Wanjiku calls",
+     "do": "The Customer voice calls you as Grace Wanjiku. SEARCH first (no one yet). Customers → ＋ New customer: Full name Grace Wanjiku (Mama Wanjiku), Area Town Centre, Status Lead, Phone 0700 000 101, Billing website ID BW-1001, Package Home 10 Mbps (pick it from the list), Monthly rate 2000, Directions “Behind the Total petrol station, green gate”. Save. Then ＋ New job: New install, “Install Home 10 Mbps”, Send to tech Tech 1, Visit day tomorrow.",
+     "where": "Customers → ＋ New customer, then ＋ New job",
+     "end": "Grace Wanjiku is a Lead with a New install job for tomorrow, sent to Tech 1. Tell her: 2,000 a month + 2,500 install."
+    },
+    {
+     "id": "d1-v-01",
+     "at": "10:15",
+     "role": "V",
+     "t": "Call 1 — Mama Wanjiku wants internet",
+     "do": "WhatsApp-call Call center 1. “Habari, I am Grace Wanjiku, they call me Mama Wanjiku. 0700 000 101. I live behind the Total petrol station, green gate. I want internet at home — what do you have?” Choose Home 10 Mbps. Ask “When can you come?”",
+     "where": "WhatsApp call to Call center 1",
+     "end": "They told you 2,000 a month + 2,500 install, gave you a day (tomorrow) and a technician's name. Tick ✅ — or ❌ and say what was missing."
+    },
+    {
+     "id": "d1-f-04",
+     "at": "10:20",
+     "role": "F",
+     "t": "Record the router purchase (with VAT)",
+     "do": "Money → ✍️ Record → Money out. Area Town Centre. Paid to Wavetech Solutions. Amount 35000. Category Equipment / Inventory. Paid from Bank. Ref WT-4471. Open “More details”: VAT included 4828, Supplier KRA PIN P051111111A, receipt Paper receipt — filed. Save.",
+     "where": "Money → ✍️ Record → Money out",
+     "end": "It shows “waiting for a second person's OK”. The Partner approves it (10:30). Then it shows in the list as approved."
+    },
+    {
+     "id": "d1-p-06",
+     "at": "10:30",
+     "role": "P",
+     "t": "Approve the first money out",
+     "do": "Finance records 10 routers (KES 35,000). Open Money → 📋 Bills → 👥 Approvals. Read it (who recorded it, the amount, the VAT). Tap ✅ Approve.",
+     "where": "Money → 📋 Bills → 👥 Approvals",
+     "end": "“✅ Approved: Wavetech Solutions, KES 35,000.” Nothing left waiting."
+    },
+    {
+     "id": "d1-t1-02",
+     "at": "10:30",
+     "role": "T1",
+     "t": "Fuel receipt",
+     "do": "You bought fuel for the motorbike. Me → 🧾 Snap a receipt → 📩 Paste M-Pesa message. Paste the message (Copy button below) → Read the message. What was it for: Transport / Fuel. Area Town Centre. ✅ Save.",
+     "where": "Me → 🧾 Snap a receipt",
+     "end": "“✅ Saved.” Me → 🧾 My receipts shows Total Energies 500 waiting for Finance.",
+     "copy": "UKA1BWFUEL Confirmed. Ksh500.00 paid to TOTAL ENERGIES MAAI MAHIU. on 16/10/26 at 10:20 AM. New M-PESA balance is Ksh9,500.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d1-f-05",
+     "at": "10:40",
+     "role": "F",
+     "t": "Put in October's bills",
+     "do": "Money → 📋 Bills → Add a bill, six times: Town Centre — Office rent 15000 due 20 (Rent & Utilities) · Safaricom backhaul 35000 due 22 (Telecom / Network) · KPLC prepaid 4000 due 18 · Staff transport 3000 due 20 (Transport / Fuel). Satellite — Pole rent 2500 due 21 · KPLC prepaid 2000 due 18. Put the “Pay to” from your role card.",
+     "where": "Money → 📋 Bills",
+     "end": "Bills for October: six bills, KES 61,500 owing, none paid."
+    },
+    {
+     "id": "d1-c2-02",
+     "at": "10:40",
+     "role": "C2",
+     "t": "Mercy Atieno calls (Satellite)",
+     "do": "Mercy Atieno, Area Satellite, Lead, 0700 000 201, BW-2001, Home 10 Mbps, 2000, “Satellite estate, blue gate”. ＋ New job: New install, Tech 3, Visit day tomorrow.",
+     "where": "Customers → ＋ New customer → ＋ New job",
+     "end": "Mercy: Lead + install tomorrow with Tech 3."
+    },
+    {
+     "id": "d1-v-02",
+     "at": "10:40",
+     "role": "V",
+     "t": "Call 2 — Mercy Atieno (Satellite)",
+     "do": "Call Call center 2. “I am Mercy Atieno, 0700 000 201, Satellite estate, blue gate. I want 10 Mbps.”",
+     "where": "Call to Call center 2",
+     "end": "A day and a technician (Tech 3) for tomorrow."
+    },
+    {
+     "id": "d1-t2-02",
+     "at": "11:00",
+     "role": "T2",
+     "t": "Survey the market",
+     "do": "Jobs → ＋ Log a job: Site survey, “Market area: which shops want business internet”. Open it. Stand outside, tap 📍 Drop pin here. Add a photo of anything (pretend it is the market cabinet).",
+     "where": "Jobs → ＋ Log a job → the job",
+     "end": "The job has a pin and a photo."
+    },
+    {
+     "id": "d1-t3-02",
+     "at": "11:00",
+     "role": "T3",
+     "t": "Survey Satellite",
+     "do": "Jobs → ＋ Log a job: Site survey, “Satellite: cabinet to the estate gate, 400 m of drop cable needed”. Drop a pin outside. Add a photo.",
+     "where": "Jobs → the survey job",
+     "end": "Survey job with a pin and a photo."
+    },
+    {
+     "id": "d1-c1-03",
+     "at": "11:10",
+     "role": "C1",
+     "t": "John Kamau calls",
+     "do": "Same steps: John Kamau, Town Centre, Lead, 0700 000 102, BW-1002, Home 5 Mbps, 1500, “Near the matatu stage, blue door”. Install job for tomorrow, Tech 1. He asks: “Can I pay by M-Pesa?” — Yes, to the tech, who types the code.",
+     "where": "Customers → ＋ New customer → ＋ New job",
+     "end": "John Kamau: Lead + install job tomorrow, Tech 1."
+    },
+    {
+     "id": "d1-v-03",
+     "at": "11:10",
+     "role": "V",
+     "t": "Call 3 — John Kamau",
+     "do": "Call Call center 1. “John Kamau, 0700 000 102, near the matatu stage, blue door. The cheapest one. Can I pay the install by M-Pesa?”",
+     "where": "Call to Call center 1",
+     "end": "Home 5 Mbps, 1,500 a month; yes M-Pesa to the technician; install tomorrow."
+    },
+    {
+     "id": "d1-f-06",
+     "at": "11:15",
+     "role": "F",
+     "t": "Confirm Tech 1's fuel receipt",
+     "do": "Money → 📋 Bills → 👥 Approvals. Tech 1's receipt (Total Energies, 500) is waiting. Look at the photo/message, then ✅ Approve.",
+     "where": "Money → 👥 Approvals",
+     "end": "Nothing waiting. Money out shows Total Energies 500 recorded by Tech 1."
+    },
+    {
+     "id": "d1-p-07",
+     "at": "11:30",
+     "role": "P",
+     "t": "Give the team their first tasks",
+     "do": "Tasks → ＋ Add a task: “Book every install for tomorrow with a tech and a time” → Call center, High. Then “Pay day is the 20th — check Staff & pay” → Finance.",
+     "where": "Tasks → ＋ Add a task",
+     "end": "Both tasks show under Team with the right group."
+    },
+    {
+     "id": "d1-c1-04",
+     "at": "11:30",
+     "role": "C1",
+     "t": "Faith's Salon calls (business)",
+     "do": "Faith Achieng (Faith Salon), Town Centre, Lead, 0700 000 103, BW-1003, Business 30 Mbps, 4500, “Market, shop 14”. Install job for tomorrow, Tech 2, Priority Urgent (she opens at 10). Business install fee is 4,500.",
+     "where": "Customers → ＋ New customer → ＋ New job",
+     "end": "Faith's Salon: Lead + urgent install tomorrow, Tech 2."
+    },
+    {
+     "id": "d1-t1-03",
+     "at": "11:30",
+     "role": "T1",
+     "t": "Tomorrow's jobs",
+     "do": "Jobs → My jobs. Open each install for tomorrow. Read the customer, directions and package.",
+     "where": "Jobs → My jobs",
+     "end": "Mama Wanjiku and John Kamau are in your list for tomorrow (Later)."
+    },
+    {
+     "id": "d1-v-04",
+     "at": "11:30",
+     "role": "V",
+     "t": "Call 4 — Faith's Salon (business)",
+     "do": "Call Call center 1. “Faith Achieng, Faith's Salon, Market shop 14, 0700 000 103. I need fast internet for the salon. Please come before 10, I open at 10.”",
+     "where": "Call to Call center 1",
+     "end": "Business 30 Mbps, 4,500 a month + 4,500 install; urgent install tomorrow morning."
+    },
+    {
+     "id": "d1-t2-03",
+     "at": "11:40",
+     "role": "T2",
+     "t": "Your first install",
+     "do": "My jobs → Faith's Salon (tomorrow, urgent). Read it. Note the install fee for a business: 4,500.",
+     "where": "Jobs → My jobs",
+     "end": "Faith's Salon is in your list for tomorrow, marked urgent."
+    },
+    {
+     "id": "d1-t3-03",
+     "at": "11:40",
+     "role": "T3",
+     "t": "Tomorrow",
+     "do": "My jobs → Mercy Atieno's install (tomorrow). Read the directions.",
+     "where": "Jobs → My jobs",
+     "end": "Mercy's install shows for tomorrow."
+    },
+    {
+     "id": "d1-f-07",
+     "at": "11:45",
+     "role": "F",
+     "t": "Next 30 days",
+     "do": "Money → 👥 Customers → Next 30 days. Read the lowest point and the day it happens.",
+     "where": "Money → Next 30 days",
+     "end": "A day-by-day list. Write in your Testers' List note: the lowest cash and the day. (No customers yet, so it only has bills.)"
+    },
+    {
+     "id": "d1-c2-03",
+     "at": "11:45",
+     "role": "C2",
+     "t": "A hotspot question (not a customer)",
+     "do": "The Customer voice asks: “How much are your hotspot vouchers?” We don't have a hotspot price list yet. Don't make a customer. Tasks → ＋ Add a task: “Caller asked hotspot voucher prices — what do we say?” Who: Partners.",
+     "where": "Tasks → ＋ Add a task",
+     "end": "A task for the Partners. No new customer."
+    },
+    {
+     "id": "d1-t1-04",
+     "at": "11:45",
+     "role": "T1",
+     "t": "Log a survey job",
+     "do": "Jobs → ＋ Log a job: Site survey, “Walked Town Centre: poles from the office to the market cabinet”. Save. Open it, add a note “Pole at the market leaning — check”.",
+     "where": "Jobs → ＋ Log a job",
+     "end": "Your survey job is in My jobs with your note under NOTES."
+    },
+    {
+     "id": "d1-v-05",
+     "at": "11:45",
+     "role": "V",
+     "t": "Call 5 — a hotspot question",
+     "do": "Call Call center 2. “How much are your hotspot vouchers?” (You are not a customer.)",
+     "where": "Call to Call center 2",
+     "end": "They did not make you a customer. They said they will find out (a task for the Partners)."
+    },
+    {
+     "id": "d1-p-08",
+     "at": "11:50",
+     "role": "P",
+     "t": "Read the first report",
+     "do": "Money → 📊 Report. Read THE REPORT. It should show Town Centre and Satellite with today's cash counts.",
+     "where": "Money → 📊 Report",
+     "end": "The report shows both areas with Bank and M-Pesa numbers counted today, and the bills owing."
+    },
+    {
+     "id": "d1-c1-05",
+     "at": "11:50",
+     "role": "C1",
+     "t": "Check every job has a tech and a day",
+     "do": "Jobs → All techs. Look at each job.",
+     "where": "Jobs",
+     "end": "Every job shows 👷 a tech and 📅 a day. None says “Not yet”."
+    },
+    {
+     "id": "d1-c2-04",
+     "at": "11:55",
+     "role": "C2",
+     "t": "Look at the map",
+     "do": "Customers → 🗺️ Map. Find the Satellite cabinet hub.",
+     "where": "Customers → 🗺️ Map",
+     "end": "The map shows the hubs the Partner added (office, OLT room, Satellite cabinet)."
+    }
+   ],
+   "brief": {
+    "P": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. You build it first; the team waits for your “You are on”.\n\nYour challenges today:\n09:00  Sign in and make the company\n09:10  Make the two areas\n09:20  Switch your team on\n09:35  Type the price list\n09:45  Hubs on the map\n10:30  Approve the first money out\n11:30  Give the team their first tasks\n11:50  Read the first report\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in (after the Partner switches you on)\n09:45  Opening cash count\n10:00  Put in the staff\n10:20  Record the router purchase (with VAT)\n10:40  Put in October's bills\n11:15  Confirm Tech 1's fuel receipt\n11:45  Next 30 days\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in\n10:15  First customer: Mama Wanjiku calls\n11:10  John Kamau calls\n11:30  Faith's Salon calls (business)\n11:50  Check every job has a tech and a day\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in\n10:40  Mercy Atieno calls (Satellite)\n11:45  A hotspot question (not a customer)\n11:55  Look at the map\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n10:30  Fuel receipt\n11:30  Tomorrow's jobs\n11:45  Log a survey job\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n11:00  Survey the market\n11:40  Your first install\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n11:00  Survey Satellite\n11:40  Tomorrow\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 1 of 7 (Fri 16 Oct) · Open the doors\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour calls today:\n10:15  Call 1 — Mama Wanjiku wants internet\n10:40  Call 2 — Mercy Atieno (Satellite)\n11:10  Call 3 — John Kamau\n11:30  Call 4 — Faith's Salon (business)\n11:45  Call 5 — a hotspot question\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+   }
+  },
+  {
+   "n": 2,
+   "date": "2026-10-17",
+   "dow": "Saturday",
+   "window": "09:00–12:00",
+   "db": "ongoing",
+   "title": "First installs",
+   "story": "Yesterday's four customers get connected. Six more call. The techs collect install fees and buy cable; Finance checks every shilling; the Partner puts the network on the map.",
+   "ch": [
+    {
+     "id": "d2-t1-01",
+     "at": "09:00",
+     "role": "T1",
+     "t": "Install Mama Wanjiku",
+     "do": "My jobs → Grace Wanjiku. ▶ I'm starting now (say yes to the pin if Zuri asks). Parts: ONT router, serial HWT10010001, qty 1. 📷 a photo. What did you do: Ran new cable + Tested — working. Did the customer pay you: 💵 Cash 2500. ✅ Job finished.",
+     "where": "Jobs → the install job",
+     "end": "The job is Done. NOTES: “Job done · collected KES 2,500 (cash)”. The router serial is under PARTS."
+    },
+    {
+     "id": "d2-t2-01",
+     "at": "09:00",
+     "role": "T2",
+     "t": "Install Faith's Salon (business, urgent)",
+     "do": "Faith's Salon. ▶ I'm starting now. Router serial HWT30010001. 📷 photo of the router on the wall. What did you do: Ran new cable + Tested — working. 📱 M-Pesa 4500, code UKF3SALN45. ✅ Job finished — before 10:00.",
+     "where": "Jobs → the install job",
+     "end": "Done before 10:00. Collected KES 4,500 (mpesa) UKF3SALN45."
+    },
+    {
+     "id": "d2-t3-01",
+     "at": "09:00",
+     "role": "T3",
+     "t": "Install Mercy Atieno",
+     "do": "Mercy's install. ▶ I'm starting now. Router HWT10020001. 📷 photo. Did: Ran new cable + Tested — working. 💵 Cash 2500. ✅ Job finished.",
+     "where": "Jobs → the install job",
+     "end": "Done, collected KES 2,500 (cash)."
+    },
+    {
+     "id": "d2-c1-01",
+     "at": "09:15",
+     "role": "C1",
+     "t": "Peter Mwangi calls",
+     "do": "SEARCH, then ＋ New customer: Peter Mwangi, Town Centre, Lead, 0700 000 104, BW-1004, Home 20 Mbps, 3000, “Opposite St. Mary's church”. Install job tomorrow (Sunday after 14:00), Tech 1.",
+     "where": "Customers → Jobs",
+     "end": "Peter: Lead + install tomorrow, Tech 1."
+    },
+    {
+     "id": "d2-v-01",
+     "at": "09:15",
+     "role": "V",
+     "t": "Call 1 — Peter Mwangi",
+     "do": "Call Call center 1. “Peter Mwangi, 0700 000 104, opposite St. Mary's church. The 20 Mbps, please. Sunday afternoon is good.”",
+     "where": "Call to Call center 1",
+     "end": "Install booked for Sunday afternoon with a technician."
+    },
+    {
+     "id": "d2-p-01",
+     "at": "09:30",
+     "role": "P",
+     "t": "Who sees what",
+     "do": "Admin → Who sees what. Field techs: tick Phone and Package. Leave Monthly rate and National ID unticked for field techs.",
+     "where": "Me → ⚙️ Admin → Who sees what",
+     "end": "Field techs see Phone and Package, not the rate or ID."
+    },
+    {
+     "id": "d2-f-01",
+     "at": "09:30",
+     "role": "F",
+     "t": "Morning count",
+     "do": "Count the cash both areas: Town Centre Bank 215000, M-Pesa 40000. Satellite Bank 60000, M-Pesa 12000. (The 35,000 for routers left the bank yesterday.)",
+     "where": "Money → Count the cash",
+     "end": "Two counts with today's date."
+    },
+    {
+     "id": "d2-c1-02",
+     "at": "09:40",
+     "role": "C1",
+     "t": "Lucy Njeri calls — wants it today",
+     "do": "Lucy Njeri, Town Centre, Lead, 0700 000 105, BW-1005, Home 10 Mbps, 2000, “Above the M-Pesa shop”. Install job TODAY, Tech 1. 💬 Tell Tech 1 on WhatsApp (from the job page).",
+     "where": "Customers → Jobs → 💬 Tell … on WhatsApp",
+     "end": "Lucy's install is today with Tech 1, and Tech 1 got the WhatsApp message."
+    },
+    {
+     "id": "d2-v-02",
+     "at": "09:40",
+     "role": "V",
+     "t": "Call 2 — Lucy Njeri (impatient)",
+     "do": "Call Call center 1. “Lucy Njeri, 0700 000 105, above the M-Pesa shop. I need it TODAY, I work from home.” Be a bit impatient.",
+     "where": "Call to Call center 1",
+     "end": "They booked today (Tech 1) and stayed polite."
+    },
+    {
+     "id": "d2-p-02",
+     "at": "10:00",
+     "role": "P",
+     "t": "Add a “Router serial” field",
+     "do": "Admin → Custom fields: Field name “Router serial”, Kind Text → Add field. Then Who sees what → tick Router serial for Field tech.",
+     "where": "Me → ⚙️ Admin → Custom fields",
+     "end": "Router serial is a field; techs can see it."
+    },
+    {
+     "id": "d2-c1-03",
+     "at": "10:00",
+     "role": "C1",
+     "t": "Make installed customers Active",
+     "do": "Mama Wanjiku and John Kamau are connected. Open each customer → ✏️ Edit → Status Active, Install date today → Save customer.",
+     "where": "Customers → ✏️ Edit",
+     "end": "Both show Active with today's install date."
+    },
+    {
+     "id": "d2-c2-01",
+     "at": "10:00",
+     "role": "C2",
+     "t": "Joseph Kibet calls",
+     "do": "Joseph Kibet, Satellite, Lead, 0700 000 202, BW-2002, Home 5 Mbps, 1500, “Satellite, near the borehole”. Install TODAY, Tech 3.",
+     "where": "Customers → Jobs",
+     "end": "Joseph: Lead + install today with Tech 3."
+    },
+    {
+     "id": "d2-v-03",
+     "at": "10:00",
+     "role": "V",
+     "t": "Call 3 — Joseph Kibet",
+     "do": "Call Call center 2. “Joseph Kibet, 0700 000 202, Satellite near the borehole. Cheapest package.”",
+     "where": "Call to Call center 2",
+     "end": "Install today with Tech 3."
+    },
+    {
+     "id": "d2-t1-02",
+     "at": "10:15",
+     "role": "T1",
+     "t": "Install John Kamau (paid by M-Pesa)",
+     "do": "John Kamau's install. Same steps. Router serial HWT10010002. 📱 M-Pesa 2500, code UKJ2JOHN25. ✅ Job finished.",
+     "where": "Jobs → the install job",
+     "end": "Done, “collected KES 2,500 (mpesa)”, code UKJ2JOHN25."
+    },
+    {
+     "id": "d2-c2-02",
+     "at": "10:20",
+     "role": "C2",
+     "t": "Purity Nyambura calls",
+     "do": "Purity Nyambura, Satellite, Lead, 0700 000 203, BW-2003, Home 20 Mbps, 3000, “Satellite shops, 2nd floor”. Install TODAY, Tech 3.",
+     "where": "Customers → Jobs",
+     "end": "Purity: Lead + install today with Tech 3."
+    },
+    {
+     "id": "d2-v-04",
+     "at": "10:20",
+     "role": "V",
+     "t": "Call 4 — Purity Nyambura",
+     "do": "Call Call center 2. “Purity Nyambura, 0700 000 203, Satellite shops, 2nd floor. 20 Mbps.”",
+     "where": "Call to Call center 2",
+     "end": "Install today."
+    },
+    {
+     "id": "d2-p-03",
+     "at": "10:30",
+     "role": "P",
+     "t": "Answer the hotspot question",
+     "do": "Tasks → find “Caller asked hotspot voucher prices”. 💬 Notes: “Hotspot not sold yet — say coming soon”. Tick it.",
+     "where": "Tasks",
+     "end": "The task is Done with your note."
+    },
+    {
+     "id": "d2-f-02",
+     "at": "10:30",
+     "role": "F",
+     "t": "Confirm the techs' receipts",
+     "do": "👥 Approvals: Tech 1's Kamau Hardware 1,800 and Tech 3's fuel 700. ✅ Approve each.",
+     "where": "Money → 👥 Approvals",
+     "end": "Nothing waiting."
+    },
+    {
+     "id": "d2-t2-02",
+     "at": "10:30",
+     "role": "T2",
+     "t": "Survey Longonot View Hotel",
+     "do": "When Call center books the hotel survey for you: open it, ▶ I'm starting now, 📍 pin at the gate. Under “What did you do?” write: Surveyed — needs 2 access points (reception + rooms block). ✅ Job finished.",
+     "where": "Jobs → the survey job",
+     "end": "Survey Done with a pin and what you found."
+    },
+    {
+     "id": "d2-t3-02",
+     "at": "10:30",
+     "role": "T3",
+     "t": "Fuel — snap it",
+     "do": "Snap the receipt (copy below). Transport / Fuel. Area Satellite.",
+     "where": "Me → 🧾 Snap a receipt",
+     "end": "Total Energies 700 in My receipts.",
+     "copy": "UKC3BWFUEL Confirmed. Ksh700.00 paid to TOTAL ENERGIES MAAI MAHIU. on 17/10/26 at 10:25 AM. New M-PESA balance is Ksh8,800.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d2-c1-04",
+     "at": "10:45",
+     "role": "C1",
+     "t": "Longonot View Hotel calls",
+     "do": "Daniel Kiprono (Longonot View Hotel), Town Centre, Lead, 0700 000 106, BW-1006, Business 30 Mbps, 4500, “Old Naivasha road, after the bridge”. Make a Site survey job TODAY for Tech 2, and a New install job for tomorrow for Tech 2.",
+     "where": "Customers → Jobs",
+     "end": "Hotel: Lead, a survey today and an install tomorrow, both Tech 2."
+    },
+    {
+     "id": "d2-v-05",
+     "at": "10:45",
+     "role": "V",
+     "t": "Call 5 — Longonot View Hotel",
+     "do": "Call Call center 1. “Daniel Kiprono, manager, Longonot View Hotel on the old Naivasha road, 0700 000 106. We need internet in reception and the rooms.”",
+     "where": "Call to Call center 1",
+     "end": "A survey today and an install tomorrow; business price 4,500/month + 4,500 install."
+    },
+    {
+     "id": "d2-f-03",
+     "at": "11:00",
+     "role": "F",
+     "t": "See the install money",
+     "do": "Customers → Faith's Salon → PAYMENTS. Then Mama Wanjiku. Then John Kamau.",
+     "where": "Customers → a customer → PAYMENTS",
+     "end": "Each shows the install money the tech collected (4,500 / 2,500 / 2,500), source field."
+    },
+    {
+     "id": "d2-t1-03",
+     "at": "11:00",
+     "role": "T1",
+     "t": "Buy cable — snap the receipt",
+     "do": "Me → 🧾 Snap a receipt → 📩 Paste M-Pesa message (copy below) → Read. What was it for: Equipment / Inventory. ✅ Save.",
+     "where": "Me → 🧾 Snap a receipt",
+     "end": "Kamau Hardware 1,800 in 🧾 My receipts, waiting for Finance.",
+     "copy": "UKB2BWCABL Confirmed. Ksh1,800.00 paid to KAMAU HARDWARE. on 17/10/26 at 10:58 AM. New M-PESA balance is Ksh7,700.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d2-c1-05",
+     "at": "11:10",
+     "role": "C1",
+     "t": "Mama Wanjiku: forgot the WiFi password",
+     "do": "Find her (search 0700 000 101). ＋ New job: Fault / no internet, “Forgot WiFi password”, Priority Low, Tech 2, today.",
+     "where": "Customers → ＋ New job",
+     "end": "A low-priority fault job for Tech 2."
+    },
+    {
+     "id": "d2-v-06",
+     "at": "11:10",
+     "role": "V",
+     "t": "Call 6 — Mama Wanjiku forgot the password",
+     "do": "Call Call center 1 as Mama Wanjiku: “The internet works, but I forgot the WiFi password!”",
+     "where": "Call to Call center 1",
+     "end": "A (low) job for a technician today — or they helped you on the phone. Either is OK."
+    },
+    {
+     "id": "d2-t3-03",
+     "at": "11:15",
+     "role": "T3",
+     "t": "Install Joseph Kibet / Purity Nyambura (if booked today)",
+     "do": "Do whichever Satellite installs Call center 2 booked for today. Routers HWT10020002, HWT10020003. Joseph pays 💵 2,500 cash; Purity 📱 2,500 code UKP4PURI25.",
+     "where": "Jobs → install jobs",
+     "end": "Each install Done with the money and router serial."
+    },
+    {
+     "id": "d2-c1-06",
+     "at": "11:30",
+     "role": "C1",
+     "t": "Esther Wairimu calls",
+     "do": "Esther Wairimu, Town Centre, Lead, 0700 000 107, BW-1007, Home 5 Mbps, 1500, “Near the health centre”. Install tomorrow, Tech 2.",
+     "where": "Customers → Jobs",
+     "end": "Esther: Lead + install tomorrow."
+    },
+    {
+     "id": "d2-c2-03",
+     "at": "11:30",
+     "role": "C2",
+     "t": "Mercy is connected — make her Active",
+     "do": "Mercy Atieno → ✏️ Edit → Status Active, Install date today → Save.",
+     "where": "Customers → ✏️ Edit",
+     "end": "Mercy shows Active."
+    },
+    {
+     "id": "d2-t2-03",
+     "at": "11:30",
+     "role": "T2",
+     "t": "Mama Wanjiku forgot her WiFi password",
+     "do": "Call center sends you a job for Mama Wanjiku (low). Found: Wrong settings / password. Did: Fixed settings + Showed customer how to pay. No money. ✅ Job finished.",
+     "where": "Jobs → the fault job",
+     "end": "Done, no money collected."
+    },
+    {
+     "id": "d2-v-07",
+     "at": "11:30",
+     "role": "V",
+     "t": "Call 7 — Esther Wairimu",
+     "do": "Call Call center 1. “Esther Wairimu, 0700 000 107, near the health centre. The small one, 5 Mbps.”",
+     "where": "Call to Call center 1",
+     "end": "Install tomorrow."
+    },
+    {
+     "id": "d2-t1-04",
+     "at": "11:40",
+     "role": "T1",
+     "t": "Lucy Njeri's install (if booked for today)",
+     "do": "If Call center booked Lucy for today: install her. Router HWT10010003. She pays install AND her first month together: 📱 M-Pesa 4500, code UKL5LUCY45. ✅ Job finished.",
+     "where": "Jobs → the install job",
+     "end": "Done, collected KES 4,500 (mpesa) UKL5LUCY45. (Lucy will ask about this on day 4.)"
+    },
+    {
+     "id": "d2-p-04",
+     "at": "11:45",
+     "role": "P",
+     "t": "Look at Home",
+     "do": "Home. Read Zuri at a glance and Needs attention.",
+     "where": "Home",
+     "end": "Write in your note one thing on Home that helps you, and one thing that is confusing."
+    },
+    {
+     "id": "d2-f-04",
+     "at": "11:45",
+     "role": "F",
+     "t": "Money in — a router sold",
+     "do": "Money → ✍️ Record → Money in: Area Town Centre, What for Equipment sale, Amount 3500, Received into M-Pesa, From “Walk-in customer”, Ref UKS6ROUT35. Save cash in.",
+     "where": "Money → ✍️ Record → Money in",
+     "end": "Equipment sale +3,500 in this month's list."
+    },
+    {
+     "id": "d2-c2-04",
+     "at": "11:50",
+     "role": "C2",
+     "t": "Check Tech 3's day",
+     "do": "Jobs → All techs → pick Tech 3.",
+     "where": "Jobs",
+     "end": "Tech 3 has Mercy (Done) and Joseph + Purity. Set the filter back to All techs."
+    }
+   ],
+   "brief": {
+    "P": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Who sees what\n10:00  Add a “Router serial” field\n10:30  Answer the hotspot question\n11:45  Look at Home\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Morning count\n10:30  Confirm the techs' receipts\n11:00  See the install money\n11:45  Money in — a router sold\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Peter Mwangi calls\n09:40  Lucy Njeri calls — wants it today\n10:00  Make installed customers Active\n10:45  Longonot View Hotel calls\n11:10  Mama Wanjiku: forgot the WiFi password\n11:30  Esther Wairimu calls\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:00  Joseph Kibet calls\n10:20  Purity Nyambura calls\n11:30  Mercy is connected — make her Active\n11:50  Check Tech 3's day\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Mama Wanjiku\n10:15  Install John Kamau (paid by M-Pesa)\n11:00  Buy cable — snap the receipt\n11:40  Lucy Njeri's install (if booked for today)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Faith's Salon (business, urgent)\n10:30  Survey Longonot View Hotel\n11:30  Mama Wanjiku forgot her WiFi password\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Mercy Atieno\n10:30  Fuel — snap it\n11:15  Install Joseph Kibet / Purity Nyambura (if booked today)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 2 of 7 (Sat 17 Oct) · First installs\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Call 1 — Peter Mwangi\n09:40  Call 2 — Lucy Njeri (impatient)\n10:00  Call 3 — Joseph Kibet\n10:20  Call 4 — Purity Nyambura\n10:45  Call 5 — Longonot View Hotel\n11:10  Call 6 — Mama Wanjiku forgot the password\n11:30  Call 7 — Esther Wairimu\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+   }
+  },
+  {
+   "n": 3,
+   "date": "2026-10-18",
+   "dow": "Sunday",
+   "window": "14:00–17:00 (after church)",
+   "db": "ongoing",
+   "title": "The first money arrives",
+   "story": "More installs. The billing website sends its first file (who paid, when they run out). Finance brings it in. A customer says he was charged twice — the first dispute.",
+   "ch": [
+    {
+     "id": "d3-f-01",
+     "at": "14:00",
+     "role": "F",
+     "t": "Bring in the billing file — payments",
+     "do": "Download “billing-payments-day3.csv” (link below) to your phone. Money → 🏦 Statements → 📥 Bring in a file. What's in the file: Customer payments. Where it came from: Billnasi. Choose the file. Check the columns, then Import.",
+     "where": "Money → 🏦 Statements → 📥 Bring in a file",
+     "end": "“… new payments · … already in · … matched to customers.” One payment is NOT matched (account 2002) and shows under “Payments not matched to a customer”. LEAVE it there until day 4.",
+     "file": "bw/billing-payments-day3.csv"
+    },
+    {
+     "id": "d3-t1-01",
+     "at": "14:00",
+     "role": "T1",
+     "t": "Install Peter Mwangi",
+     "do": "Router HWT10010004. Did: Ran new cable + Tested — working. He pays the install (2,500 — not his monthly 3,000) by 📱 M-Pesa 2500, code UKM7PETR25. ✅ Job finished.",
+     "where": "Jobs → install",
+     "end": "Done with 2,500 (mpesa) UKM7PETR25."
+    },
+    {
+     "id": "d3-t2-01",
+     "at": "14:00",
+     "role": "T2",
+     "t": "Install Longonot View Hotel",
+     "do": "Hotel install. Routers HWT30010002 + HWT30010003 (two lines in PARTS). 📷 photo. 💵 Cash 4500 (the hotel will later say they also paid by M-Pesa). ✅ Job finished.",
+     "where": "Jobs → install",
+     "end": "Done, two routers in PARTS, collected 4,500 cash."
+    },
+    {
+     "id": "d3-t3-01",
+     "at": "14:00",
+     "role": "T3",
+     "t": "Install Isaac — Satellite Academy (business)",
+     "do": "Router HWT30020001. 📱 M-Pesa 4500, code UKI8ACAD45. ✅ Job finished.",
+     "where": "Jobs → install",
+     "end": "Done, 4,500 (mpesa)."
+    },
+    {
+     "id": "d3-c1-01",
+     "at": "14:15",
+     "role": "C1",
+     "t": "Samuel Otieno and Ruth Chebet call",
+     "do": "Two new customers (voice): Samuel Otieno, TC, 0700 000 108, BW-1008, Home 10 Mbps, 2000, “Kamuyu road, after the posho mill”. Ruth Chebet, TC, 0700 000 109, BW-1009, Home 10 Mbps, 2000, “Next to the primary school”. Installs today, Tech 1.",
+     "where": "Customers → Jobs",
+     "end": "Two Leads with installs today for Tech 1."
+    },
+    {
+     "id": "d3-v-01",
+     "at": "14:15",
+     "role": "V",
+     "t": "Calls 1–2 — Samuel Otieno, Ruth Chebet",
+     "do": "Call Call center 1 twice: Samuel Otieno 0700 000 108, Kamuyu road after the posho mill, 10 Mbps. Then Ruth Chebet 0700 000 109, next to the primary school, 10 Mbps.",
+     "where": "Calls to Call center 1",
+     "end": "Both booked for today."
+    },
+    {
+     "id": "d3-f-02",
+     "at": "14:20",
+     "role": "F",
+     "t": "Bring in the billing file — customer list",
+     "do": "Import again: What's in the file: Customer list, from Billnasi, file “billing-customers-day3.csv”. Import.",
+     "where": "Money → 🏦 Statements → 📥 Bring in a file",
+     "end": "“… customers added or updated.” Open Mama Wanjiku: “Paid until 16 Nov”.",
+     "file": "bw/billing-customers-day3.csv"
+    },
+    {
+     "id": "d3-p-01",
+     "at": "14:30",
+     "role": "P",
+     "t": "Approve and look",
+     "do": "👥 Approvals: approve anything waiting that has a receipt. If a receipt is missing, ✋ Decline with the reason “No receipt — snap it and send again”.",
+     "where": "Money → 👥 Approvals",
+     "end": "Nothing waiting at 15:00 and 16:45."
+    },
+    {
+     "id": "d3-f-03",
+     "at": "14:40",
+     "role": "F",
+     "t": "Who paid",
+     "do": "Money → 👥 Customers → Who paid. Read the list.",
+     "where": "Money → Who paid",
+     "end": "The customers who paid this month are there with amounts. Note any that look wrong."
+    },
+    {
+     "id": "d3-c2-01",
+     "at": "14:45",
+     "role": "C2",
+     "t": "Satellite Academy and Beatrice call",
+     "do": "Isaac Ndungu (Satellite Academy), SA, 0700 000 204, BW-2004, Business 30 Mbps, 4500, “Satellite Academy, main gate”. Beatrice Wambui, SA, 0700 000 205, BW-2005, Home 10 Mbps, 2000, “Off the Suswa road, mabati house”. Installs today, Tech 3.",
+     "where": "Customers → Jobs",
+     "end": "Two Leads + installs today, Tech 3."
+    },
+    {
+     "id": "d3-v-02",
+     "at": "14:45",
+     "role": "V",
+     "t": "Calls 3–4 — Satellite Academy, Beatrice",
+     "do": "Call Call center 2: Isaac Ndungu, head of Satellite Academy, 0700 000 204, business package. Then Beatrice Wambui 0700 000 205, off the Suswa road, mabati house, 10 Mbps.",
+     "where": "Calls to Call center 2",
+     "end": "Both booked today; the school told 4,500 + 4,500."
+    },
+    {
+     "id": "d3-t1-02",
+     "at": "15:00",
+     "role": "T1",
+     "t": "Install Samuel Otieno / Ruth Chebet (if booked)",
+     "do": "Do the Town Centre installs Call center 1 booked for you today. Routers HWT10010005 / HWT10010006. Did: Ran new cable + Tested — working. 💵 Cash 2,500 each.",
+     "where": "Jobs → installs",
+     "end": "Each Done with router serial and 2,500."
+    },
+    {
+     "id": "d3-t2-02",
+     "at": "15:00",
+     "role": "T2",
+     "t": "Install Esther Wairimu",
+     "do": "Router HWT10010007. 💵 Cash 2500. ✅ Job finished.",
+     "where": "Jobs → install",
+     "end": "Done."
+    },
+    {
+     "id": "d3-t3-02",
+     "at": "15:00",
+     "role": "T3",
+     "t": "Install Beatrice Wambui",
+     "do": "Router HWT10020004. 💵 Cash 2500.",
+     "where": "Jobs → install",
+     "end": "Done."
+    },
+    {
+     "id": "d3-c1-02",
+     "at": "15:20",
+     "role": "C1",
+     "t": "Pastor Moses calls",
+     "do": "Pastor Moses Gitau, TC, 0700 000 110, BW-1010, Home 20 Mbps, 3000, “PCEA church compound”. Install day 4 (Monday), Tech 1.",
+     "where": "Customers → Jobs",
+     "end": "Lead + install Monday."
+    },
+    {
+     "id": "d3-v-03",
+     "at": "15:20",
+     "role": "V",
+     "t": "Call 5 — Pastor Moses",
+     "do": "Call Call center 1: Pastor Moses Gitau, PCEA church compound, 0700 000 110, 20 Mbps, Monday.",
+     "where": "Call to Call center 1",
+     "end": "Install Monday."
+    },
+    {
+     "id": "d3-p-02",
+     "at": "15:30",
+     "role": "P",
+     "t": "The map after two days",
+     "do": "Customers → 🗺️ Map. Are the new customers' pins near the hubs?",
+     "where": "Customers → 🗺️ Map",
+     "end": "Customers with green pins; each popup says how far the nearest hub is."
+    },
+    {
+     "id": "d3-f-04",
+     "at": "15:30",
+     "role": "F",
+     "t": "The double payment (Longonot View Hotel)",
+     "do": "Call center sends you a task: the hotel says they paid the install twice. Open Customers → Longonot View Hotel → PAYMENTS.",
+     "where": "Customers → the hotel → PAYMENTS",
+     "end": "Two payments of 4,500 (one field cash, one M-Pesa UKH4HOTL45). Write in the task: “Yes, paid twice — refund tomorrow after the Partner's OK.”"
+    },
+    {
+     "id": "d3-c1-03",
+     "at": "15:45",
+     "role": "C1",
+     "t": "John Kamau: slow internet",
+     "do": "Find John Kamau. ＋ New job: Fault / no internet, “Very slow since yesterday”, Tech 2, today.",
+     "where": "Customers → ＋ New job",
+     "end": "Fault job for Tech 2 today."
+    },
+    {
+     "id": "d3-v-04",
+     "at": "15:45",
+     "role": "V",
+     "t": "Call 6 — John Kamau: slow",
+     "do": "Call Call center 1 as John Kamau: “Since yesterday the internet is very slow.”",
+     "where": "Call to Call center 1",
+     "end": "A fault job; a tech comes today."
+    },
+    {
+     "id": "d3-t2-03",
+     "at": "16:00",
+     "role": "T2",
+     "t": "John Kamau: slow internet",
+     "do": "Call center sends a fault job. Found: Bad connector. Did: Replaced connector + Tested — working. Parts: Fast connector, qty 2. ✅ Job finished.",
+     "where": "Jobs → fault",
+     "end": "Done with 2 connectors in PARTS."
+    },
+    {
+     "id": "d3-t3-03",
+     "at": "16:00",
+     "role": "T3",
+     "t": "Splice kit — snap the receipt",
+     "do": "Snap the receipt (copy below). Equipment / Inventory, area Satellite. In “More”: VAT 345, supplier PIN P052222222B.",
+     "where": "Me → 🧾 Snap a receipt",
+     "end": "Fibre World 2,500 in My receipts with VAT 345.",
+     "copy": "UKD4BWSPLC Confirmed. Ksh2,500.00 paid to FIBRE WORLD NAIVASHA. on 18/10/26 at 3:55 PM. New M-PESA balance is Ksh6,300.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d3-c2-02",
+     "at": "16:15",
+     "role": "C2",
+     "t": "The hotel says they paid twice",
+     "do": "The voice calls as the hotel manager. Find the hotel. Add a note on the hotel's install job: “Says paid install twice: cash 4,500 to the tech + M-Pesa UKH4HOTL45”. Tasks → ＋ Add a task for Finance: “Longonot View Hotel paid install twice — check and refund?”",
+     "where": "Jobs → note · Tasks → ＋ Add a task",
+     "end": "A note on the job and a task for Finance."
+    },
+    {
+     "id": "d3-v-05",
+     "at": "16:15",
+     "role": "V",
+     "t": "Call 7 — the hotel paid twice",
+     "do": "Call Call center 2 as Daniel Kiprono of the hotel: “Your technician took 4,500 cash for the install, and my accountant ALSO paid 4,500 by M-Pesa, code UKH4HOTL45. I want my money back.” Be firm, not rude.",
+     "where": "Call to Call center 2",
+     "end": "They wrote down the code and promised Finance will check — not a promise of money on the spot."
+    },
+    {
+     "id": "d3-f-05",
+     "at": "16:30",
+     "role": "F",
+     "t": "Afternoon count",
+     "do": "Count the cash: Town Centre Bank 215000, M-Pesa 61500. Satellite Bank 60000, M-Pesa 15200.",
+     "where": "Money → Count the cash",
+     "end": "Satellite float is above target now (green)."
+    },
+    {
+     "id": "d3-t1-03",
+     "at": "16:30",
+     "role": "T1",
+     "t": "Clear your To do",
+     "do": "My jobs → To do. Every open job: finish it or add a note why not.",
+     "where": "Jobs → My jobs",
+     "end": "To do is empty, or every job left has a note."
+    },
+    {
+     "id": "d3-c1-04",
+     "at": "16:40",
+     "role": "C1",
+     "t": "Make today's installs Active",
+     "do": "Every Town Centre customer installed so far (Peter, Lucy, Esther, the hotel, Samuel, Ruth — whoever is Done) → Status Active + Install date.",
+     "where": "Customers → ✏️ Edit",
+     "end": "All installed customers are Active. Leads are only the ones not yet connected."
+    },
+    {
+     "id": "d3-p-03",
+     "at": "16:45",
+     "role": "P",
+     "t": "Run the manager",
+     "do": "Tasks → 🤖 Run the manager now. Then Manager log.",
+     "where": "Tasks",
+     "end": "A line “Manager (…): … new · … closed …”. Read what it made."
+    },
+    {
+     "id": "d3-c2-03",
+     "at": "16:45",
+     "role": "C2",
+     "t": "Make Satellite installs Active",
+     "do": "Joseph, Purity, Satellite Academy, Beatrice — whoever is Done → Active + Install date.",
+     "where": "Customers → ✏️ Edit",
+     "end": "Satellite: every connected customer is Active."
+    }
+   ],
+   "brief": {
+    "P": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Partner)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:30  Approve and look\n15:30  The map after two days\n16:45  Run the manager\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Finance)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Bring in the billing file — payments\n14:20  Bring in the billing file — customer list\n14:40  Who paid\n15:30  The double payment (Longonot View Hotel)\n16:30  Afternoon count\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Call center 1)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:15  Samuel Otieno and Ruth Chebet call\n15:20  Pastor Moses calls\n15:45  John Kamau: slow internet\n16:40  Make today's installs Active\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Call center 2)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:45  Satellite Academy and Beatrice call\n16:15  The hotel says they paid twice\n16:45  Make Satellite installs Active\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Tech 1)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Peter Mwangi\n15:00  Install Samuel Otieno / Ruth Chebet (if booked)\n16:30  Clear your To do\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Tech 2)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Longonot View Hotel\n15:00  Install Esther Wairimu\n16:00  John Kamau: slow internet\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Tech 3)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Isaac — Satellite Academy (business)\n15:00  Install Beatrice Wambui\n16:00  Splice kit — snap the receipt\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 3 of 7 (Sun 18 Oct) · The first money arrives\nHi [Name] (Customer voice)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n14:15  Calls 1–2 — Samuel Otieno, Ruth Chebet\n14:45  Calls 3–4 — Satellite Academy, Beatrice\n15:20  Call 5 — Pastor Moses\n15:45  Call 6 — John Kamau: slow\n16:15  Call 7 — the hotel paid twice\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+   }
+  },
+  {
+   "n": 4,
+   "date": "2026-10-19",
+   "dow": "Monday",
+   "window": "09:00–12:00",
+   "db": "ongoing",
+   "title": "The bad day",
+   "story": "Satellite goes dark (a cut cable) — three customers call within half an hour. At the same time three money disputes arrive. The billing file says who has run out. Keep calm, keep it all in Zuri.",
+   "ch": [
+    {
+     "id": "d4-f-01",
+     "at": "08:45",
+     "role": "F",
+     "t": "Bring in today's billing files",
+     "do": "Import “billing-payments-day4.csv” (Customer payments, Billnasi), then “billing-customers-day4.csv” (Customer list). Then Jobs → Check now (Payment follow-ups).",
+     "where": "Money → 🏦 Statements → 📥 Bring in a file · Jobs → Check now",
+     "end": "Payments imported. Customer list updated. “Check now” says how many payment follow-ups opened (Joseph Kibet ran out yesterday).",
+     "file": "bw/billing-payments-day4.csv"
+    },
+    {
+     "id": "d4-t1-01",
+     "at": "09:00",
+     "role": "T1",
+     "t": "Install Pastor Moses",
+     "do": "Router HWT10010008. 📱 M-Pesa 2500 code UKG9MOSE25. 📍 pin outside the church. ✅ Job finished.",
+     "where": "Jobs → install",
+     "end": "Done with pin, router and 2,500."
+    },
+    {
+     "id": "d4-c2-06",
+     "at": "09:15",
+     "role": "C2",
+     "t": "Dispute 1 — Joseph says he paid",
+     "do": "Joseph Kibet calls: internet off, but he paid 1,500 on Saturday, code UKJ7JOSE15. Open his payment follow-up (Jobs → 📩 Today's texts or his page) → ✅ Says paid. Then Tasks → ＋ Add a task for Finance: “Joseph Kibet paid 1,500 UKJ7JOSE15 — find it”.",
+     "where": "Jobs → follow-up → ✅ Says paid · Tasks",
+     "end": "Follow-up note “Customer says they paid”, and a task for Finance with the code."
+    },
+    {
+     "id": "d4-v-01",
+     "at": "09:15",
+     "role": "V",
+     "t": "Call 1 — Joseph: I paid!",
+     "do": "Call Call center 2 as Joseph Kibet: “My internet went off yesterday! I paid 1,500 on Saturday. Code UKJ7JOSE15.” (You paid from your wife Mary's phone and typed the account as 2002 — you don't know that is wrong.)",
+     "where": "Call to Call center 2",
+     "end": "They took the code and said Finance will check today. Ask again at 11:00 — Finance should have found it."
+    },
+    {
+     "id": "d4-f-02",
+     "at": "09:30",
+     "role": "F",
+     "t": "Dispute 1 — Joseph Kibet says he paid",
+     "do": "Task from Call center 2: Joseph paid 1,500, code UKJ7JOSE15. Money → 🏦 Statements → 📥 Bring in a file → “Payments not matched to a customer” → find 1,500 UKJ7JOSE15 (account 2002) → Link → type Joseph → OK.",
+     "where": "Money → Import → Payments not matched",
+     "end": "“Linked.” Joseph Kibet's page → PAYMENTS shows 1,500 UKJ7JOSE15. Tell Call center 2. (In real life the billing website must be fixed too — write that in the task note.)"
+    },
+    {
+     "id": "d4-t2-01",
+     "at": "09:30",
+     "role": "T2",
+     "t": "Hotel: second access point",
+     "do": "Call center may send you a job at the hotel: add the part “Access point, serial AP-55001”. What did you do: Tested — working. ✅ Job finished, no money (included).",
+     "where": "Jobs → the hotel job",
+     "end": "Done with the access point in PARTS."
+    },
+    {
+     "id": "d4-c1-01",
+     "at": "09:40",
+     "role": "C1",
+     "t": "Dispute 2 — Lucy: overcharged?",
+     "do": "Lucy calls: “The tech took 4,500, the price is 2,500!” Find her, read PAYMENTS. Ask Finance in the team group if unsure. Tell her: 2,500 install + 2,000 first month = 4,500. Add a note on her install job: “Explained 4,500 = install + first month”.",
+     "where": "Customers → Lucy → PAYMENTS · job note",
+     "end": "A note on Lucy's install job with the answer."
+    },
+    {
+     "id": "d4-v-02",
+     "at": "09:40",
+     "role": "V",
+     "t": "Call 2 — Lucy: overcharged?",
+     "do": "Call Call center 1 as Lucy Njeri: “Your technician took 4,500 from me but you said the install is 2,500!”",
+     "where": "Call to Call center 1",
+     "end": "They explained: 2,500 install + 2,000 first month."
+    },
+    {
+     "id": "d4-f-03",
+     "at": "10:00",
+     "role": "F",
+     "t": "Dispute 2 — Lucy: was I overcharged?",
+     "do": "Open Lucy Njeri → PAYMENTS and her install job.",
+     "where": "Customers → Lucy → PAYMENTS",
+     "end": "One payment 4,500 (UKL5LUCY45) = 2,500 install + 2,000 first month. Not counted twice even though the billing file also had UKL5LUCY45. Tell Call center 1 the answer."
+    },
+    {
+     "id": "d4-c2-01",
+     "at": "10:00",
+     "role": "C2",
+     "t": "Outage call 1 — Mercy Atieno",
+     "do": "Mercy: no internet, red light. Find her → ＋ New job: Fault / no internet, “No internet, red light”, Tech 3, today.",
+     "where": "Customers → ＋ New job",
+     "end": "Fault job for Tech 3."
+    },
+    {
+     "id": "d4-v-03",
+     "at": "10:00",
+     "role": "V",
+     "t": "Calls 3–5 — Satellite is down",
+     "do": "Call Call center 2 three times, 15 minutes apart: 10:00 Mercy Atieno (red light), 10:15 Purity Nyambura (no internet), 10:30 Isaac of Satellite Academy (“exams are online, URGENT”).",
+     "where": "Calls to Call center 2",
+     "end": "Three fault jobs; after the third, they know it is an outage."
+    },
+    {
+     "id": "d4-c2-02",
+     "at": "10:15",
+     "role": "C2",
+     "t": "Outage call 2 — Purity",
+     "do": "Purity Nyambura: no internet. Fault job, Tech 3.",
+     "where": "Customers → ＋ New job",
+     "end": "Second Satellite fault in 15 minutes."
+    },
+    {
+     "id": "d4-f-04",
+     "at": "10:30",
+     "role": "F",
+     "t": "Dispute 3 — refund the hotel",
+     "do": "Money → ✍️ Record → Money out: Town Centre, Paid to “Longonot View Hotel — refund”, Amount 4500, Category Other, Paid from M-Pesa, Ref UKR9HOTL45, note “Install paid twice (cash + UKH4HOTL45)”. Save.",
+     "where": "Money → Money out",
+     "end": "Waiting for a second OK. The Partner approves it."
+    },
+    {
+     "id": "d4-c2-03",
+     "at": "10:30",
+     "role": "C2",
+     "t": "Outage call 3 — Satellite Academy (urgent)",
+     "do": "The school: no internet, exams online. Fault job, Priority Urgent, Tech 3. After saving, open Jobs.",
+     "where": "Customers → ＋ New job → Jobs",
+     "end": "A red box: 📡 Possible outage in Satellite — 3 fault calls since 10:00."
+    },
+    {
+     "id": "d4-t1-02",
+     "at": "10:30",
+     "role": "T1",
+     "t": "Help with the Satellite outage?",
+     "do": "Read the team group. If the Partner asks, Tasks → find the outage task → 💬 Notes “Tech 1 free from 11:00”.",
+     "where": "Tasks",
+     "end": "Your note on the outage task (or nothing if not asked)."
+    },
+    {
+     "id": "d4-p-01",
+     "at": "10:35",
+     "role": "P",
+     "t": "The outage",
+     "do": "Home or Jobs shows 📡 Possible outage in Satellite. Read the drafted customer notice. Change it if you want. Tap ✅ Yes, use this notice.",
+     "where": "Home / Jobs → outage box",
+     "end": "“Yes saved. The office can copy the notice now.”"
+    },
+    {
+     "id": "d4-p-03",
+     "at": "10:40",
+     "role": "P",
+     "t": "Approve the refund",
+     "do": "👥 Approvals: “Longonot View Hotel — refund” 4,500. Read the note. ✅ Approve.",
+     "where": "Money → 👥 Approvals",
+     "end": "Approved. It shows who recorded and who approved."
+    },
+    {
+     "id": "d4-t3-01",
+     "at": "10:40",
+     "role": "T3",
+     "t": "Many Satellite faults — go to the cabinet",
+     "do": "Three fault jobs at once = check the cabinet FIRST. Open one fault job → ▶ I'm starting now. Note: “At Satellite cabinet: fibre cut 50 m before the cabinet (road works)”. Tell the Partner in the group.",
+     "where": "Jobs → a fault job → note",
+     "end": "Your note on the job; the Partner knows the cause."
+    },
+    {
+     "id": "d4-c2-04",
+     "at": "10:45",
+     "role": "C2",
+     "t": "Beatrice asks: is it down?",
+     "do": "Before you make a job, open ＋ New job and pick Beatrice: read the red outage box. Tell her: we know, technicians are on it, no visit needed. Don't save a new job.",
+     "where": "Jobs → ＋ New job (outage box)",
+     "end": "No new job for Beatrice; she was told the truth."
+    },
+    {
+     "id": "d4-v-04",
+     "at": "10:45",
+     "role": "V",
+     "t": "Call 6 — Beatrice: is it down?",
+     "do": "Call Call center 2 as Beatrice Wambui: “Is the internet down in Satellite?”",
+     "where": "Call to Call center 2",
+     "end": "They said yes, we know, technicians are on it — no visit."
+    },
+    {
+     "id": "d4-c1-02",
+     "at": "11:00",
+     "role": "C1",
+     "t": "Ann Muthoni — new customer",
+     "do": "Ann Muthoni, TC, 0700 000 111, BW-1011, Home 5 Mbps, 1500, “Behind the police post”. Install tomorrow, Tech 1.",
+     "where": "Customers → Jobs",
+     "end": "Lead + install tomorrow."
+    },
+    {
+     "id": "d4-t2-02",
+     "at": "11:00",
+     "role": "T2",
+     "t": "Your day in numbers",
+     "do": "My jobs → Done. Count your Done jobs since day 2.",
+     "where": "Jobs → My jobs → Done",
+     "end": "Write the number in your note. Does it match what you remember?"
+    },
+    {
+     "id": "d4-v-05",
+     "at": "11:00",
+     "role": "V",
+     "t": "Calls 7–9 — new customers",
+     "do": "Call Call center 1: Ann Muthoni (0700 000 111, behind the police post, 5 Mbps). Then Kevin Omondi (0700 000 112, green house near the water tank, 10 Mbps, tomorrow 10 am). Call Call center 2: Stephen Mutua (0700 000 206, near the chief's camp, 5 Mbps).",
+     "where": "Calls",
+     "end": "Three installs booked for tomorrow."
+    },
+    {
+     "id": "d4-c2-05",
+     "at": "11:15",
+     "role": "C2",
+     "t": "Copy the notice",
+     "do": "After the Partner says yes: open Jobs → the outage box → 📋 Copy the notice. Paste it in the team WhatsApp group with the words “(pretend broadcast to Satellite customers)”.",
+     "where": "Jobs → outage box → 📋 Copy the notice",
+     "end": "The notice is in the group, word for word."
+    },
+    {
+     "id": "d4-c1-03",
+     "at": "11:20",
+     "role": "C1",
+     "t": "Kevin Omondi — new customer",
+     "do": "Kevin Omondi, TC, 0700 000 112, BW-1012, Home 10 Mbps, 2000, “Green house near the water tank”. Install tomorrow 10:00, Tech 2.",
+     "where": "Customers → Jobs",
+     "end": "Lead + install tomorrow."
+    },
+    {
+     "id": "d4-f-05",
+     "at": "11:30",
+     "role": "F",
+     "t": "Bills due — KPLC",
+     "do": "Bills: both KPLC prepaid bills were due on the 18th. 💸 Pay each: full amount, M-Pesa, codes UKK1KPLC40 (Town Centre 4,000) and UKK2KPLC20 (Satellite 2,000).",
+     "where": "Money → 📋 Bills → 💸 Pay",
+     "end": "Each shows “⏳ waiting for a second OK” until the Partner approves."
+    },
+    {
+     "id": "d4-t1-03",
+     "at": "11:30",
+     "role": "T1",
+     "t": "Receipts check",
+     "do": "Me → 🧾 My receipts. Any ❌ (no photo)? Tap 📸 Snap it now.",
+     "where": "Me → 🧾 My receipts",
+     "end": "No ❌ left."
+    },
+    {
+     "id": "d4-t3-02",
+     "at": "11:30",
+     "role": "T3",
+     "t": "Fix it and close the faults",
+     "do": "Pretend you re-spliced. On EACH Satellite fault job: Found Fibre cut. Did Re-spliced the fibre + Tested — working. ✅ Job finished.",
+     "where": "Jobs → each fault job",
+     "end": "All three Satellite faults Done. Tell the Partner: “Service is back.”"
+    },
+    {
+     "id": "d4-p-04",
+     "at": "11:40",
+     "role": "P",
+     "t": "Approve KPLC and receipts",
+     "do": "👥 Approvals: both KPLC payments and Tech 3's receipts. ✅ Approve each.",
+     "where": "Money → 👥 Approvals",
+     "end": "Nothing waiting. Bills shows both KPLC paid."
+    },
+    {
+     "id": "d4-c2-07",
+     "at": "11:40",
+     "role": "C2",
+     "t": "Stephen Mutua — new customer",
+     "do": "Stephen Mutua, SA, 0700 000 206, BW-2006, Home 5 Mbps, 1500, “Near the chief's camp”. Install tomorrow (day 5), Tech 3.",
+     "where": "Customers → Jobs",
+     "end": "Lead + install tomorrow."
+    },
+    {
+     "id": "d4-t3-03",
+     "at": "11:45",
+     "role": "T3",
+     "t": "Splice sleeves + fuel — snap both",
+     "do": "Snap two receipts (copy below, then the second from your role card): Fibre World 1,200 (Equipment / Inventory) and fuel 600.",
+     "where": "Me → 🧾 Snap a receipt",
+     "end": "Two receipts in My receipts, waiting for Finance.",
+     "copy": "UKE5BWSLEV Confirmed. Ksh1,200.00 paid to FIBRE WORLD NAIVASHA. on 19/10/26 at 11:40 AM. New M-PESA balance is Ksh5,100.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d4-c1-04",
+     "at": "11:50",
+     "role": "C1",
+     "t": "Pastor Moses installed?",
+     "do": "When Tech 1 finishes Pastor Moses: Status Active + install date.",
+     "where": "Customers → ✏️ Edit",
+     "end": "Pastor Moses is Active."
+    },
+    {
+     "id": "d4-p-02",
+     "at": "12:00",
+     "role": "P",
+     "t": "Close the outage",
+     "do": "When Tech 3 says service is back: ✅ Service is back — close it.",
+     "where": "Jobs → outage box",
+     "end": "The red box is gone. Tell Call center 2."
+    },
+    {
+     "id": "d4-v-06",
+     "at": "12:15",
+     "role": "V",
+     "t": "Call 10 — Mercy: it's back",
+     "do": "Call Call center 2 as Mercy: “It's back, asante!”",
+     "where": "Call to Call center 2",
+     "end": "They thanked you; Mercy's fault job is Done."
+    }
+   ],
+   "brief": {
+    "P": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:35  The outage\n10:40  Approve the refund\n11:40  Approve KPLC and receipts\n12:00  Close the outage\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n08:45  Bring in today's billing files\n09:30  Dispute 1 — Joseph Kibet says he paid\n10:00  Dispute 2 — Lucy: was I overcharged?\n10:30  Dispute 3 — refund the hotel\n11:30  Bills due — KPLC\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:40  Dispute 2 — Lucy: overcharged?\n11:00  Ann Muthoni — new customer\n11:20  Kevin Omondi — new customer\n11:50  Pastor Moses installed?\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Dispute 1 — Joseph says he paid\n10:00  Outage call 1 — Mercy Atieno\n10:15  Outage call 2 — Purity\n10:30  Outage call 3 — Satellite Academy (urgent)\n10:45  Beatrice asks: is it down?\n11:15  Copy the notice\n11:40  Stephen Mutua — new customer\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Pastor Moses\n10:30  Help with the Satellite outage?\n11:30  Receipts check\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Hotel: second access point\n11:00  Your day in numbers\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:40  Many Satellite faults — go to the cabinet\n11:30  Fix it and close the faults\n11:45  Splice sleeves + fuel — snap both\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 4 of 7 (Mon 19 Oct) · The bad day\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Call 1 — Joseph: I paid!\n09:40  Call 2 — Lucy: overcharged?\n10:00  Calls 3–5 — Satellite is down\n10:45  Call 6 — Beatrice: is it down?\n11:00  Calls 7–9 — new customers\n12:15  Call 10 — Mercy: it's back\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+   }
+  },
+  {
+   "n": 5,
+   "date": "2026-10-20",
+   "dow": "Tuesday",
+   "window": "09:00–12:00",
+   "db": "ongoing",
+   "title": "Pay day and reports",
+   "story": "The 20th: staff pay day AND the VAT date. Morning follow-ups for customers who ran out, the cash count, the pay run with two people, the VAT figures and the Friday report — printed.",
+   "ch": [
+    {
+     "id": "d5-f-01",
+     "at": "08:45",
+     "role": "F",
+     "t": "Cash count — both areas",
+     "do": "Count the cash: Town Centre Bank 210500, M-Pesa 52300. Satellite Bank 60000, M-Pesa 14100.",
+     "where": "Money → Count the cash",
+     "end": "Two counts today. Satellite float is just below target — orange warning. Note it for the report."
+    },
+    {
+     "id": "d5-c1-01",
+     "at": "09:00",
+     "role": "C1",
+     "t": "Today's texts — customers who ran out",
+     "do": "Jobs → 📩 Today's texts (if it is empty, tap Jobs → Check now first). Esther Wairimu: call the voice → she will pay Friday → 🤝 Will pay → In 3 days → Save. Samuel Otieno: call → no answer → 📵 No answer.",
+     "where": "Jobs → 📩 Today's texts",
+     "end": "Esther: “Promised to pay by …”. Samuel: “Called — no answer”, back tomorrow."
+    },
+    {
+     "id": "d5-t1-01",
+     "at": "09:00",
+     "role": "T1",
+     "t": "Install Ann Muthoni",
+     "do": "Router HWT10010009. 💵 Cash 2500. ✅ Job finished. If the follow-up said her old service ran out, ignore — she is new.",
+     "where": "Jobs → install",
+     "end": "Done."
+    },
+    {
+     "id": "d5-t3-01",
+     "at": "09:00",
+     "role": "T3",
+     "t": "Install Stephen Mutua",
+     "do": "Router HWT10020005. 💵 Cash 2500. 📍 pin. ✅ Job finished.",
+     "where": "Jobs → install",
+     "end": "Done."
+    },
+    {
+     "id": "d5-v-01",
+     "at": "09:00",
+     "role": "V",
+     "t": "Answer the payment calls",
+     "do": "Call center will call YOU today. Answer as: Esther Wairimu — “I will pay on Friday.” Samuel Otieno — don't answer (let it ring). Peter Mwangi — “I'm moving to Naivasha, please stop it.” Joseph Kibet — “The office fixed it yesterday, thank you.”",
+     "where": "Calls from Call center 1 and 2",
+     "end": "Each call ended with the right button in Zuri (ask them what they pressed)."
+    },
+    {
+     "id": "d5-f-02",
+     "at": "09:15",
+     "role": "F",
+     "t": "Build the pay run",
+     "do": "Money → 📋 Bills → Pay run → 🔄 Build today's list.",
+     "where": "Money → 📋 Bills → Pay run",
+     "end": "Under PAY NOW: six staff salaries (121,000) and the bills due by the 23rd (rent, transport, pole rent, backhaul)."
+    },
+    {
+     "id": "d5-c2-01",
+     "at": "09:15",
+     "role": "C2",
+     "t": "Joseph's follow-up",
+     "do": "Joseph's payment follow-up: Finance linked his payment yesterday. ✅ Says paid.",
+     "where": "Jobs → Joseph's follow-up",
+     "end": "“Customer says they paid — check the next billing import.”"
+    },
+    {
+     "id": "d5-f-03",
+     "at": "09:30",
+     "role": "F",
+     "t": "Send and record each one",
+     "do": "For each line: ✅ Sent — record it, M-Pesa (Bank for rent and backhaul), code UKP1… (use your role card list: UKP1SAL001 … UKP1SAL006, UKP2RENT15, UKP3TRAN03, UKP4POLE25, UKP5BACK35). Record it.",
+     "where": "Pay run → ✅ Sent — record it",
+     "end": "Every line shows ⏳ waiting for a second OK. Nothing says “paid” yet — that is correct."
+    },
+    {
+     "id": "d5-c1-02",
+     "at": "09:30",
+     "role": "C1",
+     "t": "Peter Mwangi wants to stop",
+     "do": "Peter's follow-up: call the voice → he is moving to Naivasha → ✋ Wants to stop → OK.",
+     "where": "Jobs → Peter's follow-up",
+     "end": "Closed. “Office can disconnect on the billing website.”"
+    },
+    {
+     "id": "d5-t2-01",
+     "at": "09:30",
+     "role": "T2",
+     "t": "Install Kevin Omondi (you'll be late)",
+     "do": "Start Kevin's install at 11:10 (you were late on purpose). Router HWT10010010. 📱 M-Pesa 2500 code UKK3KEVI25.",
+     "where": "Jobs → install",
+     "end": "Done with the M-Pesa code. The job shows the call center's note about the delay."
+    },
+    {
+     "id": "d5-c1-03",
+     "at": "10:00",
+     "role": "C1",
+     "t": "Ann Muthoni: no internet after install?",
+     "do": "Ann calls (voice): no internet. Her install is today — check the job: is Tech 1 on the way? 💬 Tell Tech 1 on WhatsApp.",
+     "where": "Jobs → Ann's install → 💬 WhatsApp",
+     "end": "Ann was told the time; Tech 1 got the message."
+    },
+    {
+     "id": "d5-t1-02",
+     "at": "10:00",
+     "role": "T1",
+     "t": "Receipts audit",
+     "do": "Me → 🧾 My receipts. Every receipt this week: is it there? Any ❌? Snap it now.",
+     "where": "Me → 🧾 My receipts",
+     "end": "Only 📷 or 📱 — no ❌."
+    },
+    {
+     "id": "d5-v-02",
+     "at": "10:00",
+     "role": "V",
+     "t": "Call — Ann: is the tech coming?",
+     "do": "Call Call center 1 as Ann Muthoni: “When is the technician coming?”",
+     "where": "Call to Call center 1",
+     "end": "A clear time."
+    },
+    {
+     "id": "d5-p-01",
+     "at": "10:30",
+     "role": "P",
+     "t": "Approve the pay run — two people",
+     "do": "👥 Approvals. Approve every salary and bill EXCEPT Staff transport: ✋ Decline it with the reason “No receipt — snap it and send again”.",
+     "where": "Money → 👥 Approvals",
+     "end": "Salaries and bills approved; Staff transport declined with your reason."
+    },
+    {
+     "id": "d5-c2-02",
+     "at": "10:30",
+     "role": "C2",
+     "t": "Purity: slow in the evenings",
+     "do": "Purity calls: slow in the evening since the outage. ＋ New job: Fault, “Slow in the evenings since Monday”, Priority Low, Tech 3, tomorrow.",
+     "where": "Customers → ＋ New job",
+     "end": "A low fault for tomorrow."
+    },
+    {
+     "id": "d5-t3-02",
+     "at": "10:30",
+     "role": "T3",
+     "t": "Fuel receipt (second receipt from day 4)",
+     "do": "If you didn't snap yesterday's fuel: snap it now (copy below), Transport / Fuel.",
+     "where": "Me → 🧾 Snap a receipt",
+     "end": "Fuel 600 in My receipts.",
+     "copy": "UKE6BWFUEL Confirmed. Ksh600.00 paid to TOTAL ENERGIES MAAI MAHIU. on 19/10/26 at 11:44 AM. New M-PESA balance is Ksh4,500.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d5-v-03",
+     "at": "10:30",
+     "role": "V",
+     "t": "Call — Purity: slow evenings",
+     "do": "Call Call center 2 as Purity: “Since Monday it is slow every evening.”",
+     "where": "Call to Call center 2",
+     "end": "A job for tomorrow."
+    },
+    {
+     "id": "d5-f-04",
+     "at": "10:45",
+     "role": "F",
+     "t": "Declined line — do it right",
+     "do": "The Partner declines Staff transport (no receipt). It is back on the Pay run as due. Snap the receipt (copy below) for 3,000 and record the line again with code UKP3TRAN03.",
+     "where": "Pay run · 🧾 Snap a receipt",
+     "end": "Staff transport waiting again — this time with a receipt.",
+     "copy": "UKP3TRAN03 Confirmed. Ksh3,000.00 paid to MAAI MAHIU SACCO. on 20/10/26 at 10:40 AM. New M-PESA balance is Ksh49,300.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d5-p-02",
+     "at": "11:00",
+     "role": "P",
+     "t": "Approve Staff transport again",
+     "do": "When Finance re-records it with a receipt: open it, look at the 📷 receipt, ✅ Approve.",
+     "where": "Money → 👥 Approvals",
+     "end": "Nothing waiting. Pay run: everything “Sent this month”."
+    },
+    {
+     "id": "d5-f-05",
+     "at": "11:00",
+     "role": "F",
+     "t": "The VAT figures",
+     "do": "Money → 📊 Report → find 🧾 VAT (new box). Read: VAT on sales (estimate), VAT you can claim (receipts with a supplier PIN), VAT without a PIN, and the difference.",
+     "where": "Money → 📊 Report → 🧾 VAT",
+     "end": "October so far: claimable VAT includes Wavetech 4,828 and Fibre World 345. Write the four numbers in your note. (The October return is due 20 Nov.)"
+    },
+    {
+     "id": "d5-c1-04",
+     "at": "11:00",
+     "role": "C1",
+     "t": "Kevin: the technician is late",
+     "do": "Kevin calls: “He said 10 am!” Jobs → All techs → Tech 2. Open Kevin's job. 💬 Tell Tech 2 on WhatsApp. Add a note “Customer called 11:00 — tech late”.",
+     "where": "Jobs → Kevin's install",
+     "end": "A note on the job; Tech 2 messaged."
+    },
+    {
+     "id": "d5-t1-03",
+     "at": "11:00",
+     "role": "T1",
+     "t": "Look at Tasks",
+     "do": "Tasks → My day. Tick what you did. Add a note on anything you could not do.",
+     "where": "Tasks",
+     "end": "My day up to date."
+    },
+    {
+     "id": "d5-v-04",
+     "at": "11:00",
+     "role": "V",
+     "t": "Call — Kevin: the tech is late",
+     "do": "Call Call center 1 as Kevin Omondi: “He said 10 am. It is 11!” Be annoyed.",
+     "where": "Call to Call center 1",
+     "end": "They checked and gave you a new time, politely."
+    },
+    {
+     "id": "d5-f-06",
+     "at": "11:20",
+     "role": "F",
+     "t": "Export October",
+     "do": "📊 Report → Export October to CSV. Open the file on the phone.",
+     "where": "Money → 📊 Report",
+     "end": "A CSV with every expense (with VAT and PIN columns), money in, payments and counts."
+    },
+    {
+     "id": "d5-p-03",
+     "at": "11:30",
+     "role": "P",
+     "t": "Try to approve your own payment",
+     "do": "Money → ✍️ Record → Money out: Town Centre, Paid to “Partner test”, 100, Other, M-Pesa. Save. Then go to 👥 Approvals and try to approve it yourself. Then ↩ Withdraw it.",
+     "where": "Money → Money out → 👥 Approvals",
+     "end": "Zuri does NOT let you approve your own payment (no Approve button / “a second person must approve it”). After Withdraw it is gone."
+    },
+    {
+     "id": "d5-c2-03",
+     "at": "11:30",
+     "role": "C2",
+     "t": "Customers who ran out — read Who paid",
+     "do": "Ask Finance to show you Money → Who paid on their phone (call center can't open Money). Compare with your follow-ups.",
+     "where": "Jobs → Payment follow-ups",
+     "end": "Every customer who ran out has a follow-up job. Note any missing."
+    },
+    {
+     "id": "d5-t2-02",
+     "at": "11:30",
+     "role": "T2",
+     "t": "Your receipts",
+     "do": "Me → 🧾 My receipts. Snap any missing.",
+     "where": "Me → 🧾 My receipts",
+     "end": "No ❌."
+    },
+    {
+     "id": "d5-f-07",
+     "at": "11:40",
+     "role": "F",
+     "t": "The Friday report — printed",
+     "do": "📊 Report → 🖨 Printable view → 🖨 Print / save as PDF (Save as PDF on the phone). Then Copy for WhatsApp and paste it in the team group.",
+     "where": "Money → 📊 Report → 🖨 Printable view",
+     "end": "A PDF saved on your phone, and the report text in the group. It shows both areas, bills owing, payments waiting and receipts this week."
+    },
+    {
+     "id": "d5-p-04",
+     "at": "11:50",
+     "role": "P",
+     "t": "Read the Friday report",
+     "do": "Money → 📊 Report. Read it all.",
+     "where": "Money → 📊 Report",
+     "end": "Post in the group: the cash after bills for each area, and one thing you would ask Finance about."
+    }
+   ],
+   "brief": {
+    "P": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:30  Approve the pay run — two people\n11:00  Approve Staff transport again\n11:30  Try to approve your own payment\n11:50  Read the Friday report\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n08:45  Cash count — both areas\n09:15  Build the pay run\n09:30  Send and record each one\n10:45  Declined line — do it right\n11:00  The VAT figures\n11:20  Export October\n11:40  The Friday report — printed\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Today's texts — customers who ran out\n09:30  Peter Mwangi wants to stop\n10:00  Ann Muthoni: no internet after install?\n11:00  Kevin: the technician is late\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Joseph's follow-up\n10:30  Purity: slow in the evenings\n11:30  Customers who ran out — read Who paid\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Ann Muthoni\n10:00  Receipts audit\n11:00  Look at Tasks\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Install Kevin Omondi (you'll be late)\n11:30  Your receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Stephen Mutua\n10:30  Fuel receipt (second receipt from day 4)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 5 of 7 (Tue 20 Oct) · Pay day and reports\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:00  Answer the payment calls\n10:00  Call — Ann: is the tech coming?\n10:30  Call — Purity: slow evenings\n11:00  Call — Kevin: the tech is late\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+   }
+  },
+  {
+   "n": 6,
+   "date": "2026-10-21",
+   "dow": "Wednesday",
+   "window": "09:00–12:00",
+   "db": "ongoing",
+   "title": "Grow: a new area",
+   "story": "People in Suswa are asking for internet. Finance plans the new area in 📈 Projects; the Partner checks it. Everyone does a receipts audit: every shilling spent this week has a receipt.",
+   "ch": [
+    {
+     "id": "d6-p-01",
+     "at": "09:00",
+     "role": "P",
+     "t": "Add the planned area",
+     "do": "Admin → Areas: code SU, name “Suswa (planned)”, float target 10000 → Add area. Tell the team: “pull down to refresh”.",
+     "where": "Me → ⚙️ Admin → Areas",
+     "end": "SU Suswa (planned) in the list, and in the area picker after a refresh."
+    },
+    {
+     "id": "d6-t1-01",
+     "at": "09:00",
+     "role": "T1",
+     "t": "Suswa survey",
+     "do": "Jobs → ＋ Log a job: Site survey, area Suswa (planned) if you can pick it, “Suswa: route along the road from Satellite, 6 km, poles every 50 m”. Pin + photo.",
+     "where": "Jobs → ＋ Log a job",
+     "end": "A survey job with a pin, photo and note."
+    },
+    {
+     "id": "d6-t3-01",
+     "at": "09:00",
+     "role": "T3",
+     "t": "Purity: slow evenings",
+     "do": "Purity's job. Found: Bad connector. Did: Replaced connector + Tested — working. ✅ Job finished.",
+     "where": "Jobs → the fault job",
+     "end": "Done."
+    },
+    {
+     "id": "d6-f-01",
+     "at": "09:15",
+     "role": "F",
+     "t": "Plan Suswa",
+     "do": "📈 Projects → ＋ New project. Name: Suswa town. Area: Suswa (planned). Create. A · Start-up: Fiber cable to lay 6 km · Fiber cost per km 290000 · OLT & core equipment 600000 · Labour 400000. B · Running: Backhaul Bayobab 100 Mbps · Staff 2 · Salary each 20000 · Rent 8000. C · Customers: Homes passed 900 · Sign-ups month 1: 10 · month 3: 35 · month 6: 70 · month 12: 120 · month 24: 200 · Install fee 2500 · Leave each month 2 · Use it next to “From …” for the monthly bill.",
+     "where": "📈 Projects → ＋ New project",
+     "end": "The green line shows a start-up cost (about KES 3M) and a payback month. Write both in your note."
+    },
+    {
+     "id": "d6-c2-01",
+     "at": "09:15",
+     "role": "C2",
+     "t": "Suswa calls — three people",
+     "do": "Pull down to refresh first (the Partner just added Suswa). The voice calls three times as people from Suswa. For each: ＋ New customer, Area Suswa (planned), Status Lead, the name, phone and landmark they give, notes “Suswa interest — waiting for the Suswa plan”. No job.",
+     "where": "Customers → ＋ New customer",
+     "end": "Three Leads in Suswa (planned). Tell Finance: “3 Suswa leads” (it helps the plan)."
+    },
+    {
+     "id": "d6-v-01",
+     "at": "09:15",
+     "role": "V",
+     "t": "Calls 1–3 — Suswa wants internet",
+     "do": "Call Call center 2 three times: Susan Kariuki (0700 000 301, Suswa near the market: “Many of us want internet!”), Hassan Ali of Suswa General Shop (0700 000 302, opposite the stage, wants business), Mr. Leshan, Suswa Primary School (0700 000 303).",
+     "where": "Calls to Call center 2",
+     "end": "Each was added as a Lead and told “we are planning Suswa”. No false promise of a date."
+    },
+    {
+     "id": "d6-t2-01",
+     "at": "09:30",
+     "role": "T2",
+     "t": "Faith's Salon: router moved?",
+     "do": "Log a job for Faith's Salon? No — field techs can't link a customer. Instead: Tasks → ＋ Add a task “Faith's Salon asks about moving to shop 22” → Call center.",
+     "where": "Tasks → ＋ Add a task",
+     "end": "A task for the call center."
+    },
+    {
+     "id": "d6-f-02",
+     "at": "10:00",
+     "role": "F",
+     "t": "What if only 70% join?",
+     "do": "Scroll to “What if?”. Read the row Low (70%).",
+     "where": "📈 Projects → the plan",
+     "end": "The payback month at 70%. Write it in your note."
+    },
+    {
+     "id": "d6-c1-01",
+     "at": "10:15",
+     "role": "C1",
+     "t": "Esther says she paid",
+     "do": "Esther calls: paid 1,500 today, code UKE6ESTH15. Open her follow-up → ✅ Says paid. Tell Finance.",
+     "where": "Jobs → Esther's follow-up",
+     "end": "Note “Customer says they paid”. After Finance brings in both files (11:35), Jobs → Check now → Esther's follow-up closes by itself."
+    },
+    {
+     "id": "d6-v-02",
+     "at": "10:15",
+     "role": "V",
+     "t": "Call 4 — Esther paid",
+     "do": "Call Call center 1 as Esther: “I paid 1,500 today, code UKE6ESTH15.”",
+     "where": "Call to Call center 1",
+     "end": "They wrote the code; later they confirm it."
+    },
+    {
+     "id": "d6-p-02",
+     "at": "10:30",
+     "role": "P",
+     "t": "Read Finance's plan",
+     "do": "📈 Projects → Suswa town → read the green line and “the answer ↓”. Then ⚖️ Compare.",
+     "where": "📈 Projects",
+     "end": "You can say: start-up cost, break-even month, payback month."
+    },
+    {
+     "id": "d6-f-03",
+     "at": "10:30",
+     "role": "F",
+     "t": "Receipts this week",
+     "do": "Money → 📊 Report → 🧾 RECEIPTS THIS WEEK. Read Missing — who recorded each.",
+     "where": "Money → 📊 Report",
+     "end": "A list of missing receipts with names (or ✅ all found). For each name: Tasks → ＋ Add a task for that person: “Snap your receipt for …”."
+    },
+    {
+     "id": "d6-c2-02",
+     "at": "10:30",
+     "role": "C2",
+     "t": "Purity's slow-evening job",
+     "do": "Check Purity's job is with Tech 3 for today. If not, fix it.",
+     "where": "Jobs",
+     "end": "Purity's job has Tech 3 and today's date."
+    },
+    {
+     "id": "d6-t3-02",
+     "at": "10:30",
+     "role": "T3",
+     "t": "Receipts",
+     "do": "Me → 🧾 My receipts. Every receipt from day 2–5 there? Snap missing ones.",
+     "where": "Me → 🧾 My receipts",
+     "end": "No ❌."
+    },
+    {
+     "id": "d6-p-03",
+     "at": "11:00",
+     "role": "P",
+     "t": "Share it",
+     "do": "On the plan: 📋 Copy for WhatsApp → paste in the team group. Then 🖨 One-page report → Save as PDF.",
+     "where": "📈 Projects → the plan",
+     "end": "The text in the group and a PDF on your phone."
+    },
+    {
+     "id": "d6-f-04",
+     "at": "11:00",
+     "role": "F",
+     "t": "Ask for the second OK",
+     "do": "On Suswa town: ✅ We're doing it → keep the launch month → Send for the second OK.",
+     "where": "📈 Projects → the plan",
+     "end": "⏳ Waiting for a second OK — and no Approve button for you."
+    },
+    {
+     "id": "d6-c1-02",
+     "at": "11:00",
+     "role": "C1",
+     "t": "Complaint: cable on the church path",
+     "do": "Pastor Moses complains a cable was left on the church path. Tasks → ＋ Add a task: “Remove cable left on PCEA church path” → Tech 1, High.",
+     "where": "Tasks → ＋ Add a task",
+     "end": "A high task for Tech 1."
+    },
+    {
+     "id": "d6-t2-02",
+     "at": "11:00",
+     "role": "T2",
+     "t": "Your receipts",
+     "do": "Me → 🧾 My receipts. Snap any missing.",
+     "where": "Me → 🧾 My receipts",
+     "end": "No ❌."
+    },
+    {
+     "id": "d6-v-03",
+     "at": "11:00",
+     "role": "V",
+     "t": "Call 5 — Pastor Moses complains",
+     "do": "Call Call center 1 as Pastor Moses: “Your technician left a cable lying on our church path!” Firm but polite.",
+     "where": "Call to Call center 1",
+     "end": "They apologised and sent someone (a task)."
+    },
+    {
+     "id": "d6-t1-02",
+     "at": "11:15",
+     "role": "T1",
+     "t": "The church path",
+     "do": "Tasks → “Remove cable left on PCEA church path” → 💬 Notes “Removed, apologised to the Pastor” → tick it.",
+     "where": "Tasks",
+     "end": "Task Done with your note."
+    },
+    {
+     "id": "d6-f-05",
+     "at": "11:30",
+     "role": "F",
+     "t": "Billing files — Esther paid",
+     "do": "Bring in “billing-payments-day6.csv” (Customer payments). Tell Call center 1 that Esther's 1,500 is in.",
+     "where": "Money → 🏦 Statements → 📥 Bring in a file",
+     "end": "1 new payment, matched to Esther Wairimu (UKE6ESTH15).",
+     "file": "bw/billing-payments-day6.csv"
+    },
+    {
+     "id": "d6-c2-03",
+     "at": "11:30",
+     "role": "C2",
+     "t": "Map of the leads",
+     "do": "Customers → 🗺️ Map → pick Suswa (planned) in the area picker at the top.",
+     "where": "Customers → 🗺️ Map",
+     "end": "No pins yet for leads without a location — that is normal. Note it."
+    },
+    {
+     "id": "d6-f-06",
+     "at": "11:35",
+     "role": "F",
+     "t": "Esther's new expiry date (customer list)",
+     "do": "Right after the payments file: 📥 Bring in a file → What's in the file: Customer list → Billnasi → “billing-customers-day6.csv” → Import.",
+     "where": "Money → 🏦 Statements → 📥 Bring in a file",
+     "end": "“1 customers added or updated.” Esther's page says Paid until 20 Nov.",
+     "file": "bw/billing-customers-day6.csv"
+    },
+    {
+     "id": "d6-p-04",
+     "at": "11:40",
+     "role": "P",
+     "t": "Settings check",
+     "do": "Admin → Settings: read the two-person rule and “Read receipts with AI” (leave it Off).",
+     "where": "Me → ⚙️ Admin → Settings",
+     "end": "Money approval ON for every amount. AI reading Off."
+    },
+    {
+     "id": "d6-c1-03",
+     "at": "11:40",
+     "role": "C1",
+     "t": "Samuel Otieno — second try",
+     "do": "Samuel's follow-up is back today. Call the voice again → 📩 Text it (send to YOUR OWN number or Cancel).",
+     "where": "Jobs → Samuel's follow-up → 📩 Text it",
+     "end": "A note “📩 … sent” and the day it comes back."
+    },
+    {
+     "id": "d6-t1-03",
+     "at": "11:40",
+     "role": "T1",
+     "t": "Receipts",
+     "do": "Me → 🧾 My receipts: no ❌.",
+     "where": "Me → 🧾 My receipts",
+     "end": "Clean."
+    }
+   ],
+   "brief": {
+    "P": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Add the planned area\n10:30  Read Finance's plan\n11:00  Share it\n11:40  Settings check\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Plan Suswa\n10:00  What if only 70% join?\n10:30  Receipts this week\n11:00  Ask for the second OK\n11:30  Billing files — Esther paid\n11:35  Esther's new expiry date (customer list)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:15  Esther says she paid\n11:00  Complaint: cable on the church path\n11:40  Samuel Otieno — second try\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Suswa calls — three people\n10:30  Purity's slow-evening job\n11:30  Map of the leads\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Suswa survey\n11:15  The church path\n11:40  Receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Faith's Salon: router moved?\n11:00  Your receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Purity: slow evenings\n10:30  Receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 6 of 7 (Wed 21 Oct) · Grow: a new area\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Calls 1–3 — Suswa wants internet\n10:15  Call 4 — Esther paid\n11:00  Call 5 — Pastor Moses complains\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+   }
+  },
+  {
+   "n": 7,
+   "date": "2026-10-22",
+   "dow": "Thursday",
+   "window": "09:00–12:00",
+   "db": "ongoing",
+   "title": "Close the week",
+   "story": "Practise a month-end: the last count, next month's bills, the late payers, the Suswa decision, a staff member leaving, and print everything. Then tell us the truth: best, worst, what to fix first.",
+   "ch": [
+    {
+     "id": "d7-f-01",
+     "at": "09:00",
+     "role": "F",
+     "t": "Last count of the week",
+     "do": "Count the cash: Town Centre Bank 73500, M-Pesa 48000. Satellite Bank 57500, M-Pesa 16000.",
+     "where": "Money → Count the cash",
+     "end": "Two counts. Money → 💵 Today shows cash after bills for each area."
+    },
+    {
+     "id": "d7-t1-01",
+     "at": "09:00",
+     "role": "T1",
+     "t": "My week",
+     "do": "My jobs → Done. Count installs and faults.",
+     "where": "Jobs → My jobs → Done",
+     "end": "Write the numbers in your note."
+    },
+    {
+     "id": "d7-t2-01",
+     "at": "09:00",
+     "role": "T2",
+     "t": "Take over Tech 3's jobs",
+     "do": "After the Partner moves them: My jobs shows Tech 3's open Satellite jobs. Open each; read it.",
+     "where": "Jobs → My jobs",
+     "end": "The moved jobs are in your list."
+    },
+    {
+     "id": "d7-t3-01",
+     "at": "09:00",
+     "role": "T3",
+     "t": "Hand over before you leave",
+     "do": "Every open job: add a note for Tech 2 (what is left to do). Then tell the Partner “ready”.",
+     "where": "Jobs → each open job",
+     "end": "Every open job has a hand-over note."
+    },
+    {
+     "id": "d7-f-02",
+     "at": "09:20",
+     "role": "F",
+     "t": "Next month's bills",
+     "do": "Money → 📋 Bills → → (next month) → Copy last month's bills (for each area).",
+     "where": "Money → 📋 Bills",
+     "end": "November has the same six bills, unpaid."
+    },
+    {
+     "id": "d7-p-01",
+     "at": "09:30",
+     "role": "P",
+     "t": "Decide Suswa",
+     "do": "📈 Projects → Suswa town (waiting for your OK). Read it once more. ✅ Approve — lock the plan (or decline with a reason).",
+     "where": "📈 Projects",
+     "end": "“📊 Actual vs plan” and “🚀 Approved — starts …”. The plan is now the yardstick."
+    },
+    {
+     "id": "d7-c1-01",
+     "at": "09:30",
+     "role": "C1",
+     "t": "Faith's Salon moves shop",
+     "do": "Faith calls: please move her connection to shop 22. Find her → ＋ New job: Move connection, “Move from shop 14 to shop 22”, Tech 2, tomorrow.",
+     "where": "Customers → ＋ New job",
+     "end": "A Move connection job for Tech 2."
+    },
+    {
+     "id": "d7-v-01",
+     "at": "09:30",
+     "role": "V",
+     "t": "Call 1 — Faith moves shop",
+     "do": "Call Call center 1 as Faith: “I'm moving the salon to shop 22 next week. Can you move my internet?”",
+     "where": "Call to Call center 1",
+     "end": "A Move connection job and a day."
+    },
+    {
+     "id": "d7-f-03",
+     "at": "09:40",
+     "role": "F",
+     "t": "Late payers",
+     "do": "Money → 👥 Customers → Who paid → Late.",
+     "where": "Money → Who paid",
+     "end": "Write the late customers in your note. They should match Call center's follow-ups."
+    },
+    {
+     "id": "d7-p-02",
+     "at": "10:00",
+     "role": "P",
+     "t": "Tech 3 leaves — move their jobs",
+     "do": "Admin → People → Tech 3 → untick On → Save. Then Jobs → All techs → pick Tech 3 → open each open job → Send to tech: Tech 2 → Save.",
+     "where": "Admin → People · Jobs",
+     "end": "Tech 3 is switched off. No open job is left with Tech 3."
+    },
+    {
+     "id": "d7-f-04",
+     "at": "10:00",
+     "role": "F",
+     "t": "A staff member leaves",
+     "do": "Tech 3 is “leaving” (pretend). Staff & pay → Tech 3 → untick “Working for Zuri now” → Save.",
+     "where": "Money → 📋 Bills → Staff & pay",
+     "end": "Tech 3 shows as not working now; next pay run won't include them."
+    },
+    {
+     "id": "d7-c2-01",
+     "at": "10:00",
+     "role": "C2",
+     "t": "Satellite Academy wants 50 Mbps",
+     "do": "The school asks for 50 Mbps. Not on the price list yet → Tasks → ＋ Add a task for Partners: “Satellite Academy wants 50 Mbps — price?” After the Partner adds it, edit the school: Package Business 50 Mbps, Monthly rate 7000.",
+     "where": "Tasks · Customers → ✏️ Edit",
+     "end": "The school's package is Business 50 Mbps, 7,000."
+    },
+    {
+     "id": "d7-t1-02",
+     "at": "10:00",
+     "role": "T1",
+     "t": "Offline test",
+     "do": "Turn on airplane mode. Open any Done job and add a note “Offline test”. Turn airplane mode off and wait.",
+     "where": "Jobs → a job",
+     "end": "With no signal: “⏳ not sent”. With signal back: it sends by itself."
+    },
+    {
+     "id": "d7-v-02",
+     "at": "10:00",
+     "role": "V",
+     "t": "Call 2 — the school wants 50 Mbps",
+     "do": "Call Call center 2 as Isaac of Satellite Academy: “Do you have 50 Mbps? How much?”",
+     "where": "Call to Call center 2",
+     "end": "They found out and told you 7,000 (after the Partner added it)."
+    },
+    {
+     "id": "d7-t3-02",
+     "at": "10:15",
+     "role": "T3",
+     "t": "After you are switched off",
+     "do": "Close Zuri and open it again.",
+     "where": "Training copy",
+     "end": "Zuri says your account is switched off / “Almost there”. Write in your note what you saw — was it clear?"
+    },
+    {
+     "id": "d7-p-03",
+     "at": "10:30",
+     "role": "P",
+     "t": "A new package",
+     "do": "Satellite Academy asked for 50 Mbps. Admin → 💲 Price list: add “Business 50 Mbps” 7000.",
+     "where": "Me → ⚙️ Admin → Price list",
+     "end": "Five packages in the price list."
+    },
+    {
+     "id": "d7-f-05",
+     "at": "10:30",
+     "role": "F",
+     "t": "Print everything",
+     "do": "Save as PDF on your phone: 📊 Report → 🖨 Printable view. 📈 Projects → Suswa town → 🖨 One-page report. And Export October to CSV.",
+     "where": "Money → 📊 Report · 📈 Projects",
+     "end": "Three files on your phone: report PDF, Suswa PDF, October CSV. Send them to the team group."
+    },
+    {
+     "id": "d7-c1-02",
+     "at": "10:30",
+     "role": "C1",
+     "t": "Clean the customer list",
+     "do": "Customers: search each Town Centre customer. Fix any double, missing phone or wrong package.",
+     "where": "Customers",
+     "end": "No doubles. Every customer has a phone and package. Note what you fixed."
+    },
+    {
+     "id": "d7-t2-02",
+     "at": "10:30",
+     "role": "T2",
+     "t": "Faith's Salon move (tomorrow)",
+     "do": "Read the Move connection job for tomorrow.",
+     "where": "Jobs → My jobs",
+     "end": "It's there with the new shop in the summary."
+    },
+    {
+     "id": "d7-v-03",
+     "at": "10:30",
+     "role": "V",
+     "t": "Your customer report card",
+     "do": "Testers' List “Tell us” box: For each call this week, were they polite? Fast? Right? Give the team a mark out of 10, and the one call that went worst.",
+     "where": "Testers' List",
+     "end": "Your report card is sent."
+    },
+    {
+     "id": "d7-p-04",
+     "at": "11:00",
+     "role": "P",
+     "t": "Run the manager and read it",
+     "do": "Tasks → 🤖 Run the manager now → Manager log.",
+     "where": "Tasks",
+     "end": "The run line. Write the 2 most useful things it says."
+    },
+    {
+     "id": "d7-c2-02",
+     "at": "11:00",
+     "role": "C2",
+     "t": "Who is still a Lead?",
+     "do": "Customers: pick Satellite in the area picker and look at the status on each customer.",
+     "where": "Customers",
+     "end": "Only the Suswa leads (and anyone not yet installed) are Leads. Note anyone wrong."
+    },
+    {
+     "id": "d7-f-06",
+     "at": "11:30",
+     "role": "F",
+     "t": "Your week in 3 lines",
+     "do": "Testers' List → Business Week → the “Tell us” box: 1 best thing, 1 worst thing, 1 thing to fix first.",
+     "where": "Testers' List",
+     "end": "Your three lines are sent."
+    },
+    {
+     "id": "d7-c1-03",
+     "at": "11:30",
+     "role": "C1",
+     "t": "Your week in 3 lines",
+     "do": "Testers' List “Tell us” box: best, worst, fix first.",
+     "where": "Testers' List",
+     "end": "Sent."
+    },
+    {
+     "id": "d7-c2-03",
+     "at": "11:30",
+     "role": "C2",
+     "t": "Your week in 3 lines",
+     "do": "Testers' List “Tell us” box.",
+     "where": "Testers' List",
+     "end": "Sent."
+    },
+    {
+     "id": "d7-t1-03",
+     "at": "11:30",
+     "role": "T1",
+     "t": "Your week in 3 lines",
+     "do": "Testers' List “Tell us” box.",
+     "where": "Testers' List",
+     "end": "Sent."
+    },
+    {
+     "id": "d7-t2-03",
+     "at": "11:30",
+     "role": "T2",
+     "t": "Your week in 3 lines",
+     "do": "Testers' List “Tell us” box.",
+     "where": "Testers' List",
+     "end": "Sent."
+    },
+    {
+     "id": "d7-t3-03",
+     "at": "11:30",
+     "role": "T3",
+     "t": "Your week in 3 lines",
+     "do": "Testers' List “Tell us” box.",
+     "where": "Testers' List",
+     "end": "Sent."
+    },
+    {
+     "id": "d7-p-05",
+     "at": "11:40",
+     "role": "P",
+     "t": "Go / no-go",
+     "do": "Testers' List → Business Week → “Tell us” box: Would you run the real Zuri Fiber on this system on Monday? Yes / not yet — and why.",
+     "where": "Testers' List",
+     "end": "Your answer is sent."
+    }
+   ],
+   "brief": {
+    "P": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Decide Suswa\n10:00  Tech 3 leaves — move their jobs\n10:30  A new package\n11:00  Run the manager and read it\n11:40  Go / no-go\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Last count of the week\n09:20  Next month's bills\n09:40  Late payers\n10:00  A staff member leaves\n10:30  Print everything\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Faith's Salon moves shop\n10:30  Clean the customer list\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:00  Satellite Academy wants 50 Mbps\n11:00  Who is still a Lead?\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  My week\n10:00  Offline test\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Take over Tech 3's jobs\n10:30  Faith's Salon move (tomorrow)\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Hand over before you leave\n10:15  After you are switched off\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 7 of 7 (Thu 22 Oct) · Close the week\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:30  Call 1 — Faith moves shop\n10:00  Call 2 — the school wants 50 Mbps\n10:30  Your customer report card\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+   }
+  }
+ ]
+}
