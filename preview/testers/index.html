@@ -117,7 +117,7 @@
   const C = window.ZURI_CONFIG.training;                                   // the Testers' List always talks to the training copy
   const sb = supabase.createClient(C.supabaseUrl, C.supabaseKey, { auth: { persistSession: false } });
   // v2.0: same address as before on the live site; a local copy (tests, previews) links to its own practice.
-  const APP = location.hostname === 'jerrywins1.github.io' ? 'https://jerrywins1.github.io/zuri-system/' : new URL('../', location.href).href;
+  const APP = new URL('../', location.href).href; /* PREVIEW copy: always its own app */
   const FS = 'https://jerrywins1.github.io/daraja-apps/feedback-studio/?app=';
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const get = (k, d) => { try { const v = localStorage.getItem('zt_' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
