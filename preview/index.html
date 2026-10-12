@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><script>/* PREVIEW COPY (12 Oct): practice only, never real or training data */ if(!/[?&]practice\b/.test(location.search)||/[?&]training\b/.test(location.search)){var q=location.search.replace(/[?&]training\b/,'');location.replace(location.pathname+(q?q+'&practice':'?practice')+location.hash);}</script>
+<head><script>/* PREVIEW COPY (13 Oct, v2.35): practice or the TRAINING copy only, never real data */ if(!/[?&](practice|training)\b/.test(location.search)){var q=location.search;location.replace(location.pathname+(q?q+'&practice':'?practice')+location.hash);}</script>
 <meta charset="utf-8">
 <title>PREVIEW · Zuri System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -252,50 +252,50 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=56"></script>
-<script src="js/selfcheck.js?v=56"></script>
-<script src="js/gate.js?v=56"></script>
+<script src="js/config.js?v=57"></script>
+<script src="js/selfcheck.js?v=57"></script>
+<script src="js/gate.js?v=57"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=56"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=57"><\/script>');
 </script>
 <script>
   // Weak signal can drop one file. Practice can't run without practice.js, so try once more with a fresh address (v2.23, 5 Oct).
-  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=56&retry=' + Date.now() + '"><\/script>');
+  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=57&retry=' + Date.now() + '"><\/script>');
 </script>
-<script src="js/app.js?v=56"></script>
-<script src="js/home.js?v=56"></script>
-<script src="js/tasks.js?v=56"></script>
-<script src="js/jobs.js?v=56"></script>
-<script src="js/customers.js?v=56"></script>
-<script src="js/map.js?v=56"></script>
-<script src="js/money.js?v=56"></script>
-<script src="js/statements.js?v=56"></script>
-<script src="js/imports.js?v=56"></script>
-<script src="js/admin.js?v=56"></script>
-<script src="js/staffpay.js?v=56"></script>
-<script src="js/codes.js?v=56"></script>
-<script src="js/company.js?v=56"></script>
-<script src="js/receipts.js?v=56"></script>
-<script src="js/timesavers.js?v=56"></script>
-<script src="js/approvals.js?v=56"></script>
-<script src="js/planner_math.js?v=56"></script>
-<script src="js/projects.js?v=56"></script>
-<script src="js/checklist_data.js?v=56"></script>
-<script src="js/testing.js?v=56"></script>
-<script src="js/training.js?v=56"></script>
+<script src="js/app.js?v=57"></script>
+<script src="js/home.js?v=57"></script>
+<script src="js/tasks.js?v=57"></script>
+<script src="js/jobs.js?v=57"></script>
+<script src="js/customers.js?v=57"></script>
+<script src="js/map.js?v=57"></script>
+<script src="js/money.js?v=57"></script>
+<script src="js/statements.js?v=57"></script>
+<script src="js/imports.js?v=57"></script>
+<script src="js/admin.js?v=57"></script>
+<script src="js/staffpay.js?v=57"></script>
+<script src="js/codes.js?v=57"></script>
+<script src="js/company.js?v=57"></script>
+<script src="js/receipts.js?v=57"></script>
+<script src="js/timesavers.js?v=57"></script>
+<script src="js/approvals.js?v=57"></script>
+<script src="js/planner_math.js?v=57"></script>
+<script src="js/projects.js?v=57"></script>
+<script src="js/checklist_data.js?v=57"></script>
+<script src="js/testing.js?v=57"></script>
+<script src="js/training.js?v=57"></script>
 <script>
   // The videos live in training.js; weak signal can drop it like practice.js, so try once more (v2.25).
-  if (window.Z && typeof Z.learn !== 'function') document.write('<script src="js/training.js?v=56&retry=' + Date.now() + '"><\/script>');
+  if (window.Z && typeof Z.learn !== 'function') document.write('<script src="js/training.js?v=57&retry=' + Date.now() + '"><\/script>');
 </script>
-<script src="js/lessons_fields.js?v=56"></script>
-<script src="js/lessons_day.js?v=56"></script>
-<script src="js/lessons_receipts.js?v=56"></script>
-<script src="js/lessons_timesavers.js?v=56"></script>
-<script src="js/lessons_projects.js?v=56"></script>
+<script src="js/lessons_fields.js?v=57"></script>
+<script src="js/lessons_day.js?v=57"></script>
+<script src="js/lessons_receipts.js?v=57"></script>
+<script src="js/lessons_timesavers.js?v=57"></script>
+<script src="js/lessons_projects.js?v=57"></script>
 <script>
   // If a file didn't arrive (weak signal, power cut), say so kindly with one button, instead of a confusing error.
   (function () {
