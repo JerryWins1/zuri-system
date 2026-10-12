@@ -1,0 +1,854 @@
+{
+  "role": "callcenter",
+  "title": "Call center test script",
+  "version": "1.2",
+  "date": "2026-10-12",
+  "who": "You are Mary Wanjiku in the call center. Everything is pretend and stays on your phone — no real customer is called or texted.",
+  "sessions": [
+    {
+      "id": "c1",
+      "title": "Payment calls",
+      "mins": 20,
+      "intro": "Customers whose internet ran out: what happened on the call, and the ready-made texts.",
+      "steps": [
+        {
+          "id": "c1-01",
+          "link": "#me",
+          "do": "Tap 🧹 Start over (pretend company), then tap OK.",
+          "see": "The page reloads. The Me page shows Mary Wanjiku · Call center.",
+          "look": [
+            "🧹 Start over (pretend company)",
+            "Mary Wanjiku"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Start over (pretend company)')"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "see",
+              "Mary Wanjiku"
+            ],
+            [
+              "see",
+              "Call center"
+            ]
+          ]
+        },
+        {
+          "id": "c1-02",
+          "link": "#home",
+          "do": "On Home, read NEEDS ATTENTION. Tap the line that starts “💳 … customers have run out of paid time”.",
+          "see": "📩 Today's texts opens: one customer at a time whose internet was switched off, with the message already written (“0 of … done” at the top).",
+          "look": [
+            "Needs attention",
+            "customers have run out of paid time"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a:has-text('customers have run out of paid time')"
+            ],
+            [
+              "js",
+              "location.hash === '#texts'"
+            ],
+            [
+              "has",
+              "#tx-head"
+            ],
+            [
+              "see",
+              "done"
+            ]
+          ]
+        },
+        {
+          "id": "c1-03",
+          "link": "#jobs",
+          "do": "Open Daniel Mutua #118 (a payment follow-up). Pretend you called and nobody answered: tap 📵 No answer.",
+          "see": "“Noted. It comes back tomorrow.” Under NOTES: “📵 Called — no answer”.",
+          "look": [
+            "Daniel Mutua #118"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#118')"
+            ],
+            [
+              "tap",
+              "button:has-text('No answer')"
+            ],
+            [
+              "see",
+              "📵 Called — no answer"
+            ]
+          ]
+        },
+        {
+          "id": "c1-04",
+          "link": "#jobs",
+          "do": "Open Grace Njeri #109. Tap 🤝 Will pay, tap In 3 days, then Save.",
+          "see": "“Saved. We'll check again on …” Under NOTES: “🤝 Promised to pay by …” with the day 3 days from now.",
+          "look": [
+            "Grace Njeri #109"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#109')"
+            ],
+            [
+              "tap",
+              "button:has-text('Will pay')"
+            ],
+            [
+              "tap",
+              "button:has-text('In 3 days')"
+            ],
+            [
+              "tap",
+              "#pp-ok"
+            ],
+            [
+              "see",
+              "🤝 Promised to pay by"
+            ]
+          ]
+        },
+        {
+          "id": "c1-05",
+          "link": "#jobs",
+          "do": "Open Joseph Mwangi #110. Tap ✅ Says paid.",
+          "see": "“Noted. It closes itself when the payment shows.” Under NOTES: “✅ Customer says they paid — check the next billing import”. The job stays on the list until the payment shows.",
+          "look": [
+            "Joseph Mwangi #110"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#110')"
+            ],
+            [
+              "tap",
+              "button:has-text('Says paid')"
+            ],
+            [
+              "see",
+              "Customer says they paid"
+            ]
+          ]
+        },
+        {
+          "id": "c1-06",
+          "link": "#jobs",
+          "do": "Open Esther Ndungu #117. Tap ✋ Wants to stop, then OK.",
+          "see": "“Closed. Office can disconnect on the billing website.” The label shows Closed, and #117 is gone from the To do list.",
+          "look": [
+            "Esther Ndungu #117"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#117')"
+            ],
+            [
+              "tap",
+              "button:has-text('Wants to stop')"
+            ],
+            [
+              "see",
+              "Closed"
+            ],
+            [
+              "go",
+              "#jobs"
+            ],
+            [
+              "notsee",
+              "Esther Ndungu #117"
+            ]
+          ]
+        },
+        {
+          "id": "c1-07",
+          "link": "#jobs",
+          "do": "Open Samuel Kibet #111. Read which step is lit up (Day 3 · anything wrong?). Tap 📩 Text it. Your text app opens with the message written — change the number to YOUR OWN and send it, or press Cancel. Come back to Zuri.",
+          "see": "The message names Samuel and says how to pay (Paybill and account). Back in Zuri: “Sent. It comes back on … for the next step.” and a NOTES line “📩 … text sent”.",
+          "look": [
+            "Samuel Kibet #111"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#111')"
+            ],
+            [
+              "see",
+              "anything wrong?"
+            ],
+            [
+              "has",
+              "a[href^='sms:']:has-text('Text it')"
+            ],
+            [
+              "js",
+              "(document.querySelector('#jd-sms').addEventListener('click', e => e.preventDefault()), true)"
+            ],
+            [
+              "tap",
+              "#jd-sms"
+            ],
+            [
+              "wait",
+              1800
+            ],
+            [
+              "see",
+              "text sent"
+            ],
+            [
+              "see",
+              "comes back on"
+            ]
+          ]
+        },
+        {
+          "id": "c1-08",
+          "link": "#jobs",
+          "do": "Open Jane Odhiambo #113. Tap 💬 WhatsApp it. WhatsApp opens with the message — send it to yourself, or just come back without sending.",
+          "see": "WhatsApp shows the message, already written. Back in Zuri, NOTES has “💬 … WhatsApp sent”.",
+          "look": [
+            "Jane Odhiambo #113"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#113')"
+            ],
+            [
+              "has",
+              "a[href^='https://wa.me/']:has-text('WhatsApp it')"
+            ],
+            [
+              "js",
+              "(document.querySelector('#jd-wa').addEventListener('click', e => e.preventDefault()), true)"
+            ],
+            [
+              "tap",
+              "#jd-wa"
+            ],
+            [
+              "wait",
+              1800
+            ],
+            [
+              "see",
+              "WhatsApp sent"
+            ]
+          ]
+        },
+        {
+          "id": "c1-09",
+          "link": "#jobs",
+          "do": "Open Stephen Omondi #114. He says his internet drops every evening: tap 🛠 Service problem — open a fault job. Type of job: Fault / no internet. What's wrong: “Internet drops every evening”. Send to tech: Peter Kamau. Tap Save job.",
+          "copy": "Internet drops every evening",
+          "see": "A new job form opens with Stephen Omondi already filled in. After Save job: “Job saved.” and the new job opens, Assigned to Peter Kamau.",
+          "look": [
+            "Stephen Omondi #114"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#114')"
+            ],
+            [
+              "tap",
+              "button:has-text('Service problem')"
+            ],
+            [
+              "see",
+              "Stephen Omondi"
+            ],
+            [
+              "select",
+              "[name=kind]",
+              "Fault / no internet"
+            ],
+            [
+              "fill",
+              "[name=summary]",
+              "Internet drops every evening"
+            ],
+            [
+              "select",
+              "[name=assigned_to]",
+              "Peter Kamau"
+            ],
+            [
+              "tap",
+              "button:has-text('Save job')"
+            ],
+            [
+              "see",
+              "Job saved"
+            ],
+            [
+              "see",
+              "Internet drops every evening"
+            ],
+            [
+              "see",
+              "Assigned"
+            ]
+          ]
+        },
+        {
+          "id": "c1-10",
+          "link": "#jobs",
+          "do": "Open the job you just made (Stephen Omondi, “Internet drops every evening”). Tap 💬 Tell Peter on WhatsApp. Look at the message, then come back without sending.",
+          "see": "WhatsApp opens with a message for Peter: the job, the customer and where they are.",
+          "look": [
+            "Internet drops every evening"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('Internet drops every evening')"
+            ],
+            [
+              "has",
+              "a[href^='https://wa.me/']:has-text('Tell Peter on WhatsApp')"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "title": "Customers, new jobs and tasks",
+      "mins": 20,
+      "intro": "Find a customer while they are on the phone, add a new one, make a job for them, and use your task list.",
+      "steps": [
+        {
+          "id": "c2-01",
+          "link": "#customers",
+          "do": "In the search box at the top (it says “Search name, phone, account”) type the phone number 0736031352.",
+          "copy": "0736031352",
+          "see": "Only Grace Njeri is left in the list.",
+          "look": [
+            "＋ New customer"
+          ],
+          "auto": [
+            [
+              "type",
+              "#c-q",
+              "0736031352"
+            ],
+            [
+              "wait",
+              900
+            ],
+            [
+              "see",
+              "Grace Njeri"
+            ],
+            [
+              "notsee",
+              "Ann Chebet"
+            ]
+          ]
+        },
+        {
+          "id": "c2-02",
+          "link": "#customers/c1",
+          "do": "Look at Grace Njeri's page. Scroll down to PAYMENTS and JOBS.",
+          "see": "Her phone, account number ZA-0101, package 5 Mbps, “Paid until … ran out”, and under JOBS the follow-up #109.",
+          "look": [
+            "Grace Njeri",
+            "Payments",
+            "Jobs"
+          ],
+          "auto": [
+            [
+              "see",
+              "ZA-0101"
+            ],
+            [
+              "see",
+              "5 Mbps"
+            ],
+            [
+              "see",
+              "#109"
+            ]
+          ]
+        },
+        {
+          "id": "c2-03",
+          "link": "#customers/new",
+          "do": "Add a new customer. Full name: Grace Wanjiru. Area: Zuri A. Phone: 0712 000 111. Package / plan: 10 Mbps. Monthly rate: 2000. Directions / landmark: Near the matatu stage. Tap Save customer.",
+          "copy": "Grace Wanjiru",
+          "see": "“Customer saved.” Grace Wanjiru's own page opens showing 0712 000 111 and 10 Mbps.",
+          "look": [
+            "New customer",
+            "Full name",
+            "Save customer"
+          ],
+          "auto": [
+            [
+              "fill",
+              "[name=full_name]",
+              "Grace Wanjiru"
+            ],
+            [
+              "select",
+              "[name=area]",
+              "Zuri A"
+            ],
+            [
+              "fill",
+              "[name=phone]",
+              "0712 000 111"
+            ],
+            [
+              "fill",
+              "[name=plan]",
+              "10 Mbps"
+            ],
+            [
+              "fill",
+              "[name=monthly_rate]",
+              "2000"
+            ],
+            [
+              "fill",
+              "[name=landmark]",
+              "Near the matatu stage"
+            ],
+            [
+              "tap",
+              "button:has-text('Save customer')"
+            ],
+            [
+              "see",
+              "Customer saved"
+            ],
+            [
+              "see",
+              "Grace Wanjiru"
+            ],
+            [
+              "see",
+              "0712 000 111"
+            ]
+          ]
+        },
+        {
+          "id": "c2-04",
+          "link": "#customers/new",
+          "do": "Open ＋ New customer again. Leave Full name empty and tap Save customer.",
+          "see": "The phone points at Full name and asks you to fill it in. Nothing is saved.",
+          "look": [
+            "Full name",
+            "Save customer"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Save customer')"
+            ],
+            [
+              "js",
+              "!document.querySelector('[name=full_name]').checkValidity()"
+            ],
+            [
+              "js",
+              "location.hash === '#customers/new'"
+            ]
+          ]
+        },
+        {
+          "id": "c2-05",
+          "link": "#jobs/new",
+          "do": "Grace Wanjiru calls: no internet. On New job, type “Grace Wanjiru” in Customer and tap her name. Type of job: Fault / no internet. What's wrong: “No internet since morning, router lights red”. Send to tech: Peter Kamau. Visit day: tomorrow. Tap Save job.",
+          "copy": "No internet since morning, router lights red",
+          "see": "“Job saved.” The job opens: Fault / no internet, Grace Wanjiru, Assigned.",
+          "look": [
+            "New job",
+            "Customer",
+            "Save job"
+          ],
+          "auto": [
+            [
+              "type",
+              "#nj-q",
+              "Grace Wanjiru"
+            ],
+            [
+              "wait",
+              900
+            ],
+            [
+              "tap",
+              "#nj-res a:has-text('Grace Wanjiru')"
+            ],
+            [
+              "select",
+              "[name=kind]",
+              "Fault / no internet"
+            ],
+            [
+              "fill",
+              "[name=summary]",
+              "No internet since morning, router lights red"
+            ],
+            [
+              "select",
+              "[name=assigned_to]",
+              "Peter Kamau"
+            ],
+            [
+              "fill",
+              "[name=scheduled_for]",
+              "{tomorrow}"
+            ],
+            [
+              "tap",
+              "button:has-text('Save job')"
+            ],
+            [
+              "see",
+              "Job saved"
+            ],
+            [
+              "see",
+              "Grace Wanjiru"
+            ],
+            [
+              "see",
+              "Assigned"
+            ]
+          ]
+        },
+        {
+          "id": "c2-06",
+          "link": "#jobs",
+          "do": "On Jobs, tap the “All techs” box and pick Peter Kamau. Look, then set it back to All techs.",
+          "see": "Only Peter's jobs are listed — including Grace Wanjiru's new fault job. Back on All techs, everyone's jobs show again.",
+          "look": [
+            "＋ New job"
+          ],
+          "auto": [
+            [
+              "has",
+              "#view select option:text-is('All techs')"
+            ],
+            [
+              "select",
+              "#view select >> nth=0",
+              "Peter Kamau"
+            ],
+            [
+              "wait",
+              900
+            ],
+            [
+              "see",
+              "Grace Wanjiru"
+            ],
+            [
+              "notsee",
+              "Mary Otieno #104"
+            ],
+            [
+              "select",
+              "#view select >> nth=0",
+              "All techs"
+            ],
+            [
+              "wait",
+              900
+            ],
+            [
+              "see",
+              "Mary Otieno #104"
+            ]
+          ]
+        },
+        {
+          "id": "c2-07",
+          "link": "#customers/map",
+          "do": "Open the customer map. Tap any green or red pin.",
+          "see": "A map of Maai Mahiu with pins. The pin opens a small box with the customer's name and buttons like Call and Profile.",
+          "look": [
+            "Map"
+          ],
+          "auto": [
+            [
+              "wait",
+              2500
+            ],
+            [
+              "has",
+              ".leaflet-container"
+            ]
+          ]
+        },
+        {
+          "id": "c2-08",
+          "link": "#tasks",
+          "do": "On Tasks → My day, tick the first task.",
+          "see": "“Done ✓” flashes and the task is ticked.",
+          "look": [
+            "My day"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#view input[type=checkbox] >> nth=0"
+            ],
+            [
+              "see",
+              "Done ✓"
+            ]
+          ]
+        },
+        {
+          "id": "c2-09",
+          "link": "#tasks/add",
+          "do": "On ＋ Add a task: What needs doing? “Call Grace Wanjiru tomorrow to check the fix”. Who should do it? 🙋 Me. Tap Add task.",
+          "copy": "Call Grace Wanjiru tomorrow to check the fix",
+          "see": "“Task added.” It shows on My day.",
+          "look": [
+            "What needs doing?",
+            "Add task"
+          ],
+          "auto": [
+            [
+              "fill",
+              "[name=title]",
+              "Call Grace Wanjiru tomorrow to check the fix"
+            ],
+            [
+              "select",
+              "[name=for]",
+              "🙋 Me"
+            ],
+            [
+              "tap",
+              "button:has-text('Add task')"
+            ],
+            [
+              "see",
+              "Task added"
+            ],
+            [
+              "go",
+              "#tasks/mine"
+            ],
+            [
+              "see",
+              "Call Grace Wanjiru tomorrow"
+            ]
+          ]
+        },
+        {
+          "id": "c2-10",
+          "link": "#jobs",
+          "do": "Turn on airplane mode. Open Daniel Mutua #118 and tap 📵 No answer. Turn airplane mode off and wait a few seconds.",
+          "see": "With no signal Zuri still saves it (“⏳ not sent” and a yellow badge at the top). When signal is back, the badge clears by itself.",
+          "look": [
+            "Daniel Mutua #118"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#118')"
+            ],
+            [
+              "offline",
+              true
+            ],
+            [
+              "tap",
+              "button:has-text('No answer')"
+            ],
+            [
+              "see",
+              "not sent"
+            ],
+            [
+              "offline",
+              false
+            ],
+            [
+              "wait",
+              2500
+            ]
+          ]
+        },
+        {
+          "id": "c2-11",
+          "link": "#me",
+          "do": "On Me, under SCREEN, tap ☀️ Light. Then tap 📱 Like my phone.",
+          "see": "The screen turns light, then goes back. Tell us which is easier to read.",
+          "look": [
+            "☀️ Light"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Light')"
+            ],
+            [
+              "js",
+              "document.documentElement.dataset.theme === 'light'"
+            ],
+            [
+              "tap",
+              "button:has-text('Like my phone')"
+            ],
+            [
+              "js",
+              "!document.documentElement.dataset.theme"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crc",
+      "title": "Receipts",
+      "mins": 10,
+      "intro": "Spent Zuri money (fuel, airtime, a part)? Anyone can record it in seconds.",
+      "steps": [
+        {
+          "id": "crc-01",
+          "link": "#tasks",
+          "do": "On Tasks → My day, in the card “Spent Zuri money today?” tap 📸 Snap a receipt. Tap 📩 Paste M-Pesa message, paste the message below, tap Read the message. What was it for: Transport / Fuel. Tap ✅ Save.",
+          "copy": "UKD4RCPT03 Confirmed. Ksh300.00 paid to MAAI MAHIU MOTOR SPARES. on {dmy} at 10:15 AM. New M-PESA balance is Ksh12,700.00. Transaction cost, Ksh0.00.",
+          "see": "The boxes fill themselves (Maai Mahiu Motor Spares, 300). After ✅ Save: “✅ Saved.”",
+          "look": [
+            "Spent Zuri money today?",
+            "📸 Snap a receipt"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a:has-text('Snap a receipt')"
+            ],
+            [
+              "tap",
+              "#rc-paste-b"
+            ],
+            [
+              "fill",
+              "#rc-sms",
+              "UKD4RCPT03 Confirmed. Ksh300.00 paid to MAAI MAHIU MOTOR SPARES. on {dmy} at 10:15 AM. New M-PESA balance is Ksh12,700.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#rc-read"
+            ],
+            [
+              "js",
+              "document.querySelector('#rc-amount').value.replace(/[^0-9]/g,'') === '300'"
+            ],
+            [
+              "select",
+              "#rc-cat",
+              "Transport / Fuel"
+            ],
+            [
+              "tap",
+              "#rc-save"
+            ],
+            [
+              "see",
+              "Saved"
+            ]
+          ]
+        },
+        {
+          "id": "crc-02",
+          "link": "#me",
+          "do": "On Me tap 🧾 My receipts.",
+          "see": "Your Maai Mahiu Motor Spares 300 is in the list.",
+          "look": [
+            "My receipts"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a:has-text('My receipts')"
+            ],
+            [
+              "see",
+              "Maai Mahiu Motor Spares"
+            ]
+          ]
+        },
+        {
+          "id": "crc-03",
+          "link": "#receipt",
+          "do": "Turn on airplane mode. Tap 🖼️ From my photos and pick any photo (or 📸 Take a photo of any paper). Type Paid to: Total Energies, Amount: 500, What was it for: Transport / Fuel. Tap ✅ Save. Then turn airplane mode off.",
+          "copy": "Total Energies",
+          "see": "With no signal Zuri says “No signal — type it, the photo will upload later.” After Save: “✅ Saved on this phone — it sends when you have signal.” With signal back, the yellow badge clears.",
+          "look": [
+            "Snap a receipt"
+          ],
+          "auto": [
+            [
+              "offline",
+              true
+            ],
+            [
+              "file",
+              "#rc-lib-in"
+            ],
+            [
+              "see",
+              "No signal — type it"
+            ],
+            [
+              "fill",
+              "#rc-payee",
+              "Total Energies"
+            ],
+            [
+              "fill",
+              "#rc-amount",
+              "500"
+            ],
+            [
+              "select",
+              "#rc-cat",
+              "Transport / Fuel"
+            ],
+            [
+              "tap",
+              "#rc-save"
+            ],
+            [
+              "see",
+              "Saved on this phone"
+            ],
+            [
+              "offline",
+              false
+            ],
+            [
+              "wait",
+              2500
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
