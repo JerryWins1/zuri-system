@@ -1,0 +1,90 @@
+// Zuri System · the tester checklist — everything a tester should try, by job · v4 · 2026-10-12 (📈 Projects added · v3: 🧾 receipts, ⏱ time savers)
+// Kept as plain JSON so the printable guide (tools/make_guides.py) reads the same list.
+window.ZURI_CHECKLIST = [
+  { "group": "everyone", "label": "Everyone — first", "roles": ["admin", "internal", "callcenter", "field"], "items": [
+    { "id": "e-tour", "t": "Watch “What Zuri is” (5 min)", "how": "Me → 🎓 Learn → ⭐ What Zuri is. Sound on.", "lesson": "tour" },
+    { "id": "e-home", "t": "Add Zuri to your phone's home screen", "how": "In Chrome: ⋮ → Add to Home screen. Open it from the icon." },
+    { "id": "e-tabs", "t": "Find your tabs and open each one", "how": "The tabs are at the bottom. Open every one and read what is there.", "lesson": "start" },
+    { "id": "e-task", "t": "Tick one task as done, and write a note on it", "how": "Tasks → My day → tick a box → 💬 Notes → type → Add.", "lesson": "tasks" },
+    { "id": "e-give", "t": "Give a teammate a task", "how": "Tasks → ＋ Add a task → write it → choose the person → Add task. Ask them if it arrived.", "lesson": "tasks" },
+    { "id": "e-offline", "t": "Try it with no signal", "how": "Turn on airplane mode. Tick a task or add a note. Turn signal back on — the yellow badge should clear." },
+    { "id": "e-theme", "t": "Switch to Light and back", "how": "Me → Screen → ☀️ Light. Which is easier to read outside?" },
+    { "id": "e-receipt", "t": "Snap a receipt and save it", "how": "Me → 📸 Snap a receipt (or Tasks → My day) → 📸 Take a photo → check the boxes → choose what it was for → ✅ Save. Find it in Me → 🧾 My receipts.", "lesson": "rc-snap" },
+    { "id": "e-receipt-msg", "t": "Paste an M-Pesa message as a receipt", "how": "📸 Snap a receipt → 📩 Paste M-Pesa message → paste one of your own old messages → Read the message → check → Save. Try a Paybill, a till and a Send money message.", "lesson": "rc-mpesa" },
+    { "id": "e-receipt-off", "t": "Save a receipt with no signal", "how": "Airplane mode on → snap a receipt → it says “No signal — type it” → type the boxes → Save → airplane mode off → the yellow badge clears.", "lesson": "rc-offline" }
+  ]},
+  { "group": "field", "label": "Field techs", "roles": ["field", "internal", "admin"], "items": [
+    { "id": "f-open", "t": "Open a job, call the customer, open the map", "how": "Jobs → tap a job → 📞 Call → 🗺️ Open map.", "lesson": "field-jobs" },
+    { "id": "f-start", "t": "Start a job", "how": "In the job: ▶ I'm starting now. The office should see it change.", "lesson": "field-jobs" },
+    { "id": "f-finish", "t": "Finish a job with a cash payment", "how": "Tap what you found and what you did → 💵 Cash → amount → ✅ Job finished.", "lesson": "field-jobs" },
+    { "id": "f-mpesa", "t": "Finish a job with an M-Pesa payment", "how": "Same, but 📱 M-Pesa and type a code like UJ7K2M9PQR.", "lesson": "field-jobs" },
+    { "id": "f-photo", "t": "Add a photo to a job", "how": "In the job: 📷 Add photo → take a picture. Does it show?", "lesson": "field-extras" },
+    { "id": "f-part", "t": "Add a part you used", "how": "Parts & equipment → item, serial, qty → Add.", "lesson": "field-extras" },
+    { "id": "f-pin", "t": "Drop a map pin (outside)", "how": "In the job: 📍 Drop pin here. Does it ask again if the signal is weak?", "lesson": "field-extras" },
+    { "id": "f-new", "t": "Log a new job yourself", "how": "Jobs → ＋ Log a job → describe it → Save.", "lesson": "field-extras" },
+    { "id": "f-receipt-job", "t": "Snap a receipt on a job", "how": "Open a job → 🧾 Spent money on this job? → 📸 Snap the receipt → photo → check → Save. You come back to the job.", "lesson": "rc-snap" },
+    { "id": "f-receipt-chase", "t": "Chase a missing receipt", "how": "Save one with “No receipt yet — chase it”. Later: Me → 🧾 My receipts → 📸 Snap it now → photo. The ❌ turns to 📷.", "lesson": "rc-missing" },
+    { "id": "f-near", "t": "Sort your jobs nearest-first", "how": "Jobs → 📍 Nearest first → allow location. Each job shows how far it is. Then switch location off for the browser and try again — the list should still work (urgent first, then by day).", "lesson": "ts-pins" },
+    { "id": "f-pin-start", "t": "Save a customer's pin at “I'm starting now”", "how": "Open a job whose customer has no pin → ▶ I'm starting now → Zuri offers “Save this location as the pin?” → Yes (outside). Indoors it should warn that the location is rough.", "lesson": "ts-pins" }
+  ]},
+  { "group": "callcenter", "label": "Call center", "roles": ["callcenter", "internal", "admin"], "items": [
+    { "id": "c-follow", "t": "Work a payment follow-up: No answer", "how": "Jobs → a Payment follow-up → 📵 No answer. It should come back tomorrow.", "lesson": "cc-followups" },
+    { "id": "c-promise", "t": "Record a promise to pay", "how": "Another follow-up → 🤝 Will pay → pick a day → Save.", "lesson": "cc-followups" },
+    { "id": "c-paid", "t": "Record “says paid” and “wants to stop”", "how": "✅ Says paid on one; ✋ Wants to stop on another.", "lesson": "cc-followups" },
+    { "id": "c-remind", "t": "Send today's after-cutoff message by text and by WhatsApp", "how": "In a follow-up: read which step it is (day 1, 3, 7, 14 or 30), then 📩 Text it and 💬 WhatsApp it. (Send them to yourself in training.)", "lesson": "cc-followups" },
+    { "id": "c-newjob", "t": "Make a fault job from a customer call", "how": "Jobs → ＋ New job → find the customer → Fault → describe → tech + day → Save job.", "lesson": "cc-newjob" },
+    { "id": "c-tell", "t": "Tell the tech on WhatsApp", "how": "In the job you made: 💬 Tell … on WhatsApp.", "lesson": "cc-newjob" },
+    { "id": "c-find", "t": "Find a customer by phone number", "how": "Customers → type the number → open them → check Payments and Jobs.", "lesson": "customers" },
+    { "id": "c-newcust", "t": "Add a new customer", "how": "Customers → ＋ New customer → fill in → Save." },
+    { "id": "c-texts", "t": "Send today's texts from one list", "how": "Jobs → 📩 Today's texts → read the step → 📩 Text (send it to your own number in training) → Next. Skip one. Does the count go up? Does the job show the note?", "lesson": "ts-texts" },
+    { "id": "c-expired", "t": "Fault call from a customer whose package expired", "how": "Jobs → ＋ New job → find a customer whose service ran out → Fault. A warning says “probably not a fault”. Tap 💳 Turn this into a payment follow-up — no tech is sent.", "lesson": "ts-expired" },
+    { "id": "c-outage", "t": "Three fault calls from one area = an outage", "how": "Make three fault jobs in the same area within a few minutes. A red “Possible outage” card should appear on Jobs, and one task for technical.", "lesson": "ts-outage" }
+  ]},
+  { "group": "finance", "label": "Finance", "roles": ["admin", "internal"], "dept": "finance", "items": [
+    { "id": "m-today", "t": "Read Cash today and the warnings", "how": "Money → 💵 Today. What is each red or orange box telling you?", "lesson": "fin-daily" },
+    { "id": "m-count", "t": "Do a cash count", "how": "Money → Count the cash → bank + M-Pesa → Save.", "lesson": "fin-daily" },
+    { "id": "m-sms", "t": "Record an expense from a pasted M-Pesa message", "how": "Money → Record → Money out → paste a message → Read the message → Save.", "lesson": "fin-daily" },
+    { "id": "m-in", "t": "Record hotspot money in", "how": "Money → Record → Money in → Hotspot → amount → Save.", "lesson": "fin-daily" },
+    { "id": "m-bill", "t": "Pay part of a bill", "how": "Money → Bills → Pay → smaller amount → Bank → Pay.", "lesson": "fin-bills" },
+    { "id": "m-copy", "t": "Copy last month's bills (next month)", "how": "Bills → → (next month) → Copy last month's bills.", "lesson": "fin-bills" },
+    { "id": "m-sort", "t": "Sort five transactions, one with “always”", "how": "Money → Statements → Sort them → choose a category; tick always on one.", "lesson": "fin-statements" },
+    { "id": "m-books", "t": "Read Profit by month", "how": "Money → Statements → Profit by month. Does last month make sense?", "lesson": "fin-statements" },
+    { "id": "m-who", "t": "Chase a late payer from Who paid", "how": "Money → Customers → Who paid → Late → 📞 or 💬." },
+    { "id": "m-report", "t": "Copy the Friday report", "how": "Money → Report → Copy for WhatsApp → paste it somewhere.", "lesson": "partners" },
+    { "id": "m-staff", "t": "Add a staff member with an M-Pesa number", "how": "Money → 📋 Bills → Staff & pay → ＋ Add → name, M-Pesa number, salary, pay day → Save." },
+    { "id": "m-payrun", "t": "Build the pay run and record one payment", "how": "Money → Bills → Pay run → 🔄 Build today's list → ✅ Sent on one → code → Record it.", "lesson": "fields-payrun" },
+    { "id": "m-nudge", "t": "Send one morning nudge", "how": "Tasks → WhatsApp nudges → Open WhatsApp → send to yourself → Mark sent.", "lesson": "partners" },
+    { "id": "m-receipt-dupe", "t": "See a repeat warning and a statement match", "how": "Money → Record → 📸 Snap a receipt → paste an M-Pesa message twice (save the first). The second time it says “Already recorded”. A code that is in an imported statement says “matched”.", "lesson": "rc-dupes" },
+    { "id": "m-receipt-photo", "t": "Open a receipt photo from Money out", "how": "Money → Record → Money out → tap 📷 on an expense.", "lesson": "rc-why" },
+    { "id": "m-receipt-friday", "t": "Read “Receipts this week” in the Friday report", "how": "Money → 📊 Report: total by category, top 5, how many have receipts, and the missing list with who recorded each.", "lesson": "rc-friday" },
+    { "id": "m-friday-auto", "t": "Send the Friday report without gathering anything", "how": "Money → 📊 Report: money, service, follow-ups, the team, receipts, payments waiting and the manager's summary. Copy for WhatsApp → paste. Open 🖨 Printable view.", "lesson": "ts-friday" },
+    { "id": "m-two-pay", "t": "Pay a bill — it waits for a second person", "how": "Money → Bills → 💸 Pay → record it. The bill shows “⏳ waiting for a second OK” and is not counted as paid yet.", "lesson": "ts-approve" },
+    { "id": "m-two-self", "t": "Try to approve your own payment", "how": "Money → Bills → 👥 Approvals → “You recorded — waiting for someone else”. There is no Approve button; the database refuses it too.", "lesson": "ts-approve" },
+    { "id": "m-two-other", "t": "Approve someone else's payment (and confirm a field tech's receipt)", "how": "👥 Approvals → Waiting for your OK → ✅ Approve. Check the bill now counts it as paid. Decline one with a reason.", "lesson": "ts-approve2" }
+  ]},
+  { "group": "partners", "label": "Partners & admin", "roles": ["admin"], "items": [
+    { "id": "p-home", "t": "Read Home: what needs attention, lowest cash day", "how": "Home → Needs attention → tap one. Find “Lowest in next 30 days”.", "lesson": "partners" },
+    { "id": "p-staff", "t": "Switch on a new staff member", "how": "Me → ⚙️ Admin → People → role, area, On → Save.", "lesson": "admin" },
+    { "id": "p-vis", "t": "Hide a field from field techs", "how": "Admin → Who sees what → untick something for Field tech → check as a tech." },
+    { "id": "p-field", "t": "Add a custom customer field", "how": "Admin → Custom fields → add one → see it on a customer." },
+    { "id": "p-area", "t": "Add Zuri C as an area", "how": "Admin → Areas → add → does it appear in the area picker?" },
+    { "id": "p-manager", "t": "Run the manager and read the log", "how": "Tasks → 🤖 Run the manager now → Manager log." },
+    { "id": "p-import", "t": "Bring in a customer file", "how": "Me → 📥 Bring in a file → the Billnasi Excel export → check the counts." },
+    { "id": "p-receipt-ai", "t": "Switch “Read receipts with AI” on and off", "how": "Me → ⚙️ Admin → Settings → On → snap a receipt (the boxes fill) → Settings → Off → snap again (it asks you to type).", "lesson": "rc-ai" },
+    { "id": "p-approve", "t": "Approve a payment Kelvin recorded", "how": "Home → 👥 payments waiting for your OK → ✅ Approve. Then Money → Bills: the bill counts it as paid.", "lesson": "ts-approve2" },
+    { "id": "p-two-rule", "t": "Find the two-person rule and its amount", "how": "Me → ⚙️ Admin → Settings → 👥 Two people for money out. Leave it On (0 = every payment).", "lesson": "ts-approve2" },
+    { "id": "p-outage", "t": "Say yes to an outage notice, then close the outage", "how": "After three fault calls from one area: Home → the 📡 outage card → change the words → ✅ Yes → 📋 Copy (Zuri never sends it). Then ✅ Service is back.", "lesson": "ts-outage" }
+  ]},
+  { "group": "projects", "label": "📈 Projects (finance & partners)", "roles": ["admin", "internal"], "dept": "finance", "items": [
+    { "id": "pj-watch", "t": "Watch the 📈 Projects videos", "how": "Me → 🎓 Learn → 📈 Projects → ▶ Play all (about 30 min; ✕ stops).", "lesson": "pj-why" },
+    { "id": "pj-plan", "t": "Plan a new area and read when it pays back", "how": "Money → 📈 Projects → ＋ New project → fill A start-up, B running costs, C customers (tap Use it for Zuri A's bill) → read The answer: break-even and payback.", "lesson": "pj-plan" },
+    { "id": "pj-whatif", "t": "Read the what-ifs and the month table", "how": "In a project: What if? (low take-up, bill ±10%) and Month by month (12 / 24 / 36 / 60).", "lesson": "pj-read" },
+    { "id": "pj-compare", "t": "Compare two areas, and try a loan", "how": "Projects → ⚖️ Compare. Then in Narok (example): D · A loan? — untick and tick, watch the payback move.", "lesson": "pj-compare" },
+    { "id": "pj-share", "t": "Copy a project for WhatsApp and open the one-page report", "how": "In a project: 📋 Copy for WhatsApp (paste it in a note) → 🖨 One-page report.", "lesson": "pj-compare" },
+    { "id": "pj-go", "t": "Say “we're doing it” — and approve it as the second person", "how": "In a plan: ✅ We're doing it → Send for the second OK. A different finance person or partner taps ✅ Approve (in practice: 🎭 switch).", "lesson": "pj-go" },
+    { "id": "pj-forecast", "t": "Update a live project's forecast, with a reason", "how": "Suswa (example) → 📝 Forecast → change a number → 💾 Save the forecast → write why. Find it in 📜 Log.", "lesson": "pj-forecast" },
+    { "id": "pj-actuals", "t": "Confirm last month's actuals and read the variance", "how": "Suswa (example) → tap the orange “not confirmed” line → save customers, then money. Read the coloured box, the three-line chart and the table.", "lesson": "pj-track" },
+    { "id": "pj-tag", "t": "Tag spending to a project", "how": "Money out → Area: Zuri D → the Project box picks 📈 Suswa by itself → save → find it in Suswa's Actuals.", "lesson": "pj-track" },
+    { "id": "pj-offline", "t": "Record an actual with no signal", "how": "Airplane mode on → Suswa → ＋ Record actuals → Save → it says “saved on this phone” → airplane mode off → it sends." }
+  ]}
+];
