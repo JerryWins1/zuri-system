@@ -1,0 +1,789 @@
+{
+  "role": "admin",
+  "title": "Partner / manager test script",
+  "version": "1.2",
+  "date": "2026-10-12",
+  "who": "You are Jerry, a partner. You see everything. Everything is pretend and stays on your phone.",
+  "sessions": [
+    {
+      "id": "a1",
+      "title": "Running the company",
+      "mins": 20,
+      "intro": "Home, the money ahead, the Zuri manager, sending a tech, and the Friday report.",
+      "steps": [
+        {
+          "id": "a1-01",
+          "link": "#me",
+          "do": "Tap 🧹 Start over (pretend company), then tap OK.",
+          "see": "The page reloads. The Me page shows Jerry (owner) · Admin.",
+          "look": [
+            "🧹 Start over (pretend company)",
+            "Jerry (owner)"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Start over (pretend company)')"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "see",
+              "Jerry (owner)"
+            ]
+          ]
+        },
+        {
+          "id": "a1-02",
+          "link": "#home",
+          "do": "On Home, read NEEDS ATTENTION. Tap the line about the Zuri A M-Pesa float (“📱 Zuri A M-Pesa float … is below the … target”).",
+          "see": "Money → 💵 Today opens, where the float is shown.",
+          "look": [
+            "Needs attention",
+            "Zuri A M-Pesa float"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a:has-text('Zuri A M-Pesa float')"
+            ],
+            [
+              "see",
+              "Cash today"
+            ],
+            [
+              "js",
+              "location.hash.startsWith('#money')"
+            ]
+          ]
+        },
+        {
+          "id": "a1-03",
+          "link": "#home",
+          "do": "On Home, scroll down to the money part and find “Lowest in next 30 days”. Tap it.",
+          "see": "The “Next 30 days” page opens with “Lowest point” and the day it happens.",
+          "look": [
+            "Lowest in next 30 days"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a:has-text('Lowest in next 30 days')"
+            ],
+            [
+              "see",
+              "Lowest point"
+            ]
+          ]
+        },
+        {
+          "id": "a1-04",
+          "link": "#tasks",
+          "do": "On Tasks tap 🤖 Run the manager now. When it finishes, tap Manager log.",
+          "see": "A message “Manager (morning or chase): … new · … closed · … escalated.” The Manager log shows the run you just did.",
+          "look": [
+            "🤖 Run the manager now",
+            "Manager log"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Run the manager now')"
+            ],
+            [
+              "see",
+              "escalated"
+            ],
+            [
+              "tap",
+              "a:has-text('Manager log')"
+            ],
+            [
+              "wait",
+              800
+            ]
+          ]
+        },
+        {
+          "id": "a1-05",
+          "link": "#tasks/add",
+          "do": "On ＋ Add a task: What needs doing? “Check the Zuri B backhaul invoice”. Who should do it? Finance. Priority: High. Tap Add task.",
+          "copy": "Check the Zuri B backhaul invoice",
+          "see": "“Task added.” Under Team it shows for Finance, marked High.",
+          "look": [
+            "What needs doing?",
+            "Add task"
+          ],
+          "auto": [
+            [
+              "fill",
+              "[name=title]",
+              "Check the Zuri B backhaul invoice"
+            ],
+            [
+              "select",
+              "[name=for]",
+              "Finance"
+            ],
+            [
+              "select",
+              "[name=priority]",
+              "High"
+            ],
+            [
+              "tap",
+              "button:has-text('Add task')"
+            ],
+            [
+              "see",
+              "Task added"
+            ],
+            [
+              "go",
+              "#tasks/team"
+            ],
+            [
+              "see",
+              "Check the Zuri B backhaul invoice"
+            ]
+          ]
+        },
+        {
+          "id": "a1-06",
+          "link": "#jobs",
+          "do": "Open Wanjiku, 0712 345 678 #105 (a new install with no tech). Under WHO'S GOING, AND WHEN pick Tech: Brian Otieno and Visit day: tomorrow. Tap Save.",
+          "see": "“Dispatch saved.” The label changes from Waiting for a tech to Assigned, and NOTES says “Sent to Brian Otieno”.",
+          "look": [
+            "#105"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#105')"
+            ],
+            [
+              "see",
+              "Waiting for a tech"
+            ],
+            [
+              "select",
+              "#jd-disp [name=assigned_to]",
+              "Brian Otieno"
+            ],
+            [
+              "fill",
+              "#jd-disp [name=scheduled_for]",
+              "{tomorrow}"
+            ],
+            [
+              "tap",
+              "#jd-disp button:has-text('Save')"
+            ],
+            [
+              "see",
+              "Sent to Brian Otieno"
+            ],
+            [
+              "see",
+              "Assigned"
+            ]
+          ]
+        },
+        {
+          "id": "a1-07",
+          "link": "#money/report",
+          "do": "Open Money → 📊 Report. Read THE REPORT, then tap Copy for WhatsApp.",
+          "see": "The report starts “*ZURI FIBER — FRIDAY REPORT —” with Zuri A and Zuri B. “Copied — paste into the partners' WhatsApp group.”",
+          "look": [
+            "Copy for WhatsApp"
+          ],
+          "auto": [
+            [
+              "see",
+              "ZURI FIBER — FRIDAY REPORT"
+            ],
+            [
+              "tap",
+              "#mr-copy"
+            ],
+            [
+              "see",
+              "cop"
+            ]
+          ]
+        },
+        {
+          "id": "a1-08",
+          "link": "#customers/map",
+          "do": "Open Customers → 🗺️ Map. Look for the hubs (office, OLT room, cabinets) and the customer pins.",
+          "see": "A map of Maai Mahiu with green, red and grey customer pins and the hub icons.",
+          "look": [
+            "Map"
+          ],
+          "auto": [
+            [
+              "wait",
+              2500
+            ],
+            [
+              "has",
+              ".leaflet-container"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "title": "People, who sees what, and set-up",
+      "mins": 20,
+      "intro": "Switch on a new staff member, hide a detail from field techs and check it, add a customer field and an area.",
+      "steps": [
+        {
+          "id": "a2-01",
+          "link": "#admin/people",
+          "do": "On Admin → People, the top line says 1 person is waiting. On Samuel Kiprono: role Field tech, area Zuri A, tick On. Tap Save.",
+          "see": "“Saved.” Samuel is switched on and the “waiting to be switched on” line is gone after the page refreshes.",
+          "look": [
+            "People",
+            "Samuel Kiprono",
+            "waiting to be switched on"
+          ],
+          "auto": [
+            [
+              "select",
+              "form.item:has-text('Samuel Kiprono') [name=role]",
+              "Field tech"
+            ],
+            [
+              "select",
+              "form.item:has-text('Samuel Kiprono') [name=area]",
+              "Zuri A"
+            ],
+            [
+              "js",
+              "(document.querySelector('form.item[data-id] input[aria-label=\"Switched on: Samuel Kiprono\"]').checked = true)"
+            ],
+            [
+              "tap",
+              "form.item:has-text('Samuel Kiprono') button:has-text('Save')"
+            ],
+            [
+              "see",
+              "Saved"
+            ],
+            [
+              "go",
+              "#admin/visibility"
+            ],
+            [
+              "go",
+              "#admin/people"
+            ],
+            [
+              "notsee",
+              "waiting to be switched on"
+            ]
+          ]
+        },
+        {
+          "id": "a2-02",
+          "link": "#admin/visibility",
+          "do": "On Who sees what, find the row “Monthly rate (KES)”. Untick it in the CALL CENTER column.",
+          "see": "The box stays unticked after the page refreshes. The call center no longer gets the monthly rate.",
+          "look": [
+            "Who sees what",
+            "Monthly rate (KES)",
+            "Call center"
+          ],
+          "auto": [
+            [
+              "tap",
+              "input[aria-label='Monthly rate (KES) — visible to Call center']"
+            ],
+            [
+              "wait",
+              900
+            ],
+            [
+              "js",
+              "!document.querySelector(\"input[aria-label='Monthly rate (KES) — visible to Call center']\").checked"
+            ]
+          ]
+        },
+        {
+          "id": "a2-03",
+          "link": "#me",
+          "do": "Check it as the call center: on Me tap 🔄 Try another job, then pick 📞 Call center. Open Customers → Grace Njeri.",
+          "see": "Grace Njeri's page shows her phone, account and package, but NO “Monthly rate” line.",
+          "look": [
+            "🔄 Try another job"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Try another job')"
+            ],
+            [
+              "tap",
+              "#practice-roles button[data-role=callcenter]"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "go",
+              "#customers"
+            ],
+            [
+              "tap",
+              "a.item:has-text('Grace Njeri')"
+            ],
+            [
+              "see",
+              "ZA-0101"
+            ],
+            [
+              "notsee",
+              "Monthly rate"
+            ]
+          ]
+        },
+        {
+          "id": "a2-04",
+          "link": "#admin/visibility",
+          "do": "This link opens you as the partner again. Tick “Monthly rate (KES)” for CALL CENTER again, so they can tell customers what they owe.",
+          "see": "The box is ticked again.",
+          "look": [
+            "Monthly rate (KES)"
+          ],
+          "auto": [
+            [
+              "tap",
+              "input[aria-label='Monthly rate (KES) — visible to Call center']"
+            ],
+            [
+              "wait",
+              900
+            ],
+            [
+              "js",
+              "document.querySelector(\"input[aria-label='Monthly rate (KES) — visible to Call center']\").checked"
+            ]
+          ]
+        },
+        {
+          "id": "a2-05",
+          "link": "#admin/fields",
+          "do": "On Custom fields: Field name “Pole number”, Kind: Text. Tap Add field.",
+          "copy": "Pole number",
+          "see": "“Field added.” Pole number is in the list of fields.",
+          "look": [
+            "Custom fields",
+            "Field name",
+            "Add field"
+          ],
+          "auto": [
+            [
+              "fill",
+              "#view input[name=label]",
+              "Pole number"
+            ],
+            [
+              "select",
+              "#view select[name=kind]",
+              "Text"
+            ],
+            [
+              "tap",
+              "button:has-text('Add field')"
+            ],
+            [
+              "see",
+              "Field added"
+            ],
+            [
+              "see",
+              "Pole number"
+            ]
+          ]
+        },
+        {
+          "id": "a2-06",
+          "link": "#customers/c1/edit",
+          "do": "This opens Grace Njeri's ✏️ Edit page. Scroll down: find Pole number, type ZA-P-014, tap Save customer.",
+          "copy": "ZA-P-014",
+          "see": "“Customer saved.” Grace Njeri's page shows POLE NUMBER ZA-P-014.",
+          "look": [
+            "Pole number",
+            "Save customer"
+          ],
+          "auto": [
+            [
+              "fill",
+              "input[name^='cf__pole']",
+              "ZA-P-014"
+            ],
+            [
+              "tap",
+              "button:has-text('Save customer')"
+            ],
+            [
+              "see",
+              "Customer saved"
+            ],
+            [
+              "see",
+              "ZA-P-014"
+            ]
+          ]
+        },
+        {
+          "id": "a2-07",
+          "link": "#admin/areas",
+          "do": "On Areas, the third row is C (Zuri C (coming)). Tick In use on that row and tap its Save. Then reload the page (pull down) and open the area picker at the top right.",
+          "see": "“Saved.” After reloading, the area picker at the top lists Zuri C (coming).",
+          "look": [
+            "Areas",
+            "Add area"
+          ],
+          "auto": [
+            [
+              "js",
+              "(document.querySelector('form[data-code=C] [name=active]').checked = true)"
+            ],
+            [
+              "tap",
+              "form[data-code=C] button:has-text('Save')"
+            ],
+            [
+              "see",
+              "Saved"
+            ],
+            [
+              "role",
+              "admin",
+              "#admin/areas"
+            ],
+            [
+              "js",
+              "[...document.querySelectorAll('#h-area option')].some(o => /Zuri C/.test(o.textContent))"
+            ]
+          ]
+        },
+        {
+          "id": "a2-08",
+          "link": "#admin/settings",
+          "do": "Open Admin → Settings and read “🤖 Read receipts with AI” and “🧾 Missing receipts — automatic”. Don't change anything yet.",
+          "see": "Two choices — “Off — people type it” and “On — AI fills it in” — and the cost: about KES 3–5 per receipt.",
+          "look": [
+            "Read receipts with AI",
+            "Off — people type it",
+            "On — AI fills it in"
+          ],
+          "auto": [
+            [
+              "see",
+              "KES 3–5 per receipt"
+            ]
+          ]
+        },
+        {
+          "id": "a2-09",
+          "link": "#me",
+          "do": "On Me, under SCREEN, tap ☀️ Light. Then tap 📱 Like my phone.",
+          "see": "The screen turns light, then goes back. Tell us which is easier to read.",
+          "look": [
+            "☀️ Light"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Light')"
+            ],
+            [
+              "js",
+              "document.documentElement.dataset.theme === 'light'"
+            ],
+            [
+              "tap",
+              "button:has-text('Like my phone')"
+            ],
+            [
+              "js",
+              "!document.documentElement.dataset.theme"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "apj",
+      "title": "📈 Projects — decide and follow up",
+      "mins": 15,
+      "intro": "See every project from Home, compare towns, give the second OK, and update a forecast with a reason.",
+      "steps": [
+        {
+          "id": "apj-01",
+          "link": "#home",
+          "do": "On Home, tap the “📈 Projects:” card.",
+          "see": "The Projects page opens with Suswa (example) and Narok (example).",
+          "look": [
+            "Projects:"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#h-proj"
+            ],
+            [
+              "see",
+              "Plan a new area"
+            ]
+          ]
+        },
+        {
+          "id": "apj-02",
+          "link": "#projects",
+          "do": "Tap ⚖️ Compare.",
+          "see": "Suswa (example) and Narok (example) side by side; Narok's Payback has a ⭐ (month 24).",
+          "look": [
+            "Compare"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-compare"
+            ],
+            [
+              "see",
+              "month 24 ⭐"
+            ]
+          ]
+        },
+        {
+          "id": "apj-03",
+          "link": "#projects/pj-narok",
+          "do": "(Kelvin asked for the go-ahead on Narok.) Open Narok (example) and tap ✅ Approve — lock the plan.",
+          "see": "“📊 Actual vs plan” and “🚀 Approved — starts …”.",
+          "tip": "If Narok is still a plan on your phone, ask Kelvin (or switch to Finance under Me → Try another job) to tap ✅ We're doing it first.",
+          "look": [],
+          "auto": [
+            [
+              "role",
+              "finance",
+              "#projects/pj-narok"
+            ],
+            [
+              "tap",
+              "#pj-go"
+            ],
+            [
+              "tap",
+              "#pj-go-ok"
+            ],
+            [
+              "wait",
+              "800"
+            ],
+            [
+              "role",
+              "admin",
+              "#projects/pj-narok"
+            ],
+            [
+              "tap",
+              "#pj-approve"
+            ],
+            [
+              "see",
+              "Approved — starts"
+            ]
+          ]
+        },
+        {
+          "id": "apj-04",
+          "link": "#projects/pj-suswa/plan",
+          "do": "Open Suswa (example) → 📝 Forecast. Open 💰 C, change Average monthly bill to 1700, tap 💾 Save the forecast…, write a reason, Save.",
+          "see": "Back on Actual vs plan; the 📜 Log shows “📝 Forecast updated” with your reason.",
+          "copy": "Partner test",
+          "look": [
+            "Current forecast"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-rev summary"
+            ],
+            [
+              "fill",
+              "#pj-rev-arpu",
+              "1700"
+            ],
+            [
+              "tap",
+              "#pj-fc-save"
+            ],
+            [
+              "fill",
+              "#pf-why",
+              "Partner test"
+            ],
+            [
+              "tap",
+              "#pf-go"
+            ],
+            [
+              "go",
+              "#projects/pj-suswa/log"
+            ],
+            [
+              "see",
+              "Partner test"
+            ]
+          ]
+        },
+        {
+          "id": "apj-05",
+          "link": "#projects/pj-suswa",
+          "do": "Open Suswa (example) and read the coloured box and the three-line chart.",
+          "see": "🟠 Behind plan, the payback month now and what the plan said; a chart with grey dashes (plan), green (actual) and orange (forecast).",
+          "look": [
+            "Actual vs plan"
+          ],
+          "auto": [
+            [
+              "see",
+              "Behind plan"
+            ],
+            [
+              "has",
+              "#pt-chart svg"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arc",
+      "title": "Receipts",
+      "mins": 15,
+      "intro": "Switch on reading receipts with AI, try it, read the Friday “Receipts this week”, and switch it off again.",
+      "steps": [
+        {
+          "id": "arc-01",
+          "link": "#admin/settings",
+          "do": "On Admin → Settings → 🤖 Read receipts with AI, tap On — AI fills it in.",
+          "see": "“🤖 AI reading is ON.” and On is selected. (In practice the “AI” is pretend; on the real system it needs Jerry's key first.)",
+          "look": [
+            "Read receipts with AI",
+            "On — AI fills it in"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('On — AI fills it in')"
+            ],
+            [
+              "see",
+              "AI reading is ON"
+            ]
+          ]
+        },
+        {
+          "id": "arc-02",
+          "link": "#receipt",
+          "do": "On 🧾 Snap a receipt: Tap 🖼️ From my photos and pick any photo (or 📸 Take a photo of any paper). Wait a few seconds.",
+          "see": "“🔎 Reading the receipt…”, then “🤖 Read it. Check the yellow boxes, then Save.” — the shop, amount and date fill in by themselves.",
+          "look": [
+            "Snap a receipt"
+          ],
+          "auto": [
+            [
+              "file",
+              "#rc-lib-in"
+            ],
+            [
+              "see",
+              "Read it"
+            ],
+            [
+              "js",
+              "document.querySelector('#rc-payee').value.length > 0 && document.querySelector('#rc-amount').value.length > 0"
+            ]
+          ]
+        },
+        {
+          "id": "arc-03",
+          "link": "#receipt",
+          "do": "Do step 2 again if the page is empty. Check the boxes, pick what it was for if it is empty, and tap ✅ Save.",
+          "see": "“✅ Saved — the photo is uploading.” It shows in Money → Money out with 📷.",
+          "look": [
+            "Snap a receipt"
+          ],
+          "auto": [
+            [
+              "file",
+              "#rc-lib-in"
+            ],
+            [
+              "see",
+              "Read it"
+            ],
+            [
+              "js",
+              "(() => { const c = document.querySelector('#rc-cat'); if (!c.value) c.value = 'Other'; return true; })()"
+            ],
+            [
+              "tap",
+              "#rc-save"
+            ],
+            [
+              "see",
+              "Saved"
+            ]
+          ]
+        },
+        {
+          "id": "arc-04",
+          "link": "#admin/settings",
+          "do": "Set 🤖 Read receipts with AI back to Off — people type it.",
+          "see": "“AI reading is OFF — people type the details.”",
+          "look": [
+            "Off — people type it"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Off — people type it')"
+            ],
+            [
+              "see",
+              "AI reading is OFF"
+            ]
+          ]
+        },
+        {
+          "id": "arc-05",
+          "link": "#money/report",
+          "do": "Open Money → 📊 Report. Read 🧾 RECEIPTS THIS WEEK.",
+          "see": "Spent, With a receipt, Missing, by category, the top 5 spends — and who recorded each missing receipt.",
+          "look": [
+            "Receipts this week"
+          ],
+          "auto": [
+            [
+              "see",
+              "Top 5 spends"
+            ],
+            [
+              "see",
+              "Missing"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
