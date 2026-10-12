@@ -1,0 +1,616 @@
+{
+  "role": "finance",
+  "script": "projects",
+  "title": "📈 Projects test script",
+  "version": "1.0",
+  "date": "2026-10-12",
+  "who": "You are Kelvin, who looks after the money at Zuri Fiber. Everything is pretend and stays on your phone — no money moves. The numbers are examples.",
+  "sessions": [
+    {
+      "id": "pj1",
+      "title": "Your video, and planning a new town",
+      "mins": 25,
+      "intro": "Watch the video, then plan a pretend new town called Kijabe: what it costs to start, what it costs each month, and how many people will pay. Zuri then says when the money comes back.",
+      "steps": [
+        {
+          "id": "pj-01",
+          "link": "&play=pj-why&chain=projects#learn",
+          "do": "Tap 🎓 Open practice at this screen. Turn your sound on and tap ▶ Tap to start. Watch the 📈 Projects video (9 short chapters). You can stop with ✕ at any time and come back here.",
+          "see": "A dark bar at the bottom speaks and shows the words, and a yellow ring points at each part of the screen. At the end of each chapter, the next one starts by itself.",
+          "tip": "If the voice is too fast, tap ⏸ to pause. The words are also written in the dark bar.",
+          "look": [],
+          "auto": [
+            [
+              "has",
+              ".tour-bar"
+            ]
+          ]
+        },
+        {
+          "id": "pj-02",
+          "link": "#me",
+          "do": "Back here: tap 🎓 Open practice at this screen, then tap 🧹 Start over (pretend company) and OK — so your numbers match these steps.",
+          "see": "The page reloads. The Me page shows Kelvin, and the top bar says “Kelvin · Office”.",
+          "look": [
+            "🧹 Start over (pretend company)",
+            "Kelvin"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Start over (pretend company)')"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "see",
+              "Kelvin"
+            ]
+          ]
+        },
+        {
+          "id": "pj-03",
+          "link": "#projects",
+          "do": "Read the green box at the top. Then look at the two example projects.",
+          "see": "Suswa (example) is under 🚀 Live. Narok (example) is under 📝 Planning. Each card has one line saying how it is doing.",
+          "look": [
+            "Plan a new area",
+            "Suswa (example)",
+            "Narok (example)"
+          ],
+          "auto": [
+            [
+              "see",
+              "Live"
+            ],
+            [
+              "see",
+              "being planned"
+            ]
+          ]
+        },
+        {
+          "id": "pj-04",
+          "link": "#projects/pj-narok",
+          "do": "Open Narok (example). Read the green line at the top, then tap “the answer ↓” and read the box “You get your … back in month …”.",
+          "see": "The top line says “Start-up KES 10.5M · pays back in month 24 · break-even month 8”. The answer box explains break-even, payback and the most money tied up.",
+          "look": [
+            "Narok (example)"
+          ],
+          "auto": [
+            [
+              "see",
+              "pays back in month 24"
+            ],
+            [
+              "tap",
+              "#pj-top"
+            ],
+            [
+              "see",
+              "Most money tied up"
+            ]
+          ]
+        },
+        {
+          "id": "pj-05",
+          "link": "#projects/new",
+          "do": "Tap ← Projects, then ＋ New project. Name: Kijabe test. Leave the area as “A new area”. Tap Create and fill in the plan.",
+          "see": "A new project page for “Kijabe test”. The green line at the top says “Start-up KES 0”.",
+          "copy": "Kijabe test",
+          "look": [
+            "New project",
+            "Name"
+          ],
+          "auto": [
+            [
+              "fill",
+              "#pn-name",
+              "Kijabe test"
+            ],
+            [
+              "tap",
+              "#pn-save"
+            ],
+            [
+              "see",
+              "Kijabe test"
+            ],
+            [
+              "see",
+              "Start-up KES 0"
+            ]
+          ]
+        },
+        {
+          "id": "pj-06",
+          "do": "In 🏗️ A · Start-up costs type: Fiber cable to lay 4 · Fiber cost per km 290000 · OLT & core equipment 600000 · Labour 350000.",
+          "see": "Next to “A · Start-up costs” it says KES 2.3M. (Zuri adds 10% extra for surprises — that is the Contingency box.)",
+          "look": [
+            "Start-up costs",
+            "Fiber cable to lay"
+          ],
+          "auto": [
+            [
+              "fill",
+              "#pj-start-fiber_km",
+              "4"
+            ],
+            [
+              "fill",
+              "#pj-start-fiber_rate",
+              "290000"
+            ],
+            [
+              "fill",
+              "#pj-start-olt",
+              "600000"
+            ],
+            [
+              "fill",
+              "#pj-start-labour",
+              "350000"
+            ],
+            [
+              "see",
+              "KES 2.3M"
+            ]
+          ]
+        },
+        {
+          "id": "pj-07",
+          "do": "Tap 🔁 B · Running costs to open it. Backhaul quote: choose “Bayobab 100 Mbps”. Staff 2 · Salary each 22000 · Rent 10000.",
+          "see": "Next to “B · Running costs” it says KES 68k/mo.",
+          "look": [
+            "Running costs"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-run summary"
+            ],
+            [
+              "select",
+              "#pj-bh-preset",
+              "Bayobab 100 Mbps · KES 14,000 a month"
+            ],
+            [
+              "fill",
+              "#pj-run-staff_n",
+              "2"
+            ],
+            [
+              "fill",
+              "#pj-run-salary",
+              "22000"
+            ],
+            [
+              "fill",
+              "#pj-run-rent",
+              "10000"
+            ],
+            [
+              "see",
+              "KES 68k/mo"
+            ]
+          ]
+        },
+        {
+          "id": "pj-08",
+          "do": "Tap 💰 C · Customers & money in. Homes & businesses passed 700. Sign-ups by month 1: 15 · month 3: 40 · month 6: 80 · month 12: 140 · month 24: 220. Install fee 2500. Customers who leave each month 2. Then tap Use it next to “From Zuri A today”.",
+          "see": "The monthly bill fills in from Zuri A (KES 2,647). A line says about how many customers you will really have. The green line at the top now says “pays back in month 14”.",
+          "look": [
+            "Customers & money in"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-rev summary"
+            ],
+            [
+              "fill",
+              "#pj-rev-homes",
+              "700"
+            ],
+            [
+              "fill",
+              "#pj-rev-c1",
+              "15"
+            ],
+            [
+              "fill",
+              "#pj-rev-c3",
+              "40"
+            ],
+            [
+              "fill",
+              "#pj-rev-c6",
+              "80"
+            ],
+            [
+              "fill",
+              "#pj-rev-c12",
+              "140"
+            ],
+            [
+              "fill",
+              "#pj-rev-c24",
+              "220"
+            ],
+            [
+              "fill",
+              "#pj-rev-install_fee",
+              "2500"
+            ],
+            [
+              "fill",
+              "#pj-rev-churn_pct",
+              "2"
+            ],
+            [
+              "tap",
+              "#pj-arpu-use"
+            ],
+            [
+              "see",
+              "you will have about"
+            ],
+            [
+              "see",
+              "pays back in month 14"
+            ]
+          ]
+        },
+        {
+          "id": "pj-09",
+          "do": "Scroll down to “What if?”. Read the row “Low (70%)” — that is if only 70 of every 100 expected people join.",
+          "see": "Nine boxes with month numbers (or “never”). The bold box in the middle is your plan: m 14.",
+          "look": [
+            "What if?"
+          ],
+          "auto": [
+            [
+              "see",
+              "Low (70%)"
+            ],
+            [
+              "js",
+              "[...document.querySelectorAll('#pj-whatif td.r')][4].textContent.trim() === 'm 14'"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pj2",
+      "title": "Compare, share, and decide",
+      "mins": 15,
+      "intro": "Put the towns side by side, try a loan, share a plan, and say “we're doing it” — which needs a second person's OK.",
+      "steps": [
+        {
+          "id": "pj-10",
+          "link": "#projects/compare",
+          "do": "Read the table. Which town gives the money back sooner?",
+          "see": "Kijabe test, Suswa (example) and Narok (example) side by side. The quickest Payback has a ⭐ (Kijabe test, month 14).",
+          "look": [
+            "Compare projects",
+            "Payback"
+          ],
+          "auto": [
+            [
+              "see",
+              "Kijabe test"
+            ],
+            [
+              "see",
+              "month 14 ⭐"
+            ]
+          ]
+        },
+        {
+          "id": "pj-11",
+          "link": "#projects/pj-narok",
+          "do": "Open Narok (example). Tap 🏦 D · A loan? Untick “Include a loan” and look at the boxes under “The answer”. Then tick it again.",
+          "see": "With the loan ticked, the Start-up box says “loan 5.0M · yours 5.5M” — the partners only put in 5.5M of their own money.",
+          "look": [
+            "A loan?"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-loan summary"
+            ],
+            [
+              "tap",
+              "#pj-loan-on"
+            ],
+            [
+              "notsee",
+              "yours 5.5M"
+            ],
+            [
+              "tap",
+              "#pj-loan-on"
+            ],
+            [
+              "see",
+              "yours 5.5M"
+            ]
+          ]
+        },
+        {
+          "id": "pj-12",
+          "do": "Scroll to “Share with the partners”. Tap 📋 Copy for WhatsApp. (Paste it in a note on your phone to read it — not to a real group.) Then tap 🖨 One-page report.",
+          "see": "“Copied” at the bottom of the screen. Then a clean page: “Zuri Fiber — Narok (example): should we build it?” with numbered parts and “Questions to agree on”.",
+          "look": [
+            "Share with the partners"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-copy"
+            ],
+            [
+              "js",
+              "(document.querySelector('#toast')||{}).textContent.includes('Copied') || !!document.querySelector('.sheet textarea')"
+            ],
+            [
+              "go",
+              "#projects/pj-narok/print"
+            ],
+            [
+              "see",
+              "should we build it?"
+            ],
+            [
+              "see",
+              "Questions to agree on"
+            ]
+          ]
+        },
+        {
+          "id": "pj-13",
+          "link": "#projects/pj-narok",
+          "do": "Open Narok (example) again. At “The decision”, tap ✅ We're doing it. Keep the launch month and tap Send for the second OK.",
+          "see": "An orange box: “⏳ Waiting for a second OK”. There is no Approve button for you — someone else must approve. The numbers are now locked (grey).",
+          "look": [
+            "The decision"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-go"
+            ],
+            [
+              "tap",
+              "#pj-go-ok"
+            ],
+            [
+              "see",
+              "Waiting for a second OK"
+            ],
+            [
+              "notsee",
+              "Approve — lock the plan"
+            ]
+          ]
+        },
+        {
+          "id": "pj-14",
+          "do": "Tap 🎭 Practice: switch to Jerry to approve. Then tap ✅ Approve — lock the plan.",
+          "see": "The page now shows “📊 Actual vs plan” for Narok and “🚀 Approved — starts …”. The plan is kept as the yardstick.",
+          "look": [
+            "switch to Jerry"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-switch"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "tap",
+              "#pj-approve"
+            ],
+            [
+              "see",
+              "Actual vs plan"
+            ],
+            [
+              "see",
+              "Approved — starts"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pj3",
+      "title": "Following the real results",
+      "mins": 15,
+      "intro": "Suswa started 5 months ago. See how it is really doing against the plan, fill in last month, change what you now expect, and find it in the Friday report.",
+      "steps": [
+        {
+          "id": "pj-15",
+          "link": "#projects/pj-suswa",
+          "do": "Open Suswa (example). Read the coloured box at the top.",
+          "see": "🟠 Behind plan: “After 5 months, Suswa (example) has KES 273,179 less cash than the plan expected”, and “you get your money back in month 28 … the plan said month 25”.",
+          "look": [
+            "Suswa (example)",
+            "Actual vs plan"
+          ],
+          "auto": [
+            [
+              "see",
+              "Behind plan"
+            ],
+            [
+              "see",
+              "KES 273,179 less"
+            ]
+          ]
+        },
+        {
+          "id": "pj-16",
+          "do": "Tap the orange line “… aren't confirmed yet”. Customers: keep 86 and tap Save. Then Money collected: keep 163800 and tap Save.",
+          "see": "The orange line goes away. In the table, the last month no longer has a “?”.",
+          "look": [
+            "aren't confirmed yet"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pt-nudge"
+            ],
+            [
+              "js",
+              "document.querySelector('#pa-amount').value === '86'"
+            ],
+            [
+              "tap",
+              "#pa-save"
+            ],
+            [
+              "wait",
+              "600"
+            ],
+            [
+              "js",
+              "document.querySelector('#pa-amount').value === '163800'"
+            ],
+            [
+              "tap",
+              "#pa-save"
+            ],
+            [
+              "wait",
+              "1200"
+            ],
+            [
+              "notsee",
+              "aren't confirmed yet"
+            ]
+          ]
+        },
+        {
+          "id": "pj-17",
+          "do": "Tap ＋ Record actuals. What: Running costs paid. Which line: Power / generator fuel. Amount 7500. Note: My test entry. Tap Save.",
+          "see": "“My test entry” is at the top of the Actuals list, with Running costs paid · Power / generator fuel.",
+          "copy": "My test entry",
+          "look": [
+            "Record actuals"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pt-add"
+            ],
+            [
+              "tap",
+              "#pa-kind [data-kind=running]"
+            ],
+            [
+              "select",
+              "#pa-line",
+              "Power / generator fuel"
+            ],
+            [
+              "fill",
+              "#pa-amount",
+              "7500"
+            ],
+            [
+              "fill",
+              "#pa-note",
+              "My test entry"
+            ],
+            [
+              "tap",
+              "#pa-save"
+            ],
+            [
+              "see",
+              "My test entry"
+            ]
+          ]
+        },
+        {
+          "id": "pj-18",
+          "link": "#projects/pj-suswa/plan",
+          "do": "Open 📝 Forecast. Tap 💰 C, change Average monthly bill to 1700. Tap 💾 Save the forecast…, write why: Test: customers chose the cheaper package. Tap Save the forecast. Then open 📜 Log.",
+          "see": "The Log shows “📝 Forecast updated” with your words, and the change “Monthly bill (ARPU): 1,800 → 1,700”.",
+          "copy": "Test: customers chose the cheaper package",
+          "look": [
+            "Current forecast"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#pj-rev summary"
+            ],
+            [
+              "fill",
+              "#pj-rev-arpu",
+              "1700"
+            ],
+            [
+              "tap",
+              "#pj-fc-save"
+            ],
+            [
+              "fill",
+              "#pf-why",
+              "Test: customers chose the cheaper package"
+            ],
+            [
+              "tap",
+              "#pf-go"
+            ],
+            [
+              "go",
+              "#projects/pj-suswa/log"
+            ],
+            [
+              "see",
+              "Test: customers chose the cheaper package"
+            ],
+            [
+              "see",
+              "1,800 → 1,700"
+            ]
+          ]
+        },
+        {
+          "id": "pj-19",
+          "link": "#home",
+          "do": "Go to Home. Find the “📈 Projects:” card. Then open Money → 📊 Report and find “📈 Projects” in the report text.",
+          "see": "Home: one line — Suswa (example) behind plan · Narok (example) starts … · Kijabe test being planned. The Friday report has one line for each project.",
+          "look": [
+            "Projects:"
+          ],
+          "auto": [
+            [
+              "see",
+              "Kijabe test being planned"
+            ],
+            [
+              "go",
+              "#money/report"
+            ],
+            [
+              "wait",
+              "1500"
+            ],
+            [
+              "see",
+              "Suswa (example): 🟠 behind plan"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
