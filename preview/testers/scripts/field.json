@@ -1,0 +1,854 @@
+{
+  "role": "field",
+  "title": "Field tech test script",
+  "version": "1.1",
+  "date": "2026-10-10",
+  "who": "You are Peter Kamau, a field tech in Zuri A. Everything is pretend and stays on your phone.",
+  "sessions": [
+    {
+      "id": "f1",
+      "title": "Your jobs, start to finish",
+      "mins": 20,
+      "intro": "Open a job, start it, finish it with cash and with M-Pesa — and see what Zuri says when something is missing.",
+      "steps": [
+        {
+          "id": "f1-01",
+          "link": "#me",
+          "do": "Tap 🧹 Start over (pretend company), then tap OK.",
+          "see": "The page reloads. The Me page shows Peter Kamau · Field tech. (Now you have the same pretend jobs as everyone else.)",
+          "look": [
+            "🧹 Start over (pretend company)",
+            "Peter Kamau"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Start over (pretend company)')"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "see",
+              "Peter Kamau"
+            ],
+            [
+              "see",
+              "Field tech"
+            ]
+          ]
+        },
+        {
+          "id": "f1-02",
+          "link": "#jobs",
+          "do": "Look at the bottom of the screen. Tap each tab once: Jobs, Tasks, Me.",
+          "see": "Three tabs. Jobs says “My jobs”. Tasks says “Hi Peter”. Me shows your name.",
+          "look": [
+            "My jobs"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#nav a[data-tab=tasks]"
+            ],
+            [
+              "see",
+              "Hi Peter"
+            ],
+            [
+              "tap",
+              "#nav a[data-tab=me]"
+            ],
+            [
+              "see",
+              "Field tech"
+            ],
+            [
+              "tap",
+              "#nav a[data-tab=jobs]"
+            ],
+            [
+              "see",
+              "My jobs"
+            ],
+            [
+              "js",
+              "document.querySelectorAll('#nav a').length === 3"
+            ]
+          ]
+        },
+        {
+          "id": "f1-03",
+          "link": "#jobs",
+          "do": "Tap 🔴 John Mwangi #101.",
+          "see": "“Job #101 · Fault / no internet” opens. The problem says “No internet since morning — router light is red”.",
+          "look": [
+            "John Mwangi #101"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#101')"
+            ],
+            [
+              "see",
+              "Job #101 · Fault / no internet"
+            ],
+            [
+              "see",
+              "router light is red"
+            ]
+          ]
+        },
+        {
+          "id": "f1-04",
+          "link": "#jobs",
+          "do": "In job #101 (open it if it isn't open): tap 📞 Call — your phone offers to call. Press Cancel, it is a pretend number. Then tap 🗺️ Open map, look, and come back to Zuri.",
+          "see": "The phone shows the customer's number ready to call. The map opens at the customer's house.",
+          "look": [
+            "John Mwangi #101"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#101')"
+            ],
+            [
+              "has",
+              "a[href^='tel:']:has-text('Call')"
+            ],
+            [
+              "has",
+              "a:has-text('Open map')[href*='maps.google']"
+            ]
+          ]
+        },
+        {
+          "id": "f1-05",
+          "link": "#jobs",
+          "do": "In job #101: tap ▶ I'm starting now.",
+          "see": "“Saved.” flashes. The label near the top changes from Assigned to In progress.",
+          "look": [
+            "John Mwangi #101"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#101')"
+            ],
+            [
+              "see",
+              "Assigned"
+            ],
+            [
+              "tap",
+              "button:has-text(\"I'm starting now\")"
+            ],
+            [
+              "see",
+              "In progress"
+            ]
+          ]
+        },
+        {
+          "id": "f1-06",
+          "link": "#jobs",
+          "do": "In job #101: under “What did you find?” tap Router off / faulty. Under “What did you do?” tap Restarted router and Tested — working. Under “Did the customer pay you?” tap 💵 Cash and type 3000. Tap ✅ Job finished.",
+          "see": "The label changes to Done. Under NOTES there is a line “Job done · collected KES 3,000 (cash)”.",
+          "look": [
+            "John Mwangi #101"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#101')"
+            ],
+            [
+              "tap",
+              "button:has-text('Router off / faulty')"
+            ],
+            [
+              "tap",
+              "button:has-text('Restarted router')"
+            ],
+            [
+              "tap",
+              "button:has-text('Tested — working')"
+            ],
+            [
+              "tap",
+              "button:has-text('💵 Cash')"
+            ],
+            [
+              "fill",
+              "[name=amount_collected]",
+              "3000"
+            ],
+            [
+              "tap",
+              "button:has-text('Job finished')"
+            ],
+            [
+              "see",
+              "Done"
+            ],
+            [
+              "see",
+              "Job done · collected KES 3,000 (cash)"
+            ]
+          ]
+        },
+        {
+          "id": "f1-07",
+          "link": "#jobs",
+          "do": "Open Samuel Kibet #102. Without tapping anything else, tap ✅ Job finished.",
+          "see": "A message: “Tap or write what you did, then press Job finished.” The job stays open (still Assigned).",
+          "look": [
+            "Samuel Kibet #102"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#102')"
+            ],
+            [
+              "tap",
+              "button:has-text('Job finished')"
+            ],
+            [
+              "see",
+              "Tap or write what you did, then press Job finished."
+            ],
+            [
+              "see",
+              "Assigned"
+            ]
+          ]
+        },
+        {
+          "id": "f1-08",
+          "link": "#jobs",
+          "do": "In job #102: under “What did you do?” tap Fixed settings. Tap 📱 M-Pesa and type 2000. Leave the M-Pesa code empty and tap ✅ Job finished.",
+          "see": "A message asks for the M-Pesa code: “Add the M-Pesa code from the customer's message…”. Nothing is saved yet.",
+          "look": [
+            "Samuel Kibet #102"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#102')"
+            ],
+            [
+              "tap",
+              "button:has-text('Fixed settings')"
+            ],
+            [
+              "tap",
+              "button:has-text('📱 M-Pesa')"
+            ],
+            [
+              "fill",
+              "[name=amount_collected]",
+              "2000"
+            ],
+            [
+              "tap",
+              "button:has-text('Job finished')"
+            ],
+            [
+              "see",
+              "Add the M-Pesa code from the customer's message"
+            ]
+          ]
+        },
+        {
+          "id": "f1-09",
+          "link": "#jobs",
+          "do": "Still in job #102 (if you left it, open it and tap Fixed settings, 📱 M-Pesa, 2000 again): type the code UJ7K2M9PQR in “M-Pesa code”. Tap ✅ Job finished.",
+          "copy": "UJ7K2M9PQR",
+          "see": "The label changes to Done. NOTES says “Job done · collected KES 2,000 (mpesa)”.",
+          "look": [
+            "Samuel Kibet #102"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#102')"
+            ],
+            [
+              "tap",
+              "button:has-text('Fixed settings')"
+            ],
+            [
+              "tap",
+              "button:has-text('📱 M-Pesa')"
+            ],
+            [
+              "fill",
+              "[name=amount_collected]",
+              "2000"
+            ],
+            [
+              "fill",
+              "[name=collection_ref]",
+              "UJ7K2M9PQR"
+            ],
+            [
+              "tap",
+              "button:has-text('Job finished')"
+            ],
+            [
+              "see",
+              "Job done · collected KES 2,000 (mpesa)"
+            ]
+          ]
+        },
+        {
+          "id": "f1-10",
+          "link": "#jobs",
+          "do": "On My jobs, tap Done (at the top, next to To do). Look, then tap To do to go back.",
+          "see": "Under Done: John Mwangi #101 and Samuel Kibet #102, both marked Done. Under To do: Lucy Atieno #103 is left.",
+          "look": [
+            "My jobs",
+            "To do"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#view a:text-is('Done')"
+            ],
+            [
+              "see",
+              "John Mwangi #101"
+            ],
+            [
+              "see",
+              "Samuel Kibet #102"
+            ],
+            [
+              "tap",
+              "#view a:text-is('To do')"
+            ],
+            [
+              "see",
+              "Lucy Atieno #103"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f2",
+      "title": "Parts, photos, pins, new jobs and tasks",
+      "mins": 20,
+      "intro": "The extras on a job, logging a job yourself, your task list, and working with no signal.",
+      "steps": [
+        {
+          "id": "f2-01",
+          "link": "#jobs",
+          "do": "Open Lucy Atieno #103 (tap To do at the top if you can't see it). Under PARTS & EQUIPMENT USED type Item: ONT router, Serial: HWT12345678, Qty: 1. Tap Add.",
+          "copy": "HWT12345678",
+          "see": "“ONT router” appears in the parts list with the serial HWT12345678.",
+          "look": [
+            "Lucy Atieno #103"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#view a:text-is('To do')"
+            ],
+            [
+              "tap",
+              "a.item:has-text('#103')"
+            ],
+            [
+              "fill",
+              "[name=item]",
+              "ONT router"
+            ],
+            [
+              "fill",
+              "[name=serial]",
+              "HWT12345678"
+            ],
+            [
+              "tap",
+              "#jd-part button:has-text('Add')"
+            ],
+            [
+              "see",
+              "ONT router"
+            ],
+            [
+              "see",
+              "HWT12345678"
+            ]
+          ]
+        },
+        {
+          "id": "f2-02",
+          "link": "#jobs",
+          "do": "In job #103: tap 📷 Add photo. Take a photo of anything (or pick one) and use it.",
+          "see": "“Photo saved” flashes and the photo shows under PHOTOS.",
+          "look": [
+            "Lucy Atieno #103"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#103')"
+            ],
+            [
+              "file",
+              "#view input[type=file]"
+            ],
+            [
+              "see",
+              "Photo saved"
+            ],
+            [
+              "has",
+              "#view img"
+            ]
+          ]
+        },
+        {
+          "id": "f2-03",
+          "link": "#jobs",
+          "do": "In job #103: at the bottom, type “Customer not home, back at 2pm” in Add a note. Tap Add.",
+          "copy": "Customer not home, back at 2pm",
+          "see": "Your note shows under NOTES with your name, Peter Kamau.",
+          "look": [
+            "Lucy Atieno #103"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#103')"
+            ],
+            [
+              "fill",
+              "#jd-note [name=body]",
+              "Customer not home, back at 2pm"
+            ],
+            [
+              "tap",
+              "#jd-note button:has-text('Add')"
+            ],
+            [
+              "see",
+              "Customer not home, back at 2pm"
+            ]
+          ]
+        },
+        {
+          "id": "f2-04",
+          "link": "#jobs",
+          "do": "Go outside if you can. In job #103: tap 📍 Move pin to here. Tap OK, and Allow if the phone asks to use your location.",
+          "see": "“Pin saved (accurate to about … m)”. If the phone says the pin is rough, it asks you to step outside and try again — that is correct too.",
+          "tip": "Indoors the phone can be 100 m off. Zuri warns you so the next tech isn't sent to the wrong house.",
+          "look": [
+            "Lucy Atieno #103"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#103')"
+            ],
+            [
+              "tap",
+              "button:has-text('Move pin to here')"
+            ],
+            [
+              "see",
+              "Pin saved (accurate to about"
+            ]
+          ]
+        },
+        {
+          "id": "f2-05",
+          "link": "#jobs/new",
+          "do": "On “Log a job”: Type of job: Fault / no internet. What's wrong: “Pole down near the school, 3 houses off”. Caller: “Mama Ann 0712 000 333”. Tap Save job.",
+          "copy": "Pole down near the school, 3 houses off",
+          "see": "“Job saved.” The new job opens. Back on My jobs it is in your list for today.",
+          "look": [
+            "Log a job",
+            "Save job"
+          ],
+          "auto": [
+            [
+              "select",
+              "[name=kind]",
+              "Fault / no internet"
+            ],
+            [
+              "fill",
+              "[name=summary]",
+              "Pole down near the school, 3 houses off"
+            ],
+            [
+              "fill",
+              "[name=caller]",
+              "Mama Ann 0712 000 333"
+            ],
+            [
+              "tap",
+              "button:has-text('Save job')"
+            ],
+            [
+              "see",
+              "Job saved"
+            ],
+            [
+              "see",
+              "Pole down near the school"
+            ],
+            [
+              "go",
+              "#jobs"
+            ],
+            [
+              "see",
+              "Pole down near the school"
+            ]
+          ]
+        },
+        {
+          "id": "f2-06",
+          "link": "#tasks",
+          "do": "On Tasks → My day, find “Check the splitter box at the market”. Tap 💬 Notes under it, type “Checked — all fine”, tap Add.",
+          "copy": "Checked — all fine",
+          "see": "Your note shows under the task.",
+          "look": [
+            "My day",
+            "Check the splitter box at the market"
+          ],
+          "auto": [
+            [
+              "tap",
+              ".item:has-text('Check the splitter box') button:has-text('Notes')"
+            ],
+            [
+              "fill",
+              ".item:has-text('Check the splitter box') input[name=body]",
+              "Checked — all fine"
+            ],
+            [
+              "tap",
+              ".item:has-text('Check the splitter box') form button:has-text('Add')"
+            ],
+            [
+              "see",
+              "Checked — all fine"
+            ]
+          ]
+        },
+        {
+          "id": "f2-07",
+          "link": "#tasks",
+          "do": "Tick the box next to “Check the splitter box at the market”.",
+          "see": "“Done ✓” flashes and the task is ticked.",
+          "look": [
+            "Check the splitter box at the market"
+          ],
+          "auto": [
+            [
+              "tap",
+              "input[aria-label='Done: Check the splitter box at the market']"
+            ],
+            [
+              "see",
+              "Done ✓"
+            ]
+          ]
+        },
+        {
+          "id": "f2-08",
+          "link": "#tasks/add",
+          "do": "On ＋ Add a task: What needs doing? “Bring 2 connectors to the market box”. Who should do it? Brian Otieno. Tap Add task.",
+          "copy": "Bring 2 connectors to the market box",
+          "see": "“Task added.” Tap Team: the task is there, for Brian Otieno.",
+          "look": [
+            "What needs doing?",
+            "Add task"
+          ],
+          "auto": [
+            [
+              "fill",
+              "[name=title]",
+              "Bring 2 connectors to the market box"
+            ],
+            [
+              "select",
+              "[name=for]",
+              "Brian Otieno"
+            ],
+            [
+              "tap",
+              "button:has-text('Add task')"
+            ],
+            [
+              "see",
+              "Task added"
+            ],
+            [
+              "go",
+              "#tasks/team"
+            ],
+            [
+              "see",
+              "Bring 2 connectors to the market box"
+            ]
+          ]
+        },
+        {
+          "id": "f2-09",
+          "link": "#jobs",
+          "do": "Turn on airplane mode. Open Lucy Atieno #103 (tap To do at the top if you can't see it) and add the note “Testing with no signal”. Then turn airplane mode off and wait a few seconds.",
+          "copy": "Testing with no signal",
+          "see": "With no signal the note shows “⏳ not sent” and a yellow badge appears at the top. When signal is back, the badge clears by itself.",
+          "look": [
+            "Lucy Atieno #103"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a.item:has-text('#103')"
+            ],
+            [
+              "offline",
+              true
+            ],
+            [
+              "fill",
+              "#jd-note [name=body]",
+              "Testing with no signal"
+            ],
+            [
+              "tap",
+              "#jd-note button:has-text('Add')"
+            ],
+            [
+              "see",
+              "Testing with no signal"
+            ],
+            [
+              "see",
+              "not sent"
+            ],
+            [
+              "offline",
+              false
+            ],
+            [
+              "wait",
+              2500
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frc",
+      "title": "Receipts",
+      "mins": 15,
+      "intro": "Spent Zuri money on a job? Snap the receipt or paste the M-Pesa message — that's all.",
+      "steps": [
+        {
+          "id": "frc-01",
+          "link": "#jobs",
+          "do": "Open Lucy Atieno #103 (tap To do at the top if you can't see it). Under 🧾 Spent money on this job? tap 📸 Snap the receipt. Then tap 🖼️ From my photos and pick any photo (or 📸 Take a photo of any paper).",
+          "see": "“🧾 Snap a receipt” opens with “For job #103 · Lucy Atieno” on top. Your photo shows, and Zuri says “Type the details — reading is switched off.”",
+          "look": [
+            "Lucy Atieno #103"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#view a:text-is('To do')"
+            ],
+            [
+              "tap",
+              "a.item:has-text('#103')"
+            ],
+            [
+              "tap",
+              "a:has-text('Snap the receipt')"
+            ],
+            [
+              "see",
+              "For job #103"
+            ],
+            [
+              "file",
+              "#rc-lib-in"
+            ],
+            [
+              "has",
+              "#rc-prev img"
+            ],
+            [
+              "see",
+              "Type the details — reading is switched off."
+            ]
+          ]
+        },
+        {
+          "id": "frc-02",
+          "link": "#jobs",
+          "do": "Still on that receipt (if you left, do step 1 again): Paid to: Kamau Hardware. Amount: 850. What was it for: Equipment / Inventory. Paid with: 💵 Cash. Tap ✅ Save.",
+          "copy": "Kamau Hardware",
+          "see": "“✅ Saved — the photo is uploading.” Zuri takes you back to job #103.",
+          "look": [
+            "Lucy Atieno #103"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#view a:text-is('To do')"
+            ],
+            [
+              "tap",
+              "a.item:has-text('#103')"
+            ],
+            [
+              "tap",
+              "a:has-text('Snap the receipt')"
+            ],
+            [
+              "file",
+              "#rc-lib-in"
+            ],
+            [
+              "fill",
+              "#rc-payee",
+              "Kamau Hardware"
+            ],
+            [
+              "fill",
+              "#rc-amount",
+              "850"
+            ],
+            [
+              "select",
+              "#rc-cat",
+              "Equipment / Inventory"
+            ],
+            [
+              "tap",
+              "#rc-from button[data-v=Cash]"
+            ],
+            [
+              "tap",
+              "#rc-save"
+            ],
+            [
+              "see",
+              "Saved"
+            ],
+            [
+              "see",
+              "Job #103"
+            ]
+          ]
+        },
+        {
+          "id": "frc-03",
+          "link": "#receipt",
+          "do": "On 🧾 Snap a receipt tap 📩 Paste M-Pesa message. Copy the message below, paste it in the box and tap Read the message. What was it for: Equipment / Inventory. Tap ✅ Save.",
+          "copy": "UKF1RCPT01 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh40,800.00. Transaction cost, Ksh0.00.",
+          "see": "Before saving, the boxes fill themselves: Kamau Hardware, 1200, today's date, code UKF1RCPT01. After ✅ Save: “✅ Saved.”",
+          "look": [
+            "Snap a receipt",
+            "Paste M-Pesa message"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#rc-paste-b"
+            ],
+            [
+              "fill",
+              "#rc-sms",
+              "UKF1RCPT01 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh40,800.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#rc-read"
+            ],
+            [
+              "js",
+              "document.querySelector('#rc-amount').value.replace(/[^0-9]/g,'') === '1200' && document.querySelector('#rc-ref').value === 'UKF1RCPT01' && /kamau/i.test(document.querySelector('#rc-payee').value)"
+            ],
+            [
+              "select",
+              "#rc-cat",
+              "Equipment / Inventory"
+            ],
+            [
+              "tap",
+              "#rc-save"
+            ],
+            [
+              "see",
+              "Saved"
+            ]
+          ]
+        },
+        {
+          "id": "frc-04",
+          "link": "#receipt",
+          "do": "Tap 📩 Paste M-Pesa message again, paste the SAME message and tap Read the message. Don't save.",
+          "copy": "UKF1RCPT01 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh40,800.00. Transaction cost, Ksh0.00.",
+          "see": "A red warning: “⚠️ Already recorded: KES 1,200 to Kamau Hardware…”, so it isn't counted twice.",
+          "look": [
+            "Paste M-Pesa message"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#rc-paste-b"
+            ],
+            [
+              "fill",
+              "#rc-sms",
+              "UKF1RCPT01 Confirmed. Ksh1,200.00 paid to KAMAU HARDWARE. on {dmy} at 10:15 AM. New M-PESA balance is Ksh40,800.00. Transaction cost, Ksh0.00."
+            ],
+            [
+              "tap",
+              "#rc-read"
+            ],
+            [
+              "see",
+              "Already recorded"
+            ]
+          ]
+        },
+        {
+          "id": "frc-05",
+          "link": "#receipt/mine",
+          "do": "On 🧾 My receipts, find Kamau Hardware 3,850 marked ❌ (no receipt). Tap 📸 Snap it now and pick any photo.",
+          "see": "“📷 Receipt saved — uploading.” Back on My receipts, that one now shows 📷 instead of ❌.",
+          "look": [
+            "My receipts",
+            "Snap it now"
+          ],
+          "auto": [
+            [
+              "tap",
+              ".item:has-text('3,850') a:has-text('Snap it now')"
+            ],
+            [
+              "file",
+              "#rc-lib-in"
+            ],
+            [
+              "see",
+              "Receipt saved"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
