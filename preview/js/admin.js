@@ -1,7 +1,7 @@
 // Zuri System · Admin: people, who-sees-what, custom fields, areas · v1 · 2026-09-30
 (function () {
   const Z = window.Z;
-  const SUBS = [['people', 'People'], ['visibility', 'Who sees what'], ['fields', 'Custom fields'], ['areas', 'Areas']];
+  const SUBS = [['people', 'People'], ['visibility', 'Who sees what'], ['fields', 'Custom fields'], ['areas', 'Areas'], ['prices', '💲 Price list']]; // 💲 v2.35
   const ROLES = [['field', 'Field tech'], ['callcenter', 'Call center'], ['internal', 'Office staff'], ['admin', 'Admin (partner)']];
   const must = (r) => { if (r.error) throw r.error; return r.data; };
 
@@ -96,6 +96,9 @@
     }));
   };
 
+  // v2.35: the area picker at the top follows a new or renamed area at once (it used to need a page refresh)
+  const pickerAreas = () => { const sel = Z.$('#h-area'); if (!sel) return; sel.innerHTML = '<option value="">All areas</option>' + Z.opts(Z.ref.areas.filter((a) => a.active).map((a) => [a.code, a.name]), Z.area); };
+
   VIEWS.areas = async (el) => {
     el.innerHTML = `
       <div class="card list">${Z.ref.areas.map((a) => `
@@ -115,7 +118,7 @@
       e.preventDefault();
       const { error } = await Z.sb.from('areas').update({ name: f.name.value.trim(), float_target: Z.num(f.float_target.value) || 0, active: f.active.checked }).eq('code', f.dataset.code);
       if (error) return Z.fail(error);
-      await Z.loadRef(); Z.toast('Saved.');
+      await Z.loadRef(); pickerAreas(); Z.toast('Saved.');
     }));
     Z.$('#aa', el).onsubmit = async (e) => {
       e.preventDefault();
@@ -124,7 +127,37 @@
       if (!/^[A-Z]{1,3}$/.test(code)) return Z.toast('Code must be 1–3 letters.');
       const { error } = await Z.sb.from('areas').insert({ code, name: d.name.trim(), float_target: Z.num(d.float_target) || 50000 });
       if (error) return Z.fail(error);
-      await Z.loadRef(); Z.toast('Area added.'); Z.route();
+      await Z.loadRef(); pickerAreas(); Z.toast('Area added.'); Z.route();
     };
+  };
+  // 💲 v2.35 (Business Week): the price list — the packages Zuri sells and their monthly price (packages table,
+  // 9_billnasi_followups.sql; partners and office staff may change it). The call center picks from it on a customer.
+  VIEWS.prices = async (el) => {
+    const r = await Z.sb.from('packages').select('*').order('monthly_rate');
+    if (r.error) { el.innerHTML = `<div class="card">${Z.esc(Z.errText ? Z.errText(r.error) : r.error.message)}</div>`; return; }
+    const rows = r.data || [];
+    el.innerHTML = `
+      <p class="hint" style="margin-top:0">The packages you sell and their monthly price. When someone types a package on a customer, Zuri offers these and fills in the monthly rate. To change a price, save the same name again with the new price.</p>
+      <div class="card list" id="pl-list">${rows.map((p) => `<div class="item"><div class="grow"><div class="t">${Z.esc(p.name)}</div><div class="m">${p.kind === 'hotspot' ? 'Hotspot' : 'Fixed'} · KES ${Z.fmt(p.monthly_rate)} a month</div></div><button class="btn sec small" data-del="${Z.esc(p.name)}" aria-label="Remove ${Z.esc(p.name)}">Remove</button></div>`).join('') || '<div class="muted">No packages yet. Add the first one below.</div>'}</div>
+      <form class="card" id="pl-add"><div class="grid3">
+        <div><label for="pl-name">Package name</label><input id="pl-name" name="name" required maxlength="60" placeholder="e.g. Home 10 Mbps"></div>
+        <div><label for="pl-rate">Monthly price (KES)</label><input id="pl-rate" name="monthly_rate" inputmode="numeric" required placeholder="2000"></div>
+        <div><label for="pl-kind">Kind</label><select id="pl-kind" name="kind">${Z.opts([['fixed', 'Fixed (fibre to the home)'], ['hotspot', 'Hotspot']])}</select></div>
+      </div><div style="height:12px"></div><button class="btn" type="submit">Save package</button></form>`;
+    Z.$('#pl-add', el).onsubmit = async (e) => {
+      e.preventDefault();
+      const d = Z.formData(e.target); const amt = Z.num(d.monthly_rate);
+      if (!d.name.trim()) return Z.toast('Type the package name.');
+      if (!(amt >= 0)) return Z.toast('Type the monthly price.');
+      const { error } = await Z.sb.from('packages').upsert({ name: d.name.trim(), monthly_rate: amt, kind: d.kind }, { onConflict: 'name' });
+      if (error) return Z.fail(error);
+      Z.toast('Package saved.'); Z.route();
+    };
+    Z.$$('[data-del]', el).forEach((b) => (b.onclick = async () => {
+      if (!confirm(`Remove ${b.dataset.del} from the price list? Customers who already have it keep it.`)) return;
+      const { error } = await Z.sb.from('packages').delete().eq('name', b.dataset.del);
+      if (error) return Z.fail(error);
+      Z.toast('Removed.'); Z.route();
+    }));
   };
 })();
