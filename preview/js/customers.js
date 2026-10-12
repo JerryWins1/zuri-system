@@ -139,10 +139,12 @@
       c = data;
     }
     const defs = Z.ref.cfd.filter((d) => d.entity === 'customer' && Z.canSee('customer', d.key));
+    // 💲 v2.35: the price list (Admin → Price list) as suggestions for Package / plan; picking one fills the monthly rate
+    const pk = await Z.sb.from('packages').select('name,monthly_rate').order('monthly_rate').then((r) => r.data || [], () => []);
     const input = ([k, label, type, req]) => {
       const v = c[k] ?? '';
       if (type === 'textarea') return `<div style="grid-column:1/-1"><label>${label}</label><textarea name="${k}">${Z.esc(v)}</textarea></div>`;
-      return `<div><label>${label}</label><input name="${k}" type="${type === 'number' ? 'text' : type}" ${type === 'number' ? 'inputmode="decimal"' : ''} value="${Z.esc(v)}" ${req ? 'required' : ''}></div>`;
+      return `<div><label>${label}</label><input name="${k}" type="${type === 'number' ? 'text' : type}" ${type === 'number' ? 'inputmode="decimal"' : ''} ${k === 'plan' && pk.length ? 'list="pkg-list" autocomplete="off"' : ''} value="${Z.esc(v)}" ${req ? 'required' : ''}></div>`;
     };
     const customInput = (d) => {
       const v = (c.custom || {})[d.key] ?? '';
@@ -164,7 +166,9 @@
         </div>
         <p class="hint">GPS pin: use "Drop pin here" on the customer's page while standing at the house.</p>
         <button class="btn block" type="submit">Save customer</button>
-      </form>`;
+      </form>${pk.length ? `<datalist id="pkg-list">${pk.map((x) => `<option value="${Z.esc(x.name)}">KES ${Z.fmt(x.monthly_rate)}</option>`).join('')}</datalist>` : ''}`;
+    const cf = Z.$('#ce', el);
+    if (cf.plan && cf.monthly_rate && pk.length) cf.plan.addEventListener('input', () => { const m = pk.find((x) => x.name.toLowerCase() === cf.plan.value.trim().toLowerCase()); if (m) cf.monthly_rate.value = m.monthly_rate; });
 
     Z.$('#ce', el).onsubmit = async (e) => {
       e.preventDefault();
