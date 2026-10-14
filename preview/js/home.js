@@ -54,6 +54,7 @@
       </div>
 
       <div id="h-outage"></div>
+      ${Z.isAdmin() && Z.routes.hq ? `<a class="card" href="#hq" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--brand)"><b>🏢 Headquarters</b><p class="hint" style="margin:4px 0 0">Every area side by side, live activity, and a message to anyone in the company →</p></a>` : ''}
       ${mgr ? `<a class="card" href="#tasks/mine" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--brand)">
         <div class="row" style="justify-content:space-between"><b>🤖 Zuri manager</b><span class="hint" style="margin:0">${mgr.run ? 'last ran ' + Z.when(mgr.run.started_at) : 'hasn\'t run yet'}</span></div>
         <p style="margin:6px 0">${mgr.mine ? `You have <b>${mgr.mine}</b> thing${mgr.mine > 1 ? 's' : ''} on your list${mgr.urgent ? ` — <b>${mgr.urgent}</b> high priority` : ''}. Open Tasks →` : 'Nothing on your list right now.'}</p>
