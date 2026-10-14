@@ -1,8 +1,8 @@
 ﻿Customer ID,Name,Phone,Package,Price,Status,Expiry,Area
-BW-1004,Peter Mwangi,0700000104,Home 20 Mbps,3000,Active,19 Oct 2026 11:59 pm,TC
-BW-1007,Esther Wairimu,0700000107,Home 5 Mbps,1500,Active,19 Oct 2026 11:59 pm,TC
-BW-1008,Samuel Otieno,0700000108,Home 10 Mbps,2000,Active,19 Oct 2026 11:59 pm,TC
-BW-1009,Ruth Chebet,0700000109,Home 10 Mbps,2000,Active,18 Nov 2026 04:10 pm,TC
-BW-2002,Joseph Kibet,0700000202,Home 5 Mbps,1500,Expired,18 Oct 2026 11:59 pm,SA
-BW-2004,Isaac Ndungu (Satellite Academy),0700000204,Business 30 Mbps,4500,Active,18 Nov 2026 03:05 pm,SA
-BW-2005,Beatrice Wambui,0700000205,Home 10 Mbps,2000,Active,18 Nov 2026 03:40 pm,SA
+BW-1004,Peter Mwangi,0700000104,Home 20 Mbps,3000,Active,20 Oct 2026 11:59 pm,TC
+BW-1007,Esther Wairimu,0700000107,Home 5 Mbps,1500,Active,20 Oct 2026 11:59 pm,TC
+BW-1008,Samuel Otieno,0700000108,Home 10 Mbps,2000,Active,20 Oct 2026 11:59 pm,TC
+BW-1009,Ruth Chebet,0700000109,Home 10 Mbps,2000,Active,19 Nov 2026 11:10 am,TC
+BW-2002,Joseph Kibet,0700000202,Home 5 Mbps,1500,Expired,19 Oct 2026 11:59 pm,SA
+BW-2004,Isaac Ndungu (Satellite Academy),0700000204,Business 30 Mbps,4500,Active,19 Nov 2026 10:05 am,SA
+BW-2005,Beatrice Wambui,0700000205,Home 10 Mbps,2000,Active,19 Nov 2026 10:40 am,SA
