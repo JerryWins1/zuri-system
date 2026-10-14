@@ -99,8 +99,10 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.2 · 2026-10-13';
-  // v2.2 (13 Oct): 🏢 BUSINESS WEEK (16–22 Oct). testers/?bw is the page for the 8 Business Week testers: pick your name and role
+  const VERSION = 'v2.3 · 2026-10-14';
+  // v2.3 (14 Oct): Business Week moved one day later — Sat 17 → Fri 23 Oct (Kenya). Only the header label changes here; the days,
+  //       dates and billing files come from scripts/business_week.json v1.1 (the new VERSION also refreshes the cached JSON).
+  // v2.2 (13 Oct): 🏢 BUSINESS WEEK (then 16–22 Oct; now 17–23 Oct, see v2.3). testers/?bw is the page for the 8 Business Week testers: pick your name and role
   //       (or ride in the link: ?bw&r=C1&n=Mary), see TODAY's challenges for your role (time, do this, where, “you should end
   //       with…”), tick ✅ or report ❌, copy the pretend M-Pesa messages, download the billing files. Rows go to tester_log with the
   //       step tag bw:d<day>:<role>:<challenge>, so the board groups them. The board (?board) gains a 🏢 Business Week part at the
@@ -810,7 +812,7 @@
   const bwParse = (step) => { const m = /^bw:d(\d+):([A-Z0-9]+):(.+)$/.exec(String(step || '')); return m ? { n: +m[1], role: m[2], id: m[3] } : null; };
 
   async function bwMain() {
-    $('#prog').hidden = true; $('#sub').textContent = 'Business Week · 16–22 Oct';
+    $('#prog').hidden = true; $('#sub').textContent = 'Business Week · 17–23 Oct';
     $('#main').innerHTML = '<div class="card">Loading Business Week…</div>';
     const bw = await bwLoad();
     if (!bw) { $('#main').innerHTML = '<div class="card">Business Week could not load. Check your signal and pull down to try again.</div>'; return; }
