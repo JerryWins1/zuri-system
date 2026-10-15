@@ -334,7 +334,7 @@
       writeState(c.id, 'fail'); set('coach_pick', null); ui.mode = 'card'; ui.open = true; ui.showHint = false;
       render();
       const ok = await send([row('note', bwStep(today, me.role, c.id), ('❌ ' + c.t + ' — ' + words).slice(0, 1000))]);
-      hq('problem', `ZURI-BW|day ${today}|${me.role}|${me.name}|app ${appV()}\n❌ ${c.t}\n${words}`);
+      hq('problem', `ZURI-BW|day ${today}|${me.role}|${me.name}|app ${appV()}|device ${phone()}\n❌ ${c.t}\n${words}`);
       Z.toast(ok ? 'Sent — thank you! Jerry checks it tonight.' : 'Saved — sends when you have signal.');
       return;
     }
@@ -363,11 +363,18 @@
   }
   window.addEventListener('online', flushHQ); setTimeout(flushHQ, 4000);
   const stMap = () => st();
+  // v2.38 (16 Oct, Jerry: "do we know the size of phone the testers have?"): every mailbox report says the phone.
+  const phone = () => {
+    const ua = navigator.userAgent || '';
+    const os = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'iPad' : /Android/.test(ua) ? 'Android ' + ((ua.match(/Android ([\d.]+)/) || [])[1] || '') : /Mac/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : 'Other';
+    const br = /SamsungBrowser/.test(ua) ? 'Samsung' : /OPR|Opera/.test(ua) ? 'Opera' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome/.test(ua) ? 'Chrome' : /Firefox|FxiOS/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : 'Browser';
+    return `${os.trim()}·${br}·${screen.width}x${screen.height}@${Math.round((window.devicePixelRatio || 1) * 10) / 10}`;
+  };
   function daySummary() {
     const res = get('coach_res', {})[today] || {}, st = stMap();
     const done = mine.filter((c) => st[c.id] === 'done').length, fail = mine.filter((c) => st[c.id] === 'fail').length;
     const eases = Object.values(res).map((r) => r.ease).filter((e) => e), avg = eases.length ? (eases.reduce((t, e) => t + e, 0) / eases.length).toFixed(1) : '–';
-    const lines = [`ZURI-BW|day ${today}|${me.role}|${me.name}|app ${appV()}|done ${done}/${mine.length}|problems ${fail}|ease ${avg}`];
+    const lines = [`ZURI-BW|day ${today}|${me.role}|${me.name}|app ${appV()}|done ${done}/${mine.length}|problems ${fail}|ease ${avg}|device ${phone()}`];
     mine.forEach((c) => { const r = res[c.id]; lines.push(`${st[c.id] === 'done' ? '✅' : st[c.id] === 'fail' ? '❌' : '·'} ${c.t}${r ? ` — ${r.s}s, ease ${r.ease || '–'}${r.hint ? ', hint' : ''}${r.hit === 0 ? ', missed screen' : ''}${r.self ? ', ended same: ' + r.self : ''}${r.said ? ' — “' + r.said + '”' : ''}` : ''}`); });
     return lines.join('\n');
   }
