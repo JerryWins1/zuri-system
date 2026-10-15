@@ -99,7 +99,8 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.3 · 2026-10-14';
+  const VERSION = 'v2.4 · 2026-10-15';
+  // v2.4 (15 Oct): every Business Week tick records the Zuri app version it was done on ("v2.4 · app v2.35").
   // v2.3 (14 Oct): Business Week moved one day later — Sat 17 → Fri 23 Oct (Kenya). Only the header label changes here; the days,
   //       dates and billing files come from scripts/business_week.json v1.1 (the new VERSION also refreshes the cached JSON).
   // v2.2 (13 Oct): 🏢 BUSINESS WEEK (then 16–22 Oct; now 17–23 Oct, see v2.3). testers/?bw is the page for the 8 Business Week testers: pick your name and role
@@ -816,6 +817,10 @@
     $('#main').innerHTML = '<div class="card">Loading Business Week…</div>';
     const bw = await bwLoad();
     if (!bw) { $('#main').innerHTML = '<div class="card">Business Week could not load. Check your signal and pull down to try again.</div>'; return; }
+    // v2.4 (15 Oct, Jerry: "We need to test the one that we will deliver. Every time an update happens the testing needs to
+    //       restart."): every tick says which version of the Zuri app it was done on, so the board can tell a pass on an
+    //       older version from a pass on the version we deliver.
+    const appV = await fetch(APP + 'js/app.js', { cache: 'no-store' }).then((r) => r.text()).then((t) => ((t.match(/Z\.version = '([^' ]+)/) || [])[1] || '')).catch(() => '');
     const RL = Object.fromEntries(bw.roles.map((r) => [r.id, r]));
     let bme = get('bw_me', null);
     const n = (QS.get('n') || '').trim().replace(/\s+/g, ' ').slice(0, 60), r = (QS.get('r') || '').toUpperCase();
@@ -827,7 +832,7 @@
     const role = RL[bme.role];
     const logAs = { tester: bme.name, role: role.log };
     async function bwLog(kind, step, note) {
-      const row = { ...logAs, device, step, kind, note: note || null, version: VERSION };
+      const row = { ...logAs, device, step, kind, note: note || null, version: (VERSION.split(' ')[0] + (appV ? ' · app ' + appV : '')) };
       try { const { error } = await sb.from('tester_log').insert(row); if (error) throw error; return true; }
       catch (e) { const q = get('queue', []); q.push(row); set('queue', q); return false; }
     }
