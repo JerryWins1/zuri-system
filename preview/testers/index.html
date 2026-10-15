@@ -116,7 +116,7 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.5 · 2026-10-16';
+  const VERSION = 'v2.6 · 2026-10-16';
   // v2.5 (16 Oct): the TEST COACH. ?bw: a big first button "▶ Open Zuri with my coach" (?training&bw&r=&n=) — the steps now show
   //       inside Zuri and this page is the backup and the full list. Cards open one at a time (the clock for a challenge starts
   //       when its card opens). New kinds: 🧠 real-world problems ("scenario": the situation, 💡 Show me how, then "What did you
@@ -907,10 +907,13 @@
       $('#sub').textContent = `${bme.name} · ${role.short} · Business Week`;
       const when = today < 1 ? `Starts ${new Date(bw.start + 'T09:00:00+03:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' })} — you can read your challenges now.` : today > bw.days.length ? 'The week is over — asante sana! You can still read and send notes.' : `Today is day ${today} of ${bw.days.length}.`;
       // v2.5: the coach — Zuri itself shows each step (?training&bw&r=&n=); this page stays as the backup and the full list
-      const coachHref = APP + withCode('?training&bw&r=' + encodeURIComponent(bme.role) + '&n=' + encodeURIComponent(bme.name));
+      // v2.6 (16 Oct, Jerry: "I think this should run on Feedback Studio. How else will you know about any issues"): Zuri
+      //       opens INSIDE Feedback Studio — talk, point, mark and screenshot around it, the coach inside it. "On its own" stays as a fallback.
+      const zuriHref = APP + withCode('?training&bw&r=' + encodeURIComponent(bme.role) + '&n=' + encodeURIComponent(bme.name));
+      const coachHref = FS + encodeURIComponent(zuriHref);
       const appLink = role.app === 'no Zuri account'
         ? `<p class="tip" style="margin:0 0 8px">📞 You play the customers by phone — no Zuri account needed. Your steps are all on this page.</p>`
-        : `<a class="big" id="bw-coach" style="display:block;text-align:center;text-decoration:none;margin:0 0 6px" href="${esc(coachHref)}" target="_blank" rel="noopener">▶ Open Zuri with my coach</a>
+        : `<a class="big" id="bw-coach" style="display:block;text-align:center;text-decoration:none;margin:0 0 6px" href="${esc(coachHref)}" target="_blank" rel="noopener">▶ Open Zuri in Feedback Studio</a><p style="text-align:center;margin:0 0 6px;font-size:13px">Talk, point and take screenshots while you work — your steps show inside Zuri. <a href="${esc(zuriHref)}" target="_blank" rel="noopener">Open Zuri on its own</a></p>
            <p class="tip" style="margin:0 0 10px">Your steps now show inside Zuri, one at a time. This page is the backup and the full list.</p>`;
       const tag = (c) => (c.kind === 'scenario' ? ' · 🧠 real-world problem' : c.kind === 'scenario-call' ? ' · 📞 you are the caller' : '');
       const after = (c) => { const p = pend[c.id]; const scen = c.kind === 'scenario';

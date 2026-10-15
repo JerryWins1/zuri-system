@@ -98,6 +98,10 @@
   // v2.37 (16 Oct): "Go there" opens the page part of a route ("customers/:id/edit" → "customers"); and a real-world
   //       problem keeps its screen hidden until 💡 Show me how — showing it would give the answer away.
   const goTo = (r) => { const out = []; for (const seg of String(r || '').split('/')) { if (!seg || seg.startsWith(':')) break; out.push(seg); } return out.join('/'); };
+  // v2.37 (16 Oct, Jerry: "I think this should run on Feedback Studio. How else will you know about any issues"):
+  //       inside Feedback Studio the coach keeps its card short (the studio's talk / point / screenshot bar is below it),
+  //       says "✅ Step done" (the studio's own ✅ Done ends the session) and ends the day by pointing at 📨 Send to Claude.
+  let inFS = false; try { inFS = window.self !== window.top && /feedback-studio/.test(window.top.location.pathname); } catch (e) { inFS = window.self !== window.top; }
   let ui = { open: get('coach_open', true), mode: 'card', showHint: false, showEnd: false, ease: null, self: null, said: '' };
   const st = () => get('bw_state', {});
   const writeState = (id, v) => { const s = st(); if (v) s[id] = v; else delete s[id]; set('bw_state', s); };
@@ -165,6 +169,7 @@
   const css = document.createElement('style');
   css.textContent = `
   #zcoach { position:fixed; left:8px; right:8px; bottom:calc(var(--zc-nav, 60px) + 6px); z-index:30; max-width:560px; margin:0 auto; color:var(--ink); font-size:15px; }
+  #zcoach.fs .zc-body { max-height:38vh; }
   #zcoach .zc-box { background:var(--surface); border:2px solid var(--accent); border-radius:16px; box-shadow:0 6px 24px rgba(0,0,0,.22); overflow:hidden; }
   #zcoach .zc-bar { display:flex; align-items:center; gap:8px; width:100%; min-height:48px; padding:6px 12px; background:var(--accent-soft); border:0; color:var(--ink); font:inherit; font-weight:700; text-align:left; cursor:pointer; }
   #zcoach .zc-bar .zc-t { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -207,7 +212,7 @@
     if (root) return root;
     document.head.appendChild(css);
     root = document.createElement('div');
-    root.id = 'zcoach';
+    root.id = 'zcoach'; if (inFS) root.classList.add('fs');
     root.setAttribute('role', 'region');
     root.setAttribute('aria-label', 'Test coach');
     document.body.appendChild(root);
@@ -242,7 +247,7 @@
       body = listHtml(s);
     } else if (!c) {
       title = `🧪 ${count} · All done for today 🎉`;
-      body = `<h4>All done for today 🎉</h4><p>Thank you, ${esc(me.name.split(' ')[0])}! Jerry reads every answer tonight.</p><div class="zc-pay">${esc(payLine())}</div>
+      body = `<h4>All done for today 🎉</h4><p>Thank you, ${esc(me.name.split(' ')[0])}! Jerry reads every answer tonight.</p>${inFS ? '<p><b>Last step:</b> tap the green <b>✅ Done</b> at the very bottom (Feedback Studio), then <b>📨 Send to Claude</b> — that sends your talking and pictures.</p>' : ''}<div class="zc-pay">${esc(payLine())}</div>
         <div class="zc-grid"><button class="zc-b" data-a="list">☰ All today</button><a class="zc-b" href="testers/?bw">📋 Testers' List</a></div>`;
     } else {
       title = `🧪 ${count} · ${c.t}`;
@@ -287,7 +292,7 @@
       ${(!scen || hintOpen) && (c.where || goTo(c.route)) ? `<div class="zc-lbl">📍 Where</div><div class="row" style="gap:8px"><span class="grow">${esc(c.where || goTo(c.route))}</span>${goTo(c.route) ? `<button class="zc-b go" data-a="go">Go there →</button>` : ''}</div>` : ''}
       ${!scen && (call ? c.check || c.end : c.end) ? `<div class="zc-lbl">${call ? 'Check that…' : 'You should end with…'}</div><div class="zc-end">${esc(call ? c.check || c.end : c.end)}</div>` : ''}
       <div class="zc-grid">
-        <button class="zc-b ok wide" data-a="done">✅ Done</button>
+        <button class="zc-b ok wide" data-a="done">✅ Step done</button>
         <button class="zc-b bad" data-a="problem">❌ Problem</button><button class="zc-b" data-a="stuck">🆘 I'm stuck</button>
         <button class="zc-b" data-a="later">⏭ Later</button><button class="zc-b" data-a="list">☰ All today</button>
       </div>`;
