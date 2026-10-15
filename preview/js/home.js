@@ -53,7 +53,7 @@
         <span class="hint">as of ${Z.when(s.as_of)} · <a href="#" id="h-refresh" class="tap44" style="min-width:0;padding:0 6px">refresh</a></span>
       </div>
 
-      <div id="h-outage"></div>
+      <div id="h-outage"></div><div id="h-alerts"></div>
       ${Z.isAdmin() && Z.routes.hq ? `<a class="card" href="#hq" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--brand)"><b>🏢 Headquarters</b><p class="hint" style="margin:4px 0 0">Every area side by side, live activity, and a message to anyone in the company →</p></a>` : ''}
       ${mgr ? `<a class="card" href="#tasks/mine" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--brand)">
         <div class="row" style="justify-content:space-between"><b>🤖 Zuri manager</b><span class="hint" style="margin:0">${mgr.run ? 'last ran ' + Z.when(mgr.run.started_at) : 'hasn\'t run yet'}</span></div>
@@ -111,6 +111,7 @@
 
     Z.$('#h-refresh', el).onclick = (e) => { e.preventDefault(); Z.route(); };
     if (Z.outageBox) Z.outageBox(Z.$('#h-outage', el), 'home', Z.area || null); // ⏱ v2.33: 📡 possible outage + the notice for the partners' yes
+    if (Z.alertsHome) Z.alertsHome(Z.$('#h-alerts', el)); // 📣 v2.39: alerts waiting for a partner's yes (or ready to send)
     if (!m) return;
     try {
       await Z.chartLib();
