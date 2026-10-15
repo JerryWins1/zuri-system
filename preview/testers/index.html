@@ -86,6 +86,23 @@
   .mini.go { background:var(--brand); color:#fff; border:none; } a.mini { display:inline-flex; align-items:center; text-decoration:none; }
   .form3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; } .form3 input { padding:8px; font-size:15px; } .form3 label { margin:4px 0 2px; font-size:12px; }
   .banner { background:var(--amber-soft); border:1px solid var(--amber); color:var(--ink); border-radius:12px; padding:10px 12px; font-size:14px; margin-bottom:12px; }
+  /* v2.5 · the test coach: collapsible challenge cards, ease faces, the board's "how hard" list and coverage */
+  .bwc.shut { padding:12px 16px; } .bwc.shut h2 { margin:4px 0 0; font-size:17px; } .bwh { cursor:pointer; display:flex; justify-content:space-between; gap:8px; align-items:flex-start; } .bwh .caret { color:var(--faint); font-size:15px; flex:none; padding-top:3px; }
+  .sx .say { font-style:italic; margin:4px 0 0; } .bw-after label { margin-top:12px; }
+  .faces { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; } .faces button { font:inherit; font-size:11.5px; font-weight:700; line-height:1.15; padding:8px 2px; min-height:64px; border-radius:12px; border:2px solid var(--line-strong); background:var(--surface); color:var(--ink); cursor:pointer; } .faces button span { display:block; font-size:24px; margin-bottom:2px; }
+  .faces button.on, .seg3 button.on { border-color:var(--brand); background:var(--brand-soft); color:var(--brand); }
+  .seg3 { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; } .seg3 button { font:inherit; font-weight:800; font-size:14.5px; padding:10px 4px; min-height:48px; border-radius:12px; border:2px solid var(--line-strong); background:var(--surface); color:var(--ink); cursor:pointer; }
+  .hard { border:2px solid var(--brand); } .hardh { display:flex; justify-content:space-between; align-items:baseline; gap:8px; } .hardh h2 { margin:0; font-size:20px; color:var(--brand); } .hardh span { font-size:12.5px; color:var(--faint); white-space:nowrap; }
+  .hsub { margin:4px 0 8px; font-size:13.5px; color:var(--soft); } .hsort { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; } .hsort button { font:inherit; font-size:12.5px; font-weight:700; padding:6px 10px; min-height:34px; border-radius:999px; border:1px solid var(--line-strong); background:var(--surface); color:var(--soft); cursor:pointer; } .hsort button.on { background:var(--brand); border-color:var(--brand); color:#fff; }
+  .hlist { margin:0; padding:0; list-style:none; } .hlist li { border-top:1px solid var(--line); } .hlist li:first-child { border-top:none; } .hlist summary { display:flex; gap:10px; padding:9px 0; cursor:pointer; list-style:none; } .hlist summary::-webkit-details-marker { display:none; }
+  .hlist .hn { flex:none; width:24px; height:24px; border-radius:999px; background:var(--now-soft); color:var(--now); font-weight:800; font-size:12.5px; display:flex; align-items:center; justify-content:center; } .hlist .ht { flex:1; min-width:0; } .hlist .ht b { display:block; font-size:14.5px; } .hlist .hm { display:block; font-size:12px; color:var(--faint); overflow-wrap:anywhere; } .hlist .hc { display:block; margin-top:2px; }
+  .hlist .hd { font-size:13px; padding:0 0 10px 34px; overflow-wrap:anywhere; } .hlist .hd > div { margin:3px 0; }
+  .cov { margin-bottom:12px; } .covh { display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; font-size:14.5px; } .covh span { color:var(--soft); font-size:13px; }
+  .stack { display:flex; height:12px; border-radius:999px; overflow:hidden; background:var(--surface-2); margin:6px 0; } .stack i { display:block; height:100%; } .stack i.ok, .covk i.ok { background:var(--ok); } .stack i.old, .covk i.old { background:var(--amber); }
+  .covk { display:flex; flex-wrap:wrap; gap:4px 12px; font-size:12.5px; color:var(--soft); } .covk i { display:inline-block; width:10px; height:10px; border-radius:3px; background:var(--surface-2); border:1px solid var(--line-strong); margin-right:4px; vertical-align:-1px; }
+  .cov details, .card > details, .tcard details { margin-top:6px; font-size:13.5px; } .cov summary, .card > details > summary, .tcard summary { cursor:pointer; font-weight:700; color:var(--brand); padding:4px 0; }
+  .tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; } .tags .pill { white-space:normal; }
+  table.dd { font-size:12.5px; } table.dd th, table.dd td { padding:4px 5px; } details.said { margin:0 0 2px; } details.said summary { font-weight:600; color:var(--ink); padding:0; }
 </style>
 </head>
 <body>
@@ -99,7 +116,16 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.4 · 2026-10-15';
+  const VERSION = 'v2.6 · 2026-10-16';
+  // v2.5 (16 Oct): the TEST COACH. ?bw: a big first button "▶ Open Zuri with my coach" (?training&bw&r=&n=) — the steps now show
+  //       inside Zuri and this page is the backup and the full list. Cards open one at a time (the clock for a challenge starts
+  //       when its card opens). New kinds: 🧠 real-world problems ("scenario": the situation, 💡 Show me how, then "What did you
+  //       do?", the good ending and "Did you end the same way?") and the caller's "scenario-call" (what to say, what to check).
+  //       After every ✅ a 1–5 ease face; the done row carries the JSON note {v,via:'page',s,ease,hint,self,said}.
+  //       The board's Business Week part gains 🔎 How hard is each step (the main output: lowest ease, 🆘 stuck, slow, ❌, missed
+  //       screen), 🧪 Is everything tested (features d.feats and screens d.routes, per app version — an older pass = re-check),
+  //       🌱 How each tester is doing, and per person per day ⏱ median time, 😊 ease, 💡 hints, 🆘 stuck, 🧠 results.
+  //       'auto:' rows (stuck, screen coverage) never count as problems, notes or pay; pay is unchanged.
   // v2.4 (15 Oct): every Business Week tick records the Zuri app version it was done on ("v2.4 · app v2.35").
   // v2.3 (14 Oct): Business Week moved one day later — Sat 17 → Fri 23 Oct (Kenya). Only the header label changes here; the days,
   //       dates and billing files come from scripts/business_week.json v1.1 (the new VERSION also refreshes the cached JSON).
@@ -617,10 +643,10 @@
   async function board() {
     const ok = await partner(); if (!ok) return partnersOnly();
     $('#sub').textContent = "Everyone's progress and notes";
-    const { data, error } = await ok.a.from('tester_log').select('*').order('at', { ascending: false }).limit(2000);
+    const { data, error } = await ok.a.from('tester_log').select('*').order('at', { ascending: false }).limit(5000);
     if (error) { $('#main').innerHTML = `<div class="card">Could not load: ${esc(error.message)}</div>`; return; }
     const people = {};
-    data.forEach((r) => { if (String(r.step).startsWith('bw:')) return; const p = people[r.tester + '|' + r.role] = people[r.tester + '|' + r.role] || { name: r.tester, role: r.role, done: new Set(), notes: [], last: r.at, first: r.at }; if (r.kind === 'done') p.done.add(r.step); if (r.kind === 'undone') p.done.delete(r.step); if (r.kind === 'note') p.notes.push(r); p.first = r.at; });
+    data.forEach((r) => { if (/^(bw|auto):/.test(String(r.step))) return; const p = people[r.tester + '|' + r.role] = people[r.tester + '|' + r.role] || { name: r.tester, role: r.role, done: new Set(), notes: [], last: r.at, first: r.at }; if (r.kind === 'done') p.done.add(r.step); if (r.kind === 'undone') p.done.delete(r.step); if (r.kind === 'note') p.notes.push(r); p.first = r.at; });
     const fmt = (t) => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
     const title = (p, id) => (stepsFor(p.role).find((s) => s.id === id) || {}).t || id;
     const scripts = await boardScripts(ok, data);                            // v2.0: the test-script part (empty string if unavailable)
@@ -631,8 +657,8 @@
       <h3><span>The old list (videos, getting ready)</span><span></span></h3>
       <div class="card"><table><tr><th>Tester</th><th>Job</th><th>Done</th><th>Last seen</th><th></th></tr>${Object.values(people).map((p) => { const n = stepsFor(p.role).length; return `<tr><td>${esc(p.name)}</td><td>${ROLES[p.role]}</td><td><span class="pill ${p.done.size === n ? 'ok' : ''}">${p.done.size} / ${n}</span></td><td>${fmt(p.last)}</td><td><a href="?plan=${encodeURIComponent(p.name)}&role=${p.role}" style="font-weight:700;color:var(--brand)">✏️ Plan</a></td></tr>`; }).join('') || '<tr><td colspan="5" style="color:var(--faint)">Nobody yet.</td></tr>'}</table>
       <p style="margin:10px 0 0;font-size:14px">Plan for everyone with a job: ${Object.entries(ROLES).map(([k, t]) => `<a href="?plan=*&role=${k}" style="font-weight:700;color:var(--brand);margin-right:10px">${t}</a>`).join('')}</p></div>
-      <h3><span>Notes to Claude</span><span>${data.filter((r) => r.kind === 'note').length}</span></h3>
-      <div class="card">${data.filter((r) => r.kind === 'note').map((r) => `<div class="row" style="cursor:default;align-items:flex-start"><div style="flex:1"><div>${esc(r.note)}</div><div class="m" style="white-space:normal">${esc(r.tester)} · ${esc(title({ role: r.role }, r.step))} · ${fmt(r.at)}</div></div></div>`).join('') || '<div style="color:var(--faint)">No notes yet.</div>'}</div>`;
+      <h3><span>Notes to Claude</span><span>${data.filter((r) => r.kind === 'note' && !String(r.step).startsWith('auto:')).length}</span></h3>
+      <div class="card">${data.filter((r) => r.kind === 'note' && !String(r.step).startsWith('auto:')).map((r) => `<div class="row" style="cursor:default;align-items:flex-start"><div style="flex:1"><div>${esc(r.note)}</div><div class="m" style="white-space:normal">${esc(r.tester)} · ${esc(title({ role: r.role }, r.step))} · ${fmt(r.at)}</div></div></div>`).join('') || '<div style="color:var(--faint)">No notes yet.</div>'}</div>`;
     if (scripts.wire) scripts.wire();
     if (bwb.wire) bwb.wire();
   }
@@ -812,6 +838,13 @@
   const bwStep = (n, role, id) => ('bw:d' + n + ':' + role + ':' + id).slice(0, 60);
   const bwParse = (step) => { const m = /^bw:d(\d+):([A-Z0-9]+):(.+)$/.exec(String(step || '')); return m ? { n: +m[1], role: m[2], id: m[3] } : null; };
 
+  // v2.5: which Zuri app version this copy serves (read from js/app.js), asked once per page
+  let appVP = null;
+  const appVersion = () => (appVP = appVP || fetch(APP + 'js/app.js', { cache: 'no-store' }).then((r) => r.text()).then((t) => ((t.match(/Z\.version = '([^' ]+)/) || [])[1] || '')).catch(() => ''));
+  const FACES = [[1, '😫', 'Very hard'], [2, '😕', 'Hard'], [3, '😐', 'OK'], [4, '🙂', 'Easy'], [5, '😄', 'Very easy']];
+  const SELF = [['yes', '✅ Yes'], ['partly', '〰️ Partly'], ['no', '✖ No']];
+  const asLines = (x) => (Array.isArray(x) ? x.filter(Boolean).map(String) : x ? [String(x)] : []);
+
   async function bwMain() {
     $('#prog').hidden = true; $('#sub').textContent = 'Business Week · 17–23 Oct';
     $('#main').innerHTML = '<div class="card">Loading Business Week…</div>';
@@ -820,7 +853,7 @@
     // v2.4 (15 Oct, Jerry: "We need to test the one that we will deliver. Every time an update happens the testing needs to
     //       restart."): every tick says which version of the Zuri app it was done on, so the board can tell a pass on an
     //       older version from a pass on the version we deliver.
-    const appV = await fetch(APP + 'js/app.js', { cache: 'no-store' }).then((r) => r.text()).then((t) => ((t.match(/Z\.version = '([^' ]+)/) || [])[1] || '')).catch(() => '');
+    const appV = await appVersion();
     const RL = Object.fromEntries(bw.roles.map((r) => [r.id, r]));
     let bme = get('bw_me', null);
     const n = (QS.get('n') || '').trim().replace(/\s+/g, ' ').slice(0, 60), r = (QS.get('r') || '').toUpperCase();
@@ -828,18 +861,33 @@
     if (!bme || !RL[bme.role]) return bwWho(bw, RL);
     const today = local && QS.get('today') ? +QS.get('today') : dayNo(bw, kenyaDay());
     let view = Math.min(bw.days.length, Math.max(1, get('bw_view', null) && get('bw_view_on', '') === kenyaDay() ? get('bw_view', 1) : today));
-    const st = get('bw_state', {});                                         // challenge id → 'done' | 'fail'
+    const st = get('bw_state', {});                                         // challenge id → 'done' | 'fail' (the in-app coach writes it too)
     const role = RL[bme.role];
     const logAs = { tester: bme.name, role: role.log };
+    const rowFor = (kind, step, note) => ({ ...logAs, device, step, kind, note: note || null, version: (VERSION.split(' ')[0] + (appV ? ' · app ' + appV : '')) });
     async function bwLog(kind, step, note) {
-      const row = { ...logAs, device, step, kind, note: note || null, version: (VERSION.split(' ')[0] + (appV ? ' · app ' + appV : '')) };
+      const row = rowFor(kind, step, note);
       try { const { error } = await sb.from('tester_log').insert(row); if (error) throw error; return true; }
       catch (e) { const q = get('queue', []); q.push(row); set('queue', q); return false; }
     }
+    // v2.5 · the measures behind each ✅: seconds since the card was opened, 💡 hint used, the 1–5 ease face, and for a
+    //       real-world problem what they did and whether they ended the same way. The done row waits (bw_pend) until the
+    //       tester answers or skips; if the page closes first it goes into the send queue with what is known.
+    const seen = get('bw_seen', {}); const hints = get('bw_hint', {}); let pend = get('bw_pend', {});
+    const savePend = () => set('bw_pend', pend);
+    const noteFor = (p) => JSON.stringify({ v: 1, via: 'page', s: Number.isFinite(p.s) ? p.s : null, n: null, p: null, hit: null, ease: p.ease || null, hint: p.hint ? 1 : 0, self: p.self || null, said: String(p.said || '').slice(0, 200) });
+    const parkPend = (olderThan) => {
+      const q = get('queue', []); let moved = 0;
+      Object.keys(pend).forEach((id) => { const p = pend[id]; if (!p || !p.step || Date.now() - (p.at || 0) < olderThan) return; q.push(rowFor('done', p.step, noteFor(p))); delete pend[id]; moved++; });
+      if (moved) { set('queue', q); savePend(); }
+    };
+    parkPend(30 * 60e3);                                                    // answers left hanging from an earlier visit
+    window.addEventListener('pagehide', () => parkPend(0));
+    const exp = new Set(), shut = new Set();                                // cards the tester opened / closed by hand
     let confirmed = get('bw_conf', []);
     sb.from('test_confirmed').select('tester,role,step,status,at').order('at', { ascending: false }).limit(2000).then(({ data }) => {
-      if (!data) return; const seen = {}; const c = [];
-      data.filter((x) => x.tester.trim().toLowerCase() === bme.name.trim().toLowerCase() && String(x.step).startsWith('bw:')).forEach((x) => { if (seen[x.step]) return; seen[x.step] = 1; if (x.status === 'confirmed') c.push(x.step.slice(3)); });
+      if (!data) return; const seenS = {}; const c = [];
+      data.filter((x) => x.tester.trim().toLowerCase() === bme.name.trim().toLowerCase() && String(x.step).startsWith('bw:')).forEach((x) => { if (seenS[x.step]) return; seenS[x.step] = 1; if (x.status === 'confirmed') c.push(x.step.slice(3)); });
       confirmed = c; set('bw_conf', c); if ($('#bw-pay')) $('#bw-pay').textContent = payLine();
     }, () => {});
     const payLine = () => {
@@ -853,40 +901,95 @@
       const d = bw.days[view - 1]; const mine = d.ch.filter((c) => c.role === bme.role);
       const open = today >= 1 && view <= today;
       const done = mine.filter((c) => st[c.id] === 'done').length;
+      const cur = (mine.find((c) => !st[c.id]) || {}).id;
+      const expanded = (c) => !open || !!pend[c.id] || exp.has(c.id) || (c.id === cur && !shut.has(c.id));
       $('#prog').hidden = false; $('#prog').textContent = `${done} / ${mine.length}`;
       $('#sub').textContent = `${bme.name} · ${role.short} · Business Week`;
       const when = today < 1 ? `Starts ${new Date(bw.start + 'T09:00:00+03:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' })} — you can read your challenges now.` : today > bw.days.length ? 'The week is over — asante sana! You can still read and send notes.' : `Today is day ${today} of ${bw.days.length}.`;
-      const appLink = role.app === 'no Zuri account' ? '' : `<a class="big" style="display:block;text-align:center;text-decoration:none;margin:8px 0 0" href="${esc(APP + withCode('?training'))}" target="_blank" rel="noopener">🟠 Open Zuri (training copy)</a>`;
+      // v2.5: the coach — Zuri itself shows each step (?training&bw&r=&n=); this page stays as the backup and the full list
+      // v2.6 (16 Oct, Jerry: "I think this should run on Feedback Studio. How else will you know about any issues"): Zuri
+      //       opens INSIDE Feedback Studio — talk, point, mark and screenshot around it, the coach inside it. "On its own" stays as a fallback.
+      const zuriHref = APP + withCode('?training&bw&r=' + encodeURIComponent(bme.role) + '&n=' + encodeURIComponent(bme.name));
+      const coachHref = FS + encodeURIComponent(zuriHref);
+      const appLink = role.app === 'no Zuri account'
+        ? `<p class="tip" style="margin:0 0 8px">📞 You play the customers by phone — no Zuri account needed. Your steps are all on this page.</p>`
+        : `<a class="big" id="bw-coach" style="display:block;text-align:center;text-decoration:none;margin:0 0 6px" href="${esc(coachHref)}" target="_blank" rel="noopener">▶ Open Zuri in Feedback Studio</a><p style="text-align:center;margin:0 0 6px;font-size:13px">Talk, point and take screenshots while you work — your steps show inside Zuri. <a href="${esc(zuriHref)}" target="_blank" rel="noopener">Open Zuri on its own</a></p>
+           <p class="tip" style="margin:0 0 10px">Your steps now show inside Zuri, one at a time. This page is the backup and the full list.</p>`;
+      const tag = (c) => (c.kind === 'scenario' ? ' · 🧠 real-world problem' : c.kind === 'scenario-call' ? ' · 📞 you are the caller' : '');
+      const after = (c) => { const p = pend[c.id]; const scen = c.kind === 'scenario';
+        return `<div class="what bw-after" data-after="${esc(c.id)}"><b>✅ Well done — ${scen ? 'three' : 'one'} quick question${scen ? 's' : ''}</b>
+          ${scen ? `<label for="said-${esc(c.id)}">What did you do?</label><textarea id="said-${esc(c.id)}" data-said="${esc(c.id)}" maxlength="200" placeholder="A few words, e.g. I found her by phone and made a job for Tech 1 (🎤 you can talk)">${esc(p.said || '')}</textarea>
+            ${c.end ? `<div class="part see" style="margin:10px 0 0"><b class="h">A good ending looks like…</b><p>${esc(c.end)}</p></div>` : ''}
+            <label>Did you end the same way?</label><div class="seg3">${SELF.map(([k, t]) => `<button type="button" data-self="${k}" data-id="${esc(c.id)}" class="${p.self === k ? 'on' : ''}" aria-pressed="${p.self === k}">${t}</button>`).join('')}</div>` : ''}
+          <label>How easy was that in Zuri?</label><div class="faces">${FACES.map(([v, f, t]) => `<button type="button" data-ease="${v}" data-id="${esc(c.id)}" class="${p.ease === v ? 'on' : ''}" aria-pressed="${p.ease === v}" aria-label="${v} — ${t}"><span>${f}</span>${t}</button>`).join('')}</div>
+          <div class="row2">${scen ? `<button type="button" class="save" data-save="${esc(c.id)}">Save</button>` : ''}<button type="button" data-skip="${esc(c.id)}">${scen ? 'Skip' : 'Skip this question'}</button><button type="button" data-unpend="${esc(c.id)}">↩ Not done yet</button></div></div>`; };
+      const body = (c) => {
+        const s = st[c.id]; let h = '';
+        if (c.kind === 'scenario') {
+          h += `<div class="part do"><b class="h">The situation</b><p>${esc(c.do)}</p></div>`;
+          if (c.hint) h += hints[c.id] ? `<div class="part see"><b class="h">💡 How to do it in Zuri</b><p>${esc(c.hint)}</p></div>` : `<button type="button" class="mini" data-hint="${esc(c.id)}">💡 Show me how</button>`;
+          if (s === 'done' && c.end && !pend[c.id]) h += `<div class="part see"><b class="h">A good ending looks like…</b><p>${esc(c.end)}</p></div>`;
+        } else if (c.kind === 'scenario-call') {
+          const say = asLines(c.say || c.lines), chk = asLines(c.check || c.end);
+          if (c.do) h += `<div class="part do"><b class="h">Do this</b><p>${esc(c.do)}</p>${c.where ? `<p class="tip">📍 ${esc(c.where)}</p>` : ''}</div>`;
+          if (say.length) h += `<div class="part do"><b class="h">📞 Say this (in your own words)</b>${say.map((l) => `<p class="say">“${esc(l)}”</p>`).join('')}</div>`;
+          if (chk.length) h += `<div class="part see"><b class="h">Check that…</b>${chk.map((l) => `<p>${esc(l)}</p>`).join('')}</div>`;
+        } else {
+          h += `<div class="part do"><b class="h">Do this</b><p>${esc(c.do)}</p>${c.where ? `<p class="tip">📍 ${esc(c.where)}</p>` : ''}
+            ${c.copy ? `<div class="copy"><span>${esc(c.copy)}</span><button type="button" data-copy="${esc(c.id)}">Copy</button></div>` : ''}
+            ${c.file ? `<a class="open" href="${esc(c.file)}" download>⬇️ Download ${esc(String(c.file).split('/').pop())}</a>` : ''}</div>
+            ${c.end ? `<div class="part see"><b class="h">You should end with…</b><p>${esc(c.end)}</p></div>` : ''}`;
+        }
+        if (!open) return h + `<p class="tip">Ticking opens on day ${d.n}.</p>`;
+        if (pend[c.id]) return h + after(c);
+        return h + `<div class="ans" style="grid-template-columns:1fr 1fr"><button type="button" class="ok ${s === 'done' ? 'on' : ''}" data-done="${esc(c.id)}">✅ ${c.kind === 'scenario' ? 'Done — I handled it' : 'Done — I ended with this'}</button><button type="button" class="fail ${s === 'fail' ? 'on' : ''}" data-fail="${esc(c.id)}">❌ Problem</button></div>
+            <div class="what" data-what="${esc(c.id)}" hidden><textarea placeholder="What happened? What did you expect? (🎤 tap the microphone on your keyboard to talk)"></textarea><div class="row2"><button type="button" class="save" data-send="${esc(c.id)}">Send the problem</button></div></div>`;
+      };
+      const card = (c) => { const s = st[c.id], ex = expanded(c);
+        return `<div class="sx bwc ${ex ? '' : 'shut'}" data-c="${esc(c.id)}" style="${s === 'done' ? 'border-color:var(--ok)' : s === 'fail' ? 'border-color:var(--bad)' : ''}">
+          <div class="lbl"><span>⏰ ${esc(c.at || '')}${tag(c)}</span><span>${pend[c.id] ? '✅ one more tap' : s === 'done' ? '✅ done' : s === 'fail' ? '❌ problem sent' : c.id === cur && open ? '👉 now' : ''}</span></div>
+          <h2 class="bwh" data-tog="${esc(c.id)}" role="button" tabindex="0" aria-expanded="${ex}">${esc(c.t)}<span class="caret" aria-hidden="true">${ex ? '▴' : '▾'}</span></h2>
+          ${ex ? body(c) : ''}</div>`; };
       $('#main').innerHTML = `
         <div class="now" id="bw-day"><div class="lbl"><span>🏢 Business Week · day ${d.n} of ${bw.days.length}</span><span>${d.db === 'fresh' ? '🆕 FRESH company' : '📚 ongoing company'}</span></div>
+          ${appLink}
           <h2>${esc(d.dow)} ${esc(new Date(d.date + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }))} · ${esc(d.title)}</h2>
           <div class="why">${esc(d.story)}</div><div class="why"><b>${esc(d.window)}</b> Kenya time · ${esc(when)}</div>
-          <div class="chips"><span class="chip coin" id="bw-pay" style="white-space:normal">${esc(payLine())}</span></div>${appLink}
+          <div class="chips"><span class="chip coin" id="bw-pay" style="white-space:normal">${esc(payLine())}</span></div>
           <div class="nav2"><button type="button" id="bw-prev" ${view <= 1 ? 'disabled' : ''}>← Day ${view - 1}</button><button type="button" id="bw-today">Today</button><button type="button" id="bw-next" ${view >= bw.days.length ? 'disabled' : ''}>Day ${view + 1} →</button></div></div>
         <h3><span>${esc(role.label)} · ${mine.length} challenge${mine.length === 1 ? '' : 's'}</span><span>${done} done</span></h3>
-        ${mine.map((c) => `<div class="sx bwc" data-c="${esc(c.id)}" style="${st[c.id] === 'done' ? 'border-color:var(--ok)' : st[c.id] === 'fail' ? 'border-color:var(--bad)' : ''}">
-          <div class="lbl"><span>⏰ ${esc(c.at)}</span><span>${st[c.id] === 'done' ? '✅ done' : st[c.id] === 'fail' ? '❌ problem sent' : ''}</span></div>
-          <h2>${esc(c.t)}</h2>
-          <div class="part do"><b class="h">Do this</b><p>${esc(c.do)}</p><p class="tip">📍 ${esc(c.where)}</p>
-            ${c.copy ? `<div class="copy"><span>${esc(c.copy)}</span><button type="button" data-copy="${esc(c.id)}">Copy</button></div>` : ''}
-            ${c.file ? `<a class="open" href="${esc(c.file)}" download>⬇️ Download ${esc(c.file.split('/').pop())}</a>` : ''}</div>
-          <div class="part see"><b class="h">You should end with…</b><p>${esc(c.end)}</p></div>
-          ${open ? `<div class="ans" style="grid-template-columns:1fr 1fr"><button type="button" class="ok ${st[c.id] === 'done' ? 'on' : ''}" data-done="${esc(c.id)}">✅ Done — I ended with this</button><button type="button" class="fail ${st[c.id] === 'fail' ? 'on' : ''}" data-fail="${esc(c.id)}">❌ Problem</button></div>
-            <div class="what" data-what="${esc(c.id)}" hidden><textarea placeholder="What happened? What did you expect? (🎤 tap the microphone on your keyboard to talk)"></textarea><div class="row2"><button type="button" class="save" data-send="${esc(c.id)}">Send the problem</button></div></div>`
-          : `<p class="tip">Ticking opens on day ${d.n}.</p>`}</div>`).join('') || '<div class="card">Nothing for you this day.</div>'}
+        ${mine.map(card).join('') || '<div class="card">Nothing for you this day.</div>'}
         <div class="tell card"><textarea id="tell" placeholder="✍️ Tell Jerry and Claude anything about today: what was confusing, slow, or wrong"></textarea>
           <div class="row"><button id="b-tell">Send</button><span style="font-size:12.5px;color:var(--faint)">Goes straight to Jerry and Claude, with your name.</span></div></div>
         <p class="foot">Zuri Testers' List ${VERSION} · Business Week ${esc(bw.version)} · <button id="bw-who">Not ${esc(bme.name.split(' ')[0])}? Change</button> · <a href="?">The full Testers' List</a></p>`;
+      // the clock for each challenge starts when its card is first open on a day that can be ticked
+      if (open) { let ch = false; mine.forEach((c) => { if (expanded(c) && !st[c.id] && !seen[c.id]) { seen[c.id] = Date.now(); ch = true; } }); if (ch) set('bw_seen', seen); }
       $('#bw-prev').onclick = () => { view = Math.max(1, view - 1); draw(); window.scrollTo(0, 0); };
       $('#bw-next').onclick = () => { view = Math.min(bw.days.length, view + 1); draw(); window.scrollTo(0, 0); };
       $('#bw-today').onclick = () => { view = Math.min(bw.days.length, Math.max(1, today)); draw(); window.scrollTo(0, 0); };
+      $$('[data-tog]').forEach((h) => { const t = () => { const id = h.dataset.tog; const c = mine.find((x) => x.id === id); if (!c || !open || pend[id]) return; if (expanded(c)) { exp.delete(id); shut.add(id); } else { exp.add(id); shut.delete(id); } draw(); };
+        h.onclick = t; h.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } }; });
       $$('[data-copy]').forEach((b) => (b.onclick = () => { const c = mine.find((x) => x.id === b.dataset.copy); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(c.copy) : Promise.reject()).then(() => toast('Copied — paste it in Zuri.'), () => toast('Press and hold the words to copy them.')); }));
+      $$('[data-hint]').forEach((b) => (b.onclick = () => { hints[b.dataset.hint] = 1; set('bw_hint', hints); draw(); }));
+      const sendDone = async (id) => {
+        const p = pend[id]; if (!p) return; delete pend[id]; savePend(); exp.delete(id);
+        const ok = await bwLog('done', p.step, noteFor(p)); toast(ok ? 'Saved — asante!' : 'Saved on the phone — sends when you have signal.'); draw();
+      };
       $$('[data-done]').forEach((b) => (b.onclick = async () => {
         const id = b.dataset.done; const step = bwStep(d.n, bme.role, id);
-        if (st[id] === 'done') { delete st[id]; set('bw_state', st); await bwLog('undone', step); toast('Unticked.'); }
-        else { st[id] = 'done'; set('bw_state', st); const ok = await bwLog('done', step); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); }
-        draw();
+        if (st[id] === 'done') { delete st[id]; set('bw_state', st); delete seen[id]; set('bw_seen', seen); await bwLog('undone', step); toast('Unticked.'); draw(); return; }
+        st[id] = 'done'; set('bw_state', st);
+        const s = seen[id] ? Math.round((Date.now() - seen[id]) / 1000) : null;
+        pend[id] = { step, at: Date.now(), s: s != null && s >= 0 && s < 6 * 3600 ? s : null, hint: hints[id] ? 1 : 0, ease: null, self: null, said: '' }; savePend();
+        draw(); const a = $(`[data-after="${id}"]`); if (a) a.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }));
+      $$('[data-said]').forEach((t) => (t.oninput = () => { const p = pend[t.dataset.said]; if (p) { p.said = t.value.slice(0, 200); savePend(); } }));
+      $$('[data-self]').forEach((b) => (b.onclick = () => { const p = pend[b.dataset.id]; if (!p) return; p.self = b.dataset.self; savePend(); draw(); }));
+      $$('[data-ease]').forEach((b) => (b.onclick = () => { const id = b.dataset.id; const p = pend[id]; if (!p) return; p.ease = +b.dataset.ease; savePend();
+        const c = mine.find((x) => x.id === id); if (c && c.kind === 'scenario') { draw(); const s2 = $(`[data-save="${id}"]`); if (s2) s2.focus(); } else sendDone(id); }));
+      $$('[data-save]').forEach((b) => (b.onclick = () => { const id = b.dataset.save; const p = pend[id]; if (!p) return; if (!p.self && !confirm('Save without saying if you ended the same way?')) return; sendDone(id); }));
+      $$('[data-skip]').forEach((b) => (b.onclick = () => sendDone(b.dataset.skip)));
+      $$('[data-unpend]').forEach((b) => (b.onclick = () => { const id = b.dataset.unpend; delete pend[id]; savePend(); delete st[id]; set('bw_state', st); draw(); }));
       $$('[data-fail]').forEach((b) => (b.onclick = () => { const w = $(`[data-what="${b.dataset.fail}"]`); w.hidden = !w.hidden; if (!w.hidden) $('textarea', w).focus(); }));
       $$('[data-send]').forEach((b) => (b.onclick = async () => {
         const id = b.dataset.send; const c = mine.find((x) => x.id === id); const t = $(`[data-what="${id}"] textarea`).value.trim();
@@ -899,6 +1002,8 @@
       $('#bw-who').onclick = () => { if (confirm('Change your name or role? Your ticks stay on this phone.')) { localStorage.removeItem('zt_bw_me'); location.href = location.pathname + '?bw'; } };
     };
     draw();
+    // the coach in Zuri ticks the same zt_bw_state: coming back to this tab shows its ticks
+    document.addEventListener('visibilitychange', () => { if (document.hidden || $('[data-after] textarea:focus') || $('[data-what]:not([hidden])')) return; const fresh = get('bw_state', {}); Object.keys(st).forEach((k) => { if (!(k in fresh) && !pend[k]) delete st[k]; }); Object.assign(st, fresh); draw(); });
     if (!get('bw_hello', false)) bwLog('hello', bwStep(Math.max(0, today), bme.role, 'start')).then((ok) => ok && set('bw_hello', true));
     flush();
   }
@@ -914,6 +1019,19 @@
   }
 
   // ---------- the board's 🏢 Business Week part (partner signed in) ----------
+  // v2.5 helpers: a done row's note may be the coach's JSON ({"v":1,"s":…,"ease":…}); older rows have plain text or nothing.
+  const bwJ = (x) => { if (typeof x !== 'string' || x.trim()[0] !== '{') return null; try { const o = JSON.parse(x); return o && typeof o === 'object' && !Array.isArray(o) ? o : null; } catch (e) { return null; } };
+  const appOf = (v) => ((/app (v\d+(?:\.\d+)*)/.exec(String(v || '')) || [])[1] || null);
+  const vNum = (v) => String(v || '').replace(/^v/, '').split('.').map((x) => +x || 0);
+  const vCmp = (a, b) => { const x = vNum(a), y = vNum(b); for (let i = 0; i < Math.max(x.length, y.length); i++) { const d = (x[i] || 0) - (y[i] || 0); if (d) return d; } return 0; };
+  const median = (a) => { const b = a.filter((x) => Number.isFinite(x)).sort((x, y) => x - y); if (!b.length) return null; const m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
+  const mean = (a) => { const b = a.filter((x) => Number.isFinite(x)); return b.length ? b.reduce((t, x) => t + x, 0) / b.length : null; };
+  const fmtS = (s) => (s == null ? '–' : s < 60 ? Math.round(s) + 's' : mmss(Math.round(s)));
+  const num = (x, lo, hi) => (typeof x === 'number' && Number.isFinite(x) && x >= lo && x <= hi ? x : null);
+  const featList = (f) => { if (!f) return []; if (Array.isArray(f)) return f.map((x) => (typeof x === 'string' ? { tag: x, name: x } : x && (x.tag || x.id) ? { tag: String(x.tag || x.id), name: String(x.name || x.t || x.tag || x.id) } : null)).filter(Boolean);
+    return typeof f === 'object' ? Object.entries(f).map(([tag, name]) => ({ tag, name: typeof name === 'string' ? name : (name && (name.name || name.t)) || tag })) : []; };
+  const normRoute = (r) => String(r || '').trim().replace(/^#\/?/, '').replace(/\/+$/, '');
+
   async function boardBW(ok, log) {
     const bw = await bwLoad(); if (!bw) return { html: '', wire: null };
     const rows = log.filter((r) => String(r.step).startsWith('bw:')).slice().reverse();          // oldest first
@@ -922,16 +1040,22 @@
     const CH = {}; bw.days.forEach((d) => d.ch.forEach((c) => (CH[c.id] = { ...c, n: d.n })));
     const low = (x) => String(x || '').trim().toLowerCase();
     const P = {};                                                                            // name|bwrole → person
-    const person = (name, role) => (P[low(name) + '|' + role] = P[low(name) + '|' + role] || { name, role, days: {}, probs: [], tells: [], last: null });
+    const person = (name, role) => (P[low(name) + '|' + role] = P[low(name) + '|' + role] || { name, role, days: {}, probs: [], tells: [], last: null, doneRow: {}, stuck: [] });
     rows.forEach((r) => {
       const s = bwParse(r.step); if (!s || !RL[s.role]) return;
       const p = person(r.tester, s.role); p.last = r.at;
       const day = (p.days[s.n] = p.days[s.n] || { done: new Set(), probs: 0 });
-      if (r.kind === 'done' && CH[s.id]) day.done.add(s.id);
-      if (r.kind === 'undone') day.done.delete(s.id);
+      if (r.kind === 'done' && CH[s.id]) { day.done.add(s.id); p.doneRow[s.id] = { ...r, j: bwJ(r.note), n: s.n, app: appOf(r.version) }; }   // the latest ✅ carries the measures
+      if (r.kind === 'undone') { day.done.delete(s.id); delete p.doneRow[s.id]; }
       if (r.kind === 'note' && CH[s.id]) { p.probs.push({ ...r, cid: s.id, n: s.n }); day.probs++; }
       if (r.kind === 'note' && s.id === 'tell') p.tells.push({ ...r, n: s.n });
     });
+    // v2.5 · 'auto:' rows (the coach's 🆘 stuck and screen coverage) — measures only: never problems, never pay
+    const autos = log.filter((r) => String(r.step).startsWith('auto:'));
+    const whoOf = (r) => { const ps = Object.values(P).filter((p) => low(p.name) === low(r.tester)); return ps.find((p) => RL[p.role].log === r.role) || ps[0] || null; };
+    const chOf = (cid) => (CH[cid] ? cid : Object.keys(CH).find((k) => cid && k.startsWith(cid)) || null);
+    const stuckAll = [];
+    autos.filter((r) => String(r.step).startsWith('auto:stuck:')).forEach((r) => { const cid = chOf(String(r.step).slice(11)); if (!cid) return; const x = { cid, n: CH[cid].n, at: r.at, note: r.note, who: whoOf(r) }; stuckAll.push(x); if (x.who) x.who.stuck.push(x); });
     const q = async (t, fn) => { try { const x = await fn(ok.a.from(t)); return x.error ? { err: x.error, data: [] } : { data: x.data || [] }; } catch (e) { return { err: e, data: [] }; } };
     const since = new Date(Date.parse(bw.start + 'T00:00:00+03:00') - 864e5).toISOString();
     const [CF, PY, PR, TK, EV, EX, PA, CC, CU] = await Promise.all([
@@ -953,34 +1077,126 @@
     const profFor = (name) => { const ex = PR.data.filter((x) => low(x.full_name) === low(name)); if (ex.length === 1) return ex[0]; const f = low(name).split(' ')[0]; const m = PR.data.filter((x) => low(x.full_name).split(' ')[0] === f); return m.length === 1 ? m[0] : null; };
     const conf = {}; CF.data.forEach((r) => { const k = low(r.tester) + '|' + r.step; if (!conf[k]) conf[k] = r; });  // newest first
     const order = bw.roles.map((r) => r.id);
+    // the measures of one set of ✅ rows (a person's day, a person's week, one challenge)
+    const measure = (drs, stuck) => {
+      const js = drs.map((x) => x.j || {});
+      const scen = drs.filter((x) => CH[x.cid || x._cid] && CH[x.cid || x._cid].kind === 'scenario');
+      return { secs: median(js.map((j) => num(j.s, 0, 6 * 3600))), ease: mean(js.map((j) => num(j.ease, 1, 5))), easeN: js.filter((j) => num(j.ease, 1, 5) != null).length,
+        hints: js.filter((j) => j.hint === 1 || j.hint === true).length, stuck: stuck.length,
+        scen: scen.map((x) => ({ cid: x._cid, self: ['yes', 'partly', 'no'].includes(x.j && x.j.self) ? x.j.self : null, said: x.j && typeof x.j.said === 'string' ? x.j.said : '' })) };
+    };
     const list = Object.values(P).sort((a, b) => order.indexOf(a.role) - order.indexOf(b.role) || a.name.localeCompare(b.name)).map((p) => {
       const prof = p.role === 'V' ? null : profFor(p.name);
+      const drAll = Object.entries(p.doneRow).map(([cid, x]) => ({ ...x, _cid: cid }));
       let worked = 0, cprobs = 0; const cells = [];
       for (let n = 1; n <= bw.days.length; n++) {
         const d = p.days[n] || { done: new Set(), probs: 0 }; const a = prof ? (acts[prof.id] || {})[n] || 0 : null;
         const cp = p.probs.filter((x) => x.n === n && conf[low(p.name) + '|bw:' + x.cid] && conf[low(p.name) + '|bw:' + x.cid].status === 'confirmed').length;
         const w = d.done.size >= bw.pay.min_done_for_day; if (w) worked++; cprobs += Math.min(bw.pay.problems_cap_day, cp);
-        cells.push({ n, done: d.done.size, total: bw.days[n - 1].ch.filter((c) => c.role === p.role).length, probs: d.probs, cp, acts: a, worked: w });
+        cells.push({ n, done: d.done.size, total: bw.days[n - 1].ch.filter((c) => c.role === p.role).length, probs: d.probs, cp, acts: a, worked: w, m: measure(drAll.filter((x) => x.n === n), p.stuck.filter((x) => x.n === n)) });
       }
       const earned = worked * bw.pay.day + cprobs * bw.pay.problem;
       const pays = PY.data.filter((x) => low(x.tester) === low(p.name) && /^Business Week/i.test(x.note || ''));
       const paid = pays.reduce((t, x) => t + Number(x.amount || 0), 0);
-      return { ...p, prof, cells, worked, cprobs, earned, paid, owed: Math.max(0, earned - paid), pays };
+      return { ...p, prof, cells, worked, cprobs, earned, paid, owed: Math.max(0, earned - paid), pays, drAll, wk: measure(drAll, p.stuck) };
     });
     const today = dayNo(bw, kenyaDay());
     const kes = (x) => 'KES ' + Number(x || 0).toLocaleString('en-GB');
     const missing = CF.err && isMissing(CF.err);
     const payText = list.map((p) => `${p.name} (${RL[p.role].short}): ${p.worked} day${p.worked === 1 ? '' : 's'} × ${bw.pay.day} + ${p.cprobs} problem${p.cprobs === 1 ? '' : 's'} × ${bw.pay.problem} = ${kes(p.earned)} · paid ${kes(p.paid)} · owed ${kes(p.owed)}`).join('\n');
     const probs = list.flatMap((p) => p.probs.map((x) => ({ ...x, p }))).sort((a, b) => (a.at < b.at ? 1 : -1));
+
+    // ---- v2.5 · 🔎 How hard is each step: where Zuri is NOT intuitive yet ----
+    const H = {}; const hOf = (cid) => (H[cid] = H[cid] || { cid, c: CH[cid], done: 0, eases: [], secs: [], stuck: 0, probs: 0, hitN: 0, miss: 0, hints: 0, self: { yes: 0, partly: 0, no: 0 }, who: [] });
+    list.forEach((p) => {
+      p.drAll.forEach((x) => { const h = hOf(x._cid); const j = x.j || {}; h.done++; const e = num(j.ease, 1, 5), s = num(j.s, 0, 6 * 3600);
+        if (e != null) h.eases.push(e); if (s != null) h.secs.push(s); if (j.hit === 0 || j.hit === 1) { h.hitN++; if (j.hit === 0) h.miss++; } if (j.hint === 1 || j.hint === true) h.hints++;
+        if (['yes', 'partly', 'no'].includes(j.self)) h.self[j.self]++;
+        h.who.push({ name: p.name, role: p.role, ease: e, s, self: j.self || null, said: typeof j.said === 'string' ? j.said : '', hit: j.hit, app: x.app }); });
+      p.probs.forEach((x) => { const h = hOf(x.cid); h.probs++; h.who.push({ name: p.name, role: p.role, prob: x.note }); });
+    });
+    stuckAll.forEach((x) => { const h = hOf(x.cid); h.stuck++; h.who.push({ name: x.who ? x.who.name : '?', role: x.who ? x.who.role : '', stuck: x.note }); });
+    const allMed = median(Object.values(H).map((h) => median(h.secs)).filter((x) => x != null)) || null;
+    const hard = Object.values(H).filter((h) => h.c).map((h) => {
+      const ease = mean(h.eases), med = median(h.secs), missR = h.hitN ? h.miss / h.hitN : 0;
+      const score = (ease != null ? (5 - ease) * 1.5 : 0) + h.stuck * 1.5 + h.probs * 1.5 + missR * 3 + (med != null && allMed ? Math.min(3, Math.max(0, med / allMed - 1)) : 0) + (h.self.no + h.self.partly * 0.5);
+      return { ...h, ease, med, missR, score };
+    }).filter((h) => h.score > 0 || h.eases.length);
+    const HSORT = { all: ['Hardest overall', (a, b) => b.score - a.score], ease: ['Lowest ease', (a, b) => (a.ease ?? 9) - (b.ease ?? 9) || b.score - a.score], stuck: ['Most 🆘 stuck', (a, b) => b.stuck - a.stuck || b.score - a.score],
+      time: ['Longest time', (a, b) => (b.med ?? -1) - (a.med ?? -1)], probs: ['Most ❌ problems', (a, b) => b.probs - a.probs || b.score - a.score], miss: ['Missed the screen', (a, b) => b.missR - a.missR || b.miss - a.miss] };
+    const SELFT = { yes: '✅ yes', partly: '〰️ partly', no: '✖ no' };
+    const hardRow = (h, i) => { const c = h.c;
+      const chips = [h.ease != null ? `<span class="flag ${h.ease < 2.5 ? '' : h.ease < 3.5 ? 'amber' : 'ok'}" title="Average ease, 1 = very hard … 5 = very easy">😊 ${h.ease.toFixed(1)} <small>(${h.eases.length})</small></span>` : '',
+        h.stuck ? `<span class="flag">🆘 ${h.stuck} stuck</span>` : '', h.med != null ? `<span class="flag ${allMed && h.med > allMed * 2 ? 'amber' : 'ok'}" title="Median time">⏱ ${fmtS(h.med)}</span>` : '',
+        h.probs ? `<span class="flag">❌ ${h.probs}</span>` : '', h.miss ? `<span class="flag amber" title="Ticked done without reaching the screen it is on">🧭 missed ${h.miss}/${h.hitN}</span>` : '',
+        h.hints ? `<span class="flag amber">💡 ${h.hints} hint${h.hints === 1 ? '' : 's'}</span>` : '', (h.self.yes + h.self.partly + h.self.no) ? `<span class="flag ${h.self.no ? '' : h.self.partly ? 'amber' : 'ok'}">🧠 ${h.self.yes}✓ ${h.self.partly}〰 ${h.self.no}✖</span>` : ''].join('');
+      return `<li><details><summary><span class="hn">${i + 1}</span><span class="ht"><b>${esc(c.t)}</b><span class="hm">Day ${c.n} · ${esc((RL[c.role] || {}).short || c.role)} · ${esc(c.at || '')}${c.route ? ' · 📍 ' + esc(c.route) : ''} · ${h.done} done</span><span class="hc">${chips}</span></span></summary>
+        <div class="hd">${h.who.map((w) => `<div><b>${esc(w.name)}</b> ${w.prob != null ? `❌ ${esc(w.prob)}` : w.stuck != null ? `🆘 stuck <span style="color:var(--faint)">${esc(w.stuck || '')}</span>` : `${w.ease != null ? '😊 ' + w.ease : ''} ${w.s != null ? '⏱ ' + fmtS(w.s) : ''} ${w.hit === 0 ? '🧭 not on the screen' : ''} ${w.self ? SELFT[w.self] || '' : ''}${w.said ? ` — “${esc(w.said)}”` : ''}${w.app ? ` <span style="color:var(--faint)">· app ${esc(w.app)}</span>` : ''}`}</div>`).join('')}
+          ${c.end ? `<div style="color:var(--faint);margin-top:4px">Expected: ${esc(c.end)}</div>` : ''}</div></details></li>`; };
+    const hardList = (key, all) => { const s = hard.slice().sort(HSORT[key][1]); return (all ? s : s.slice(0, 12)).map(hardRow).join('') || '<li style="list-style:none;color:var(--faint)">No measures yet — they come in as testers tick ✅ (in Zuri with the coach, or on their page) and rate how easy it was.</li>'; };
+
+    // ---- v2.5 · 🧪 Is everything tested (features × app version, screens visited) ----
+    const curApp = (await appVersion()) || Object.values(P).flatMap((p) => Object.values(p.doneRow).map((x) => x.app)).filter(Boolean).sort(vCmp).pop() || null;
+    const feats = featList(bw.feats);
+    const fv = {};                                                                           // feature tag → Set of app versions it passed on
+    list.forEach((p) => p.drAll.forEach((x) => { const c = CH[x._cid]; asLines(c && c.feat).forEach((t) => { (fv[t] = fv[t] || new Set()).add(x.app || '?'); }); }));
+    const fStat = feats.map((f) => { const vs = fv[f.tag] ? [...fv[f.tag]] : []; const known = vs.filter((v) => v !== '?').sort(vCmp);
+      return { ...f, vs, st: curApp && vs.includes(curApp) ? 'ok' : vs.length ? 'old' : 'never', last: known.pop() || (vs.length ? 'an unknown version' : null) }; });
+    const rv = {};                                                                           // route → Set of app versions it was seen on
+    const addR = (r, v) => { r = normRoute(r); if (!r) return; (rv[r] = rv[r] || new Set()).add(v || '?'); };
+    autos.filter((r) => r.step === 'auto:cover').forEach((r) => { const s = String(r.note || ''); const i = s.indexOf('|'); const v = appOf(i >= 0 ? s.slice(0, i) : '') || appOf(r.version); (i >= 0 ? s.slice(i + 1) : s).split(',').forEach((x) => addR(x, v)); });
+    list.forEach((p) => p.drAll.forEach((x) => { const pp = x.j && typeof x.j.p === 'string' ? x.j.p : ''; pp.split('>').forEach((y) => addR(y, x.app)); }));
+    const routes = Array.isArray(bw.routes) ? [...new Set(bw.routes.map(normRoute).filter(Boolean))] : [];
+    const seenOn = (R) => { const out = new Set(); Object.entries(rv).forEach(([r, vs]) => { if (r === R || (!R.includes(':') && r.startsWith(R + '/'))) vs.forEach((v) => out.add(v)); }); return [...out]; };
+    const rStat = routes.map((R) => { const vs = seenOn(R); const known = vs.filter((v) => v !== '?').sort(vCmp); return { tag: R, vs, st: curApp && vs.includes(curApp) ? 'ok' : vs.length ? 'old' : 'never', last: known.pop() || (vs.length ? 'an unknown version' : null) }; });
+    const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+    const covBlock = (title, items, nameOf) => { if (!items.length) return ''; const k = { ok: 0, old: 0, never: 0 }; items.forEach((x) => k[x.st]++);
+      return `<div class="cov"><div class="covh"><b>${title}</b><span><b>${pct(k.ok, items.length)}%</b> on app ${esc(curApp || '?')} · ${k.ok} of ${items.length}</span></div>
+        <div class="stack" role="img" aria-label="${k.ok} tested on the current app, ${k.old} only on older versions, ${k.never} never"><i class="ok" style="width:${pct(k.ok, items.length)}%"></i><i class="old" style="width:${pct(k.old, items.length)}%"></i></div>
+        <div class="covk"><span><i class="ok"></i>${k.ok} tested on ${esc(curApp || 'this app')}</span><span><i class="old"></i>${k.old} need a re-check</span><span><i></i>${k.never} never</span></div>
+        ${k.never ? `<details><summary>⬜ Never tested (${k.never})</summary><div class="tags">${items.filter((x) => x.st === 'never').map((x) => `<span class="pill" title="${esc(x.tag)}">${esc(nameOf(x))}</span>`).join('')}</div></details>` : ''}
+        ${k.old ? `<details><summary>🔁 Needs re-check on ${esc(curApp || 'the new app')} (${k.old})</summary><div class="tags">${items.filter((x) => x.st === 'old').map((x) => `<span class="pill" title="last passed on ${esc(x.last)}">${esc(nameOf(x))} · <small>${esc(x.last)}</small></span>`).join('')}</div></details>` : ''}</div>`; };
+    const byVer = {}; list.forEach((p) => p.drAll.forEach((x) => { const v = x.app || '?'; const b = (byVer[v] = byVer[v] || { ticks: 0, feats: new Set(), people: new Set() }); b.ticks++; b.people.add(p.name); asLines(CH[x._cid] && CH[x._cid].feat).forEach((t) => b.feats.add(t)); }));
+    Object.entries(rv).forEach(([, vs]) => vs.forEach((v) => (byVer[v] = byVer[v] || { ticks: 0, feats: new Set(), people: new Set() })));
+    const verRows = Object.keys(byVer).sort((a, b) => (a === '?' ? 1 : b === '?' ? -1 : vCmp(b, a)));
+    const covHtml = feats.length || routes.length ? `<h3><span>🧪 Is everything tested</span><span>app ${esc(curApp || '?')}</span></h3>
+      <div class="card">${covBlock('Features', fStat, (x) => x.name)}${covBlock('Screens visited', rStat, (x) => x.tag)}
+        ${verRows.length ? `<details><summary>By app version</summary><table><tr><th>App</th><th>✅ ticks</th><th>Features</th><th>Screens</th><th>People</th></tr>${verRows.map((v) => `<tr><td>${v === '?' ? 'unknown' : esc(v)}${v === curApp ? ' <span class="pill ok">now</span>' : ''}</td><td>${byVer[v].ticks}</td><td>${byVer[v].feats.size}</td><td>${Object.values(rv).filter((s) => s.has(v)).length}</td><td>${byVer[v].people.size}</td></tr>`).join('')}</table></details>` : ''}
+        <p style="font-size:12.5px;color:var(--faint);margin:6px 0 0">A feature counts when someone ticked ✅ a challenge that uses it. A pass on an older app version shows as “needs re-check”: every update restarts the testing. Screens come from where the coach saw testers go.</p></div>` : '';
+
+    // ---- v2.5 · 🌱 How each tester is doing (kind words — a guide for helping, not a ranking) ----
+    const skillOf = (p) => { const w = p.wk; const upto = Math.max(1, Math.min(bw.days.length, Math.max(today, ...p.cells.filter((c) => c.done || c.probs).map((c) => c.n)))); const given = bw.days.slice(0, upto).flatMap((d) => d.ch.filter((c) => c.role === p.role && c.kind === 'scenario')).length;
+      const solved = w.scen.reduce((t, x) => t + (x.self === 'yes' ? 1 : x.self === 'partly' ? 0.5 : 0), 0);
+      const help = [...new Set([...w.scen.filter((x) => x.self === 'no' || x.self === 'partly').map((x) => CH[x.cid].t.replace(/^🧠\s*Real-world problem:\s*/i, '')),
+        ...p.drAll.filter((x) => x.j && num(x.j.ease, 1, 5) != null && x.j.ease <= 2).map((x) => CH[x._cid].t), ...p.stuck.map((x) => CH[x.cid].t)])].slice(0, 3);
+      const any = p.drAll.length || p.stuck.length;
+      const word = !any ? '🌱 Just starting' : !help.length ? '🌟 Doing well' : solved >= Math.max(1, w.scen.length) * 0.75 && (w.ease == null || w.ease >= 3.5) ? '🌟 Doing well' : '🙂 Getting there';
+      return { given, solved, help, word }; };
+    const skillHtml = list.length ? `<h3><span>🌱 How each tester is doing</span><span></span></h3><div class="card">${list.map((p) => { const w = p.wk, k = skillOf(p);
+      return `<div class="tcard"><h4>${esc(p.name)} <span style="color:var(--faint);font-weight:600;font-size:13px">· ${esc(RL[p.role].short)}</span> <span class="pill ${k.word.startsWith('🌟') ? 'ok' : ''}">${k.word}</span></h4>
+        <div class="kv"><b>🧠 Real-world problems</b><span>${w.scen.length ? `${k.solved} solved of ${w.scen.length} tried` : 'none tried yet'}${k.given ? ` · ${k.given} given so far` : ''}</span>
+          <b>💡 Hints used</b><span>${w.hints}</span><b>😊 Ease</b><span>${w.ease != null ? w.ease.toFixed(1) + ' of 5' : '–'}</span><b>⏱ Typical time</b><span>${fmtS(w.secs)} a challenge</span>${w.stuck ? `<b>🆘 Asked for help</b><span>${w.stuck}×</span>` : ''}</div>
+        ${k.help.length ? `<p style="margin:6px 0 0;font-size:13.5px">Could use a hand with: ${k.help.map(esc).join(' · ')}</p>` : ''}
+        <details><summary>Day by day</summary><div class="scroll-x"><table class="dd"><tr><th>Day</th><th>✅</th><th>❌</th><th>⏱</th><th>😊</th><th>💡</th><th>🆘</th><th>🧠 Real-world problem</th></tr>${p.cells.filter((c) => c.done || c.probs || c.m.stuck).map((c) => `<tr><td>D${c.n}</td><td>${c.done}/${c.total}</td><td>${c.probs || ''}</td><td>${fmtS(c.m.secs)}</td><td>${c.m.ease != null ? c.m.ease.toFixed(1) : '–'}</td><td>${c.m.hints || ''}</td><td>${c.m.stuck || ''}</td>
+          <td>${c.m.scen.map((x) => `<details class="said"><summary>${x.self ? SELFT[x.self] : '· no answer'} · ${esc(CH[x.cid].t.replace(/^🧠\s*Real-world problem:\s*/i, ''))}</summary>${x.said ? '“' + esc(x.said) + '”' : '<span style="color:var(--faint)">Nothing written.</span>'}</details>`).join('') || ''}</td></tr>`).join('') || '<tr><td colspan="8" style="color:var(--faint)">Nothing yet.</td></tr>'}</table></div></details></div>`; }).join('')}
+      <p style="font-size:12.5px;color:var(--faint);margin:6px 0 0">Solved: “Did you end the same way?” yes = 1, partly = ½ (their own answer). Ease is their 1–5 face after each ✅. Use it to see who to sit with, not to rank people.</p></div>` : '';
+
     const html = `
       <details open id="bw-board"><summary style="cursor:pointer;list-style:none"><h3 style="margin-top:4px"><span>🏢 Business Week · ${today < 1 ? 'starts ' + esc(bw.start) : today > bw.days.length ? 'finished' : 'day ' + today + ' of ' + bw.days.length}</span><span>${list.length} people</span></h3></summary>
       ${missing ? '<div class="banner">⚙️ Confirming problems and “Mark paid” need <b>supabase/24_test_scripts.sql</b> on the training copy.</div>' : ''}
+      <div class="hard card" id="bw-hard-card"><div class="hardh"><h2>🔎 How hard is each step</h2><span>${hard.length} measured</span></div>
+        <p class="hsub">Where Zuri is <b>not easy yet</b>: low ease (1–5 faces), 🆘 stuck, slow, ❌ problems, 🧭 done away from the right screen. Fix from the top.</p>
+        <div class="hsort" role="group" aria-label="Sort by">${Object.entries(HSORT).map(([k, [t]], i) => `<button type="button" data-hsort="${k}" class="${i ? '' : 'on'}" aria-pressed="${!i}">${t}</button>`).join('')}</div>
+        <ol class="hlist" id="bw-hard">${hardList('all', false)}</ol>
+        ${hard.length > 12 ? `<button class="mini" id="bw-hard-all">Show all ${hard.length}</button>` : ''}</div>
       <div class="card scroll-x"><table class="grid" id="bw-grid"><tr><th style="text-align:left">Person</th>${bw.days.map((d) => `<th title="${esc(d.title)}">D${d.n}</th>`).join('')}<th>KES</th></tr>
         ${list.map((p) => `<tr><td class="s" style="white-space:normal;min-width:120px"><b>${esc(p.name)}</b><br><span style="color:var(--faint)">${esc(RL[p.role].short)}${p.role !== 'V' && !p.prof ? ' · no Zuri account matched' : ''}</span></td>
-          ${p.cells.map((c) => `<td style="text-align:center;padding:3px;border-radius:6px;background:${c.worked ? 'var(--ok-soft)' : c.done ? 'var(--amber-soft)' : 'transparent'}" title="Day ${c.n}: ${c.done}/${c.total} done · ${c.probs} problem(s), ${c.cp} confirmed${c.acts != null ? ' · ' + c.acts + ' things done in Zuri' : ''}">${c.done}/${c.total}${c.probs ? `<br><span style="color:var(--bad)">❌${c.probs}</span>` : ''}${c.acts != null ? `<br><span style="color:var(--faint)">⚙️${c.acts}</span>` : ''}</td>`).join('')}
+          ${p.cells.map((c) => `<td style="text-align:center;padding:3px;border-radius:6px;background:${c.worked ? 'var(--ok-soft)' : c.done ? 'var(--amber-soft)' : 'transparent'}" title="Day ${c.n}: ${c.done}/${c.total} done · ${c.probs} problem(s), ${c.cp} confirmed${c.acts != null ? ' · ' + c.acts + ' things done in Zuri' : ''}${c.m.secs != null ? ' · median ' + fmtS(c.m.secs) + ' a challenge' : ''}${c.m.ease != null ? ' · ease ' + c.m.ease.toFixed(1) : ''}${c.m.hints ? ' · ' + c.m.hints + ' hint(s)' : ''}${c.m.stuck ? ' · stuck ' + c.m.stuck + '×' : ''}">${c.done}/${c.total}${c.probs ? `<br><span style="color:var(--bad)">❌${c.probs}</span>` : ''}${c.acts != null ? `<br><span style="color:var(--faint)">⚙️${c.acts}</span>` : ''}${c.m.ease != null ? `<br><span>😊${c.m.ease.toFixed(1)}</span>` : ''}${c.m.secs != null ? `<br><span style="color:var(--faint)">⏱${fmtS(c.m.secs)}</span>` : ''}${c.m.stuck ? `<br><span style="color:var(--bad)">🆘${c.m.stuck}</span>` : ''}${c.m.scen.length ? `<br><span>🧠${c.m.scen.map((x) => (x.self === 'yes' ? '✓' : x.self === 'partly' ? '〰' : x.self === 'no' ? '✖' : '·')).join('')}</span>` : ''}</td>`).join('')}
           <td style="text-align:right;white-space:nowrap"><b>${kes(p.earned)}</b><br><span style="color:var(--faint)">paid ${kes(p.paid)}</span>${p.owed ? `<br><button class="mini go" data-bwpay="${esc(low(p.name) + '|' + p.role)}">💵 Mark paid</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="${bw.days.length + 2}" style="color:var(--faint)">Nobody has opened Business Week yet. Their link: testers/?bw&code=${esc(bw.code)}</td></tr>`}</table>
-        <p style="font-size:12.5px;color:var(--faint);margin:6px 0 0">Each square: challenges done / given · ❌ problems sent · ⚙️ things they really did in Zuri that day (jobs, notes, money, counts, customers). Green = a paid day (${bw.pay.min_done_for_day}+ done). KES = paid days × ${bw.pay.day} + confirmed problems × ${bw.pay.problem} (max ${bw.pay.problems_cap_day} a day). A green square with ⚙️0 is worth a look before paying.</p>
+        <p style="font-size:12.5px;color:var(--faint);margin:6px 0 0">Each square: challenges done / given · ❌ problems sent · ⚙️ things they really did in Zuri that day (jobs, notes, money, counts, customers) · 😊 average ease (1–5) · ⏱ median time a challenge · 🆘 stuck · 🧠 real-world problems (✓ yes · 〰 partly · ✖ no). Green = a paid day (${bw.pay.min_done_for_day}+ done). KES = paid days × ${bw.pay.day} + confirmed problems × ${bw.pay.problem} (max ${bw.pay.problems_cap_day} a day). A green square with ⚙️0 is worth a look before paying.</p>
         <button class="mini" id="bw-copypay">📋 Copy the pay list</button></div>
+      ${covHtml}
+      ${skillHtml}
       <h3><span>❌ Business Week problems</span><span>${probs.length}</span></h3>
       <div class="card">${probs.map((x) => { const c = CH[x.cid] || {}; const k = low(x.p.name) + '|bw:' + x.cid; const cf = conf[k];
         return `<div class="red" data-bwprob="${esc(x.cid)}" data-who="${esc(low(x.p.name) + '|' + x.p.role)}"><b>Day ${x.n} · ${esc(x.p.name)} (${esc(RL[x.p.role].short)}) · ${esc(c.at || '')} ${esc(c.t || x.cid)}</b><div>${esc(x.note || '')}</div><div style="color:var(--faint);font-size:12px">${esc(fmtWhen(x.at))} · expected: ${esc(c.end || '')}</div>
@@ -991,6 +1207,10 @@
     const wire = () => {
       const by = ok.p.full_name || 'Jerry';
       const find = (key) => list.find((p) => low(p.name) + '|' + p.role === key);
+      let hKey = 'all', hAll = false;
+      const hPaint = () => { const ol = $('#bw-hard'); if (ol) ol.innerHTML = hardList(hKey, hAll); $$('[data-hsort]').forEach((b) => { b.classList.toggle('on', b.dataset.hsort === hKey); b.setAttribute('aria-pressed', b.dataset.hsort === hKey); }); };
+      $$('[data-hsort]').forEach((b) => (b.onclick = () => { hKey = b.dataset.hsort; hPaint(); }));
+      const ha = $('#bw-hard-all'); if (ha) ha.onclick = () => { hAll = !hAll; ha.textContent = hAll ? 'Show the top 12' : `Show all ${hard.length}`; hPaint(); };
       const cp = $('#bw-copypay'); if (cp) cp.onclick = () => (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(payText) : Promise.reject()).then(() => toast('Pay list copied.'), () => toast(payText.slice(0, 120)));
       $$('[data-bwprob]').forEach((box) => $$('[data-bwconf]', box).forEach((b) => (b.onclick = async () => {
         const p = find(box.dataset.who); if (!p) return;
