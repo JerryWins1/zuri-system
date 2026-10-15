@@ -116,7 +116,8 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.6 · 2026-10-16';
+  const VERSION = 'v2.7 · 2026-10-16';
+  // v2.7 (16 Oct): a “Watch: your coach (2 min)” link under the Feedback Studio button.
   // v2.5 (16 Oct): the TEST COACH. ?bw: a big first button "▶ Open Zuri with my coach" (?training&bw&r=&n=) — the steps now show
   //       inside Zuri and this page is the backup and the full list. Cards open one at a time (the clock for a challenge starts
   //       when its card opens). New kinds: 🧠 real-world problems ("scenario": the situation, 💡 Show me how, then "What did you
@@ -913,7 +914,7 @@
       const coachHref = FS + encodeURIComponent(zuriHref);
       const appLink = role.app === 'no Zuri account'
         ? `<p class="tip" style="margin:0 0 8px">📞 You play the customers by phone — no Zuri account needed. Your steps are all on this page.</p>`
-        : `<a class="big" id="bw-coach" style="display:block;text-align:center;text-decoration:none;margin:0 0 6px" href="${esc(coachHref)}" target="_blank" rel="noopener">▶ Open Zuri in Feedback Studio</a><p style="text-align:center;margin:0 0 6px;font-size:13px">Talk, point and take screenshots while you work — your steps show inside Zuri. <a href="${esc(zuriHref)}" target="_blank" rel="noopener">Open Zuri on its own</a></p>
+        : `<a class="big" id="bw-coach" style="display:block;text-align:center;text-decoration:none;margin:0 0 6px" href="${esc(coachHref)}" target="_blank" rel="noopener">▶ Open Zuri in Feedback Studio</a><p style="text-align:center;margin:0 0 6px;font-size:13px">Talk, point and take screenshots while you work — your steps show inside Zuri. <a href="${esc(zuriHref)}" target="_blank" rel="noopener">Open Zuri on its own</a></p><p style="text-align:center;margin:0 0 6px;font-size:13px">New? <a href="${esc(APP + withCode('?practice&role=callcenter&coach&local=1&today=1&play=bw-coach') + '#learn')}" target="_blank" rel="noopener">▶ Watch “Business Week: your coach” (2 min)</a></p>
            <p class="tip" style="margin:0 0 10px">Your steps now show inside Zuri, one at a time. This page is the backup and the full list.</p>`;
       const tag = (c) => (c.kind === 'scenario' ? ' · 🧠 real-world problem' : c.kind === 'scenario-call' ? ' · 📞 you are the caller' : '');
       const after = (c) => { const p = pend[c.id]; const scen = c.kind === 'scenario';
