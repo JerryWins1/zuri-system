@@ -428,9 +428,16 @@
         return r.error;
       // 🧾 Receipts (v2.32): the expense first, then its photo (the storage rules check the expense exists).
       case 'expense_insert': {
-        r = await Z.sb.from('expenses').upsert(d.row, { onConflict: 'id', ignoreDuplicates: true });
+        // v2.36 (15 Oct): with a photo, the expense goes in as "chase it" and only says "Photo saved" once the photo is
+        //       really up — a photo that never arrived (then Discard) no longer counts as a receipt in the Friday report.
+        const first = d.key ? { ...d.row, receipt: 'No — chase it', receipt_path: null } : d.row;
+        r = await Z.sb.from('expenses').upsert(first, { onConflict: 'id', ignoreDuplicates: true });
         if (r.error) return r.error;
-        if (d.key) { const e = await uploadReceipt(d.key, d.row.receipt_path); if (e) return e; }
+        if (d.key) {
+          const e = await uploadReceipt(d.key, d.row.receipt_path); if (e) return e;
+          const u = await Z.sb.from('expenses').update({ receipt: d.row.receipt, receipt_path: d.row.receipt_path }).eq('id', d.row.id);
+          if (u.error) return u.error;
+        }
         if (d.newPayee) await Z.sb.from('payees').insert({ name: d.row.payee, category: d.row.category }).then(() => {}, () => {});
         return null;
       }

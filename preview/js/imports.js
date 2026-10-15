@@ -42,9 +42,14 @@
     return out;
   }
 
+  // v2.36 (15 Oct): Excel dates read with cellDates come back a few SECONDS early in Kenya time (SheetJS rounding), so a
+  //       date-only cell like 15 Sep landed on 14 Sep at 23:59:44 — every payment and statement line a day early, and the
+  //       same statement as .csv and .xlsx counted twice. Round to the nearest minute first.
+  const whole = (d) => new Date(Math.round(d.getTime() / 6e4) * 6e4);
+  Z.wholeDate = whole;
   // Dates arrive as real dates, Excel serial numbers, or text like 30/09/2026 14:22 (Kenya writes day first).
   function toDate(v) {
-    if (v instanceof Date && !isNaN(v)) return Z.ymd(v);
+    if (v instanceof Date && !isNaN(v)) return Z.ymd(whole(v));
     if (typeof v === 'number' && v > 20000 && v < 80000) { const d = new Date(Math.round((v - 25569) * 864e5)); return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') + '-' + String(d.getUTCDate()).padStart(2, '0'); }
     const s = String(v || '').trim();
     let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
@@ -58,7 +63,7 @@
   // Billnasi writes expiry like "29 Oct 2026 06:38 pm" — Kenya time.
   const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
   function toDateTime(v) {
-    if (v instanceof Date && !isNaN(v)) return v.toISOString();
+    if (v instanceof Date && !isNaN(v)) return whole(v).toISOString();
     const s = String(v || '').trim();
     if (!s) return null;
     const m = s.match(/^(\d{1,2})\s+([A-Za-z]{3})[a-z]*\.?,?\s+(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(am|pm)?)?/i);
@@ -95,11 +100,11 @@
     return 'active';
   }
   const cell = (row, idx) => (idx == null || idx === '' ? '' : row[idx] ?? '');
-  const str = (v) => (v instanceof Date ? Z.ymd(v) : String(v ?? '').trim());
+  const str = (v) => (v instanceof Date ? Z.ymd(whole(v)) : String(v ?? '').trim());
 
   function mapRows(kind, source, rows, map, defArea) {
     const good = [], bad = [];
-    const seen = new Set();
+    const seen = new Set(), twins = new Map();
     unknownStatus = new Set();
     for (const r of rows) {
       if (!r.some((v) => String(v).trim() !== '')) continue;
@@ -134,7 +139,9 @@
         if (!o.date) { bad.push([r, 'date not readable']); continue; }
         if (o.mpesa_ref && !/^[A-Z0-9]{8,12}$/.test(o.mpesa_ref)) o.mpesa_ref = null;
         // No code and no ID: a stable fingerprint stops a re-import counting the same payment twice.
-        if (!o.external_id) o.external_id = 'auto:' + [o.date, o.amount, o.mpesa_ref, o.payer_phone, o.account_ref, o.payer_name].join('|');
+        // v2.36 (15 Oct): two real payments that look the same (same day, amount and payer, no code) used to collapse into one
+        //       and vanish silently. The 2nd, 3rd… in a file get #2, #3, so a re-import of the same file still matches them.
+        if (!o.external_id) { const fp = 'auto:' + [o.date, o.amount, o.mpesa_ref, o.payer_phone, o.account_ref, o.payer_name].join('|'); const n = (twins.get(fp) || 0) + 1; twins.set(fp, n); o.external_id = n > 1 ? fp + '#' + n : fp; }
         const key = o.mpesa_ref || o.external_id;
         if (seen.has(key)) continue;
         seen.add(key);

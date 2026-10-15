@@ -81,6 +81,18 @@
       Z.sb.from('pay_items').select('*').or(`period.eq.${period},and(status.eq.due,period.lt.${period}),and(status.eq.waiting,period.lt.${period})`).order('due_date').order('name').then(must),
       Z.ts && Z.ts.ok ? Z.ts.ok().then((ok) => (ok ? Z.sb.from('expenses').select('id,bill_id,amount,created_by,recorded_by').eq('approval', 'waiting').then(must).catch(() => []) : [])) : Promise.resolve([]),
     ]);
+    // v2.36 (15 Oct): a bill paid in Bills or Money out after the list was built stayed "due" here at its old amount, and
+    //       "Record it" paid it a second time. Bill lines now follow the bill: paid → off the list; part-paid → what's still owing.
+    const billIds = [...new Set(items.filter((i) => i.kind === 'bill' && i.ref_id).map((i) => i.ref_id))];
+    const billRows = billIds.length ? await Z.sb.from('bills').select('id,amount,paid_amount').in('id', billIds).then(must).catch(() => []) : [];
+    const owingOf = {}; billRows.forEach((b) => (owingOf[b.id] = Math.max(0, Number(b.amount) - Number(b.paid_amount || 0))));
+    let paidElsewhere = 0;
+    for (let k = items.length - 1; k >= 0; k--) {
+      const i = items[k];
+      if (i.kind !== 'bill' || i.status !== 'due' || !(i.ref_id in owingOf)) continue;
+      if (owingOf[i.ref_id] <= 0) { items.splice(k, 1); paidElsewhere++; }
+      else if (owingOf[i.ref_id] < Number(i.amount)) i.amount = owingOf[i.ref_id];
+    }
     const today = Z.ymd();
     const billWait = (i) => (i.kind === 'bill' ? waitExp.filter((e) => e.bill_id === i.ref_id).reduce((t, e) => t + Number(e.amount || 0), 0) : 0);
     const waiting = items.filter((i) => i.status === 'waiting');
@@ -102,6 +114,7 @@
         <div class="kpi"><div class="k">Coming in 3 days</div><div class="v num">${Z.fmt(sum(soon))}</div><div class="f">${soon.length} item${soon.length === 1 ? '' : 's'}</div></div>
         <div class="kpi"><div class="k">Sent this month</div><div class="v num ok">${Z.fmt(sum(sent))}</div><div class="f">${sent.length} payment${sent.length === 1 ? '' : 's'}</div></div>
       </div>
+      ${paidElsewhere ? `<p class="hint">✅ ${paidElsewhere} bill${paidElsewhere === 1 ? ' was' : 's were'} already paid in Bills, so ${paidElsewhere === 1 ? 'it is' : 'they are'} off this list.</p>` : ''}
       <h3>Pay now · ${now.length}</h3><div class="card list">${now.map(row).join('') || '<div class="muted">Nothing due today. 🎉 Tap Build today\'s list if you expected something.</div>'}</div>
       ${waiting.length ? `<h3>⏳ Waiting for a second OK · ${waiting.length}</h3><div class="card list" id="pr-waiting">${waiting.map((i) => `<div class="item"><span style="font-size:22px">${i.kind === 'staff' ? '👤' : '📋'}</span><div class="grow"><div class="t">${Z.esc(i.name)}</div><div class="m">Recorded by ${Z.esc(Z.personName(i.sent_by) || 'someone')}${i.ref_code ? ' · ' + Z.esc(i.ref_code) : ''} · ${i.sent_by === Z.me.id ? 'someone else must approve it' : '<a href="#money/approvals">approve it in 👥 Approvals</a>'}</div></div><b class="num">KES ${Z.fmt(i.amount)}</b></div>`).join('')}</div>` : ''}
       ${soon.length ? `<h3>Coming up</h3><div class="card list">${soon.map(row).join('')}</div>` : ''}
@@ -127,7 +140,7 @@
       const it = items.find((x) => x.id === b.closest('[data-id]').dataset.id);
       const sh = Z.sheet('✅ Record: ' + it.name, `
         <form id="prs">
-          <label>How much did you send? (KES)</label><input name="amount" inputmode="numeric" value="${Z.esc(it.amount)}" required>
+          <label>How much did you send? (KES)</label><input name="amount" inputmode="numeric" value="${Z.esc(Math.max(0, Number(it.amount) - billWait(it)))}" required>
           <label>Paid from</label><div class="seg" id="prs-from">${['M-Pesa', 'Bank', 'Cash'].map((k, i) => `<button type="button" data-v="${k}" class="${i ? '' : 'on'}">${k === 'M-Pesa' ? '📱' : k === 'Bank' ? '🏦' : '💵'} ${k}</button>`).join('')}</div>
           <label>M-Pesa / bank code</label><input name="ref" autocapitalize="characters" placeholder="e.g. SJK3X9ABCD">
           <div style="height:12px"></div><button class="btn block">Record it</button>
@@ -138,7 +151,10 @@
         e.preventDefault();
         const amt = Z.num(e.target.amount.value);
         if (!amt || amt <= 0) return Z.toast('Enter the amount.');
+        if (it.kind === 'bill' && amt > Number(it.amount) - billWait(it) && !confirm(`That is more than the KES ${Z.fmt(Number(it.amount) - billWait(it))} still owing on this bill. Record it anyway?`)) return;
+        const btn = Z.$('button.block', e.target); if (btn.disabled) return; btn.disabled = true;
         const { data, error } = await Z.sb.rpc('record_pay_item', { p_item: it.id, p_from: from, p_ref: e.target.ref.value.trim() || null, p_amount: amt });
+        btn.disabled = false;
         if (error) return Z.fail(error);
         sh.close(); Z.toast(data && data.waiting ? 'Recorded — waiting for a second person\'s OK (👥 Approvals).' : 'Recorded as an expense.'); Z.route();
       };
