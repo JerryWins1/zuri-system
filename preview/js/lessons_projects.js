@@ -23,7 +23,7 @@
       { el: '#pj-answer', say: 'The answer comes first, in plain words: how much it costs to start, and the month you get it back.' },
       { el: '#pj-answer li', say: 'Two different months matter. Break-even is the first month when the money coming in is more than the money going out that month.' },
       { el: () => find('#pj-answer li:nth-child(2)'), say: 'Payback comes later. By then, all the profits added together have paid back the start-up money, and the losses of the early months.' },
-      { el: () => find('#pj-answer li:nth-child(3)'), say: 'And the most money tied up: the deepest the cash goes. That is how much the partners must have ready, or borrow.' },
+      { el: () => find('#pj-answer li::Most money tied up'), say: 'And the most money tied up: the deepest the cash goes. That is how much the partners must have ready, or borrow.' },
       { el: '#pj-chart', say: 'The chart shows it. The line starts below zero: the start-up money going out. It falls while the months lose money, turns up at break-even, and crosses zero at payback.' },
     ], ['Open 📈 Projects from Home', 'Open Narok (example) and read the answer', 'Find break-even and payback on the chart']),
 
