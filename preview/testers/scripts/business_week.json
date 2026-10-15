@@ -4010,9 +4010,9 @@
      "at": "09:40",
      "role": "F",
      "t": "Pay part of a bill",
-     "do": "Bills: Pole rent (Satellite, 2,500, due today). 💸 Pay → amount 1,000, M-Pesa, code UKP1POLE10 → Save.",
+     "do": "Bills → Add a bill: Satellite, “Generator fuel”, 2,000, due day 28, Transport / Fuel → Add bill. Then on Generator fuel 💸 Pay → amount 1,000, M-Pesa, code UKP1GEN010 → Pay and record it.",
      "where": "Money → 📋 Bills",
-     "end": "Pole rent shows KES 1,500 still owing. (The Partner approves it if the two-person rule is on.)",
+     "end": "Generator fuel shows KES 1,000 still owing. (The Partner approves it if the two-person rule is on.)",
      "route": "money/bills",
      "feat": [
       "bills.pay.part"

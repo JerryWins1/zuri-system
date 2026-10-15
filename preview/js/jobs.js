@@ -197,7 +197,7 @@
     const outage = () => { if (Z.outageBox && Z.isOffice()) Z.outageBox(Z.$('#nj-outage', el), 'form', Z.$('#nj-area', el).value); };
     Z.$('#nj select[name=kind]', el).addEventListener('change', checkExp);
     checkExp(); outage();
-    const fillTechs = () => { const s = Z.$('#nj-tech', el); if (!s) return; const a = Z.$('#nj-area', el).value; s.innerHTML = '<option value="">Not yet — decide later</option>' + Z.opts(Z.techs(a).map((p) => [p.id, p.full_name])); };
+    const fillTechs = () => { const s = Z.$('#nj-tech', el); if (!s) return; const a = Z.$('#nj-area', el).value; s.innerHTML = '<option value="">Not yet — decide later</option>' + Z.opts(covering(a, Z.techs(a).map((p) => [p.id, p.full_name]))); };
     fillTechs();
     Z.$('#nj-area', el).onchange = () => { fillTechs(); outage(); };
 
@@ -247,8 +247,11 @@
 
   // 7 Oct deep check #3: the person already on the job is always a choice, even if they moved area or were
   // switched off — otherwise the box shows "Nobody yet" and saving a new date silently takes the job off them.
+  // v2.37 (16 Oct): techs from other areas come after the area's own, marked "covering" — when a tech leaves or is off,
+  //       a partner must be able to send their jobs to someone from the other area (Business Week day 7).
+  const covering = (area, list) => list.concat(Z.techs().filter((p) => !list.some(([id]) => id === p.id)).map((p) => [p.id, p.full_name + ' (other area — covering)']));
   function techChoices(t) {
-    const list = Z.techs(t.area).map((p) => [p.id, p.full_name]);
+    const list = covering(t.area, Z.techs(t.area).map((p) => [p.id, p.full_name]));
     if (t.assigned_to && !list.some(([id]) => id === t.assigned_to)) {
       const p = Z.ref.people.find((x) => x.id === t.assigned_to) || {};
       list.unshift([t.assigned_to, (p.full_name || Z.personName(t.assigned_to) || 'Current tech') + (p.active === false ? ' (switched off)' : p.role && p.role !== 'field' ? '' : ' (other area)')]);

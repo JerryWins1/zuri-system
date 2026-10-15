@@ -95,6 +95,9 @@
 
   // ---------- state ----------
   let bw = null, RL = {}, me = null, today = 0, mine = [], dayObj = null;
+  // v2.37 (16 Oct): "Go there" opens the page part of a route ("customers/:id/edit" → "customers"); and a real-world
+  //       problem keeps its screen hidden until 💡 Show me how — showing it would give the answer away.
+  const goTo = (r) => { const out = []; for (const seg of String(r || '').split('/')) { if (!seg || seg.startsWith(':')) break; out.push(seg); } return out.join('/'); };
   let ui = { open: get('coach_open', true), mode: 'card', showHint: false, showEnd: false, ease: null, self: null, said: '' };
   const st = () => get('bw_state', {});
   const writeState = (id, v) => { const s = st(); if (v) s[id] = v; else delete s[id]; set('bw_state', s); };
@@ -281,7 +284,7 @@
       ${c.copy ? `<div class="zc-copy"><span>${esc(c.copy)}</span><button class="zc-b" data-a="copy">Copy</button></div>` : ''}
       ${c.file ? `<p><a class="zc-b" href="${esc('testers/' + c.file)}" download>⬇️ ${esc(c.file.split('/').pop())}</a></p>` : ''}
       ${scen && c.hint ? (hintOpen ? `<div class="zc-lbl">💡 How</div><div class="zc-hint">${esc(c.hint)}</div>` : `<button class="zc-b" data-a="hint">💡 Show me how</button>`) : ''}
-      ${c.where || c.route ? `<div class="zc-lbl">📍 Where</div><div class="row" style="gap:8px"><span class="grow">${esc(c.where || c.route)}</span>${c.route ? `<button class="zc-b go" data-a="go">Go there →</button>` : ''}</div>` : ''}
+      ${(!scen || hintOpen) && (c.where || goTo(c.route)) ? `<div class="zc-lbl">📍 Where</div><div class="row" style="gap:8px"><span class="grow">${esc(c.where || goTo(c.route))}</span>${goTo(c.route) ? `<button class="zc-b go" data-a="go">Go there →</button>` : ''}</div>` : ''}
       ${!scen && (call ? c.check || c.end : c.end) ? `<div class="zc-lbl">${call ? 'Check that…' : 'You should end with…'}</div><div class="zc-end">${esc(call ? c.check || c.end : c.end)}</div>` : ''}
       <div class="zc-grid">
         <button class="zc-b ok wide" data-a="done">✅ Done</button>
@@ -313,7 +316,7 @@
     if (a === 'back') { ui.mode = 'card'; return render(); }
     if (a === 'off') { set('coach_off', true); if (root) root.remove(); root = null; document.body.classList.remove('zc-on'); Z.toast('Coach hidden. Your Business Week link brings it back.'); return; }
     if (!c) return;
-    if (a === 'go') { tick(); ui.open = false; set('coach_open', false); if (c.route) Z.go(c.route); return render(); }
+    if (a === 'go') { tick(); ui.open = false; set('coach_open', false); if (goTo(c.route)) Z.go(goTo(c.route)); return render(); }
     if (a === 'hint') { const x = m(c); x.hint = 1; saveM(c.id, x); ui.showHint = true; return render(); }
     if (a === 'copy') { (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(c.copy) : Promise.reject()).then(() => Z.toast('Copied — paste it in Zuri.'), () => Z.toast('Press and hold the words to copy them.')); return; }
     if (a === 'later') { const l = later().filter((x) => x !== c.id); l.push(c.id); setLater(l); set('coach_pick', null); ui.showHint = false; ui.open = true; Z.toast('Moved to the end of today.'); return render(); }
