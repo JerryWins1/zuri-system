@@ -16,6 +16,8 @@
   // 'Photo saved' (v2.32) is set by 🧾 Snap a receipt when the photo is kept with the expense; the old three stay valid.
   const RECEIPTS = ['Digital / M-Pesa msg', 'Paper receipt — filed', 'No — chase it'];
   const ALL_RECEIPTS = ['Photo saved', ...RECEIPTS];
+  // v2.36 (15 Oct): Money out starts on Category “— choose —” and Receipt “No — chase it” (it saved Payroll + “Digital” by
+  //       default, so the books had wrong categories and missing receipts were never chased). A pasted M-Pesa message sets Digital.
   const IN_CATS = ['Hotspot', 'Installation fee', 'Reconnection fee', 'Equipment sale', 'Other'];
   const monthStart = (ym = Z.ym()) => ym + '-01';
   const nextMonth = (ym, k = 1) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + k, 1); return Z.ym(d); };
@@ -38,11 +40,29 @@
     el.innerHTML = `<div class="row m-head" style="justify-content:space-between;align-items:center;margin-bottom:4px"><h2 style="margin:4px 0">Money${Z.area ? ' · ' + Z.esc(Z.areaName(Z.area)) : ' · all areas'}</h2>${Z.routes.projects ? '<a class="btn sec small" id="m-projects" href="#projects">📈 Projects</a>' : ''}</div>
       ${Z.moneyNav(sub)}<div id="m-body"><div class="loading">Loading…</div></div>`;
     await VIEWS[sub](Z.$('#m-body', el), args.slice(1));
+    guardForms(el);
   };
 
-  // Latest cash count per area.
-  async function latestCounts() {
-    const rows = must(await inArea(Z.sb.from('cash_counts').select('*')).order('date', { ascending: false }).order('created_at', { ascending: false }).limit(200));
+  // v2.36 (15 Oct): a double tap on Save (slow signal) saved money twice — two expenses, two cash-ins, two counts.
+  // Every money form now ignores a second tap until the first save has finished.
+  function guardForms(root) {
+    Z.$$('form', root).forEach((f) => {
+      const h = f.onsubmit; if (!h || h._guard) return;
+      const g = async function (e) {
+        if (f._busy) { e.preventDefault(); return; }
+        f._busy = true; const bs = Z.$$('button[type=submit], button:not([type])', f); bs.forEach((b) => (b.disabled = true));
+        try { return await h.call(this, e); } finally { f._busy = false; bs.forEach((b) => { if (b.isConnected) b.disabled = false; }); }
+      };
+      g._guard = true; f.onsubmit = g;
+    });
+  }
+  Z.guardForms = guardForms;
+
+  // Latest cash count per area. v2.36 (15 Oct): anyArea = every area, whatever the header's area filter — a form can save
+  // for another area, and its empty balance box must keep THAT area's last figure (it was saved as 0).
+  async function latestCounts(anyArea) {
+    const q = Z.sb.from('cash_counts').select('*');
+    const rows = must(await (anyArea ? q : inArea(q)).order('date', { ascending: false }).order('created_at', { ascending: false }).limit(200));
     const out = {};
     for (const r of rows) if (!out[r.area]) out[r.area] = r;
     return out;
@@ -125,7 +145,7 @@
       const d = Z.formData(e.target);
       if (d.bank === '' && d.mpesa === '') return Z.toast('Enter at least one balance.');
       // 7 Oct deep check #1: a box left empty keeps the last count's figure (it used to be saved as 0).
-      const lc = (d.bank === '' || d.mpesa === '') ? (await latestCounts())[d.area] : null;
+      const lc = (d.bank === '' || d.mpesa === '') ? (await latestCounts(true))[d.area] : null;
       const keep = (v, k) => (v === '' ? (lc ? Number(lc[k]) || 0 : 0) : Z.num(v) || 0);
       const kept = [d.bank === '' && lc ? 'bank' : '', d.mpesa === '' && lc ? 'M-Pesa' : ''].filter(Boolean);
       const note = [d.note.trim(), kept.length ? kept.join(' and ') + ' carried from the ' + lc.date + ' count' : ''].filter(Boolean).join(' · ');
@@ -187,11 +207,11 @@
           <div><label>Area</label>${areaSelect()}</div>
           <div><label>Date</label><input type="date" name="date" value="${Z.ymd()}" required></div>
           <div><label>Paid to</label><input name="payee" list="me-payees" required autocomplete="off"><datalist id="me-payees">${payees.map((p) => `<option value="${Z.esc(p.name)}">`).join('')}</datalist></div>
-          <div><label>Category</label><select name="category" required>${Z.opts(cats.map((c) => c.name))}</select></div>
+          <div><label>Category</label><select name="category" required><option value="">— choose —</option>${Z.opts(cats.map((c) => c.name))}</select></div>
           <div><label>Amount (KES)</label><input name="amount" inputmode="numeric" required></div>
           <div><label>Paid from</label><select name="paid_from">${Z.opts(['M-Pesa', 'Bank', 'Cash'])}</select></div>
           <div><label>M-Pesa / bank code</label><input name="ref" autocapitalize="characters"><div id="me-match"></div></div>
-          <div><label>Receipt</label><select name="receipt">${Z.opts(RECEIPTS)}</select></div>
+          <div><label>Receipt</label><select name="receipt">${Z.opts(RECEIPTS, 'No — chase it')}</select></div>
           ${Z.projectPick ? Z.projectPick(live, Z.area || Z.me.area || (Z.ref.areas[0] || {}).code) : ''}
         </div>
         <label class="row" id="me-billrow" style="gap:8px;font-weight:600" hidden><input type="checkbox" name="as_bill" checked> <span id="me-billtxt"></span></label>
@@ -218,6 +238,7 @@
       const name = f.payee.value.trim().toLowerCase();
       matchedBill = name.length >= 3 ? openBills.find((b) => b.area === f.area.value && (b.name.toLowerCase().includes(name) || name.includes(b.name.toLowerCase()))) || null : null;
       Z.$('#me-billrow', el).hidden = !matchedBill;
+      if (matchedBill && !f.category.value && matchedBill.category) f.category.value = matchedBill.category; // v2.36: the bill knows its category
       if (matchedBill) Z.$('#me-billtxt', el).textContent = `This pays the ${matchedBill.name} bill (still owing ${Z.kes(Number(matchedBill.amount) - Number(matchedBill.paid_amount))}) — tick it off the bill list too`;
     };
     f.payee.onchange = () => { const p = payees.find((x) => x.name.toLowerCase() === f.payee.value.trim().toLowerCase()); if (p && p.category) f.category.value = p.category; findBill(); };
@@ -268,7 +289,7 @@
     async function saveBalance(area, date) {
       if (parsedBalance == null) return;
       const day = date || Z.ymd();
-      const lc = (await latestCounts())[area];
+      const lc = (await latestCounts(true))[area];
       if (lc && lc.date > day) return;
       await Z.sb.from('cash_counts').insert({ area, date: day, bank: lc ? lc.bank : 0, mpesa: parsedBalance, counted_by: 'M-Pesa message', note: 'M-Pesa balance from confirmation message' });
     }
@@ -365,6 +386,8 @@
     Z.$('#mb', el).onsubmit = async (e) => {
       e.preventDefault();
       const d = Z.formData(e.target);
+      // v2.36 (15 Oct): a bill of −500 (or 0) was saved and showed as already paid.
+      if (!(Z.num(d.amount) > 0)) return Z.toast('Enter the bill amount (more than 0).');
       const { error } = await Z.sb.from('bills').insert({ area: d.area, month: ym, name: d.name.trim(), amount: Z.num(d.amount), due_day: Math.min(31, Math.max(1, parseInt(d.due_day, 10) || 1)), category: d.category, pay_to: d.pay_to.trim() || null, ...(Z.projectTagFields ? Z.projectTagFields(d) : {}) });
       if (error) return Z.toast(/unique|duplicate/i.test(error.message) ? 'That bill is already on this month\'s list.' : Z.errText(error));
       Z.toast('Bill added.'); Z.route();
@@ -455,6 +478,8 @@
       e.preventDefault();
       const amt = Z.num(e.target.amount.value);
       if (!amt || amt <= 0) return Z.toast('Enter an amount.');
+      // v2.36 (15 Oct): KES 10,000 on a 1,000 bill was saved without a word (the pay run already asked).
+      if (amt > owing(b) && !confirm(`That is more than the KES ${Z.fmt(owing(b))} still owing on ${b.name}. Record it anyway?`)) return;
       const btn = Z.$('button.block', e.target); btn.disabled = true;
       const { data, error } = await Z.sb.rpc('pay_bill', { p_bill: b.id, p_amount: amt, p_from: from, p_ref: e.target.ref.value.trim() || null });
       btn.disabled = false;

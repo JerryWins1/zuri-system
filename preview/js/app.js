@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.35 · 2026-10-13';
+  Z.version = 'v2.36 · 2026-10-15';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -428,9 +428,16 @@
         return r.error;
       // 🧾 Receipts (v2.32): the expense first, then its photo (the storage rules check the expense exists).
       case 'expense_insert': {
-        r = await Z.sb.from('expenses').upsert(d.row, { onConflict: 'id', ignoreDuplicates: true });
+        // v2.36 (15 Oct): with a photo, the expense goes in as "chase it" and only says "Photo saved" once the photo is
+        //       really up — a photo that never arrived (then Discard) no longer counts as a receipt in the Friday report.
+        const first = d.key ? { ...d.row, receipt: 'No — chase it', receipt_path: null } : d.row;
+        r = await Z.sb.from('expenses').upsert(first, { onConflict: 'id', ignoreDuplicates: true });
         if (r.error) return r.error;
-        if (d.key) { const e = await uploadReceipt(d.key, d.row.receipt_path); if (e) return e; }
+        if (d.key) {
+          const e = await uploadReceipt(d.key, d.row.receipt_path); if (e) return e;
+          const u = await Z.sb.from('expenses').update({ receipt: d.row.receipt, receipt_path: d.row.receipt_path }).eq('id', d.row.id);
+          if (u.error) return u.error;
+        }
         if (d.newPayee) await Z.sb.from('payees').insert({ name: d.row.payee, category: d.row.category }).then(() => {}, () => {});
         return null;
       }
@@ -463,6 +470,11 @@
     return null;
   }
 
+  // v2.36 (15 Oct): what was sent in the last 2 minutes. A page that loads while a change is on its way could get the
+  //       server's OLD copy after the change had already left the queue — so a finished job redrew as "Assigned" with an
+  //       empty form, and the next Save wiped the cash collected or took the job off its tech. Pages lay these on top too.
+  const recent = [];
+  Z.recentOps = () => { const old = Date.now() - 120e3; while (recent.length && recent[0].t < old) recent.shift(); return recent.slice(); };
   let flushing = false;
   Z.flush = async () => {
     if (flushing || !Z.online() || !Z.me || !Z.pending().length) return;
@@ -472,7 +484,7 @@
       for (const it of Z.pending()) {
         let err;
         try { err = await runOp(it); } catch (e) { err = e; }
-        if (!err) { Z.queue = Z.queue.filter((q) => q.qid !== it.qid); sent++; }
+        if (!err) { Z.queue = Z.queue.filter((q) => q.qid !== it.qid); sent++; recent.push({ op: it.op, data: it.data, t: Date.now() }); }
         else if (Z.isNet(err)) break;
         else if (Z.isAuth(err)) { Z.toast('Sign in again to send the work saved on this phone.'); break; }
         else it.err = Z.errText(err);

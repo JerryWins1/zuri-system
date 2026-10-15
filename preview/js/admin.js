@@ -8,7 +8,7 @@
   Z.routes.admin = async (args, el) => {
     const sub = SUBS.some(([k]) => k === args[0]) ? args[0] : 'people';
     const subs = SUBS.filter(([k]) => k !== 'staff' || Z.isFinance());
-    el.innerHTML = `<h2>Admin</h2><div class="subtabs">${subs.map(([k, t]) => `<a href="#admin/${k}" class="${k === sub ? 'on' : ''}">${t}</a>`).join('')}</div><div id="a-body"><div class="loading">Loading…</div></div>`;
+    el.innerHTML = `<h2>Admin</h2><div class="subtabs wrap">${subs.map(([k, t]) => `<a href="#admin/${k}" class="${k === sub ? 'on' : ''}">${t}</a>`).join('')}</div><div id="a-body"><div class="loading">Loading…</div></div>`;
     await VIEWS[sub](Z.$('#a-body', el));
   };
   const VIEWS = {};
@@ -42,6 +42,7 @@
         if (error) return Z.fail(error);
         await Z.loadRef();
         Z.toast('Saved.');
+        Z.route(); // v2.36 (15 Oct): the “N waiting to be switched on” note stayed until you left the page
       };
     });
   };

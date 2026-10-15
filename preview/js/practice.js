@@ -648,10 +648,11 @@
   }
 
   // ---------- the database's built-in jobs ----------
-  const paidThisMonth = (c) => D.payments.filter((p) => p.customer_id === c.id && p.date.slice(0, 7) === ym()).reduce((t, p) => t + Number(p.amount), 0);
-  function collections() {
+  // v2.36 (15 Oct): Who paid's ← / → months showed this month's figures under last month's name; the month is passed through now.
+  const paidThisMonth = (c, mo) => D.payments.filter((p) => p.customer_id === c.id && p.date.slice(0, 7) === (mo || ym())).reduce((t, p) => t + Number(p.amount), 0);
+  function collections(mo) {
     return D.v_customers.filter((c) => c.status === 'active').map((c) => {
-      const paid = paidThisMonth(c), late = c.paid_until && new Date(c.paid_until) < new Date();
+      const paid = paidThisMonth(c, mo), late = c.paid_until && new Date(c.paid_until) < new Date();
       const state = late ? (paid > 0 ? 'part' : 'late') : paid >= Number(c.monthly_rate) ? 'paid' : paid > 0 ? 'part' : c.paid_until ? 'due_later' : 'unpaid';
       return { customer_id: c.id, full_name: c.full_name, phone: c.phone, area: c.area, monthly_rate: c.monthly_rate, paid_this_month: paid, state, paid_until: c.paid_until, usual_day: new Date(c.paid_until || Date.now()).getDate(), reliability: late ? 0.6 : 0.95 };
     });
@@ -722,7 +723,7 @@
   const projLog = (id, kind, why, changes) => D.project_revisions.push({ id: uuid(), project_id: id, at: new Date().toISOString(), by: meId(), by_name: me().full_name, kind, why: why || null, changes: changes || null });
   const RPC = {
     dashboard_snapshot: (a) => snapshot(a.p_area),
-    collections_month: () => collections(),
+    collections_month: (a) => collections(a && a.p_month ? String(a.p_month).slice(0, 7) : null),
     cash_projection: (a) => projection(a.p_area, a.p_start, a.p_extra),
     pay_bill: (a) => {
       if (!isFinance()) throw new Error('Only finance can pay bills.');
@@ -892,7 +893,20 @@
       projLog(j.id, 'imported', 'Moved from a phone into the database'); return j.id;
     },
     project_planner_version: () => 1,
-    import_payments: (a) => ({ rows: a.rows.length, added: a.rows.length, matched: 0 }),
+    // v2.36 (15 Oct): imported payments are really stored (Who paid, the report and the unmatched list change), and a
+    //       repeat import skips what is already there, like the real database.
+    import_payments: (a) => {
+      let added = 0, matched = 0;
+      const seen = new Set(D.payments.map((p) => p.mpesa_ref || p.external_id || '').filter(Boolean));
+      (a.rows || []).forEach((r) => {
+        const k = r.mpesa_ref || r.external_id || ''; if (k && seen.has(k)) return; if (k) seen.add(k);
+        const acc = String(r.account_ref || '').trim().toUpperCase(), ph = String(r.payer_phone || '').replace(/\D/g, '').slice(-9);
+        const c = D.v_customers.find((x) => (acc && String(x.account_no || '').toUpperCase() === acc) || (ph && String(x.phone || '').replace(/\D/g, '').slice(-9) === ph));
+        D.payments.push({ id: uuid(), ...r, customer_id: c ? c.id : null, area: c ? c.area : (r.area || null) }); added++; if (c) matched++;
+      });
+      save();
+      return { rows: (a.rows || []).length, added, matched };
+    },
   };
   const READ_ONLY = ['dashboard_snapshot', 'collections_month', 'cash_projection', 'receipt_suggest', 'receipt_code_check', 'time_savers_version']; // #17: these never change anything
   const blobs = new Map();

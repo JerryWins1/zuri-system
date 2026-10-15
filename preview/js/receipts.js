@@ -594,7 +594,8 @@
           await Z.idb.putBlob(key, S.blob);
           Z.enqueue('receipt_attach', { id: data.expense, key, path: Z.receiptPath(row.area, row.date, data.expense) });
         }
-        Z.toast(`Saved and counted against the ${S.matchedBill.name} bill.`);
+        // v2.36 (15 Oct): with two people for money out on, the payment waits for an OK — don't say the bill is settled.
+        Z.toast(data && data.waiting ? `Saved for the ${S.matchedBill.name} bill — waiting for a second person's OK (👥 Approvals).` : `Saved and counted against the ${S.matchedBill.name} bill.`);
         return tk ? Z.go('jobs/' + tk.id) : Z.route();
       }
       let key = null;

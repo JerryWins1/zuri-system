@@ -1,9 +1,9 @@
 {
- "version": "v1.1 · 2026-10-14",
+ "version": "v1.2 · 2026-10-15",
  "start": "2026-10-17",
  "days_total": 7,
  "code": "ZURI-BW",
- "training": "https://jerrywins1.github.io/zuri-system/?training",
+ "training": "https://jerrywins1.github.io/zuri-system/preview/?training",
  "pay": {
   "day": 600,
   "problem": 100,
@@ -648,8 +648,8 @@
      "at": "10:30",
      "role": "T1",
      "t": "Fuel receipt",
-     "do": "You bought fuel for the motorbike. Me → 🧾 Snap a receipt → 📩 Paste M-Pesa message. Paste the message (Copy button below) → Read the message. What was it for: Transport / Fuel. Area Town Centre. ✅ Save.",
-     "where": "Me → 🧾 Snap a receipt",
+     "do": "You bought fuel for the motorbike. Me → 📸 Snap a receipt → 📩 Paste M-Pesa message. Paste the message (Copy button below) → Read the message. What was it for: Transport / Fuel. Area Town Centre. ✅ Save.",
+     "where": "Me → 📸 Snap a receipt",
      "end": "“✅ Saved.” Me → 🧾 My receipts shows Total Energies 500 waiting for Finance.",
      "copy": "UKA1BWFUEL Confirmed. Ksh500.00 paid to TOTAL ENERGIES MAAI MAHIU. on 17/10/26 at 10:20 AM. New M-PESA balance is Ksh9,500.00. Transaction cost, Ksh0.00."
     },
@@ -816,6 +816,15 @@
      "end": "They did not make you a customer. They said they will find out (a task for the Partners)."
     },
     {
+     "id": "d1-p-x1",
+     "at": "11:45",
+     "role": "P",
+     "t": "First look at 🏢 Headquarters",
+     "do": "Home → tap the 🏢 Headquarters card. Read Needs a decision, then Areas side by side, then Live activity (Last 24 hours). Scroll to The team.",
+     "where": "Home → 🏢 Headquarters",
+     "end": "Both areas (Town Centre, Satellite) are in the table. Today's new customers and jobs are in Live activity, with who did them. Everyone you switched on is in The team."
+    },
+    {
      "id": "d1-p-08",
      "at": "11:50",
      "role": "P",
@@ -844,14 +853,14 @@
     }
    ],
    "brief": {
-    "P": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. You build it first; the team waits for your “You are on”.\n\nYour challenges today:\n09:00  Sign in and make the company\n09:10  Make the two areas\n09:20  Switch your team on\n09:35  Type the price list\n09:45  Hubs on the map\n10:30  Approve the first money out\n11:30  Give the team their first tasks\n11:50  Read the first report\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "F": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in (after the Partner switches you on)\n09:45  Opening cash count\n10:00  Put in the staff\n10:20  Record the router purchase (with VAT)\n10:40  Put in October's bills\n11:15  Confirm Tech 1's fuel receipt\n11:45  Next 30 days\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C1": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in\n10:15  First customer: Mama Wanjiku calls\n11:10  John Kamau calls\n11:30  Faith's Salon calls (business)\n11:50  Check every job has a tech and a day\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C2": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in\n10:40  Mercy Atieno calls (Satellite)\n11:45  A hotspot question (not a customer)\n11:55  Look at the map\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T1": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n10:30  Fuel receipt\n11:30  Tomorrow's jobs\n11:45  Log a survey job\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T2": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n11:00  Survey the market\n11:40  Your first install\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T3": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n11:00  Survey Satellite\n11:40  Tomorrow\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "V": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour calls today:\n10:15  Call 1 — Mama Wanjiku wants internet\n10:40  Call 2 — Mercy Atieno (Satellite)\n11:10  Call 3 — John Kamau\n11:30  Call 4 — Faith's Salon (business)\n11:45  Call 5 — a hotspot question\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+    "P": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. You build it first; the team waits for your “You are on”.\n\nYour challenges today:\n09:00  Sign in and make the company\n09:10  Make the two areas\n09:20  Switch your team on\n09:35  Type the price list\n09:45  Hubs on the map\n10:30  Approve the first money out\n11:30  Give the team their first tasks\n11:50  Read the first report\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in (after the Partner switches you on)\n09:45  Opening cash count\n10:00  Put in the staff\n10:20  Record the router purchase (with VAT)\n10:40  Put in October's bills\n11:15  Confirm Tech 1's fuel receipt\n11:45  Next 30 days\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in\n10:15  First customer: Mama Wanjiku calls\n11:10  John Kamau calls\n11:30  Faith's Salon calls (business)\n11:50  Check every job has a tech and a day\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in\n10:40  Mercy Atieno calls (Satellite)\n11:45  A hotspot question (not a customer)\n11:55  Look at the map\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n10:30  Fuel receipt\n11:30  Tomorrow's jobs\n11:45  Log a survey job\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n11:00  Survey the market\n11:40  Your first install\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour challenges today:\n09:30  Sign in and put Zuri on your phone\n11:00  Survey Satellite\n11:40  Tomorrow\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 1 of 7 (Sat 17 Oct) · Open the doors\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n🆕 FRESH company today — it starts EMPTY. The Partner builds it first; wait for “You are on”.\n\nYour calls today:\n10:15  Call 1 — Mama Wanjiku wants internet\n10:40  Call 2 — Mercy Atieno (Satellite)\n11:10  Call 3 — John Kamau\n11:30  Call 4 — Faith's Salon (business)\n11:45  Call 5 — a hotspot question\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
    }
   },
   {
@@ -909,6 +918,15 @@
      "end": "Install booked for Monday morning with a technician."
     },
     {
+     "id": "d2-c1-x1",
+     "at": "14:20",
+     "role": "C1",
+     "t": "Search finds Leads too",
+     "do": "Customers: leave the status box on Active. Search “Grace”.",
+     "where": "Customers",
+     "end": "Grace Wanjiku shows (as a Lead) with the note “Searching every status”. If she does NOT show, tap ❌: people will get added twice."
+    },
+    {
      "id": "d2-p-01",
      "at": "14:30",
      "role": "P",
@@ -949,9 +967,9 @@
      "at": "15:00",
      "role": "P",
      "t": "Add a “Router serial” field",
-     "do": "Admin → Custom fields: Field name “Router serial”, Kind Text → Add field. Then Who sees what → tick Router serial for Field tech.",
+     "do": "Admin → Custom fields: Field name “Router serial”, Kind Text → Add field. Then Who sees what → tick Router serial for Call center.",
      "where": "Me → ⚙️ Admin → Custom fields",
-     "end": "Router serial is a field; techs can see it."
+     "end": "Router serial is a field the call center can fill on a customer. (Techs record serials under the job's Parts.)"
     },
     {
      "id": "d2-c1-03",
@@ -1040,7 +1058,7 @@
      "role": "T3",
      "t": "Fuel — snap it",
      "do": "Snap the receipt (copy below). Transport / Fuel. Area Satellite.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Total Energies 700 in My receipts.",
      "copy": "UKC3BWFUEL Confirmed. Ksh700.00 paid to TOTAL ENERGIES MAAI MAHIU. on 18/10/26 at 3:25 PM. New M-PESA balance is Ksh8,800.00. Transaction cost, Ksh0.00."
     },
@@ -1076,10 +1094,19 @@
      "at": "16:00",
      "role": "T1",
      "t": "Buy cable — snap the receipt",
-     "do": "Me → 🧾 Snap a receipt → 📩 Paste M-Pesa message (copy below) → Read. What was it for: Equipment / Inventory. ✅ Save.",
-     "where": "Me → 🧾 Snap a receipt",
+     "do": "Me → 📸 Snap a receipt → 📩 Paste M-Pesa message (copy below) → Read. What was it for: Equipment / Inventory. ✅ Save.",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Kamau Hardware 1,800 in 🧾 My receipts, waiting for Finance.",
      "copy": "UKB2BWCABL Confirmed. Ksh1,800.00 paid to KAMAU HARDWARE. on 18/10/26 at 3:58 PM. New M-PESA balance is Ksh7,700.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d2-f-x1",
+     "at": "16:00",
+     "role": "F",
+     "t": "Fix a mistake: delete a wrong entry",
+     "do": "Money → Money out: record KES 100, payee “TEST — delete me”, Cash. Then find it in the list below and tap ✕ to delete it.",
+     "where": "Money → Money out",
+     "end": "It is gone from the list and from Cash today. The totals are the same as before."
     },
     {
      "id": "d2-c1-05",
@@ -1154,6 +1181,15 @@
      "end": "Done, collected KES 4,500 (mpesa) UKL5LUCY45. (Lucy will ask about this on day 4.)"
     },
     {
+     "id": "d2-p-x1",
+     "at": "16:40",
+     "role": "P",
+     "t": "Message the Satellite team from Headquarters",
+     "do": "🏢 Headquarters → ✉️ Message… → tap the Satellite button → write: Habari {name}, asante for today! → Next: send → send it on WhatsApp to each person (one tap each, then press Send in WhatsApp).",
+     "where": "🏢 Headquarters → ✉️ Message…",
+     "end": "Each person got the message with THEIR first name (not “{name}”). A ✅ shows next to each one you sent."
+    },
+    {
      "id": "d2-p-04",
      "at": "16:45",
      "role": "P",
@@ -1182,14 +1218,14 @@
     }
    ],
    "brief": {
-    "P": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Partner)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:30  Who sees what\n15:00  Add a “Router serial” field\n15:30  Answer the hotspot question\n16:45  Look at Home\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "F": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Finance)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:30  Count the cash\n15:30  Confirm the techs' receipts\n16:00  See the install money\n16:45  Money in — a router sold\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C1": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Call center 1)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:15  Peter Mwangi calls\n14:40  Lucy Njeri calls — wants it today\n15:00  Make installed customers Active\n15:45  Longonot View Hotel calls\n16:10  Mama Wanjiku: forgot the WiFi password\n16:30  Esther Wairimu calls\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C2": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Call center 2)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n15:00  Joseph Kibet calls\n15:20  Purity Nyambura calls\n16:30  Mercy is connected — make her Active\n16:50  Check Tech 3's day\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T1": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Tech 1)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Mama Wanjiku\n15:15  Install John Kamau (paid by M-Pesa)\n16:00  Buy cable — snap the receipt\n16:40  Lucy Njeri's install (if booked for today)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T2": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Tech 2)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Faith's Salon (business, urgent)\n15:30  Survey Longonot View Hotel\n16:30  Mama Wanjiku forgot her WiFi password\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T3": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Tech 3)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Mercy Atieno\n15:30  Fuel — snap it\n16:15  Install Joseph Kibet / Purity Nyambura (if booked today)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "V": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Customer voice)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n14:15  Call 1 — Peter Mwangi\n14:40  Call 2 — Lucy Njeri (impatient)\n15:00  Call 3 — Joseph Kibet\n15:20  Call 4 — Purity Nyambura\n15:45  Call 5 — Longonot View Hotel\n16:10  Call 6 — Mama Wanjiku forgot the password\n16:30  Call 7 — Esther Wairimu\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+    "P": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Partner)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:30  Who sees what\n15:00  Add a “Router serial” field\n15:30  Answer the hotspot question\n16:45  Look at Home\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Finance)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:30  Count the cash\n15:30  Confirm the techs' receipts\n16:00  See the install money\n16:45  Money in — a router sold\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Call center 1)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:15  Peter Mwangi calls\n14:40  Lucy Njeri calls — wants it today\n15:00  Make installed customers Active\n15:45  Longonot View Hotel calls\n16:10  Mama Wanjiku: forgot the WiFi password\n16:30  Esther Wairimu calls\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Call center 2)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n15:00  Joseph Kibet calls\n15:20  Purity Nyambura calls\n16:30  Mercy is connected — make her Active\n16:50  Check Tech 3's day\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Tech 1)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Mama Wanjiku\n15:15  Install John Kamau (paid by M-Pesa)\n16:00  Buy cable — snap the receipt\n16:40  Lucy Njeri's install (if booked for today)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Tech 2)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Faith's Salon (business, urgent)\n15:30  Survey Longonot View Hotel\n16:30  Mama Wanjiku forgot her WiFi password\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Tech 3)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n14:00  Install Mercy Atieno\n15:30  Fuel — snap it\n16:15  Install Joseph Kibet / Purity Nyambura (if booked today)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 2 of 7 (Sun 18 Oct) · First installs\nHi [Name] (Customer voice)! Today 14:00–17:00 (after church) Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n14:15  Call 1 — Peter Mwangi\n14:40  Call 2 — Lucy Njeri (impatient)\n15:00  Call 3 — Joseph Kibet\n15:20  Call 4 — Purity Nyambura\n15:45  Call 5 — Longonot View Hotel\n16:10  Call 6 — Mama Wanjiku forgot the password\n16:30  Call 7 — Esther Wairimu\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
    }
   },
   {
@@ -1330,6 +1366,24 @@
      "end": "Done."
     },
     {
+     "id": "d3-p-x1",
+     "at": "10:00",
+     "role": "P",
+     "t": "Set the two-person rule",
+     "do": "Me → ⚙️ Admin → Settings → 👥 Two people for money out → On — two people → Needs a second person above (KES): 1000 → Save. Tell Finance in the team group: “Rule is 1,000.”",
+     "where": "Me → ⚙️ Admin → Settings",
+     "end": "Settings shows On, above KES 1,000."
+    },
+    {
+     "id": "d3-f-x1",
+     "at": "10:15",
+     "role": "F",
+     "t": "Test the two-person rule",
+     "do": "After the Partner sets the rule to 1,000: Money out → KES 500 “TEST small payment”, Cash → Save. Then KES 5,000 “TEST big payment”, Cash → Save. Then delete the 500 test (✕).",
+     "where": "Money → Money out",
+     "end": "The 500 saved straight away. The 5,000 says it is waiting for a second person (the Partner)."
+    },
+    {
      "id": "d3-c1-02",
      "at": "10:20",
      "role": "C1",
@@ -1366,6 +1420,24 @@
      "end": "Two payments of 4,500 (one field cash, one M-Pesa UKH4HOTL45). Write in the task: “Yes, paid twice — refund tomorrow after the Partner's OK.”"
     },
     {
+     "id": "d3-p-x2",
+     "at": "10:30",
+     "role": "P",
+     "t": "Decline a test payment",
+     "do": "Money → 📋 Bills → 👥 Approvals: Finance's “TEST big payment” (KES 5,000) is waiting. Tap ✋ Decline and give the reason “Test”.",
+     "where": "Money → 📋 Bills → 👥 Approvals",
+     "end": "It leaves the waiting list and shows as declined. The KES 500 test did not need you at all."
+    },
+    {
+     "id": "d3-t1-x1",
+     "at": "10:40",
+     "role": "T1",
+     "t": "Delete a part you added by mistake",
+     "do": "On your next job → Parts: add “TEST cable” × 1 → then tap ✕ on it.",
+     "where": "Jobs → the job → Parts",
+     "end": "TEST cable is gone, and stays gone after you close and open the job again."
+    },
+    {
      "id": "d3-c1-03",
      "at": "10:45",
      "role": "C1",
@@ -1398,9 +1470,27 @@
      "role": "T3",
      "t": "Splice kit — snap the receipt",
      "do": "Snap the receipt (copy below). Equipment / Inventory, area Satellite. In “More”: VAT 345, supplier PIN P052222222B.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Fibre World 2,500 in My receipts with VAT 345.",
      "copy": "UKD4BWSPLC Confirmed. Ksh2,500.00 paid to FIBRE WORLD NAIVASHA. on 19/10/26 at 10:55 AM. New M-PESA balance is Ksh6,300.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d3-c2-x1",
+     "at": "11:00",
+     "role": "C2",
+     "t": "Cancel a job made by mistake, then reopen it",
+     "do": "＋ New job for Mercy Atieno: Other, summary “TEST — made by mistake”. Open it → Cancel job. Then Reopen. Then Cancel job again.",
+     "where": "Jobs → the job",
+     "end": "The job shows cancelled, then open, then cancelled. The notes on the job show each change."
+    },
+    {
+     "id": "d3-t2-x1",
+     "at": "11:10",
+     "role": "T2",
+     "t": "Snap a receipt from inside a job",
+     "do": "On your job → Spent money on this job? → 📸 → take a photo of any paper (pretend receipt), KES 200, Transport → Save.",
+     "where": "Jobs → the job",
+     "end": "The receipt is saved on that job and waits in 👥 Approvals."
     },
     {
      "id": "d3-c2-02",
@@ -1467,14 +1557,14 @@
     }
    ],
    "brief": {
-    "P": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Approve and look\n10:30  The map after two days\n11:45  Run the manager\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "F": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Bring in the billing file — payments\n09:20  Bring in the billing file — customer list\n09:40  Who paid\n10:30  The double payment (Longonot View Hotel)\n11:30  Count before noon\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C1": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Samuel Otieno and Ruth Chebet call\n10:20  Pastor Moses calls\n10:45  John Kamau: slow internet\n11:40  Make today's installs Active\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C2": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:45  Satellite Academy and Beatrice call\n11:15  The hotel says they paid twice\n11:45  Make Satellite installs Active\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T1": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Peter Mwangi\n10:00  Install Samuel Otieno / Ruth Chebet (if booked)\n11:30  Clear your To do\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T2": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Longonot View Hotel\n10:00  Install Esther Wairimu\n11:00  John Kamau: slow internet\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T3": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Isaac — Satellite Academy (business)\n10:00  Install Beatrice Wambui\n11:00  Splice kit — snap the receipt\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "V": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Calls 1–2 — Samuel Otieno, Ruth Chebet\n09:45  Calls 3–4 — Satellite Academy, Beatrice\n10:20  Call 5 — Pastor Moses\n10:45  Call 6 — John Kamau: slow\n11:15  Call 7 — the hotel paid twice\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+    "P": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Approve and look\n10:30  The map after two days\n11:45  Run the manager\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Bring in the billing file — payments\n09:20  Bring in the billing file — customer list\n09:40  Who paid\n10:30  The double payment (Longonot View Hotel)\n11:30  Count before noon\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Samuel Otieno and Ruth Chebet call\n10:20  Pastor Moses calls\n10:45  John Kamau: slow internet\n11:40  Make today's installs Active\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:45  Satellite Academy and Beatrice call\n11:15  The hotel says they paid twice\n11:45  Make Satellite installs Active\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Peter Mwangi\n10:00  Install Samuel Otieno / Ruth Chebet (if booked)\n11:30  Clear your To do\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Longonot View Hotel\n10:00  Install Esther Wairimu\n11:00  John Kamau: slow internet\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Isaac — Satellite Academy (business)\n10:00  Install Beatrice Wambui\n11:00  Splice kit — snap the receipt\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 3 of 7 (Mon 19 Oct) · The first money arrives\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Calls 1–2 — Samuel Otieno, Ruth Chebet\n09:45  Calls 3–4 — Satellite Academy, Beatrice\n10:20  Call 5 — Pastor Moses\n10:45  Call 6 — John Kamau: slow\n11:15  Call 7 — the hotel paid twice\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
    }
   },
   {
@@ -1596,6 +1686,15 @@
      "end": "Second Satellite fault in 15 minutes."
     },
     {
+     "id": "d4-t2-x1",
+     "at": "10:20",
+     "role": "T2",
+     "t": "Send a customer's pin",
+     "do": "Open a job with a pin → 📤 Send pin → send it to yourself on WhatsApp.",
+     "where": "Jobs → the job",
+     "end": "The message opens Google Maps at the customer's house."
+    },
+    {
      "id": "d4-f-04",
      "at": "10:30",
      "role": "F",
@@ -1666,6 +1765,15 @@
      "do": "Call Call center 2 as Beatrice Wambui: “Is the internet down in Satellite?”",
      "where": "Call to Call center 2",
      "end": "They said yes, we know, technicians are on it — no visit."
+    },
+    {
+     "id": "d4-c1-x1",
+     "at": "10:45",
+     "role": "C1",
+     "t": "Skip a text, come back to it",
+     "do": "Jobs → 📩 Today's texts: on the first card tap ⏭ Skip. Work the rest. At the end tap ↺ Go through the skipped ones.",
+     "where": "Jobs → 📩 Today's texts",
+     "end": "The skipped card comes back at the end."
     },
     {
      "id": "d4-c1-02",
@@ -1763,9 +1871,18 @@
      "role": "T3",
      "t": "Splice sleeves + fuel — snap both",
      "do": "Snap two receipts (copy below, then the second from your role card): Fibre World 1,200 (Equipment / Inventory) and fuel 600.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Two receipts in My receipts, waiting for Finance.",
      "copy": "UKE5BWSLEV Confirmed. Ksh1,200.00 paid to FIBRE WORLD NAIVASHA. on 20/10/26 at 11:40 AM. New M-PESA balance is Ksh5,100.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d4-f-x1",
+     "at": "11:45",
+     "role": "F",
+     "t": "Look 30 days ahead with a one-off",
+     "do": "Money → Next 30 days → One-off money in or out: tomorrow, −50,000, “TEST generator” → add. Read the lowest point. Then remove the one-off.",
+     "where": "Money → Next 30 days",
+     "end": "The lowest point drops by 50,000 while it is there, and goes back when you remove it."
     },
     {
      "id": "d4-c1-04",
@@ -1796,14 +1913,14 @@
     }
    ],
    "brief": {
-    "P": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:35  The outage\n10:40  Approve the refund\n11:40  Approve KPLC and receipts\n12:00  Close the outage\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "F": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n08:45  Bring in today's billing files\n09:30  Dispute 1 — Joseph Kibet says he paid\n10:00  Dispute 2 — Lucy: was I overcharged?\n10:30  Dispute 3 — refund the hotel\n11:30  Bills due — KPLC\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C1": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:40  Dispute 2 — Lucy: overcharged?\n11:00  Ann Muthoni — new customer\n11:20  Kevin Omondi — new customer\n11:50  Pastor Moses installed?\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C2": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Dispute 1 — Joseph says he paid\n10:00  Outage call 1 — Mercy Atieno\n10:15  Outage call 2 — Purity\n10:30  Outage call 3 — Satellite Academy (urgent)\n10:45  Beatrice asks: is it down?\n11:15  Copy the notice\n11:40  Stephen Mutua — new customer\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T1": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Pastor Moses\n10:30  Help with the Satellite outage?\n11:30  Receipts check\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T2": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Hotel: second access point\n11:00  Your day in numbers\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T3": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:40  Many Satellite faults — go to the cabinet\n11:30  Fix it and close the faults\n11:45  Splice sleeves + fuel — snap both\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "V": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Call 1 — Joseph: I paid!\n09:40  Call 2 — Lucy: overcharged?\n10:00  Calls 3–5 — Satellite is down\n10:45  Call 6 — Beatrice: is it down?\n11:00  Calls 7–9 — new customers\n12:15  Call 10 — Mercy: it's back\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+    "P": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:35  The outage\n10:40  Approve the refund\n11:40  Approve KPLC and receipts\n12:00  Close the outage\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n08:45  Bring in today's billing files\n09:30  Dispute 1 — Joseph Kibet says he paid\n10:00  Dispute 2 — Lucy: was I overcharged?\n10:30  Dispute 3 — refund the hotel\n11:30  Bills due — KPLC\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:40  Dispute 2 — Lucy: overcharged?\n11:00  Ann Muthoni — new customer\n11:20  Kevin Omondi — new customer\n11:50  Pastor Moses installed?\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Dispute 1 — Joseph says he paid\n10:00  Outage call 1 — Mercy Atieno\n10:15  Outage call 2 — Purity\n10:30  Outage call 3 — Satellite Academy (urgent)\n10:45  Beatrice asks: is it down?\n11:15  Copy the notice\n11:40  Stephen Mutua — new customer\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Pastor Moses\n10:30  Help with the Satellite outage?\n11:30  Receipts check\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Hotel: second access point\n11:00  Your day in numbers\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:40  Many Satellite faults — go to the cabinet\n11:30  Fix it and close the faults\n11:45  Splice sleeves + fuel — snap both\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 4 of 7 (Tue 20 Oct) · The bad day\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Call 1 — Joseph: I paid!\n09:40  Call 2 — Lucy: overcharged?\n10:00  Calls 3–5 — Satellite is down\n10:45  Call 6 — Beatrice: is it down?\n11:00  Calls 7–9 — new customers\n12:15  Call 10 — Mercy: it's back\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
    }
   },
   {
@@ -1859,6 +1976,15 @@
      "do": "Call center will call YOU today. Answer as: Esther Wairimu — “I will pay on Saturday.” Samuel Otieno — don't answer (let it ring). Peter Mwangi — “I'm moving to Naivasha, please stop it.” Joseph Kibet — “The office fixed it yesterday, thank you.”",
      "where": "Calls from Call center 1 and 2",
      "end": "Each call ended with the right button in Zuri (ask them what they pressed)."
+    },
+    {
+     "id": "d5-t3-x1",
+     "at": "09:10",
+     "role": "T3",
+     "t": "Nearest job first",
+     "do": "Jobs → 📍 Nearest first (allow location).",
+     "where": "Jobs",
+     "end": "The list orders itself by distance from where you stand."
     },
     {
      "id": "d5-f-02",
@@ -1956,7 +2082,7 @@
      "role": "T3",
      "t": "Fuel receipt (second receipt from day 4)",
      "do": "If you didn't snap yesterday's fuel: snap it now (copy below), Transport / Fuel.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Fuel 600 in My receipts.",
      "copy": "UKE6BWFUEL Confirmed. Ksh600.00 paid to TOTAL ENERGIES MAAI MAHIU. on 20/10/26 at 11:44 AM. New M-PESA balance is Ksh4,500.00. Transaction cost, Ksh0.00."
     },
@@ -1970,12 +2096,30 @@
      "end": "A job for tomorrow."
     },
     {
+     "id": "d5-f-x1",
+     "at": "10:30",
+     "role": "F",
+     "t": "Skip one line on the pay run",
+     "do": "Pay run: on one person tap ⏭ Skip → then 🔄 Build today's list again. Copy one person's M-Pesa number.",
+     "where": "Money → 📋 Bills → Pay run",
+     "end": "The skipped person comes back after Build. The copied number is only digits."
+    },
+    {
+     "id": "d5-c2-x1",
+     "at": "10:40",
+     "role": "C2",
+     "t": "A fault call that is really an expired package",
+     "do": "The voice calls as a Satellite customer whose package ran out on day 3 (pick one who is Late). ＋ New job → Fault for them. Read the 💳 box → 💳 Turn this into a payment follow-up.",
+     "where": "Jobs → ＋ New job",
+     "end": "No tech visit is made. A payment follow-up is made instead."
+    },
+    {
      "id": "d5-f-04",
      "at": "10:45",
      "role": "F",
      "t": "Declined line — do it right",
      "do": "The Partner declines Staff transport (no receipt). It is back on the Pay run as due. Snap the receipt (copy below) for 3,000 and record the line again with code UKP3TRAN03.",
-     "where": "Pay run · 🧾 Snap a receipt",
+     "where": "Pay run · 📸 Snap a receipt",
      "end": "Staff transport waiting again — this time with a receipt.",
      "copy": "UKP3TRAN03 Confirmed. Ksh3,000.00 paid to MAAI MAHIU SACCO. on 21/10/26 at 10:40 AM. New M-PESA balance is Ksh49,300.00. Transaction cost, Ksh0.00."
     },
@@ -2025,6 +2169,15 @@
      "end": "They checked and gave you a new time, politely."
     },
     {
+     "id": "d5-p-x1",
+     "at": "11:15",
+     "role": "P",
+     "t": "Change a price, then change it back",
+     "do": "Me → ⚙️ Admin → Price list → Home 5 Mbps → change 1500 to 1700 → Save package. Open John Kamau's customer page. Then set Home 5 Mbps back to 1500 → Save package.",
+     "where": "Me → ⚙️ Admin → Price list",
+     "end": "While it was 1700, John Kamau still paid 1500 (old customers keep their price). It is back to 1500 now."
+    },
+    {
      "id": "d5-f-06",
      "at": "11:20",
      "role": "F",
@@ -2061,6 +2214,15 @@
      "end": "No ❌."
     },
     {
+     "id": "d5-t2-x1",
+     "at": "11:30",
+     "role": "T2",
+     "t": "Forgot password",
+     "do": "Me → Sign out. On the sign-in page tap Forgot password? → your email → open the email → set a new password → sign in.",
+     "where": "Sign-in page",
+     "end": "You are back in with the new password."
+    },
+    {
      "id": "d5-f-07",
      "at": "11:40",
      "role": "F",
@@ -2080,14 +2242,14 @@
     }
    ],
    "brief": {
-    "P": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:30  Approve the pay run — two people\n11:00  Approve Staff transport again\n11:30  Try to approve your own payment\n11:50  Read the Friday report\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "F": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n08:45  Cash count — both areas\n09:15  Build the pay run\n09:30  Send and record each one\n10:45  Declined line — do it right\n11:00  The VAT figures\n11:20  Export October\n11:40  The Friday report — printed\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C1": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Today's texts — customers who ran out\n09:30  Peter Mwangi wants to stop\n10:00  Ann Muthoni: no internet after install?\n11:00  Kevin: the technician is late\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C2": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Joseph's follow-up\n10:30  Purity: slow in the evenings\n11:30  Customers who ran out — read Who paid\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T1": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Ann Muthoni\n10:00  Receipts audit\n11:00  Look at Tasks\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T2": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Install Kevin Omondi (you'll be late)\n11:30  Your receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T3": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Stephen Mutua\n10:30  Fuel receipt (second receipt from day 4)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "V": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:00  Answer the payment calls\n10:00  Call — Ann: is the tech coming?\n10:30  Call — Purity: slow evenings\n11:00  Call — Kevin: the tech is late\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+    "P": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:30  Approve the pay run — two people\n11:00  Approve Staff transport again\n11:30  Try to approve your own payment\n11:50  Read the Friday report\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n08:45  Cash count — both areas\n09:15  Build the pay run\n09:30  Send and record each one\n10:45  Declined line — do it right\n11:00  The VAT figures\n11:20  Export October\n11:40  The Friday report — printed\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Today's texts — customers who ran out\n09:30  Peter Mwangi wants to stop\n10:00  Ann Muthoni: no internet after install?\n11:00  Kevin: the technician is late\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Joseph's follow-up\n10:30  Purity: slow in the evenings\n11:30  Customers who ran out — read Who paid\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Ann Muthoni\n10:00  Receipts audit\n11:00  Look at Tasks\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Install Kevin Omondi (you'll be late)\n11:30  Your receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Install Stephen Mutua\n10:30  Fuel receipt (second receipt from day 4)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 5 of 7 (Wed 21 Oct) · Pay day and reports\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:00  Answer the payment calls\n10:00  Call — Ann: is the tech coming?\n10:30  Call — Purity: slow evenings\n11:00  Call — Kevin: the tech is late\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
    }
   },
   {
@@ -2163,6 +2325,15 @@
      "end": "A task for the call center."
     },
     {
+     "id": "d6-f-x1",
+     "at": "09:40",
+     "role": "F",
+     "t": "Pay part of a bill",
+     "do": "Bills: Pole rent (Satellite, 2,500, due today). 💸 Pay → amount 1,000, M-Pesa, code UKP1POLE10 → Save.",
+     "where": "Money → 📋 Bills",
+     "end": "Pole rent shows KES 1,500 still owing. (The Partner approves it if the two-person rule is on.)"
+    },
+    {
      "id": "d6-f-02",
      "at": "10:00",
      "role": "F",
@@ -2190,11 +2361,20 @@
      "end": "They wrote the code; later they confirm it."
     },
     {
+     "id": "d6-t1-x1",
+     "at": "10:15",
+     "role": "T1",
+     "t": "Work with no signal",
+     "do": "Turn on airplane mode. Open a job → add a note “TEST no signal” → Save. Open Me: it shows something waiting. Turn airplane mode off → Me → Send now.",
+     "where": "Jobs · Me",
+     "end": "The note waits while offline, then sends. It is on the job afterwards (ask Call center to check)."
+    },
+    {
      "id": "d6-p-02",
      "at": "10:30",
      "role": "P",
      "t": "Read Finance's plan",
-     "do": "📈 Projects → Suswa town → read the green line and “the answer ↓”. Then ⚖️ Compare.",
+     "do": "📈 Projects → Suswa town → read the green line and “the answer ↓”. (⚖️ Compare only shows when there are two or more projects.)",
      "where": "📈 Projects",
      "end": "You can say: start-up cost, break-even month, payback month."
     },
@@ -2224,6 +2404,15 @@
      "do": "Me → 🧾 My receipts. Every receipt from day 2–5 there? Snap missing ones.",
      "where": "Me → 🧾 My receipts",
      "end": "No ❌."
+    },
+    {
+     "id": "d6-p-x1",
+     "at": "10:50",
+     "role": "P",
+     "t": "Move a hub on the map",
+     "do": "Me → ⚙️ Admin → Company & hubs → the Satellite cabinet → ✏️ Edit → move its pin a little (or tap Where I'm standing) → Save the hub. Then open Customers → 🗺️ Map.",
+     "where": "Me → ⚙️ Admin → Company & hubs",
+     "end": "The cabinet shows in its new place on the map."
     },
     {
      "id": "d6-p-03",
@@ -2280,6 +2469,15 @@
      "end": "Task Done with your note."
     },
     {
+     "id": "d6-p-x2",
+     "at": "11:20",
+     "role": "P",
+     "t": "Make and cancel an access code",
+     "do": "Me → ⚙️ Admin → Access codes → ＋ Make the code (label: TEST) → 📋 Copy → then Revoke it.",
+     "where": "Me → ⚙️ Admin → Access codes",
+     "end": "The TEST code shows as revoked. (Anyone using it would be stopped the next time they open Zuri.)"
+    },
+    {
      "id": "d6-f-05",
      "at": "11:30",
      "role": "F",
@@ -2297,6 +2495,15 @@
      "do": "Customers → 🗺️ Map → pick Suswa (planned) in the area picker at the top.",
      "where": "Customers → 🗺️ Map",
      "end": "No pins yet for leads without a location — that is normal. Note it."
+    },
+    {
+     "id": "d6-c1-x1",
+     "at": "11:30",
+     "role": "C1",
+     "t": "See the whole team's tasks",
+     "do": "Tasks → Team → pick Finance in the who-box → tick Show done.",
+     "where": "Tasks → Team",
+     "end": "You see Finance's open and done tasks. Nothing from other teams is mixed in."
     },
     {
      "id": "d6-f-06",
@@ -2337,14 +2544,14 @@
     }
    ],
    "brief": {
-    "P": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Add the planned area\n10:30  Read Finance's plan\n11:00  Share it\n11:40  Settings check\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "F": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Plan Suswa\n10:00  What if only 70% join?\n10:30  Receipts this week\n11:00  Ask for the second OK\n11:30  Billing files — Esther paid\n11:35  Esther's new expiry date (customer list)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C1": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:15  Esther says she paid\n11:00  Complaint: cable on the church path\n11:40  Samuel Otieno — second try\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C2": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Suswa calls — three people\n10:30  Purity's slow-evening job\n11:30  Map of the leads\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T1": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Suswa survey\n11:15  The church path\n11:40  Receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T2": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Faith's Salon: router moved?\n11:00  Your receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T3": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Purity: slow evenings\n10:30  Receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "V": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Calls 1–3 — Suswa wants internet\n10:15  Call 4 — Esther paid\n11:00  Call 5 — Pastor Moses complains\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+    "P": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Add the planned area\n10:30  Read Finance's plan\n11:00  Share it\n11:40  Settings check\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Plan Suswa\n10:00  What if only 70% join?\n10:30  Receipts this week\n11:00  Ask for the second OK\n11:30  Billing files — Esther paid\n11:35  Esther's new expiry date (customer list)\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:15  Esther says she paid\n11:00  Complaint: cable on the church path\n11:40  Samuel Otieno — second try\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:15  Suswa calls — three people\n10:30  Purity's slow-evening job\n11:30  Map of the leads\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Suswa survey\n11:15  The church path\n11:40  Receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Faith's Salon: router moved?\n11:00  Your receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Purity: slow evenings\n10:30  Receipts\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 6 of 7 (Thu 22 Oct) · Grow: a new area\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:15  Calls 1–3 — Suswa wants internet\n10:15  Call 4 — Esther paid\n11:00  Call 5 — Pastor Moses complains\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
    }
   },
   {
@@ -2442,7 +2649,7 @@
      "at": "10:00",
      "role": "P",
      "t": "Tech 3 leaves — move their jobs",
-     "do": "Admin → People → Tech 3 → untick On → Save. Then Jobs → All techs → pick Tech 3 → open each open job → Send to tech: Tech 2 → Save.",
+     "do": "First move the jobs: Jobs → All techs → pick Tech 3 → open each open job → Send to tech: Tech 2 → Save. Then Admin → People → Tech 3 → untick On → Save.",
      "where": "Admin → People · Jobs",
      "end": "Tech 3 is switched off. No open job is left with Tech 3."
     },
@@ -2514,7 +2721,7 @@
      "at": "10:30",
      "role": "C1",
      "t": "Clean the customer list",
-     "do": "Customers: search each Town Centre customer. Fix any double, missing phone or wrong package.",
+     "do": "Customers: set the status box to Any status, then search each Town Centre customer. Fix any double, missing phone or wrong package.",
      "where": "Customers",
      "end": "No doubles. Every customer has a phone and package. Note what you fixed."
     },
@@ -2550,9 +2757,18 @@
      "at": "11:00",
      "role": "C2",
      "t": "Who is still a Lead?",
-     "do": "Customers: pick Satellite in the area picker and look at the status on each customer.",
+     "do": "Customers: set the status box to Any status, pick Satellite in the area picker, and look at the status on each customer.",
      "where": "Customers",
      "end": "Only the Suswa leads (and anyone not yet installed) are Leads. Note anyone wrong."
+    },
+    {
+     "id": "d7-f-x1",
+     "at": "11:10",
+     "role": "F",
+     "t": "Edit and remove a bill",
+     "do": "Bills → next month → Staff transport → ✏️ change the due day to 25 → Save. Then add a bill “TEST bill” 100 → open it → 🗑️ Remove this bill.",
+     "where": "Money → 📋 Bills",
+     "end": "Staff transport is due on the 25th. TEST bill is gone."
     },
     {
      "id": "d7-f-06",
@@ -2609,6 +2825,15 @@
      "end": "Sent."
     },
     {
+     "id": "d7-p-x1",
+     "at": "11:30",
+     "role": "P",
+     "t": "The week in Headquarters",
+     "do": "🏢 Headquarters → Live activity → Last 7 days. Then All areas → Town Centre, then Satellite. Compare the Areas table with Finance's Friday report.",
+     "where": "🏢 Headquarters",
+     "end": "Every tester shows up in the activity. Customers and cash in the Areas table match the report. Note anything that does not match."
+    },
+    {
      "id": "d7-p-05",
      "at": "11:40",
      "role": "P",
@@ -2619,14 +2844,14 @@
     }
    ],
    "brief": {
-    "P": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Decide Suswa\n10:00  Tech 3 leaves — move their jobs\n10:30  A new package\n11:00  Run the manager and read it\n11:40  Go / no-go\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "F": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Last count of the week\n09:20  Next month's bills\n09:40  Late payers\n10:00  A staff member leaves\n10:30  Print everything\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C1": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Faith's Salon moves shop\n10:30  Clean the customer list\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "C2": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:00  Satellite Academy wants 50 Mbps\n11:00  Who is still a Lead?\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T1": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  My week\n10:00  Offline test\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T2": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Take over Tech 3's jobs\n10:30  Faith's Salon move (tomorrow)\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "T3": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Hand over before you leave\n10:15  After you are switched off\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
-    "V": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:30  Call 1 — Faith moves shop\n10:00  Call 2 — the school wants 50 Mbps\n10:30  Your customer report card\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
+    "P": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Partner)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Decide Suswa\n10:00  Tech 3 leaves — move their jobs\n10:30  A new package\n11:00  Run the manager and read it\n11:40  Go / no-go\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "F": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Finance)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Last count of the week\n09:20  Next month's bills\n09:40  Late payers\n10:00  A staff member leaves\n10:30  Print everything\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C1": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Call center 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:30  Faith's Salon moves shop\n10:30  Clean the customer list\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "C2": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Call center 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n10:00  Satellite Academy wants 50 Mbps\n11:00  Who is still a Lead?\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T1": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Tech 1)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  My week\n10:00  Offline test\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T2": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Tech 2)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Take over Tech 3's jobs\n10:30  Faith's Salon move (tomorrow)\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "T3": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Tech 3)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour challenges today:\n09:00  Hand over before you leave\n10:15  After you are switched off\n11:30  Your week in 3 lines\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!",
+    "V": "☀️ Zuri Business Week — Day 7 of 7 (Fri 23 Oct) · Close the week\nHi [Name] (Customer voice)! Today 09:00–12:00 Kenya time.\n📚 Same company as yesterday — everything you did is still there.\n\nYour calls today:\n09:30  Call 1 — Faith moves shop\n10:00  Call 2 — the school wants 50 Mbps\n10:30  Your customer report card\n\n🔧 Fixed last night: [Claude fills this in, or “nothing needed”]\nTick each one when you end with the right result: https://jerrywins1.github.io/zuri-system/preview/testers/?bw&code=ZURI-BW\n❌ Something wrong or confusing? Tap ❌ on that challenge and say what happened — every REAL problem is +100 KES.\n💵 Today: 600 KES when you finish at least 2 challenges. Asante!"
    }
   }
  ]
