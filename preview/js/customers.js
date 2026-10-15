@@ -43,7 +43,9 @@
     const per = 50;
     let q = Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status,plan,lat', { count: 'exact' });
     if (clean(f.q)) q = q.or(findOr(clean(f.q))); // #12
-    if (f.status) q = q.eq('status', f.status);
+    // v2.36 (15 Oct): a search looks at EVERY status. The list opens on Active, so “search first” before a new customer
+    //       missed Leads and switched-off customers, and the same person was added twice.
+    if (f.status && !clean(f.q)) q = q.eq('status', f.status);
     if (Z.area) q = q.eq('area', Z.area);
     const { data, count, error } = await q.order('full_name').range(f.page * per, f.page * per + per - 1);
     if (error) throw error;
@@ -56,6 +58,7 @@
         <input id="c-q" placeholder="Search name, phone, account" value="${Z.esc(f.q)}" style="flex:1">
         <select id="c-st" aria-label="Show customers with this status" style="width:auto"><option value="">Any status</option>${Z.opts(STATUSES.map(([k, t]) => [k, t.split(' (')[0]]), f.status)}</select>
       </div>
+      ${clean(f.q) && f.status ? '<p class="hint" style="margin:-4px 0 8px">Searching every status (Lead, Active, switched off…).</p>' : ''}
       <div class="card list">${data.length ? data.map((c) => `<a class="item" href="#customers/${c.id}"><div class="grow">
           <div class="t">${Z.esc(c.full_name)}</div>
           <div class="m">${Z.esc([c.phone, c.account_no, c.plan].filter(Boolean).join(' · '))}</div>

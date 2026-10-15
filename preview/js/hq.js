@@ -1,8 +1,9 @@
-// Zuri System · 🏢 Headquarters: the whole company on one screen, for the partners · v1 · 2026-10-14
+// Zuri System · 🏢 Headquarters: the whole company on one screen, for the partners · v1.1 · 2026-10-15
+// v1.1 (15 Oct): "waiting for a partner's OK" opens Money → 👥 Approvals (it opened Cash today).
 // Jerry (14 Oct): "At some point we will have a corporate headquarters and many areas running and someone needs to be
 // monitoring activity in the company. It needs to be able to message anyone in the company."
 // Four parts: ① what needs a decision · ② every area side by side · ③ live activity (who did what, newest first)
-// · ④ the team, with a message to anyone — one person, an area, a job, or everyone. Messages go by WhatsApp or SMS
+// · ④ the team, with a message to anyone — one person, an area, a role, or everyone. Messages go by WhatsApp or SMS
 // from this phone, one tap each (no WhatsApp Business account needed yet); ticks are kept on this phone.
 // Reads only — nothing here changes the company's records. Each part loads on its own, so one slow table never blanks the page.
 (function () {
@@ -53,7 +54,7 @@
     // Job notes and status changes (skip the "done" ones — the finished job above already says it).
     events.filter((e) => !(e.kind === 'status' && /done/i.test(e.body || ''))).forEach((e) => { const t = T[e.ticket_id]; out.push({ at: e.at, area: t && t.area, ic: e.kind === 'status' ? '🔄' : '📝', by: e.by, t: `${t ? job(t) : 'Job'} · ${e.kind === 'status' ? 'status' : 'note'}`, m: e.body || '', href: '#jobs/' + e.ticket_id }); });
     pays.forEach((p) => { const at = p.created_at || (p.date + 'T12:00:00'); if (new Date(at) < new Date(since) && !p.created_at) return; out.push({ at, day: !p.created_at, area: p.area, ic: '💵', t: `Payment in · ${Z.kes(p.amount)}`, m: [p.payer_name, p.method, p.source === 'field' ? 'collected by a tech' : p.source].filter(Boolean).join(' · ') }); });
-    exps.forEach((e) => out.push({ at: e.created_at, area: e.area, ic: e.approval === 'waiting' ? '⏳' : '💸', by: e.created_by, t: `${e.approval === 'waiting' ? 'Waiting for OK' : 'Money out'} · ${Z.kes(e.amount)}`, m: [e.payee, e.category].filter(Boolean).join(' · '), href: e.approval === 'waiting' ? '#money' : '' }));
+    exps.forEach((e) => out.push({ at: e.created_at, area: e.area, ic: e.approval === 'waiting' ? '⏳' : '💸', by: e.created_by, t: `${e.approval === 'waiting' ? 'Waiting for OK' : 'Money out'} · ${Z.kes(e.amount)}`, m: [e.payee, e.category].filter(Boolean).join(' · '), href: e.approval === 'waiting' ? '#money/approvals' : '' }));
     counts.forEach((c) => out.push({ at: c.created_at, area: c.area, ic: '🧮', t: `Cash counted · ${Z.kes(N(c.bank) + N(c.mpesa))}`, m: `bank ${Z.fmt(c.bank)} · M-Pesa ${Z.fmt(c.mpesa)}${c.counted_by ? ' · by ' + c.counted_by : ''}` }));
     outs.forEach((o) => out.push({ at: o.started_at, area: o.area, ic: '📡', t: `Possible outage${o.status === 'open' ? ' (still open)' : ''}`, m: `${(o.fault_ids || []).length || ''} fault calls close together`.trim(), href: '#home' }));
     tasks.forEach((k) => out.push({ at: k.updated_at, area: k.area, ic: '☑️', by: k.assigned_to, t: 'Task done', m: k.title || '' }));
@@ -70,7 +71,7 @@
     ]);
     const d = [];
     outages.forEach((o) => d.push(['bad', `📡 Possible outage in ${Z.areaName(o.area)} since ${Z.when(o.started_at)} — check the notice to customers.`, '#home']));
-    if (waiting.length) d.push(['warn', `⏳ ${waiting.length} payment${waiting.length > 1 ? 's' : ''} waiting for a partner's OK · ${Z.kes(waiting.reduce((t, e) => t + N(e.amount), 0))}`, '#money']);
+    if (waiting.length) d.push(['warn', `⏳ ${waiting.length} payment${waiting.length > 1 ? 's' : ''} waiting for a partner's OK · ${Z.kes(waiting.reduce((t, e) => t + N(e.amount), 0))}`, '#money/approvals']);
     if (urgent.length) d.push(['warn', `🔴 ${urgent.length} urgent task${urgent.length > 1 ? 's' : ''} still open${urgent[0].title ? ' — first: ' + urgent[0].title : ''}`, '#tasks']);
     return d;
   }

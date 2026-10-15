@@ -1,5 +1,5 @@
 {
- "version": "v1.1 · 2026-10-14",
+ "version": "v1.2 · 2026-10-15",
  "start": "2026-10-17",
  "days_total": 7,
  "code": "ZURI-BW",
@@ -648,8 +648,8 @@
      "at": "10:30",
      "role": "T1",
      "t": "Fuel receipt",
-     "do": "You bought fuel for the motorbike. Me → 🧾 Snap a receipt → 📩 Paste M-Pesa message. Paste the message (Copy button below) → Read the message. What was it for: Transport / Fuel. Area Town Centre. ✅ Save.",
-     "where": "Me → 🧾 Snap a receipt",
+     "do": "You bought fuel for the motorbike. Me → 📸 Snap a receipt → 📩 Paste M-Pesa message. Paste the message (Copy button below) → Read the message. What was it for: Transport / Fuel. Area Town Centre. ✅ Save.",
+     "where": "Me → 📸 Snap a receipt",
      "end": "“✅ Saved.” Me → 🧾 My receipts shows Total Energies 500 waiting for Finance.",
      "copy": "UKA1BWFUEL Confirmed. Ksh500.00 paid to TOTAL ENERGIES MAAI MAHIU. on 17/10/26 at 10:20 AM. New M-PESA balance is Ksh9,500.00. Transaction cost, Ksh0.00."
     },
@@ -816,6 +816,15 @@
      "end": "They did not make you a customer. They said they will find out (a task for the Partners)."
     },
     {
+     "id": "d1-p-x1",
+     "at": "11:45",
+     "role": "P",
+     "t": "First look at 🏢 Headquarters",
+     "do": "Home → tap the 🏢 Headquarters card. Read Needs a decision, then Areas side by side, then Live activity (Last 24 hours). Scroll to The team.",
+     "where": "Home → 🏢 Headquarters",
+     "end": "Both areas (Town Centre, Satellite) are in the table. Today's new customers and jobs are in Live activity, with who did them. Everyone you switched on is in The team."
+    },
+    {
      "id": "d1-p-08",
      "at": "11:50",
      "role": "P",
@@ -909,6 +918,15 @@
      "end": "Install booked for Monday morning with a technician."
     },
     {
+     "id": "d2-c1-x1",
+     "at": "14:20",
+     "role": "C1",
+     "t": "Search finds Leads too",
+     "do": "Customers: leave the status box on Active. Search “Grace”.",
+     "where": "Customers",
+     "end": "Grace Wanjiku shows (as a Lead) with the note “Searching every status”. If she does NOT show, tap ❌: people will get added twice."
+    },
+    {
      "id": "d2-p-01",
      "at": "14:30",
      "role": "P",
@@ -949,9 +967,9 @@
      "at": "15:00",
      "role": "P",
      "t": "Add a “Router serial” field",
-     "do": "Admin → Custom fields: Field name “Router serial”, Kind Text → Add field. Then Who sees what → tick Router serial for Field tech.",
+     "do": "Admin → Custom fields: Field name “Router serial”, Kind Text → Add field. Then Who sees what → tick Router serial for Call center.",
      "where": "Me → ⚙️ Admin → Custom fields",
-     "end": "Router serial is a field; techs can see it."
+     "end": "Router serial is a field the call center can fill on a customer. (Techs record serials under the job's Parts.)"
     },
     {
      "id": "d2-c1-03",
@@ -1040,7 +1058,7 @@
      "role": "T3",
      "t": "Fuel — snap it",
      "do": "Snap the receipt (copy below). Transport / Fuel. Area Satellite.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Total Energies 700 in My receipts.",
      "copy": "UKC3BWFUEL Confirmed. Ksh700.00 paid to TOTAL ENERGIES MAAI MAHIU. on 18/10/26 at 3:25 PM. New M-PESA balance is Ksh8,800.00. Transaction cost, Ksh0.00."
     },
@@ -1076,10 +1094,19 @@
      "at": "16:00",
      "role": "T1",
      "t": "Buy cable — snap the receipt",
-     "do": "Me → 🧾 Snap a receipt → 📩 Paste M-Pesa message (copy below) → Read. What was it for: Equipment / Inventory. ✅ Save.",
-     "where": "Me → 🧾 Snap a receipt",
+     "do": "Me → 📸 Snap a receipt → 📩 Paste M-Pesa message (copy below) → Read. What was it for: Equipment / Inventory. ✅ Save.",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Kamau Hardware 1,800 in 🧾 My receipts, waiting for Finance.",
      "copy": "UKB2BWCABL Confirmed. Ksh1,800.00 paid to KAMAU HARDWARE. on 18/10/26 at 3:58 PM. New M-PESA balance is Ksh7,700.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d2-f-x1",
+     "at": "16:00",
+     "role": "F",
+     "t": "Fix a mistake: delete a wrong entry",
+     "do": "Money → Money out: record KES 100, payee “TEST — delete me”, Cash. Then find it in the list below and tap ✕ to delete it.",
+     "where": "Money → Money out",
+     "end": "It is gone from the list and from Cash today. The totals are the same as before."
     },
     {
      "id": "d2-c1-05",
@@ -1152,6 +1179,15 @@
      "do": "If Call center booked Lucy for today: install her. Router HWT10010003. She pays install AND her first month together: 📱 M-Pesa 4500, code UKL5LUCY45. ✅ Job finished.",
      "where": "Jobs → the install job",
      "end": "Done, collected KES 4,500 (mpesa) UKL5LUCY45. (Lucy will ask about this on day 4.)"
+    },
+    {
+     "id": "d2-p-x1",
+     "at": "16:40",
+     "role": "P",
+     "t": "Message the Satellite team from Headquarters",
+     "do": "🏢 Headquarters → ✉️ Message… → tap the Satellite button → write: Habari {name}, asante for today! → Next: send → send it on WhatsApp to each person (one tap each, then press Send in WhatsApp).",
+     "where": "🏢 Headquarters → ✉️ Message…",
+     "end": "Each person got the message with THEIR first name (not “{name}”). A ✅ shows next to each one you sent."
     },
     {
      "id": "d2-p-04",
@@ -1330,6 +1366,24 @@
      "end": "Done."
     },
     {
+     "id": "d3-p-x1",
+     "at": "10:00",
+     "role": "P",
+     "t": "Set the two-person rule",
+     "do": "Me → ⚙️ Admin → Settings → 👥 Two people for money out → On — two people → Needs a second person above (KES): 1000 → Save. Tell Finance in the team group: “Rule is 1,000.”",
+     "where": "Me → ⚙️ Admin → Settings",
+     "end": "Settings shows On, above KES 1,000."
+    },
+    {
+     "id": "d3-f-x1",
+     "at": "10:15",
+     "role": "F",
+     "t": "Test the two-person rule",
+     "do": "After the Partner sets the rule to 1,000: Money out → KES 500 “TEST small payment”, Cash → Save. Then KES 5,000 “TEST big payment”, Cash → Save. Then delete the 500 test (✕).",
+     "where": "Money → Money out",
+     "end": "The 500 saved straight away. The 5,000 says it is waiting for a second person (the Partner)."
+    },
+    {
      "id": "d3-c1-02",
      "at": "10:20",
      "role": "C1",
@@ -1366,6 +1420,24 @@
      "end": "Two payments of 4,500 (one field cash, one M-Pesa UKH4HOTL45). Write in the task: “Yes, paid twice — refund tomorrow after the Partner's OK.”"
     },
     {
+     "id": "d3-p-x2",
+     "at": "10:30",
+     "role": "P",
+     "t": "Decline a test payment",
+     "do": "Money → 📋 Bills → 👥 Approvals: Finance's “TEST big payment” (KES 5,000) is waiting. Tap ✋ Decline and give the reason “Test”.",
+     "where": "Money → 📋 Bills → 👥 Approvals",
+     "end": "It leaves the waiting list and shows as declined. The KES 500 test did not need you at all."
+    },
+    {
+     "id": "d3-t1-x1",
+     "at": "10:40",
+     "role": "T1",
+     "t": "Delete a part you added by mistake",
+     "do": "On your next job → Parts: add “TEST cable” × 1 → then tap ✕ on it.",
+     "where": "Jobs → the job → Parts",
+     "end": "TEST cable is gone, and stays gone after you close and open the job again."
+    },
+    {
      "id": "d3-c1-03",
      "at": "10:45",
      "role": "C1",
@@ -1398,9 +1470,27 @@
      "role": "T3",
      "t": "Splice kit — snap the receipt",
      "do": "Snap the receipt (copy below). Equipment / Inventory, area Satellite. In “More”: VAT 345, supplier PIN P052222222B.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Fibre World 2,500 in My receipts with VAT 345.",
      "copy": "UKD4BWSPLC Confirmed. Ksh2,500.00 paid to FIBRE WORLD NAIVASHA. on 19/10/26 at 10:55 AM. New M-PESA balance is Ksh6,300.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d3-c2-x1",
+     "at": "11:00",
+     "role": "C2",
+     "t": "Cancel a job made by mistake, then reopen it",
+     "do": "＋ New job for Mercy Atieno: Other, summary “TEST — made by mistake”. Open it → Cancel job. Then Reopen. Then Cancel job again.",
+     "where": "Jobs → the job",
+     "end": "The job shows cancelled, then open, then cancelled. The notes on the job show each change."
+    },
+    {
+     "id": "d3-t2-x1",
+     "at": "11:10",
+     "role": "T2",
+     "t": "Snap a receipt from inside a job",
+     "do": "On your job → Spent money on this job? → 📸 → take a photo of any paper (pretend receipt), KES 200, Transport → Save.",
+     "where": "Jobs → the job",
+     "end": "The receipt is saved on that job and waits in 👥 Approvals."
     },
     {
      "id": "d3-c2-02",
@@ -1596,6 +1686,15 @@
      "end": "Second Satellite fault in 15 minutes."
     },
     {
+     "id": "d4-t2-x1",
+     "at": "10:20",
+     "role": "T2",
+     "t": "Send a customer's pin",
+     "do": "Open a job with a pin → 📤 Send pin → send it to yourself on WhatsApp.",
+     "where": "Jobs → the job",
+     "end": "The message opens Google Maps at the customer's house."
+    },
+    {
      "id": "d4-f-04",
      "at": "10:30",
      "role": "F",
@@ -1666,6 +1765,15 @@
      "do": "Call Call center 2 as Beatrice Wambui: “Is the internet down in Satellite?”",
      "where": "Call to Call center 2",
      "end": "They said yes, we know, technicians are on it — no visit."
+    },
+    {
+     "id": "d4-c1-x1",
+     "at": "10:45",
+     "role": "C1",
+     "t": "Skip a text, come back to it",
+     "do": "Jobs → 📩 Today's texts: on the first card tap ⏭ Skip. Work the rest. At the end tap ↺ Go through the skipped ones.",
+     "where": "Jobs → 📩 Today's texts",
+     "end": "The skipped card comes back at the end."
     },
     {
      "id": "d4-c1-02",
@@ -1763,9 +1871,18 @@
      "role": "T3",
      "t": "Splice sleeves + fuel — snap both",
      "do": "Snap two receipts (copy below, then the second from your role card): Fibre World 1,200 (Equipment / Inventory) and fuel 600.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Two receipts in My receipts, waiting for Finance.",
      "copy": "UKE5BWSLEV Confirmed. Ksh1,200.00 paid to FIBRE WORLD NAIVASHA. on 20/10/26 at 11:40 AM. New M-PESA balance is Ksh5,100.00. Transaction cost, Ksh0.00."
+    },
+    {
+     "id": "d4-f-x1",
+     "at": "11:45",
+     "role": "F",
+     "t": "Look 30 days ahead with a one-off",
+     "do": "Money → Next 30 days → One-off money in or out: tomorrow, −50,000, “TEST generator” → add. Read the lowest point. Then remove the one-off.",
+     "where": "Money → Next 30 days",
+     "end": "The lowest point drops by 50,000 while it is there, and goes back when you remove it."
     },
     {
      "id": "d4-c1-04",
@@ -1859,6 +1976,15 @@
      "do": "Call center will call YOU today. Answer as: Esther Wairimu — “I will pay on Saturday.” Samuel Otieno — don't answer (let it ring). Peter Mwangi — “I'm moving to Naivasha, please stop it.” Joseph Kibet — “The office fixed it yesterday, thank you.”",
      "where": "Calls from Call center 1 and 2",
      "end": "Each call ended with the right button in Zuri (ask them what they pressed)."
+    },
+    {
+     "id": "d5-t3-x1",
+     "at": "09:10",
+     "role": "T3",
+     "t": "Nearest job first",
+     "do": "Jobs → 📍 Nearest first (allow location).",
+     "where": "Jobs",
+     "end": "The list orders itself by distance from where you stand."
     },
     {
      "id": "d5-f-02",
@@ -1956,7 +2082,7 @@
      "role": "T3",
      "t": "Fuel receipt (second receipt from day 4)",
      "do": "If you didn't snap yesterday's fuel: snap it now (copy below), Transport / Fuel.",
-     "where": "Me → 🧾 Snap a receipt",
+     "where": "Me → 📸 Snap a receipt",
      "end": "Fuel 600 in My receipts.",
      "copy": "UKE6BWFUEL Confirmed. Ksh600.00 paid to TOTAL ENERGIES MAAI MAHIU. on 20/10/26 at 11:44 AM. New M-PESA balance is Ksh4,500.00. Transaction cost, Ksh0.00."
     },
@@ -1970,12 +2096,30 @@
      "end": "A job for tomorrow."
     },
     {
+     "id": "d5-f-x1",
+     "at": "10:30",
+     "role": "F",
+     "t": "Skip one line on the pay run",
+     "do": "Pay run: on one person tap ⏭ Skip → then 🔄 Build today's list again. Copy one person's M-Pesa number.",
+     "where": "Money → 📋 Bills → Pay run",
+     "end": "The skipped person comes back after Build. The copied number is only digits."
+    },
+    {
+     "id": "d5-c2-x1",
+     "at": "10:40",
+     "role": "C2",
+     "t": "A fault call that is really an expired package",
+     "do": "The voice calls as a Satellite customer whose package ran out on day 3 (pick one who is Late). ＋ New job → Fault for them. Read the 💳 box → 💳 Turn this into a payment follow-up.",
+     "where": "Jobs → ＋ New job",
+     "end": "No tech visit is made. A payment follow-up is made instead."
+    },
+    {
      "id": "d5-f-04",
      "at": "10:45",
      "role": "F",
      "t": "Declined line — do it right",
      "do": "The Partner declines Staff transport (no receipt). It is back on the Pay run as due. Snap the receipt (copy below) for 3,000 and record the line again with code UKP3TRAN03.",
-     "where": "Pay run · 🧾 Snap a receipt",
+     "where": "Pay run · 📸 Snap a receipt",
      "end": "Staff transport waiting again — this time with a receipt.",
      "copy": "UKP3TRAN03 Confirmed. Ksh3,000.00 paid to MAAI MAHIU SACCO. on 21/10/26 at 10:40 AM. New M-PESA balance is Ksh49,300.00. Transaction cost, Ksh0.00."
     },
@@ -2025,6 +2169,15 @@
      "end": "They checked and gave you a new time, politely."
     },
     {
+     "id": "d5-p-x1",
+     "at": "11:15",
+     "role": "P",
+     "t": "Change a price, then change it back",
+     "do": "Me → ⚙️ Admin → Price list → Home 5 Mbps → change 1500 to 1700 → Save package. Open John Kamau's customer page. Then set Home 5 Mbps back to 1500 → Save package.",
+     "where": "Me → ⚙️ Admin → Price list",
+     "end": "While it was 1700, John Kamau still paid 1500 (old customers keep their price). It is back to 1500 now."
+    },
+    {
      "id": "d5-f-06",
      "at": "11:20",
      "role": "F",
@@ -2059,6 +2212,15 @@
      "do": "Me → 🧾 My receipts. Snap any missing.",
      "where": "Me → 🧾 My receipts",
      "end": "No ❌."
+    },
+    {
+     "id": "d5-t2-x1",
+     "at": "11:30",
+     "role": "T2",
+     "t": "Forgot password",
+     "do": "Me → Sign out. On the sign-in page tap Forgot password? → your email → open the email → set a new password → sign in.",
+     "where": "Sign-in page",
+     "end": "You are back in with the new password."
     },
     {
      "id": "d5-f-07",
@@ -2163,6 +2325,15 @@
      "end": "A task for the call center."
     },
     {
+     "id": "d6-f-x1",
+     "at": "09:40",
+     "role": "F",
+     "t": "Pay part of a bill",
+     "do": "Bills: Pole rent (Satellite, 2,500, due today). 💸 Pay → amount 1,000, M-Pesa, code UKP1POLE10 → Save.",
+     "where": "Money → 📋 Bills",
+     "end": "Pole rent shows KES 1,500 still owing. (The Partner approves it if the two-person rule is on.)"
+    },
+    {
      "id": "d6-f-02",
      "at": "10:00",
      "role": "F",
@@ -2190,11 +2361,20 @@
      "end": "They wrote the code; later they confirm it."
     },
     {
+     "id": "d6-t1-x1",
+     "at": "10:15",
+     "role": "T1",
+     "t": "Work with no signal",
+     "do": "Turn on airplane mode. Open a job → add a note “TEST no signal” → Save. Open Me: it shows something waiting. Turn airplane mode off → Me → Send now.",
+     "where": "Jobs · Me",
+     "end": "The note waits while offline, then sends. It is on the job afterwards (ask Call center to check)."
+    },
+    {
      "id": "d6-p-02",
      "at": "10:30",
      "role": "P",
      "t": "Read Finance's plan",
-     "do": "📈 Projects → Suswa town → read the green line and “the answer ↓”. Then ⚖️ Compare.",
+     "do": "📈 Projects → Suswa town → read the green line and “the answer ↓”. (⚖️ Compare only shows when there are two or more projects.)",
      "where": "📈 Projects",
      "end": "You can say: start-up cost, break-even month, payback month."
     },
@@ -2224,6 +2404,15 @@
      "do": "Me → 🧾 My receipts. Every receipt from day 2–5 there? Snap missing ones.",
      "where": "Me → 🧾 My receipts",
      "end": "No ❌."
+    },
+    {
+     "id": "d6-p-x1",
+     "at": "10:50",
+     "role": "P",
+     "t": "Move a hub on the map",
+     "do": "Me → ⚙️ Admin → Company & hubs → the Satellite cabinet → ✏️ Edit → move its pin a little (or tap Where I'm standing) → Save the hub. Then open Customers → 🗺️ Map.",
+     "where": "Me → ⚙️ Admin → Company & hubs",
+     "end": "The cabinet shows in its new place on the map."
     },
     {
      "id": "d6-p-03",
@@ -2280,6 +2469,15 @@
      "end": "Task Done with your note."
     },
     {
+     "id": "d6-p-x2",
+     "at": "11:20",
+     "role": "P",
+     "t": "Make and cancel an access code",
+     "do": "Me → ⚙️ Admin → Access codes → ＋ Make the code (label: TEST) → 📋 Copy → then Revoke it.",
+     "where": "Me → ⚙️ Admin → Access codes",
+     "end": "The TEST code shows as revoked. (Anyone using it would be stopped the next time they open Zuri.)"
+    },
+    {
      "id": "d6-f-05",
      "at": "11:30",
      "role": "F",
@@ -2297,6 +2495,15 @@
      "do": "Customers → 🗺️ Map → pick Suswa (planned) in the area picker at the top.",
      "where": "Customers → 🗺️ Map",
      "end": "No pins yet for leads without a location — that is normal. Note it."
+    },
+    {
+     "id": "d6-c1-x1",
+     "at": "11:30",
+     "role": "C1",
+     "t": "See the whole team's tasks",
+     "do": "Tasks → Team → pick Finance in the who-box → tick Show done.",
+     "where": "Tasks → Team",
+     "end": "You see Finance's open and done tasks. Nothing from other teams is mixed in."
     },
     {
      "id": "d6-f-06",
@@ -2442,7 +2649,7 @@
      "at": "10:00",
      "role": "P",
      "t": "Tech 3 leaves — move their jobs",
-     "do": "Admin → People → Tech 3 → untick On → Save. Then Jobs → All techs → pick Tech 3 → open each open job → Send to tech: Tech 2 → Save.",
+     "do": "First move the jobs: Jobs → All techs → pick Tech 3 → open each open job → Send to tech: Tech 2 → Save. Then Admin → People → Tech 3 → untick On → Save.",
      "where": "Admin → People · Jobs",
      "end": "Tech 3 is switched off. No open job is left with Tech 3."
     },
@@ -2514,7 +2721,7 @@
      "at": "10:30",
      "role": "C1",
      "t": "Clean the customer list",
-     "do": "Customers: search each Town Centre customer. Fix any double, missing phone or wrong package.",
+     "do": "Customers: set the status box to Any status, then search each Town Centre customer. Fix any double, missing phone or wrong package.",
      "where": "Customers",
      "end": "No doubles. Every customer has a phone and package. Note what you fixed."
     },
@@ -2550,9 +2757,18 @@
      "at": "11:00",
      "role": "C2",
      "t": "Who is still a Lead?",
-     "do": "Customers: pick Satellite in the area picker and look at the status on each customer.",
+     "do": "Customers: set the status box to Any status, pick Satellite in the area picker, and look at the status on each customer.",
      "where": "Customers",
      "end": "Only the Suswa leads (and anyone not yet installed) are Leads. Note anyone wrong."
+    },
+    {
+     "id": "d7-f-x1",
+     "at": "11:10",
+     "role": "F",
+     "t": "Edit and remove a bill",
+     "do": "Bills → next month → Staff transport → ✏️ change the due day to 25 → Save. Then add a bill “TEST bill” 100 → open it → 🗑️ Remove this bill.",
+     "where": "Money → 📋 Bills",
+     "end": "Staff transport is due on the 25th. TEST bill is gone."
     },
     {
      "id": "d7-f-06",
@@ -2607,6 +2823,15 @@
      "do": "Testers' List “Tell us” box.",
      "where": "Testers' List",
      "end": "Sent."
+    },
+    {
+     "id": "d7-p-x1",
+     "at": "11:30",
+     "role": "P",
+     "t": "The week in Headquarters",
+     "do": "🏢 Headquarters → Live activity → Last 7 days. Then All areas → Town Centre, then Satellite. Compare the Areas table with Finance's Friday report.",
+     "where": "🏢 Headquarters",
+     "end": "Every tester shows up in the activity. Customers and cash in the Areas table match the report. Note anything that does not match."
     },
     {
      "id": "d7-p-05",
