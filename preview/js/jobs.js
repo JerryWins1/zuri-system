@@ -16,17 +16,20 @@
   const DID = ['Re-spliced the fibre', 'Replaced connector', 'Replaced router', 'Restarted router', 'Fixed settings', 'Ran new cable', 'Showed customer how to pay', 'Tested — working'];
   const chips = (name, items) => `<div class="chips" data-for="${name}">${items.map((x) => `<button type="button">${Z.esc(x)}</button>`).join('')}</div>`;
 
-  // Apply changes still waiting in the queue on top of what the server returned.
+  // Apply changes still waiting in the queue — and those sent in the last 2 minutes (v2.36, see Z.recentOps) — on top of
+  // what the server returned.
+  const pend = () => (Z.recentOps ? Z.recentOps() : []).concat(Z.queue);
   function overlay(tickets) {
     const byId = new Map(tickets.map((t) => [t.id, { ...t }]));
-    for (const q of Z.queue) {
+    for (const q of pend()) {
       if (q.op === 'ticket_insert' && !byId.has(q.data.row.id)) byId.set(q.data.row.id, { ...q.data.row, ticket_no: '…', opened_at: new Date(q.at).toISOString(), _local: true });
       if (q.op === 'ticket_update' && byId.has(q.data.id)) Object.assign(byId.get(q.data.id), q.data.fields, { _local: true });
     }
     return [...byId.values()];
   }
   function queuedChildren(op, ticketId) {
-    return Z.queue.filter((q) => q.op === op && q.data.row.ticket_id === ticketId).map((q) => ({ ...q.data.row, _local: true }));
+    return Z.queue.filter((q) => q.op === op && q.data.row.ticket_id === ticketId).map((q) => ({ ...q.data.row, _local: true }))
+      .concat((Z.recentOps ? Z.recentOps() : []).filter((q) => q.op === op && q.data.row && q.data.row.ticket_id === ticketId).map((q) => ({ ...q.data.row })));
   }
 
   async function customersFor(ids) {
@@ -285,7 +288,7 @@
     t = overlay(t ? [t] : []).find((x) => x.id === id) || null;
     if (!t) { el.innerHTML = '<div class="card">This job isn\'t available. It may have been reassigned.</div>'; return; }
     events = events.concat(queuedChildren('event', id).filter((e) => !events.some((x) => x.id === e.id)));
-    const deleted = new Set(Z.queue.filter((q) => q.op === 'part_delete').map((q) => q.data.id));
+    const deleted = new Set(pend().filter((q) => q.op === 'part_delete').map((q) => q.data.id));
     parts = parts.concat(queuedChildren('part', id).filter((p) => !parts.some((x) => x.id === p.id))).filter((p) => !deleted.has(p.id));
 
     const mine = t.assigned_to === Z.me.id;

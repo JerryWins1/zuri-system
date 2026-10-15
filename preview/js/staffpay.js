@@ -100,18 +100,20 @@
     const now = due.filter((i) => i.due_date <= today), soon = due.filter((i) => i.due_date > today);
     const sent = items.filter((i) => i.status === 'sent' && i.period === period);
     const sum = (a) => a.reduce((t, i) => t + Number(i.amount), 0);
+    // v2.36 (15 Oct): “To pay now” counted money already recorded and waiting for a second OK (it can't be sent again).
+    const sumDue = (a) => a.reduce((t, i) => t + Math.max(0, Number(i.amount) - billWait(i)), 0);
     const row = (i) => `<div class="item" data-id="${i.id}" style="align-items:flex-start;flex-wrap:wrap">
         <span style="font-size:22px">${i.kind === 'staff' ? '👤' : '📋'}</span>
         <div class="grow" style="min-width:200px"><div class="t">${Z.esc(i.name)}</div>
           <div class="m">${i.period < period ? '<span class="pill bad">from ' + Z.esc(new Date(i.period + '-01T12:00:00').toLocaleDateString('en-GB', { month: 'long' })) + '</span> ' : ''}${i.due_date < today ? '<span class="pill bad">overdue</span> ' :i.due_date === today ? '<span class="pill warn">today</span> ' : 'due ' + Z.day(i.due_date) + ' · '}${i.area ? Z.esc(Z.areaName(i.area)) + ' · ' : ''}${i.pay_to ? '📱 ' + Z.esc(i.pay_to) : '<span style="color:var(--warn-ink)">no number — add it to the ' + (i.kind === 'staff' ? 'staff member' : 'bill') + '</span>'}</div>
-          ${billWait(i) ? `<div class="m"><span class="pill warn">⏳ KES ${Z.fmt(billWait(i))} already recorded for this bill — waiting for a second OK</span></div>` : ''}
+          ${billWait(i) ? `<div class="m"><span class="pill warn" style="white-space:normal">⏳ KES ${Z.fmt(billWait(i))} already recorded for this bill — waiting for a second OK</span></div>` : ''}
           <div class="row" style="margin-top:6px">${billWait(i) >= Number(i.amount) ? '<a class="btn sec small" href="#money/approvals">👥 See it in Approvals</a>' : `${i.pay_to ? `<button class="btn sec small pr-copy" data-copy="${Z.esc(i.pay_to)}">📋 Copy number</button>` : ''}<button class="btn small pr-sent">✅ Sent — record it</button><button class="btn sec small pr-skip">⏭ Skip</button>`}</div>
         </div><b class="num">KES ${Z.fmt(i.amount)}</b></div>`;
     el.innerHTML = `
       <div class="card" style="border-left:4px solid var(--brand)"><div class="row" style="justify-content:space-between"><div class="grow"><b>Today's pay run</b><div class="hint" style="margin:2px 0 0">Bills that are due and staff whose pay day it is. Send each one in the M-Pesa app, then tap <b>Sent</b> and type the code. Zuri records it as an expense.</div></div><button class="btn small" id="pr-build">🔄 Build today's list</button></div></div>
       <div class="kpis">
-        <div class="kpi"><div class="k">To pay now</div><div class="v num ${now.length ? 'bad' : 'ok'}">${Z.fmt(sum(now))}</div><div class="f">${now.length} item${now.length === 1 ? '' : 's'}</div></div>
-        <div class="kpi"><div class="k">Coming in 3 days</div><div class="v num">${Z.fmt(sum(soon))}</div><div class="f">${soon.length} item${soon.length === 1 ? '' : 's'}</div></div>
+        <div class="kpi"><div class="k">To pay now</div><div class="v num ${now.length ? 'bad' : 'ok'}">${Z.fmt(sumDue(now))}</div><div class="f">${now.length} item${now.length === 1 ? '' : 's'}</div></div>
+        <div class="kpi"><div class="k">Coming in 3 days</div><div class="v num">${Z.fmt(sumDue(soon))}</div><div class="f">${soon.length} item${soon.length === 1 ? '' : 's'}</div></div>
         <div class="kpi"><div class="k">Sent this month</div><div class="v num ok">${Z.fmt(sum(sent))}</div><div class="f">${sent.length} payment${sent.length === 1 ? '' : 's'}</div></div>
       </div>
       ${paidElsewhere ? `<p class="hint">✅ ${paidElsewhere} bill${paidElsewhere === 1 ? ' was' : 's were'} already paid in Bills, so ${paidElsewhere === 1 ? 'it is' : 'they are'} off this list.</p>` : ''}

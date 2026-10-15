@@ -16,6 +16,8 @@
   // 'Photo saved' (v2.32) is set by 🧾 Snap a receipt when the photo is kept with the expense; the old three stay valid.
   const RECEIPTS = ['Digital / M-Pesa msg', 'Paper receipt — filed', 'No — chase it'];
   const ALL_RECEIPTS = ['Photo saved', ...RECEIPTS];
+  // v2.36 (15 Oct): Money out starts on Category “— choose —” and Receipt “No — chase it” (it saved Payroll + “Digital” by
+  //       default, so the books had wrong categories and missing receipts were never chased). A pasted M-Pesa message sets Digital.
   const IN_CATS = ['Hotspot', 'Installation fee', 'Reconnection fee', 'Equipment sale', 'Other'];
   const monthStart = (ym = Z.ym()) => ym + '-01';
   const nextMonth = (ym, k = 1) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + k, 1); return Z.ym(d); };
@@ -205,11 +207,11 @@
           <div><label>Area</label>${areaSelect()}</div>
           <div><label>Date</label><input type="date" name="date" value="${Z.ymd()}" required></div>
           <div><label>Paid to</label><input name="payee" list="me-payees" required autocomplete="off"><datalist id="me-payees">${payees.map((p) => `<option value="${Z.esc(p.name)}">`).join('')}</datalist></div>
-          <div><label>Category</label><select name="category" required>${Z.opts(cats.map((c) => c.name))}</select></div>
+          <div><label>Category</label><select name="category" required><option value="">— choose —</option>${Z.opts(cats.map((c) => c.name))}</select></div>
           <div><label>Amount (KES)</label><input name="amount" inputmode="numeric" required></div>
           <div><label>Paid from</label><select name="paid_from">${Z.opts(['M-Pesa', 'Bank', 'Cash'])}</select></div>
           <div><label>M-Pesa / bank code</label><input name="ref" autocapitalize="characters"><div id="me-match"></div></div>
-          <div><label>Receipt</label><select name="receipt">${Z.opts(RECEIPTS)}</select></div>
+          <div><label>Receipt</label><select name="receipt">${Z.opts(RECEIPTS, 'No — chase it')}</select></div>
           ${Z.projectPick ? Z.projectPick(live, Z.area || Z.me.area || (Z.ref.areas[0] || {}).code) : ''}
         </div>
         <label class="row" id="me-billrow" style="gap:8px;font-weight:600" hidden><input type="checkbox" name="as_bill" checked> <span id="me-billtxt"></span></label>
@@ -383,6 +385,8 @@
     Z.$('#mb', el).onsubmit = async (e) => {
       e.preventDefault();
       const d = Z.formData(e.target);
+      // v2.36 (15 Oct): a bill of −500 (or 0) was saved and showed as already paid.
+      if (!(Z.num(d.amount) > 0)) return Z.toast('Enter the bill amount (more than 0).');
       const { error } = await Z.sb.from('bills').insert({ area: d.area, month: ym, name: d.name.trim(), amount: Z.num(d.amount), due_day: Math.min(31, Math.max(1, parseInt(d.due_day, 10) || 1)), category: d.category, pay_to: d.pay_to.trim() || null, ...(Z.projectTagFields ? Z.projectTagFields(d) : {}) });
       if (error) return Z.toast(/unique|duplicate/i.test(error.message) ? 'That bill is already on this month\'s list.' : Z.errText(error));
       Z.toast('Bill added.'); Z.route();
@@ -473,6 +477,8 @@
       e.preventDefault();
       const amt = Z.num(e.target.amount.value);
       if (!amt || amt <= 0) return Z.toast('Enter an amount.');
+      // v2.36 (15 Oct): KES 10,000 on a 1,000 bill was saved without a word (the pay run already asked).
+      if (amt > owing(b) && !confirm(`That is more than the KES ${Z.fmt(owing(b))} still owing on ${b.name}. Record it anyway?`)) return;
       const btn = Z.$('button.block', e.target); btn.disabled = true;
       const { data, error } = await Z.sb.rpc('pay_bill', { p_bill: b.id, p_amount: amt, p_from: from, p_ref: e.target.ref.value.trim() || null });
       btn.disabled = false;

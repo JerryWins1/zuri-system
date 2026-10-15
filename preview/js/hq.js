@@ -1,5 +1,6 @@
 // Zuri System · 🏢 Headquarters: the whole company on one screen, for the partners · v1.1 · 2026-10-15
-// v1.1 (15 Oct): "waiting for a partner's OK" opens Money → 👥 Approvals (it opened Cash today).
+// v1.1 (15 Oct): "waiting for a partner's OK" opens Money → 👥 Approvals (it opened Cash today); Money in shows in the
+//       feed; day-only payments sort at the start of their day; the feed's pickers are full-size taps.
 // Jerry (14 Oct): "At some point we will have a corporate headquarters and many areas running and someone needs to be
 // monitoring activity in the company. It needs to be able to message anyone in the company."
 // Four parts: ① what needs a decision · ② every area side by side · ③ live activity (who did what, newest first)
@@ -35,7 +36,7 @@
   // ---------- ③ what happened, newest first ----------
   async function activity(hours) {
     const since = new Date(Date.now() - hours * 3600e3).toISOString(), sinceDay = Z.ymd(new Date(Date.now() - hours * 3600e3));
-    const [opened, closed, events, pays, exps, counts, outs, tasks] = await Promise.all([
+    const [opened, closed, events, pays, exps, counts, outs, tasks, cins] = await Promise.all([
       safe(Z.sb.from('tickets').select('id,ticket_no,kind,status,area,summary,priority,opened_at,opened_by,assigned_to,closed_at').gte('opened_at', since).limit(300)),
       safe(Z.sb.from('tickets').select('id,ticket_no,kind,status,area,summary,priority,opened_at,opened_by,assigned_to,closed_at,amount_collected').gte('closed_at', since).limit(300)),
       safe(Z.sb.from('ticket_events').select('ticket_id,by,kind,body,at').gte('at', since).order('at', { ascending: false }).limit(400)),
@@ -44,6 +45,7 @@
       safe(Z.sb.from('cash_counts').select('*').gte('created_at', since).limit(50)),
       safe(Z.sb.from('outages').select('*').gte('started_at', since).limit(50)),
       safe(Z.sb.from('tasks').select('id,title,status,area,assigned_to,updated_at,priority').eq('status', 'done').gte('updated_at', since).limit(200)),
+      safe(Z.sb.from('cash_in').select('*').gte('date', sinceDay).limit(200)), // v1.1: Money in was missing from the feed
     ]);
     const T = {}; opened.concat(closed).forEach((t) => (T[t.id] = t));
     const who = (id) => Z.personName(id) || '';
@@ -53,10 +55,12 @@
     closed.filter((t) => t.status === 'done').forEach((t) => out.push({ at: t.closed_at, area: t.area, ic: '✅', by: t.assigned_to, t: `Finished ${job(t)}`, m: (N(t.amount_collected) ? `collected ${Z.kes(t.amount_collected)} · ` : '') + (t.summary || ''), href: '#jobs/' + t.id }));
     // Job notes and status changes (skip the "done" ones — the finished job above already says it).
     events.filter((e) => !(e.kind === 'status' && /done/i.test(e.body || ''))).forEach((e) => { const t = T[e.ticket_id]; out.push({ at: e.at, area: t && t.area, ic: e.kind === 'status' ? '🔄' : '📝', by: e.by, t: `${t ? job(t) : 'Job'} · ${e.kind === 'status' ? 'status' : 'note'}`, m: e.body || '', href: '#jobs/' + e.ticket_id }); });
-    pays.forEach((p) => { const at = p.created_at || (p.date + 'T12:00:00'); if (new Date(at) < new Date(since) && !p.created_at) return; out.push({ at, day: !p.created_at, area: p.area, ic: '💵', t: `Payment in · ${Z.kes(p.amount)}`, m: [p.payer_name, p.method, p.source === 'field' ? 'collected by a tech' : p.source].filter(Boolean).join(' · ') }); });
+    // v1.1: a payment with only a day (no time) sorts at the START of that day, not above things that happened “just now”.
+    pays.forEach((p) => { const at = p.created_at || (p.date + 'T00:00:00'); if (new Date(at) < new Date(since) && !p.created_at) return; out.push({ at, day: !p.created_at, area: p.area, ic: '💵', t: `Payment in · ${Z.kes(p.amount)}`, m: [p.payer_name, p.method, p.source === 'field' ? 'collected by a tech' : p.source].filter(Boolean).join(' · ') }); });
     exps.forEach((e) => out.push({ at: e.created_at, area: e.area, ic: e.approval === 'waiting' ? '⏳' : '💸', by: e.created_by, t: `${e.approval === 'waiting' ? 'Waiting for OK' : 'Money out'} · ${Z.kes(e.amount)}`, m: [e.payee, e.category].filter(Boolean).join(' · '), href: e.approval === 'waiting' ? '#money/approvals' : '' }));
     counts.forEach((c) => out.push({ at: c.created_at, area: c.area, ic: '🧮', t: `Cash counted · ${Z.kes(N(c.bank) + N(c.mpesa))}`, m: `bank ${Z.fmt(c.bank)} · M-Pesa ${Z.fmt(c.mpesa)}${c.counted_by ? ' · by ' + c.counted_by : ''}` }));
     outs.forEach((o) => out.push({ at: o.started_at, area: o.area, ic: '📡', t: `Possible outage${o.status === 'open' ? ' (still open)' : ''}`, m: `${(o.fault_ids || []).length || ''} fault calls close together`.trim(), href: '#home' }));
+    cins.forEach((c) => out.push({ at: c.created_at || (c.date + 'T00:00:00'), day: !c.created_at, area: c.area, ic: '💰', t: `Money in · ${Z.kes(c.amount)}`, m: [c.category, c.from_name, c.received_to].filter(Boolean).join(' · ') }));
     tasks.forEach((k) => out.push({ at: k.updated_at, area: k.area, ic: '☑️', by: k.assigned_to, t: 'Task done', m: k.title || '' }));
     out.forEach((x) => (x.who = who(x.by)));
     return out.filter((x) => x.at).sort((a, b) => String(b.at).localeCompare(String(a.at)));
@@ -91,8 +95,8 @@
       <h3>Areas side by side</h3><div id="hq-areas"><div class="card muted">Loading…</div></div>
       <h3 style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">Live activity
         <span class="row" style="text-transform:none;letter-spacing:0;gap:6px">
-          <select id="hq-area" aria-label="Area" style="width:auto;padding:6px 8px;font-size:14px"><option value="">All areas</option>${Z.opts((Z.ref.areas || []).map((a) => [a.code, a.name || Z.areaName(a.code)]), areaPick)}</select>
-          <select id="hq-hours" aria-label="How far back" style="width:auto;padding:6px 8px;font-size:14px">${Z.opts([[6, 'Last 6 hours'], [24, 'Last 24 hours'], [72, 'Last 3 days'], [168, 'Last 7 days']], hours)}</select>
+          <select id="hq-area" aria-label="Area" style="width:auto;padding:6px 8px;font-size:14px;min-height:44px"><option value="">All areas</option>${Z.opts((Z.ref.areas || []).map((a) => [a.code, a.name || Z.areaName(a.code)]), areaPick)}</select>
+          <select id="hq-hours" aria-label="How far back" style="width:auto;padding:6px 8px;font-size:14px;min-height:44px">${Z.opts([[6, 'Last 6 hours'], [24, 'Last 24 hours'], [72, 'Last 3 days'], [168, 'Last 7 days']], hours)}</select>
         </span></h3>
       <div id="hq-feed"><div class="card muted">Loading…</div></div>
       <h3 style="display:flex;justify-content:space-between;align-items:center">The team <button class="btn small" id="hq-msg-all" style="text-transform:none;letter-spacing:0">✉️ Message…</button></h3>

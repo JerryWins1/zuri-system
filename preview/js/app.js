@@ -470,6 +470,11 @@
     return null;
   }
 
+  // v2.36 (15 Oct): what was sent in the last 2 minutes. A page that loads while a change is on its way could get the
+  //       server's OLD copy after the change had already left the queue — so a finished job redrew as "Assigned" with an
+  //       empty form, and the next Save wiped the cash collected or took the job off its tech. Pages lay these on top too.
+  const recent = [];
+  Z.recentOps = () => { const old = Date.now() - 120e3; while (recent.length && recent[0].t < old) recent.shift(); return recent.slice(); };
   let flushing = false;
   Z.flush = async () => {
     if (flushing || !Z.online() || !Z.me || !Z.pending().length) return;
@@ -479,7 +484,7 @@
       for (const it of Z.pending()) {
         let err;
         try { err = await runOp(it); } catch (e) { err = e; }
-        if (!err) { Z.queue = Z.queue.filter((q) => q.qid !== it.qid); sent++; }
+        if (!err) { Z.queue = Z.queue.filter((q) => q.qid !== it.qid); sent++; recent.push({ op: it.op, data: it.data, t: Date.now() }); }
         else if (Z.isNet(err)) break;
         else if (Z.isAuth(err)) { Z.toast('Sign in again to send the work saved on this phone.'); break; }
         else it.err = Z.errText(err);
