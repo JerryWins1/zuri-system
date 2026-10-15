@@ -334,6 +334,7 @@
       writeState(c.id, 'fail'); set('coach_pick', null); ui.mode = 'card'; ui.open = true; ui.showHint = false;
       render();
       const ok = await send([row('note', bwStep(today, me.role, c.id), ('❌ ' + c.t + ' — ' + words).slice(0, 1000))]);
+      hq('problem', `ZURI-BW|day ${today}|${me.role}|${me.name}|app ${appV()}\n❌ ${c.t}\n${words}`);
       Z.toast(ok ? 'Sent — thank you! Jerry checks it tonight.' : 'Saved — sends when you have signal.');
       return;
     }
@@ -344,6 +345,36 @@
       send([row('note', ('auto:stuck:' + c.id), 'secs=' + Math.round(x.s) + '|route=' + norm(location.hash))]);
       Z.toast(c.route ? 'Here is how — tap “Go there”. Still stuck? Tap ❌ Problem.' : 'Read the steps again. Still stuck? Tap ❌ Problem.');
     }
+  }
+  // v2.37 (16 Oct): Claude reads the Jerry HQ mailbox every night, so the coach also sends it each ❌ problem at once and
+  //       one summary per tester when the day is finished (the board keeps the full detail). Training only; practice dry-runs.
+  const MAILBOX = 'https://script.google.com/macros/s/AKfycbw1hgXVj5E8x8Ampm1fYK9po07pmSh9zrHfyVn3RvEYOR15_xb2jNPdlgzUuariPPrp/exec';
+  function hq(kind, text) {
+    const body = { action: 'report', kind, who: '', name: (me.name + ' (Zuri BW)').slice(0, 60), app: 'zuri-bw', contact: '', text: String(text).slice(0, 3000) };
+    if (!live) { console.info('[coach] mailbox (practice, not sent)', body); return; }
+    const q = get('hq_q', []); q.push(body); set('hq_q', q.slice(-50)); flushHQ();
+  }
+  async function flushHQ() {
+    const q = get('hq_q', []); if (!q.length || !navigator.onLine) return;
+    set('hq_q', []);
+    const left = [];
+    for (const b of q) { try { await fetch(MAILBOX, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(b) }); } catch (e) { left.push(b); } }
+    if (left.length) set('hq_q', left.concat(get('hq_q', [])).slice(-50));
+  }
+  window.addEventListener('online', flushHQ); setTimeout(flushHQ, 4000);
+  const stMap = () => st();
+  function daySummary() {
+    const res = get('coach_res', {})[today] || {}, st = stMap();
+    const done = mine.filter((c) => st[c.id] === 'done').length, fail = mine.filter((c) => st[c.id] === 'fail').length;
+    const eases = Object.values(res).map((r) => r.ease).filter((e) => e), avg = eases.length ? (eases.reduce((t, e) => t + e, 0) / eases.length).toFixed(1) : '–';
+    const lines = [`ZURI-BW|day ${today}|${me.role}|${me.name}|app ${appV()}|done ${done}/${mine.length}|problems ${fail}|ease ${avg}`];
+    mine.forEach((c) => { const r = res[c.id]; lines.push(`${st[c.id] === 'done' ? '✅' : st[c.id] === 'fail' ? '❌' : '·'} ${c.t}${r ? ` — ${r.s}s, ease ${r.ease || '–'}${r.hint ? ', hint' : ''}${r.hit === 0 ? ', missed screen' : ''}${r.self ? ', ended same: ' + r.self : ''}${r.said ? ' — “' + r.said + '”' : ''}` : ''}`); });
+    return lines.join('\n');
+  }
+  function noteResult(c, note) {
+    const all = get('coach_res', {}); all[today] = all[today] || {}; all[today][c.id] = { s: note.s, ease: note.ease, hint: note.hint, hit: note.hit, self: note.self, said: note.said }; set('coach_res', all);
+    const st = stMap(), sent = get('hq_day_sent', {});
+    if (mine.length && mine.every((x) => st[x.id] === 'done' || st[x.id] === 'fail') && !sent[today]) { sent[today] = 1; set('hq_day_sent', sent); hq('daily', daySummary()); }
   }
   async function finish(c) {
     tick();
@@ -357,6 +388,7 @@
     set('coach_pick', null); setLater(later().filter((i) => i !== c.id));
     ui.mode = 'card'; ui.open = true; ui.showHint = false; ui.said = ''; ui.ease = null; ui.self = null;
     render();
+    noteResult(c, note);
     const ok = await send([row('done', bwStep(today, me.role, c.id), txt)]);
     Z.toast(ok ? 'Done ✓ — next one is up.' : 'Done ✓ (saved on the phone — sends when you have signal)');
   }
