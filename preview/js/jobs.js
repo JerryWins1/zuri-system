@@ -407,6 +407,7 @@
           <div class="row"><div class="grow"><label>Qty</label><input name="qty" inputmode="decimal" value="1"></div><button class="btn sec" type="submit">Add</button></div>
         </form>
       </div>` : ''}
+      <div id="jd-cab"></div>
 
       <h3>Photos</h3>
       <div class="card">
@@ -572,6 +573,7 @@
         Z.route();
       } catch (e) { Z.toast('This phone couldn\'t keep the photo (storage may be full).'); console.error(e); }
     };
+    if (Z.alertCabinetBox && c && c.id) Z.alertCabinetBox(Z.$('#jd-cab', el), c); // 📣 v2.39: which cabinet this home is wired to
     if (localPhotos.length) {
       const box = Z.$('#jd-lphotos', el);
       const urls = await Promise.all(localPhotos.map((q) => Z.idb.getBlob(q.data.key).then((b) => (b ? URL.createObjectURL(b) : null)).catch(() => null)));

@@ -179,13 +179,13 @@
     const where = (r) => (r.hubs || []).length ? r.hubs.map(hubName).join(', ') : (r.areas || []).length ? r.areas.map(Z.areaName).join(', ') : 'Same people as before';
     const item = (r) => `<a class="item" href="#alerts/${r.id}"><div class="grow"><div class="t"><b>${Z.esc(r.code)}</b> · ${Z.esc(where(r))}</div>
       <div class="m">${Z.fmt(r.recipients)} people · ${Z.when(r.sent_at || r.approved_at || r.created_at)}${r.created_by ? ' · by ' + Z.esc(Z.personName(r.created_by) || 'office') : ''}</div></div>${pill(STATUS[r.status] || [r.status, ''])}</a>`;
-    const sec = (title, l, empty) => `<h3>${title}</h3><div class="card list">${l.length ? l.map(item).join('') : `<div class="empty">${empty}</div>`}</div>`;
+    const sec = (title, l, empty, id) => `<h3>${title}</h3><div class="card list" id="${id}">${l.length ? l.map(item).join('') : `<div class="empty">${empty}</div>`}</div>`;
     el.innerHTML = `<h2>📣 Alerts</h2>${subtabs('')}
       <p class="hint" style="margin-top:0">One message to many customers: an outage, planned work, a power cut, an offer. The office writes it, a partner says yes, then it goes out. Zuri never sends anything by itself.</p>
-      <div class="row" style="margin-bottom:8px">${['OUT', 'FIX', 'MAINT', 'POWER'].map((c) => `<a class="btn sec small" href="#alerts/new/${c}">${c === 'OUT' ? '📡' : c === 'FIX' ? '✅' : c === 'MAINT' ? '🛠️' : '⚡'} ${c}</a>`).join('')}<a class="btn small" href="#alerts/new">＋ New alert</a></div>
-      ${sec('Waiting for a partner', group(['draft']), 'Nothing waiting.')}
-      ${sec('Ready to send', group(['approved']), 'Nothing approved and unsent.')}
-      ${sec('Sent and cancelled', group(['sent', 'cancelled']).slice(0, 30), 'No alerts yet.')}`;
+      <div class="row" id="al-quick" style="margin-bottom:8px">${['OUT', 'FIX', 'MAINT', 'POWER'].map((c) => `<a class="btn sec small" href="#alerts/new/${c}">${c === 'OUT' ? '📡' : c === 'FIX' ? '✅' : c === 'MAINT' ? '🛠️' : '⚡'} ${c}</a>`).join('')}<a class="btn small" href="#alerts/new">＋ New alert</a></div>
+      ${sec('Waiting for a partner', group(['draft']), 'Nothing waiting.', 'al-l-wait')}
+      ${sec('Ready to send', group(['approved']), 'Nothing approved and unsent.', 'al-l-ready')}
+      ${sec('Sent and cancelled', group(['sent', 'cancelled']).slice(0, 30), 'No alerts yet.', 'al-l-done')}`;
   }
 
   // ---------- write one ----------
@@ -221,7 +221,7 @@
         <h2>📣 ${Z.esc(code.code)} · ${Z.esc(code.name)} ${pill(PURPOSE[code.purpose])}</h2>
         ${code.hint ? `<p class="hint" style="margin-top:0">${Z.esc(code.hint)}</p>` : ''}
         ${parent ? `<div class="alert ok">Going to the same <b>${Z.fmt((parent.recipient_ids || []).length)}</b> people who got <b>${Z.esc(parent.code)}</b> on ${Z.when(parent.sent_at || parent.created_at)}.</div>` : `
-        <div class="card"><b>Who gets it</b>
+        <div class="card" id="al-who"><b>Who gets it</b>
           <div class="seg" style="margin:8px 0" id="al-mode"><a href="javascript:void 0" data-m="area" class="${t.mode === 'area' ? 'on' : ''}">By area</a><a href="javascript:void 0" data-m="hub" class="${t.mode === 'hub' ? 'on' : ''}">By cabinet / tower</a></div>
           ${t.mode === 'area' ? `<div class="chips" id="al-areas">${areas.map((a) => `<button type="button" data-a="${Z.esc(a.code)}" class="${t.areas.includes(a.code) ? 'on' : ''}">${Z.esc(a.name)}</button>`).join('')}</div>`
             : `<div class="chips" id="al-hubs">${servingHubs.map((h) => `<button type="button" data-h="${Z.esc(h.id)}" class="${t.hubs.includes(String(h.id)) ? 'on' : ''}">${kindIcon(h.kind)} ${Z.esc(h.name)}${h.area ? ' · ' + Z.esc(Z.areaName(h.area)) : ''}</button>`).join('') || '<span class="hint">No cabinets or towers yet. Add them in Admin → Company &amp; hubs.</span>'}</div>
@@ -231,8 +231,8 @@
           ${code.purpose === 'reminder' ? `<div style="margin-top:8px"><label for="al-within">Only packages ending within (days)</label><input id="al-within" type="number" min="0" max="60" value="${t.within ?? ''}" style="max-width:120px"></div>` : ''}
           <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="al-p2" ${t.phone2 ? 'checked' : ''} style="width:auto"> Also send to second phone numbers</label>
         </div>`}
-        ${bl.length ? `<div class="card"><b>Fill in</b><div class="grid2" style="margin-top:6px">${bl.map((k) => ['', '_sw'].map((sx) => `<div><label for="al-b-${k}${sx}">${sx ? '🇰🇪 Kiswahili <span class="hint" style="margin:0">(if different)</span>' : BLANKS[k][0]}</label>${k === 'message' ? `<textarea id="al-b-${k}${sx}" data-b="${k}${sx}" placeholder="${Z.esc(sx ? '' : BLANKS[k][1])}">${Z.esc(blanks[k + sx] || '')}</textarea>` : `<input id="al-b-${k}${sx}" data-b="${k}${sx}" placeholder="${Z.esc(sx ? SW_HINT[k] || '' : BLANKS[k][1])}" value="${Z.esc(blanks[k + sx] || '')}">`}</div>`).join('')).join('')}</div></div>` : ''}
-        <div class="card"><b>What they'll read</b> <span class="hint">(${sample ? 'for ' + Z.esc(sample.c.full_name) : 'example'})</span>
+        ${bl.length ? `<div class="card" id="al-fill"><b>Fill in</b><div class="grid2" style="margin-top:6px">${bl.map((k) => ['', '_sw'].map((sx) => `<div><label for="al-b-${k}${sx}">${sx ? '🇰🇪 Kiswahili <span class="hint" style="margin:0">(if different)</span>' : BLANKS[k][0]}</label>${k === 'message' ? `<textarea id="al-b-${k}${sx}" data-b="${k}${sx}" placeholder="${Z.esc(sx ? '' : BLANKS[k][1])}">${Z.esc(blanks[k + sx] || '')}</textarea>` : `<input id="al-b-${k}${sx}" data-b="${k}${sx}" placeholder="${Z.esc(sx ? SW_HINT[k] || '' : BLANKS[k][1])}" value="${Z.esc(blanks[k + sx] || '')}">`}</div>`).join('')).join('')}</div></div>` : ''}
+        <div class="card" id="al-read"><b>What they'll read</b> <span class="hint">(${sample ? 'for ' + Z.esc(sample.c.full_name) : 'example'})</span>
           <div style="margin-top:6px"><div class="hint" style="margin:0">🇰🇪 Kiswahili · ${pSw.length} letters · ${smsParts(pSw)} SMS</div><div class="card" style="background:var(--surface-2);margin:4px 0;font-weight:500;white-space:pre-wrap">${Z.esc(pSw)}</div>
           <div class="hint" style="margin:0">🇬🇧 English · ${pEn.length} letters · ${smsParts(pEn)} SMS</div><div class="card" style="background:var(--surface-2);margin:4px 0;font-weight:500;white-space:pre-wrap">${Z.esc(pEn)}</div></div>
           <div class="row" style="margin-top:6px"><label for="al-ch" style="margin:0">Send by</label><select id="al-ch" style="width:auto">${Z.opts([['sms', 'SMS'], ['whatsapp', 'WhatsApp'], ['both', 'SMS and WhatsApp']], channel)}</select></div>
@@ -309,15 +309,15 @@
       <div class="card"><div class="hint" style="margin:0">🇰🇪 Kiswahili</div><div class="card" style="background:var(--surface-2);margin:4px 0;font-weight:500;white-space:pre-wrap" id="al-sw">${Z.esc(shown(a.message_sw))}</div>
         <div class="hint" style="margin:0">🇬🇧 English</div><div class="card" style="background:var(--surface-2);margin:4px 0;font-weight:500;white-space:pre-wrap" id="al-en">${Z.esc(shown(a.message_en))}</div>
         <p class="hint" style="margin:4px 0 0">Anything still in {curly brackets} fills in for each customer.</p></div>
-      <div class="card timeline">
+      <div class="card timeline" id="al-tl">
         <div class="ev">✍️ Written by ${Z.esc(Z.personName(a.created_by) || 'the office')} <span class="m">${Z.when(a.created_at)}</span></div>
         ${a.approved_at ? `<div class="ev">✅ Approved by ${Z.esc(Z.personName(a.approved_by) || 'a partner')} <span class="m">${Z.when(a.approved_at)}</span></div>` : ''}
         ${a.sent_at ? `<div class="ev">📤 Sent by ${Z.esc(Z.personName(a.sent_by) || 'the office')} (${Z.esc(a.sent_how === 'server' ? 'Daraja server' : a.sent_how === 'copied' ? 'copied into WhatsApp' : 'bulk-SMS list')}) <span class="m">${Z.when(a.sent_at)}</span>${a.delivered != null ? ` · ${Z.fmt(a.delivered)} delivered, ${Z.fmt(a.failed || 0)} failed` : ''}</div>` : ''}
         ${a.status === 'cancelled' ? '<div class="ev">✖ Cancelled</div>' : ''}
       </div>
       <div id="al-act"></div>
-      ${isOut && follow && !followDone ? `<div class="card" style="border-left:5px solid var(--ok)"><b>Service back?</b><p class="hint" style="margin:2px 0 6px">Tell exactly these ${Z.fmt(a.recipients)} people.</p><a class="btn" href="#alerts/new/${follow.code}/parent:${a.id}">✅ Send ${Z.esc(follow.code)} to the same people</a></div>` : ''}
-      <details class="card"><summary><b>The people</b> (${Z.fmt(a.recipients)})</summary><div id="al-people" class="list" style="margin-top:6px"><div class="loading">Loading…</div></div></details>`;
+      ${isOut && follow && !followDone ? `<div class="card" id="al-fix" style="border-left:5px solid var(--ok)"><b>Service back?</b><p class="hint" style="margin:2px 0 6px">Tell exactly these ${Z.fmt(a.recipients)} people.</p><a class="btn" href="#alerts/new/${follow.code}/parent:${a.id}">✅ Send ${Z.esc(follow.code)} to the same people</a></div>` : ''}
+      <details class="card" id="al-ppl"><summary><b>The people</b> (${Z.fmt(a.recipients)})</summary><div id="al-people" class="list" style="margin-top:6px"><div class="loading">Loading…</div></div></details>`;
 
     const act = Z.$('#al-act', el);
     if (a.status === 'draft') {
@@ -330,7 +330,7 @@
         ${over ? `<div class="alert warn" style="margin:6px 0">Quiet hours (${Z.esc(cfg.quiet_from)}–${Z.esc(cfg.quiet_to)}): send offers in the morning.</div>` : ''}
         ${cfg.server_on ? '<p class="hint">The Daraja server is switched on, but sending from here arrives with it. For now use the list.</p>' : ''}
         <ol class="hint" style="margin:6px 0 8px;padding-left:20px"><li><b>SMS:</b> download the list and upload it to the bulk-SMS website. Each row has the customer's own words.</li><li><b>WhatsApp:</b> copy the words into the broadcast list for the area.</li><li>Then tap <b>It went out</b>.</li></ol>
-        <div class="row"><button class="btn" id="al-csv">📥 Download the list (CSV)</button><button class="btn sec" id="al-copy">📋 Copy the Kiswahili words</button><button class="btn sec" id="al-copy-en">📋 English</button><button class="btn sec" id="al-nums">📋 Copy the numbers</button></div>
+        <div class="row" id="al-send"><button class="btn" id="al-csv">📥 Download the list (CSV)</button><button class="btn sec" id="al-copy">📋 Copy the Kiswahili words</button><button class="btn sec" id="al-copy-en">📋 English</button><button class="btn sec" id="al-nums">📋 Copy the numbers</button></div>
         <div class="row" style="margin-top:8px"><button class="btn" id="al-sent">✅ It went out</button>${Z.isAdmin() ? '<button class="btn sec" id="al-no">✖ Cancel it</button>' : ''}</div></div>`;
     }
     const set = async (patch, msg, b) => {
@@ -340,10 +340,11 @@
       Z.toast(msg); Z.route();
     };
     const yes = Z.$('#al-yes', el); if (yes) yes.onclick = () => set({ status: 'approved', approved_by: Z.me.id, approved_at: new Date().toISOString() }, 'Approved. The office can send it now.', yes);
-    const no = Z.$('#al-no', el); if (no) no.onclick = () => { if (confirm('Cancel this alert? It stays in the history.')) set({ status: 'cancelled' }, 'Cancelled.', no); };
+    const ask = (q) => window.ZP_LESSON || confirm(q);
+    const no = Z.$('#al-no', el); if (no) no.onclick = () => { if (ask('Cancel this alert? It stays in the history.')) set({ status: 'cancelled' }, 'Cancelled.', no); };
     let how = null;
-    const sent = Z.$('#al-sent', el); if (sent) sent.onclick = () => { if (confirm(`Did the ${Z.fmt(a.recipients)} messages go out?`)) set({ status: 'sent', sent_how: how || 'export', sent_by: Z.me.id, sent_at: new Date().toISOString() }, 'Marked as sent.', sent); };
-    const copy = (t, m) => navigator.clipboard.writeText(t).then(() => Z.toast(m), () => Z.toast('Press and hold the words to copy them.'));
+    const sent = Z.$('#al-sent', el); if (sent) sent.onclick = () => { if (ask(`Did the ${Z.fmt(a.recipients)} messages go out?`)) set({ status: 'sent', sent_how: how || 'export', sent_by: Z.me.id, sent_at: new Date().toISOString() }, 'Marked as sent.', sent); };
+    const copy = (t, m) => (window.ZP_LESSON ? Promise.resolve() : navigator.clipboard.writeText(t)).then(() => Z.toast(m), () => Z.toast('Press and hold the words to copy them.'));
     const c1 = Z.$('#al-copy', el); if (c1) c1.onclick = () => { how = how || 'copied'; copy(Z.$('#al-sw', el).textContent, 'Copied. Fill in {name}/{zone} if WhatsApp needs it, or use the list.'); };
     const c2 = Z.$('#al-copy-en', el); if (c2) c2.onclick = () => { how = how || 'copied'; copy(Z.$('#al-en', el).textContent, 'Copied.'); };
     const nums = Z.$('#al-nums', el); if (nums) nums.onclick = async () => { const ps = await people(); copy(ps.flatMap((p) => p.phones).join(', '), `Copied ${Z.fmt(ps.reduce((s, p) => s + p.phones.length, 0))} numbers.`); };
@@ -422,6 +423,25 @@
     };
   }
 
+  // ---------- for the training videos: make an alert the way the screens do (practice only) ----------
+  // Z.alertMake({ code: 'OUT', areas: ['B'] | hubs: [id] | parent: id, blanks: {...}, status: 'draft'|'approved'|'sent' }) → id
+  Z.alertMake = async (o) => {
+    if (!Z.practice) throw new Error('Only in practice.');
+    const all = await codes(), code = all.find((c) => c.code === o.code);
+    const [people, prefs] = await Promise.all([everyone(), prefsMap()]);
+    const parent = o.parent ? must(await Z.sb.from('alerts').select('*').eq('id', o.parent).maybeSingle()) : null;
+    const t = { mode: parent ? 'same' : (o.hubs || []).length ? 'hub' : 'area', areas: o.areas || [], hubs: (o.hubs || []).map(String), statuses: ['active'], plans: [], within: null, phone2: false, parent };
+    const blanks = o.blanks || {}, r = audience(t, code.purpose, people, prefs);
+    const row = { id: Z.uuid(), code: code.code, purpose: code.purpose, areas: parent ? parent.areas || [] : t.areas, hubs: parent ? (parent.hubs || []) : t.hubs, filters: { statuses: t.statuses, mode: t.mode },
+      blanks, message_en: fill(code.msg_en, blanks), message_sw: fill(code.msg_sw, swOf(blanks)), recipients: r.pick.length, recipient_ids: r.pick.map((x) => String(x.c.id)),
+      parent_id: parent ? parent.id : null, channel: 'sms', status: 'draft', created_by: o.by || 'p-mary', created_at: new Date(Date.now() - (o.minsAgo || 10) * 60e3).toISOString() };
+    must(await Z.sb.from('alerts').insert(row));
+    const now = new Date().toISOString();
+    if (o.status === 'approved' || o.status === 'sent') must(await Z.sb.from('alerts').update({ status: 'approved', approved_by: 'p-jerry', approved_at: now }).eq('id', row.id));
+    if (o.status === 'sent') must(await Z.sb.from('alerts').update({ status: 'sent', sent_how: 'export', sent_by: 'p-mary', sent_at: now }).eq('id', row.id));
+    return row.id;
+  };
+
   // ---------- on the customer page ----------
   Z.alertPrefsBox = async (box, c) => {
     if (!box || !Z.isOffice() || !(await Z.alertsOk())) return;
@@ -447,6 +467,25 @@
       if (row.ok_offers && !(v.ok_offers) && !row.consent_note) return Z.toast('Write how and when they said yes to offers.');
       const { error } = await Z.sb.from('customer_alert_prefs').upsert(row, { onConflict: 'customer_id' });
       if (error) return Z.fail(error); Z.toast('Saved.');
+    };
+  };
+
+  // ---------- on the job page: the tech says which cabinet the home is wired to ----------
+  Z.alertCabinetBox = async (box, c) => {
+    if (!box || !navigator.onLine || !(await Z.alertsOk())) return;
+    let p = null;
+    try { p = must(await Z.sb.from('customer_alert_prefs').select('customer_id,served_by_hub').eq('customer_id', c.id).maybeSingle()); } catch (e) { return; }
+    if (!box.isConnected) return;
+    const serving = hubs().filter((h) => SERVING.includes(h.kind));
+    if (!serving.length) return;
+    const near = c.lat != null && Z.nearestHub ? Z.nearestHub(c.lat, c.lng, serving) : null;
+    box.innerHTML = `<h3>📣 Wired to</h3><div class="card"><div class="row" style="align-items:end"><div class="grow"><label for="jd-cab-s">Which cabinet or tower is this home connected to?</label>
+      <select id="jd-cab-s"><option value="">${near ? 'Not sure (nearest: ' + Z.esc(near.h.name) + ')' : 'Not sure'}</option>${Z.opts(serving.map((h) => [h.id, kindIcon(h.kind) + ' ' + h.name]), p && p.served_by_hub ? p.served_by_hub : '')}</select></div>
+      <button class="btn sec" id="jd-cab-ok" type="button">Save</button></div><p class="hint" style="margin:4px 0 0">So an outage message reaches the right homes.</p></div>`;
+    Z.$('#jd-cab-ok', box).onclick = async (e) => {
+      const v = Z.$('#jd-cab-s', box).value || null;
+      const { error } = await Z.sb.from('customer_alert_prefs').upsert({ customer_id: c.id, served_by_hub: v }, { onConflict: 'customer_id' });
+      if (error) return Z.fail(error); e.target.textContent = '✓ Saved'; Z.toast('Saved.');
     };
   };
 

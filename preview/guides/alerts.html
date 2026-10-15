@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📣 Alerts — one-page guide</title><style>
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; }
+body { font: 14px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: #152322; background: #fff; margin: 0; padding: 16px; max-width: 760px; margin: 0 auto; }
+h1 { font-size: 24px; margin: 0; color: #0F6E5C; }
+.sub { color: #56645F; font-size: 12.5px; margin: 2px 0 12px; }
+h2 { font-size: 15px; margin: 14px 0 6px; color: #0F6E5C; border-bottom: 2px solid #0F6E5C; padding-bottom: 2px; text-transform: uppercase; letter-spacing: .4px; }
+ol, ul { margin: 4px 0 4px 20px; padding: 0; } li { margin: 3px 0; }
+.big { font-size: 15.5px; }
+.box { border-radius: 10px; padding: 10px 12px; margin: 8px 0; }
+.ok { background: #E8F4EE; border-left: 5px solid #2E8B57; } .warn { background: #FDF1E4; border-left: 5px solid #D9822B; } .bad { background: #FBEAE8; border-left: 5px solid #C0392B; } .info { background: #E7F1EF; border-left: 5px solid #0F6E5C; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+.btn { display: inline-block; background: #0F6E5C; color: #fff; border-radius: 6px; padding: 0 6px; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+.chip { display: inline-block; border: 1px solid #B9C4C0; border-radius: 99px; padding: 0 7px; font-size: 12.5px; white-space: nowrap; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; } th, td { border: 1px solid #D8DFDC; padding: 5px 7px; text-align: left; vertical-align: top; } th { background: #EDF1EF; }
+.foot { margin-top: 12px; border-top: 1px solid #D8DFDC; padding-top: 6px; font-size: 11px; color: #56645F; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.print { position: fixed; right: 12px; bottom: 12px; background: #0F6E5C; color: #fff; border: none; border-radius: 10px; padding: 12px 16px; font: inherit; font-weight: 700; }
+@media print { .print { display: none; } body { padding: 0; font-size: 12.5px; } h1 { font-size: 21px; } }
+</style>
+</head><body>
+<h1>📣 Alerts — one-page guide</h1><div class="sub">One message to a whole area or one cabinet · for the office and the partners · v1 · 16 October 2026</div>
+
+<div class="box info big"><b>Where:</b> 👥 Customers → <span class="btn">📣 Alerts</span> · or the <b>📡 outage card</b> → <span class="btn">📣 Text the … customers</span> · or the <b>🗺️ Map</b> → tap a cabinet → <b>📣 Text the homes on this cabinet</b></div>
+<div class="box ok"><b>Zuri never sends anything by itself.</b> The office writes an alert, a <b>partner says yes</b>, then the office sends it from the bulk-SMS website or WhatsApp and taps <b>It went out</b>.</div>
+
+<h2>The ready-made messages</h2>
+<table><tr><th style="width:84px">Code</th><th>When</th><th style="width:150px">Who gets it</th></tr>
+<tr><td><b>📡 OUT</b></td><td>Outage: a cabinet, tower or the backhaul is down. Send it <b>before</b> the phones start ringing.</td><td>The area or the cabinet</td></tr>
+<tr><td><b>✅ FIX</b></td><td>Service is back. Sent from the outage alert.</td><td><b>Exactly</b> the people who got OUT</td></tr>
+<tr><td><b>🛠️ MAINT</b></td><td>Planned work. Send the day before.</td><td>The area or the cabinet</td></tr>
+<tr><td><b>⚡ POWER</b></td><td>KPLC power is off. Tells customers it's not us.</td><td>The area</td></tr>
+<tr><td><b>🐢 SLOW</b></td><td>Internet slow while we fix a fault.</td><td>The area or the cabinet</td></tr>
+<tr><td><b>📝 NOTICE</b></td><td>Anything else. You type the whole message.</td><td>You choose</td></tr>
+<tr><td><b>⬆️ UPGRADE</b></td><td>Faster packages, offers.</td><td>Only customers who <b>said yes to offers</b></td></tr>
+<tr><td><b>⏳ RENEW</b></td><td><b>Off.</b> Billnasi already texts 3 days before the package ends.</td><td>—</td></tr></table>
+
+<div class="grid">
+<div>
+<h2>📞 Office: write it (2 minutes)</h2>
+<ol>
+<li>Tap the code, e.g. <span class="btn">📡 OUT</span>.</li>
+<li><b>Who gets it:</b> <span class="chip">By area</span> or <span class="chip">By cabinet / tower</span>. Leave <span class="chip">Active</span> on.</li>
+<li><b>Fill in</b> what's asked (e.g. when it's back). Add the <b>🇰🇪 Kiswahili</b> way of saying it: <i>4pm → saa 10 jioni</i>.</li>
+<li>Read <b>What they'll read</b> in both languages. One SMS is up to 160 letters.</li>
+<li>Check the count, and anyone <b>left out</b> (said no, no phone, no cabinet).</li>
+<li><span class="btn">📨 Ask a partner for a yes</span>. Urgent? <b>Phone</b> the partner.</li>
+</ol>
+</div>
+<div>
+<h2>⭐ Partner: say yes (1 minute)</h2>
+<ol>
+<li><b>Home</b> shows <span class="chip">📣 1 alert waiting for your yes</span>. Tap it.</li>
+<li>Read the <b>Kiswahili</b> and the <b>English</b>, and the number of people.</li>
+<li><span class="btn">✅ Yes, approve</span> — after that nobody can change the words or the people. To change it: <b>Cancel</b> and write a new one.</li>
+</ol>
+<h2>📤 Office: send it</h2>
+<ol>
+<li><b>SMS:</b> <span class="btn">📥 Download the list</span> → upload it to the bulk-SMS website. Each row has that customer's own words and language.</li>
+<li><b>WhatsApp:</b> <span class="btn">📋 Copy</span> → paste into the area's broadcast list.</li>
+<li>Then <span class="btn">✅ It went out</span>.</li>
+</ol>
+</div></div>
+
+<h2>When the service is back</h2>
+<p>Open the outage alert → <span class="btn">✅ Send FIX to the same people</span> → yes → send. Same people, nobody missed.</p>
+
+<h2>Each customer's 📣 Messages box (customer page)</h2>
+<ul>
+<li><b>Wired to:</b> the cabinet or tower. Field techs set it at the install; until then Zuri uses the <b>nearest</b> one on the map. A home with <b>no pin and no cabinet</b> can't get cabinet alerts — Zuri names them.</li>
+<li><b>Language:</b> Kiswahili or English.</li>
+<li><b>Outages and planned work · Payment reminders</b>: on, unless the customer asks us to stop.</li>
+<li><b>Offers and upgrades</b>: only when the customer <b>says yes</b> — and write how and when in the note.</li>
+</ul>
+
+<h2>Good to know</h2>
+<ul>
+<li><b>Quiet hours</b> (20:00–07:00): offers wait for the morning. Outage, service back and power cut may go any time.</li>
+<li>Every alert keeps its story: who wrote it, who said yes, who sent it, and when — Customers → 📣 Alerts.</li>
+<li>Partners change the words in <b>📣 Alerts → Messages</b>, and set the SMS price, sender name and quiet hours in <b>Settings</b>.</li>
+<li>Never promise a time you can't keep. If you don't know, say <i>"today"</i> — and send an update later.</li>
+</ul>
+<div class="box warn">🎬 <b>Videos:</b> Me → 🎓 Learn Zuri → <b>📣 Alerts</b> (7 short chapters, 18 minutes) — they talk you through the real screens.<br><b>To share on WhatsApp</b> (silent, the words are on screen): <a href="../videos/alerts/al-outage.mp4" download>1 · An outage: text the whole area</a> · <a href="../videos/alerts/al-approve.mp4" download>2 · A partner says yes, and it goes out</a> · <a href="../videos/alerts/al-fix.mp4" download>3 · Service is back: the same people hear it</a> · <a href="../videos/alerts/al-cabinet.mp4" download>4 · By cabinet: only the homes on that cabinet</a> · <a href="../videos/alerts/al-customer.mp4" download>5 · One customer: cabinet, language, offers</a> · <a href="../videos/alerts/al-partner.mp4" download>6 · Partners: the words, the price, quiet hours</a> · <a href="../videos/alerts/al-turn.mp4" download>7 · Your turn</a></div>
+
+<div class="foot"><span>Zuri System · 📣 Alerts — one-page guide</span><span>Practice anytime: open Zuri → <b>Open practice</b> · Videos: <b>Me → 🎓 Learn Zuri</b></span><span>v1 · 16 October 2026</span></div>
+<button class="print" onclick="print()">🖨️ Print</button>
+</body></html>
