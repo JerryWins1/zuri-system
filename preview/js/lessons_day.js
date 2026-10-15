@@ -14,14 +14,14 @@
 
   const CH = [
     C('day-1', '1 · 6:45 am — Kelvin opens the day', 4, 'finance', 'day-2', [
-      { go: 'home', el: '#view a.card', say: 'It is a quarter to seven in Maai Mahiu. Kelvin opens Zuri with his tea. The Zuri manager ran at half past six: here is what it noticed overnight.' },
+      { go: 'home', el: '#view a.card[href="#tasks/mine"]', say: 'It is a quarter to seven in Maai Mahiu. Kelvin opens Zuri with his tea. The Zuri manager ran at half past six: here is what it noticed overnight.' },
       { el: '#view .alert', say: 'Needs attention. Two things today: the Zuri B float is below target, and ten customers have run out of paid time.' },
       { go: 'tasks/mine', el: '#tk-body .item', say: 'His own list for the day, already written: a cash count, a bill to pay, statements to sort. He will tick them as he goes.' },
       { go: 'money/today', el: '#m-body .kpis', say: 'Money, Cash today. The bank, the M-Pesa float, bills owing, and cash after bills, for each area. The float warning is here too.' },
       { go: 'money/count', el: 'input[name=bank]', say: 'First job: a cash count. He opens the bank app and the M-Pesa account on his phone, and types what each one says.', do: seq(type('input[name=bank]', '186500'), type('input[name=mpesa]', '39800')) },
       { el: '#mc button[type=submit]', say: 'Save. Now the forecast for the next thirty days starts from a true number.', do: tap('#mc button[type=submit]') },
       { go: 'money/payrun', el: '#pr-build', say: 'Next, the pay run. Build today\'s list collects every bill that is due and every monthly salary whose day has come. Anything left unpaid from last month stays on the list.', do: tap('#pr-build') }, // 7 Oct deep check #5 + #41
-      { el: '#m-body .list .item', say: 'KPLC is due today, and so is Mary\'s salary. He copies the number, sends each one in the M-Pesa app, and comes back.' },
+      { el: '#m-body .list .item::KPLC', say: 'KPLC is due today, and so is Mary\'s salary. He copies the number, sends each one in the M-Pesa app, and comes back.' }, // v2.35 (15 Oct): ring KPLC, not the Bayobab line above it
       { el: '.pr-sent', say: 'Then Sent, and the code from the M-Pesa message. Zuri records it as an expense, with his name and the time, and it waits for a second person, Jerry, to approve it.', do: seq(tap('.pr-sent'), type('.sheet input[name=ref]', 'SJK3X9ABCD'), tap('.sheet button.block')) },
       { go: 'money/expense', el: '#me-sms', say: 'Dickson forwards an M-Pesa message: cable clips from the hardware shop. Kelvin pastes it in and taps Read the message.', do: seq(type('#me-sms', 'SJK4Q1ZTYU Confirmed. Ksh2,400.00 paid to MAMA NJERI HARDWARE on 1/10/26 at 11:02 AM New M-PESA balance is Ksh37,400.00. Transaction cost, Ksh0.00.'), tap('#me-read')) },
       { el: '#me button[type=submit]', say: 'The code, the amount, the shop, the date, even the new M-Pesa balance: filled in. He checks the category and saves.', do: tap('#me button[type=submit]') },
