@@ -95,7 +95,8 @@
     ], ['Read every Kiswahili message', 'Set the SMS price', 'Check the quiet hours']),
 
     C('al-turn', '7 · Your turn: try every part of Alerts', 2, 'admin', null, [
-      { go: 'alerts', el: '#al-quick', say: 'That\'s Alerts. Now try it yourself, in practice. Nothing here is real, and nothing is sent.' },
+      { pre: async () => { await Z.alertMake({ ...OUT_B, status: 'sent', minsAgo: 180 }); await Z.alertMake({ code: 'MAINT', areas: ['A'], blanks: { date: 'Sat 18 Oct', date_sw: 'Jumamosi 18 Okt', time: '10am', time_sw: 'saa 4 asubuhi', duration: '2 hours', duration_sw: 'saa 2' }, status: 'draft', minsAgo: 6 }); },
+        go: 'alerts', el: '#al-quick', say: 'That\'s Alerts. Now try it yourself, in practice. Nothing here is real, and nothing is sent.' },
       { el: '#al-l-wait', say: 'Alerts waiting for a partner\'s yes are here, and on the partners\' Home screen.' },
       { el: '#al-l-done', say: 'Everything that went out stays here: who wrote it, who said yes, and when.' },
       { go: 'me', el: 'a[href="#learn"]', say: 'Every chapter is on the Learn page, to watch again any time.' },
