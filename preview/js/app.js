@@ -148,6 +148,7 @@
     { id: 'receipt', ic: '🧾', label: 'Receipts', ok: () => true, nav: () => false },
     { id: 'texts', ic: '📩', label: "Today's texts", ok: () => Z.isOffice(), nav: () => false }, // ⏱ v2.33 (timesavers.js)
     { id: 'projects', ic: '📈', label: 'Projects', ok: () => Z.isFinance(), nav: () => false }, // 📈 v2.34 (projects.js): from Home and Money
+    { id: 'hq', ic: '🏢', label: 'HQ', ok: () => Z.isAdmin(), nav: () => false }, // 🏢 v2.36 (hq.js): Headquarters, from Home
     { id: 'me', ic: '🙂', label: 'Me', ok: () => true },
   ];
   // Field techs live in Jobs, so it comes first for them.
@@ -156,7 +157,7 @@
     return Z.isField() ? ['jobs', 'tasks', 'me'].map((id) => t.find((x) => x.id === id)).filter(Boolean) : t;
   };
   // Which bottom tab lights up for a page that has no tab of its own.
-  const PARENT = { import: 'money', admin: 'me', learn: 'me', test: 'me', texts: 'jobs', projects: 'money', receipt: () => (Z.isFinance() ? 'money' : Z.isField() ? 'jobs' : 'tasks') };
+  const PARENT = { import: 'money', admin: 'me', learn: 'me', test: 'me', texts: 'jobs', projects: 'money', hq: 'home', receipt: () => (Z.isFinance() ? 'money' : Z.isField() ? 'jobs' : 'tasks') };
   Z.routes = {};
 
   function buildChrome() {
