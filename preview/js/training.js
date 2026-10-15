@@ -212,6 +212,22 @@
       { el: '.sheet #hq-send', say: 'Now tap WhatsApp or SMS for each person, and press send there. Zuri never sends anything by itself. Headquarters only reads: it never changes the company\'s records.',
         do: async () => { Z.set('hq_draft', ''); const x = find('.sheet [data-x]'); if (x) x.click(); await sleep(300); } },
     ], turn: ['Open Headquarters from Home', 'Look at the last 7 days of activity', 'Write a message to the field techs (practice: nothing is sent)'] },
+    // v2.37 (16 Oct): the Business Week coach (coach.js) had no video. It plays in practice with the coach on (dry run —
+    //       nothing is sent, nothing is ticked); a phone with no tester name gets "Practice" for the video only.
+    { id: 'bw-coach', group: 'Everyone', title: 'Business Week: your coach (2 min)', mins: 2, role: 'callcenter', coach: true, safe: false, steps: [
+      { pre: async () => { try { if (!localStorage.getItem('zt_bw_me')) { localStorage.setItem('zt_bw_me', JSON.stringify({ name: 'Practice', role: 'C1' })); window.__bwDemo = true; } } catch (e) {} },
+        go: 'home', el: '#zcoach', say: 'This is your coach. During Business Week every step shows here, inside Zuri, so you never leave the app.',
+        do: async () => { await sleep(300); if (!find('#zcoach .zc-body')) { const t = find('#zcoach [data-a=toggle]'); if (t) t.click(); await sleep(400); } } },
+      { el: '#zcoach .zc-body', say: 'It says what to do, where, and how you should end. Read it, then do it in Zuri.' },
+      { el: () => find('#zcoach [data-a=go]') || find('#zcoach .zc-body'), say: 'Not sure where? Tap Go there, and Zuri opens the right page.' },
+      { el: '#zcoach [data-a=done]', say: 'Finished the step? Tap Step done. Then tap a face: how easy was it? This tells us which parts of Zuri are hard.' },
+      { el: '#zcoach [data-a=problem]', say: 'Something wrong, confusing or slow? Tap Problem and write what happened. Every real problem we confirm pays you one hundred shillings.' },
+      { el: '#zcoach [data-a=stuck]', say: 'Lost? Tap I am stuck. It shows you the way. Being stuck is useful: it shows us where Zuri must be easier.' },
+      { el: '#zcoach [data-a=list]', say: 'All today shows every step of your day. You can do them in any order.' },
+      { el: '#zcoach', say: 'The last step of every day is a real-world problem, like a customer calling about a router. No steps are given: do what you would do at work. If you need help, tap Show me how.' },
+      { el: '#zcoach', say: 'Open Zuri from your Business Week page, inside Feedback Studio. There you can also talk, point and take screenshots. At the end of the day, tap Done at the bottom, then Send to Claude. Thank you!',
+        do: async () => { if (window.__bwDemo) { try { localStorage.removeItem('zt_bw_me'); } catch (e) {} window.__bwDemo = false; } } },
+    ], turn: ['Open your Business Week page and tap ▶ Open Zuri in Feedback Studio', 'Read your first step in the coach', 'Tap Go there'] },
   ];
   Z.lessons = LESSONS;
 
@@ -251,6 +267,11 @@
 
   let P = null; // the playing lesson
   async function play(lesson, from = 0) {
+    // v2.37: the coach video needs the coach on (?coach) and a Business Week day to show (?today=1 before the week starts).
+    if (lesson.coach && !document.getElementById('zcoach') && !/[?&]coach\b/.test(location.search)) {
+      try { localStorage.setItem(AUTO, lesson.id); localStorage.setItem('zuri_practice_role', lesson.role || 'callcenter'); } catch (e) {}
+      location.href = location.pathname + '?practice&coach&local=1&today=1#learn'; return;
+    }
     stop(true);
     // Same starting point every time, so the jobs and bills the video taps are always there.
     // 7 Oct deep check #17: ask first if that would throw away the person's own practice work (e.g. their empty company set-up).
@@ -364,6 +385,7 @@
     const lesson = LESSONS.find((l) => l.id === id); if (!lesson) return;
     const want = lesson.role || currentPracticeRole() || 'field';
     if (lesson.safe && !Z.practice) return play(lesson);             // only points, never taps: fine on real data
+    // v2.37: the coach video needs the coach on (?coach) and a Business Week day to show (?today=1 before the week starts).
     if (Z.practice && currentPracticeRole() === want) return play(lesson);
     try { localStorage.setItem(AUTO, id); localStorage.setItem('zuri_practice_role', want); if (Z.training) localStorage.setItem('zuri_from_training', '1'); else localStorage.removeItem('zuri_from_training'); } catch (e) { /* storage blocked */ }
     // v2.32: a link's &role= used to win over the new person when the page reloaded (the reload raced the address change),
