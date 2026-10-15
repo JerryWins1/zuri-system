@@ -52,7 +52,7 @@
       { go: 'home', el: '#hdr', say: 'Welcome to Zuri. In the next few minutes you will see the whole system, so you know how everything fits together. After this, watch the short videos for your own job.' },
       { el: '#nav', say: 'Zuri is one app for the whole Zuri Fiber team: the partners, the office, the call center, and the technicians in the field. It works on any phone, in Chrome, and on the office computer.' },
       { el: '#view .kpis', say: 'Everyone works from the same information. This is Home. It shows the whole company on one page: our customers, who has paid, our service jobs, and our money.' },
-      { el: '#view a.card[href="#tasks/mine"]', say: 'Every morning at half past six, the Zuri manager looks at everything and writes each person\'s list for the day. It also warns us early when something is going wrong, like customers who have not paid, or cash running low.' }, // v2.35 (15 Oct): Headquarters is now the first card on Home
+      { el: '#view a.card[href="#tasks/mine"]', say: 'Every morning at half past six, the Zuri manager looks at everything and writes each person\'s list for the day. It also warns us early when something is going wrong, like customers who have not paid, or cash running low.' }, // v2.36 (15 Oct): Headquarters is now the first card on Home
       { el: '#view .alert', say: 'Needs attention shows the most important problems first. Tap one, and it takes you straight there.' },
       { go: 'customers', el: '#view .list', say: 'Customers is everyone we serve: their package, their phone number, where they live, and when their payment runs out. The list comes from our billing website every morning.' },
       { el: 'a[href="#customers/map"]', say: 'And the map: every customer with a pin, by area. Green has paid, red has run out. A technician taps a pin and drives there.' },
@@ -153,7 +153,7 @@
       { go: 'money/today', el: '#m-body .kpis', say: 'Money starts with Cash today: what is in the bank, the M-Pesa float, bills still owing, and cash left after bills.' },
       { el: '#m-body .alert', say: 'Red and orange boxes tell you what to do, like a float that is too low, or a bill that is due.' },
       { go: 'money/count', el: 'input[name=bank]', say: 'Count the cash at least once a week, and every Friday. Look at the bank app and the M-Pesa account, and type what each one says.', do: async () => { await type('input[name=bank]', '185000')(); await type('input[name=mpesa]', '39500')(); } },
-      { el: '#mc button[type=submit]', say: 'Tap Save cash count. The forecast for the next 30 days starts from this number.', do: tap('#mc button[type=submit]') }, // v2.35 (15 Oct): the button says Save cash count
+      { el: '#mc button[type=submit]', say: 'Tap Save cash count. The forecast for the next 30 days starts from this number.', do: tap('#mc button[type=submit]') }, // v2.36 (15 Oct): the button says Save cash count
       { go: 'money/expense', el: '#me-sms', say: 'Paid something by M-Pesa? Copy the confirmation message and paste it here.', do: type('#me-sms', 'UJ7K2M9PQR Confirmed. Ksh1,500.00 paid to KPLC PREPAID for account 5412 on 30/9/26 at 10:12 AM New M-PESA balance is Ksh38,000.00. Transaction cost, Ksh0.00.') },
       { el: '#me-read', say: 'Tap Read the message. Zuri fills in the code, the amount, who was paid, the date, and the new balance.', do: tap('#me-read') },
       { el: '#me-billrow', say: 'It even sees this is the KPLC bill, and ticks it off the bill list for you.' },
@@ -166,7 +166,7 @@
       { el: '[data-pay]', say: 'When you send the money, tap Pay.', do: tap('[data-pay]') },
       { el: '#pb-from', say: 'Choose where the money came from: M-Pesa, bank or cash. Part payments are fine.', do: tap('#pb-from [data-v=Bank]') },
       { el: '.sheet input[name=ref]', say: 'Type the M-Pesa or bank code.', do: type('.sheet input[name=ref]', 'FT26274QX') },
-      { el: '.sheet button.block', say: 'Tap Pay and record it. It is recorded in Money out automatically, so you never type it twice. Then a second person, a partner or another finance person, approves it, and only then does the bill count it as paid.', do: tap('.sheet button.block') }, // v2.35 (15 Oct): the button says Pay and record it
+      { el: '.sheet button.block', say: 'Tap Pay and record it. It is recorded in Money out automatically, so you never type it twice. Then a second person, a partner or another finance person, approves it, and only then does the bill count it as paid.', do: tap('.sheet button.block') }, // v2.36 (15 Oct): the button says Pay and record it
       { el: '[data-copy]', say: 'At the start of a new month, tap Copy last month\'s bills. Then change any amount that is different.' },
     ], turn: ['Pay part of a bill', 'Add a new bill for transport'] },
 
@@ -180,7 +180,7 @@
     ], turn: ['Sort five transactions', 'Make one always rule', 'Read last month\'s profit'] },
 
     { id: 'partners', group: 'Partners & admin', title: 'Running the company from Home', mins: 3, role: 'admin', steps: [
-      { go: 'home', el: '#view a.card[href="#tasks/mine"]', say: 'Home is the whole company on one page. The Zuri manager card tells you what it noticed this morning.' }, // v2.35 (15 Oct): Headquarters is now the first card
+      { go: 'home', el: '#view a.card[href="#tasks/mine"]', say: 'Home is the whole company on one page. The Zuri manager card tells you what it noticed this morning.' }, // v2.36 (15 Oct): Headquarters is now the first card
       { el: '#view .alert', say: 'Needs attention lists the most important problems first. Tap one to go straight to it.' },
       { el: '#view .kpis', say: 'Customers: how many are active, how many have paid, and how much is late.' },
       { el: '#h-cash', say: 'This chart is our cash for the next 30 days: renewals coming in, bills going out. If it goes below zero, Zuri warns you weeks before.' },
@@ -197,7 +197,7 @@
       { el: () => find('#a-body form[data-id="p-samuel"] input[name=active]'), say: 'Switch them on, and tap Save. They can now sign in.', do: async () => { const f = find('#a-body form[data-id="p-samuel"]'); if (f) { f.active.checked = true; f.requestSubmit(); } await sleep(600); } },
       { go: 'admin/visibility', el: '#a-body', say: 'Who sees what lets you hide private details, like a customer\'s ID number, from some jobs.' },
     ], turn: ['Switch on Samuel as a field tech in Zuri A'] },
-    // v2.35 (15 Oct): 🏢 Headquarters (hq.js, #hq) had no video. Partners only; it only reads, so the taps are safe.
+    // v2.36 (15 Oct): 🏢 Headquarters (hq.js, #hq) had no video. Partners only; it only reads, so the taps are safe.
     { id: 'hq', group: 'Partners & admin', title: 'Headquarters: the whole company, and a message to anyone', mins: 2, role: 'admin', steps: [
       { go: 'home', el: '#view a.card[href="#hq"]', say: 'Partners have one more screen: Headquarters. It is at the top of Home. Tap it.', do: tap('#view a.card[href="#hq"]') },
       { el: '#hq-dec .alert', say: 'Headquarters is the whole company on one screen. First, Needs a decision: payments waiting for an OK, and urgent tasks. Tap one to go there.' },

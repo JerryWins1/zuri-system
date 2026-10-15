@@ -9,9 +9,9 @@
 
   const CH = [
     C('fields-home', '1 · Home', 2, 'fields-tasks', [
-      { go: 'home', el: '#hdr', say: 'Chapter one: Home. At the top: who you are, and the area picker. All areas shows the whole company; pick one area, like Zuri A, to see that area only. Every screen follows this choice.' }, // v2.35 (15 Oct): more than two areas now
-      { el: '#view a.card[href="#hq"]', say: 'Partners also get Headquarters: every area side by side, live activity, and a message to anyone. It has its own video.' }, // v2.35 (15 Oct): new 🏢 screen
-      { el: '#view a.card[href="#tasks/mine"]', say: 'The Zuri manager card: when it last ran, how many things are on your list, and its warnings for today.' }, // v2.35 (15 Oct): the first card is now Headquarters
+      { go: 'home', el: '#hdr', say: 'Chapter one: Home. At the top: who you are, and the area picker. All areas shows the whole company; pick one area, like Zuri A, to see that area only. Every screen follows this choice.' }, // v2.36 (15 Oct): more than two areas now
+      { el: '#view a.card[href="#hq"]', say: 'Partners also get Headquarters: every area side by side, live activity, and a message to anyone. It has its own video.' }, // v2.36 (15 Oct): new 🏢 screen
+      { el: '#view a.card[href="#tasks/mine"]', say: 'The Zuri manager card: when it last ran, how many things are on your list, and its warnings for today.' }, // v2.36 (15 Oct): the first card is now Headquarters
       { el: '#view .alert', say: 'Needs attention: the most important problems, most urgent first. Each one is a link to the screen where you fix it.' },
       { el: '#view .kpis', say: 'Customers: active customers, how many are paid up, how many have run out, the monthly recurring revenue if everyone pays, renewals due in the next seven days, and customers with no map pin.' },
       { el: '#view .card::Packages', say: 'Packages: how many customers are on each package, and the money each package brings in per month.' },
@@ -23,7 +23,7 @@
       { el: '#h-books', say: 'And income against expenses from the sorted statements. Tap refresh at the top right to reload all of it.' },
     ]),
     C('fields-tasks', '2 · Tasks', 3, 'fields-jobs', [
-      { go: 'tasks/mine', el: '.subtabs', say: 'Chapter two: Tasks. My day, Team, Add a task, and, for finance and the partners, WhatsApp nudges and the Manager log.' }, // v2.35 (15 Oct): it said four parts, then named five
+      { go: 'tasks/mine', el: '.subtabs', say: 'Chapter two: Tasks. My day, Team, Add a task, and, for finance and the partners, WhatsApp nudges and the Manager log.' }, // v2.36 (15 Oct): it said four parts, then named five
       { el: '#tk-run', say: 'Partners also get Run the manager now, which runs the morning rules on the spot.' },
       { el: '#tk-body .item', say: 'A task: the tick box, the title, who it is for, where it came from, when it is due, and a lock if only finance can see it.' },
       { el: '.tk-cm', say: 'Open, if the task points at a page or a customer, and Notes to talk about it.' },
@@ -57,7 +57,7 @@
       { el: 'h2', say: 'The job number, the kind, and the status: waiting for a tech, assigned, in progress, done, or cancelled.' },
       { el: '#view .card::Problem', say: 'The problem, as the customer described it.' },
       { el: 'a[href^="tel:"]', say: 'The customer card: name, area, account, package and rate, when their payment runs out, the landmark, and Call buttons for each phone number.' },
-      { el: '#jd-pin', say: 'Open map and Send pin, if there is a pin. Drop pin here, or Move pin to here, saves where the technician is standing.' }, // v2.35 (15 Oct): the button's real words
+      { el: '#jd-pin', say: 'Open map and Send pin, if there is a pin. Drop pin here, or Move pin to here, saves where the technician is standing.' }, // v2.36 (15 Oct): the button's real words
       { el: '#jd-disp select[name=assigned_to]', say: 'Who\'s going, and when: the technician, the visit day, and the priority. Save, Cancel job, or Reopen.' },
       { el: '.chips[data-for=findings]', say: 'The work. What did you find: tap the round buttons, or type.' },
       { el: '.chips[data-for=work_done]', say: 'What did you do: the same.' },
@@ -100,7 +100,7 @@
     C('fields-newcust', '5c · A new customer', 2, 'fields-money-today', [
       { go: 'customers/new', el: 'h2', say: 'Chapter five c: adding a new customer. From Customers, tap New customer. It is the same form as Edit, starting empty.' },
       { el: 'input[name=full_name]', say: 'Full name first: the name on the account.' },
-      { el: 'select[name=area]', say: 'The area, like Zuri A. This decides whose map and lists they appear on.' }, // v2.35 (15 Oct): more than two areas now
+      { el: 'select[name=area]', say: 'The area, like Zuri A. This decides whose map and lists they appear on.' }, // v2.36 (15 Oct): more than two areas now
       { el: 'select[name=status]', say: 'Status: lead if they have only asked, active once they are installed and paying.' },
       { el: 'input[name=phone]', say: 'Phone numbers: the M-Pesa number first, so payments can be matched to them.' },
       { el: 'input[name=account_no]', say: 'Account number and billing website ID: the same as in Billnasi, so the two never disagree. Zuri warns you if one is already used.' },
@@ -112,7 +112,7 @@
       { el: '#m-body .kpis', say: 'Cash today. First: customer payments this month, other cash in like hotspot, and expenses logged.' },
       { el: '#m-body h3', say: 'Then each area: the bank balance from the last count, the M-Pesa float against its target, bills still owing, and cash after bills: bank plus M-Pesa minus what is owed.' },
       { el: '#m-body .alert', say: 'The alerts: float below target, cash after bills negative, bills due, Friday count due, missing receipts.' },
-      { el: () => { const a = [...document.querySelectorAll('#m-body a.btn[href="#money/count"]')].find((x) => x.getClientRects().length); return a ? a.parentElement : null; }, say: 'And three shortcuts: Cash count, Log expense, Cash ahead.' }, // v2.35 (15 Oct): ring the three buttons, not the alert link
+      { el: () => { const a = [...document.querySelectorAll('#m-body a.btn[href="#money/count"]')].find((x) => x.getClientRects().length); return a ? a.parentElement : null; }, say: 'And three shortcuts: Cash count, Log expense, Cash ahead.' }, // v2.36 (15 Oct): ring the three buttons, not the alert link
     ]),
     C('fields-count', '7 · Count the cash', 1, 'fields-expense', [
       { go: 'money/count', el: '#mc select[name=area]', say: 'Chapter seven: Count the cash. The area and the date.' },
@@ -143,7 +143,7 @@
     C('fields-payrun', '10b · Pay run', 2, 'fields-collections', [
       { go: 'money/payrun', el: '#pr-build', say: 'The Pay run: what to pay today. Build today\'s list collects the bills that are due and the staff whose pay day has come.', do: tap('#pr-build') },
       { el: '#m-body .kpis', say: 'To pay now, coming in three days, and sent this month.' },
-      { el: '#m-body .list .item::Copy number', say: 'Each line: a bill or a person, the amount, and the number to pay. Copy number, then send it in the M-Pesa app.' }, // v2.35 (15 Oct): the first line was one already waiting for an OK (no Copy number)
+      { el: '#m-body .list .item::Copy number', say: 'Each line: a bill or a person, the amount, and the number to pay. Copy number, then send it in the M-Pesa app.' }, // v2.36 (15 Oct): the first line was one already waiting for an OK (no Copy number)
       { el: '.pr-sent', say: 'Back in Zuri, tap Sent, type the M-Pesa code, and it is recorded as an expense. Skip puts it off for now.' },
       { go: 'money/staff', el: '#sf-add', say: 'Staff and pay, next to the Pay run under Bills: everyone Zuri pays, with their M-Pesa number, salary and pay day. Only finance and the partners see it. Casual staff paid by the day or the job are paid by hand in Money out.' }, // 7 Oct deep check #7 + #41
     ]),
@@ -154,7 +154,7 @@
     ]),
     C('fields-projection', '12 · Next 30 days', 2, 'fields-statements', [
       { go: 'money/projection', el: '#m-body .kpis', say: 'Chapter twelve: the next thirty days. The lowest point and when, the month-end balance, expected money in, bills still to pay, and the upside if late payers pay.' },
-      { el: '#m-body .chart-box', say: 'The chart: the balance day by day.' }, // v2.35 (15 Oct): the box stays when the chart can't load (no connection)
+      { el: '#m-body .chart-box', say: 'The chart: the balance day by day.' }, // v2.36 (15 Oct): the box stays when the chart can't load (no connection)
       { el: '#mp-start', say: 'Start from today\'s balance: type it if there is no fresh count. Update redraws.' },
       { el: '#mp-x input[name=amount]', say: 'One-off money in or out: a day, an amount with a minus for money out, and what it is. Funding from Jerry, a generator repair.' },
       { el: '#m-body table', say: 'Day by day: customers, other in, bills out, one-offs, balance, and a note of which bills land that day.' },
@@ -185,8 +185,8 @@
       { go: 'admin/people', el: '#a-body form[data-id]', say: 'Chapter seventeen: Admin. People: everyone who signed up. Their job: field tech, call center, office staff with a finance or technical department, or admin. Their area. On or off. Save.' },
       { go: 'admin/visibility', el: '#a-body', say: 'Who sees what: for each customer field, which jobs may see it. Untick ID numbers for field techs, for example.' },
       { go: 'admin/fields', el: '#af input[name=label]', say: 'Custom fields: add your own customer field. A name, a kind: text, number, date, yes or no, or pick from a list, and the choices.' },
-      { go: 'admin/areas', el: '#aa input[name=code]', say: 'Areas: each area\'s M-Pesa float target, and whether it is in use. Zuri C is already here: tick In use when it opens. A brand-new area is added here.' }, // v2.35 (15 Oct): Zuri C already exists (switched off)
-      { go: 'admin/prices', el: '#pl-list', say: 'Price list: the packages Zuri sells, and the monthly price of each. On a customer, Zuri offers these and fills in the rate. To change a price, save the same name again.' }, // v2.35 (15 Oct): new 💲 Price list tab had no video
+      { go: 'admin/areas', el: '#aa input[name=code]', say: 'Areas: each area\'s M-Pesa float target, and whether it is in use. Zuri C is already here: tick In use when it opens. A brand-new area is added here.' }, // v2.36 (15 Oct): Zuri C already exists (switched off)
+      { go: 'admin/prices', el: '#pl-list', say: 'Price list: the packages Zuri sells, and the monthly price of each. On a customer, Zuri offers these and fills in the rate. To change a price, save the same name again.' }, // v2.36 (15 Oct): new 💲 Price list tab had no video
       { go: 'admin/company', el: '#co', say: 'Company and hubs. The company card: the name, phones, the M-Pesa Paybill and the KRA PIN. The reminder texts to customers use the name and the Paybill from here.' },
       { el: '#a-body .list', say: 'Hubs: the office, the OLT room, splitter cabinets, towers and the store. They show on the customer map for everyone.' },
       { el: '#hb-here', say: 'To add one, stand at the place and tap Where I\'m standing, or tap the map. Give it a name and an area, and save.' },
@@ -202,7 +202,7 @@
     C('fields-me', '18 · Me', 1, null, [
       { go: 'me', el: '#view .card', say: 'Chapter eighteen: Me. Your job and area, and whether you are online.' },
       { el: 'h3::Waiting', say: 'Waiting to send: work saved on this phone that has not reached the server yet. Send now, Retry, or Discard.' },
-      { el: 'a[href="#learn"]', say: 'More: Snap a receipt, My receipts, Learn Zuri, Testing Zuri, Admin, and Bring in a file.' }, // v2.35 (15 Oct): the list grew
+      { el: 'a[href="#learn"]', say: 'More: Snap a receipt, My receipts, Learn Zuri, Testing Zuri, Admin, and Bring in a file.' }, // v2.36 (15 Oct): the list grew
       { el: '#me-theme', say: 'Screen: like my phone, light, or dark.' },
       { el: '#me-out', say: 'Sign out, and the version line. That is every screen and every field. Thank you for watching.' },
     ]),

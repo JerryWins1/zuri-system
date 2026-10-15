@@ -238,6 +238,7 @@
       const name = f.payee.value.trim().toLowerCase();
       matchedBill = name.length >= 3 ? openBills.find((b) => b.area === f.area.value && (b.name.toLowerCase().includes(name) || name.includes(b.name.toLowerCase()))) || null : null;
       Z.$('#me-billrow', el).hidden = !matchedBill;
+      if (matchedBill && !f.category.value && matchedBill.category) f.category.value = matchedBill.category; // v2.36: the bill knows its category
       if (matchedBill) Z.$('#me-billtxt', el).textContent = `This pays the ${matchedBill.name} bill (still owing ${Z.kes(Number(matchedBill.amount) - Number(matchedBill.paid_amount))}) — tick it off the bill list too`;
     };
     f.payee.onchange = () => { const p = payees.find((x) => x.name.toLowerCase() === f.payee.value.trim().toLowerCase()); if (p && p.category) f.category.value = p.category; findBill(); };

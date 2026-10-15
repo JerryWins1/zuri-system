@@ -103,7 +103,7 @@
     ], ['Make three fault jobs in Zuri B within a few minutes', 'Find the outage task on the technical list', 'Say yes to the customer notice and copy it (partner)', 'Close the outage when service is back']),
 
     C('ts-approve', '6 · Two people for every payment — recording', 4, 'finance', 'ts-approve2', [
-      { go: 'money/bills', el: () => find('#m-body .bill-wait') || find('#m-body .bill-table td::waiting'), say: 'Zuri\'s rule: money out always needs two people. Now the database enforces it. This is Kelvin. Yesterday he paid the Bayobab backhaul: it says waiting for a second OK. The bill does not count it as paid yet.' }, // v2.35 (15 Oct): a computer shows the bills as a table, not cards
+      { go: 'money/bills', el: () => find('#m-body .bill-wait') || find('#m-body .bill-table td::waiting'), say: 'Zuri\'s rule: money out always needs two people. Now the database enforces it. This is Kelvin. Yesterday he paid the Bayobab backhaul: it says waiting for a second OK. The bill does not count it as paid yet.' }, // v2.36 (15 Oct): a computer shows the bills as a table, not cards
       { el: '[data-pay]', say: 'Today KPLC is due. He taps Pay.', do: tap('[data-pay]') },
       { el: '#pb-two', say: 'The sheet says how it works: after he records it, someone else approves it. Best: ask first, send after the OK, then add the code.' },
       { el: '.sheet input[name=ref]', say: 'He already sent this one, so he types the M-Pesa code.', do: type('.sheet input[name=ref]', 'UJ8KPLC123') },
@@ -121,7 +121,7 @@
       { go: 'home', el: '#h-appr', say: 'This is Jerry, a partner, on his own phone. Home says: payments waiting for your OK.', do: tap('#h-appr') },
       { el: '#ap-forme', say: 'Kelvin\'s payments are here, with what they were for, the amount, the code and the time.' },
       { el: inside('#ap-forme .ap-item::Bayobab', '.ap-ok'), say: 'The Bayobab backhaul looks right. Approve.', do: tap(inside('#ap-forme .ap-item::Bayobab', '.ap-ok')) },
-      { go: 'money/bills', el: () => find('#m-body .bill-cards .item::Bayobab') || find('#m-body .bill-table tr::Bayobab'), say: 'Only now does the Bayobab bill count it as paid.' }, // v2.35 (15 Oct): a computer shows the bills as a table, not cards
+      { go: 'money/bills', el: () => find('#m-body .bill-cards .item::Bayobab') || find('#m-body .bill-table tr::Bayobab'), say: 'Only now does the Bayobab bill count it as paid.' }, // v2.36 (15 Oct): a computer shows the bills as a table, not cards
       { go: 'money/approvals', el: () => find('#ap-forme .ap-no') || find('#ap-forme'), say: 'Something wrong? A wrong number, or not a Zuri cost? Decline it and say why. The request is removed, the bill is not touched, and the log keeps it.' },
       { go: 'money/payrun', el: '#pr-build', say: 'The pay run works the same way: Sent puts the line on waiting, and a second person approves it.' },
       { go: 'admin/settings', el: '#st-appr-card', say: 'The rule lives in Admin, Settings. On means two people for every payment above this amount. Zero means every payment.' },
