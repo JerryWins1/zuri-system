@@ -45,7 +45,7 @@
     { code: 'RENEW', name: 'Package ending', purpose: 'reminder', urgent: false, follow_up: null, sort: 80, active: false, hint: 'OFF by default: Billnasi already texts customers 3 days before their package ends. Switch on only if Billnasi stops.',
       msg_en: 'Hi {name}, your {company} package ends on {paid_until}.{pay}', msg_sw: 'Habari {name}, kifurushi chako cha {company} kinaisha tarehe {paid_until}.{pay}' },
   ];
-  const SETUP0 = { sms_price_kes: null, sender_id: null, quiet_from: '20:00', quiet_to: '07:00', approve_over: 0, server_on: false };
+  const SETUP0 = { sms_price_kes: null, sender_id: null, quiet_from: '19:00', quiet_to: '07:00', approve_over: 0, server_on: false };
 
   // ---------- is 28_alerts.sql there? (asked once; a "no" is asked again after 5 minutes) ----------
   let ok = null, okAt = 0;
@@ -413,11 +413,11 @@
         <div><label>Sender name on the SMS</label><input name="sender_id" value="${Z.esc(s.sender_id || '')}" placeholder="e.g. ZURIFIBER (registered with the SMS company)"></div>
         <div><label>Quiet hours from</label><input name="quiet_from" type="time" value="${Z.esc(s.quiet_from)}"></div>
         <div><label>Quiet hours until</label><input name="quiet_to" type="time" value="${Z.esc(s.quiet_to)}"></div></div>
-        <p class="hint">Offers never go out in quiet hours. Urgent alerts (outage, service back, power cut) may.</p>
+        <p class="hint">Offers never go out in quiet hours (Kenyan rules allow promotional SMS only 7am–7pm, so keep 19:00–07:00 or longer). Urgent alerts (outage, service back, power cut) may.</p>
         <button class="btn">Save</button></form>`;
     Z.$('#al-set', el).onsubmit = async (e) => {
       e.preventDefault(); const d = Z.formData(e.target);
-      const v = { ...s, sms_price_kes: Z.num(d.sms_price_kes), sender_id: d.sender_id.trim() || null, quiet_from: d.quiet_from || '20:00', quiet_to: d.quiet_to || '07:00' };
+      const v = { ...s, sms_price_kes: Z.num(d.sms_price_kes), sender_id: d.sender_id.trim() || null, quiet_from: d.quiet_from || '19:00', quiet_to: d.quiet_to || '07:00' };
       const { error } = await Z.sb.from('settings').upsert({ key: 'alerts_setup', value: v }, { onConflict: 'key' });
       if (error) return Z.fail(error); Z.toast('Saved.'); Z.route();
     };
