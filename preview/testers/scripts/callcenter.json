@@ -1,8 +1,8 @@
 {
   "role": "callcenter",
   "title": "Call center test script",
-  "version": "1.2",
-  "date": "2026-10-12",
+  "version": "1.3",
+  "date": "2026-10-16",
   "who": "You are Mary Wanjiku in the call center. Everything is pretend and stays on your phone — no real customer is called or texted.",
   "sessions": [
     {
@@ -845,6 +845,237 @@
             [
               "wait",
               2500
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cal",
+      "title": "📣 Alerts — tell a whole area at once",
+      "mins": 12,
+      "intro": "An outage message for a whole area, in Kiswahili and English, and one customer's language and yes to offers. Nothing is ever sent from practice.",
+      "steps": [
+        {
+          "id": "cal-01",
+          "link": "#me",
+          "do": "Tap 🧹 Start over (pretend company), then tap OK.",
+          "see": "The page reloads. The Me page shows Mary Wanjiku · Call center.",
+          "look": [
+            "🧹 Start over (pretend company)"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Start over (pretend company)')"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "see",
+              "Mary Wanjiku"
+            ]
+          ]
+        },
+        {
+          "id": "cal-02",
+          "link": "#customers",
+          "do": "On Customers tap 📣 Alerts.",
+          "see": "📣 Alerts opens: buttons 📡 OUT, ✅ FIX, 🛠️ MAINT, ⚡ POWER, and the lists “Waiting for a partner”, “Ready to send”, “Sent and cancelled”.",
+          "look": [
+            "📣 Alerts"
+          ],
+          "auto": [
+            [
+              "tap",
+              "a:has-text('📣 Alerts')"
+            ],
+            [
+              "see",
+              "Waiting for a partner"
+            ],
+            [
+              "has",
+              "#al-quick"
+            ]
+          ]
+        },
+        {
+          "id": "cal-03",
+          "link": "#alerts",
+          "do": "Tap 📡 OUT. Under Who gets it, tap Zuri B (only Zuri B should be dark green).",
+          "see": "The count at the bottom says “… customers · … phones”, with how many get Kiswahili and English. “Send by” says WhatsApp (free) — no SMS cost is shown.",
+          "look": [
+            "📡 OUT"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-quick a:has-text('OUT')"
+            ],
+            [
+              "tap",
+              "#al-areas button:has-text('Zuri B')"
+            ],
+            [
+              "see",
+              "phones"
+            ],
+            [
+              "js",
+              "[...document.querySelectorAll('#al-ch option')].map(o => o.textContent).join('|') === 'WhatsApp (free)'"
+            ]
+          ]
+        },
+        {
+          "id": "cal-04",
+          "link": "#alerts/new/OUT/area:B",
+          "do": "(Zuri B is chosen.) Fill in Expected back by: 4pm today. In the 🇰🇪 Kiswahili box next to it: saa 10 jioni. Tap anywhere outside the box.",
+          "see": "Under What they'll read, the Kiswahili says “Utarudi kufikia saa 10 jioni” and the English says “Expected back by 4pm today”. Each says 1 SMS.",
+          "look": [
+            "Expected back by"
+          ],
+          "auto": [
+            [
+              "fill",
+              "#al-b-eta",
+              "4pm today"
+            ],
+            [
+              "tap",
+              "#al-read"
+            ],
+            [
+              "fill",
+              "#al-b-eta_sw",
+              "saa 10 jioni"
+            ],
+            [
+              "tap",
+              "#al-read"
+            ],
+            [
+              "see",
+              "kufikia saa 10 jioni"
+            ],
+            [
+              "see",
+              "Expected back by 4pm today"
+            ]
+          ]
+        },
+        {
+          "id": "cal-05",
+          "link": "#alerts/new/OUT/area:B",
+          "do": "Check the time is still filled in (4pm today / saa 10 jioni), then tap 📨 Ask a partner for a yes.",
+          "see": "The alert opens with “Waiting for a partner's yes.” and “✍️ Written by Mary Wanjiku”. Nothing was sent.",
+          "look": [
+            "📨 Ask a partner for a yes"
+          ],
+          "auto": [
+            [
+              "fill",
+              "#al-b-eta",
+              "4pm today"
+            ],
+            [
+              "tap",
+              "#al-read"
+            ],
+            [
+              "tap",
+              "#al-save"
+            ],
+            [
+              "see",
+              "Waiting for a partner's yes"
+            ],
+            [
+              "see",
+              "Written by Mary Wanjiku"
+            ]
+          ]
+        },
+        {
+          "id": "cal-06",
+          "link": "#customers",
+          "do": "Search Grace Njeri and open her. Find the 📣 Messages box. Choose Language: English, tick Offers and upgrades, and tap Save (leave the note empty).",
+          "see": "Zuri says “Write how and when they said yes to offers.” — it won't save a yes to offers without a note.",
+          "look": [
+            "📣 Messages"
+          ],
+          "auto": [
+            [
+              "type",
+              "#c-q",
+              "Grace Njeri"
+            ],
+            [
+              "wait",
+              "900"
+            ],
+            [
+              "tap",
+              "a.item:has-text('Grace Njeri')"
+            ],
+            [
+              "see",
+              "📣 Messages"
+            ],
+            [
+              "select",
+              "#cap-f select[name=lang]",
+              "English"
+            ],
+            [
+              "tap",
+              "#cap-f input[name=ok_offers]"
+            ],
+            [
+              "tap",
+              "#cap-f button"
+            ],
+            [
+              "see",
+              "Write how and when they said yes to offers"
+            ]
+          ]
+        },
+        {
+          "id": "cal-07",
+          "link": "#customers/c1",
+          "do": "Still on Grace Njeri: Language English and Offers ticked. In the note box type: Said yes on the phone today. Tap Save.",
+          "see": "“Saved.” Open her page again later: English and Offers are still set.",
+          "look": [
+            "How and when they said yes or no"
+          ],
+          "auto": [
+            [
+              "see",
+              "Grace Njeri"
+            ],
+            [
+              "select",
+              "#cap-f select[name=lang]",
+              "English"
+            ],
+            [
+              "js",
+              "document.querySelector('#cap-f input[name=ok_offers]').checked || (document.querySelector('#cap-f input[name=ok_offers]').click(), true)"
+            ],
+            [
+              "fill",
+              "#cap-f input[name=consent_note]",
+              "Said yes on the phone today"
+            ],
+            [
+              "tap",
+              "#cap-f button"
+            ],
+            [
+              "see",
+              "Saved"
             ]
           ]
         }

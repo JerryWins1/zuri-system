@@ -75,7 +75,7 @@ window.ZURI_CHECKLIST = [
     { "id": "p-approve", "t": "Approve a payment Kelvin recorded", "how": "Home → 👥 payments waiting for your OK → ✅ Approve. Then Money → Bills: the bill counts it as paid.", "lesson": "ts-approve2" },
     { "id": "p-two-rule", "t": "Find the two-person rule and its amount", "how": "Me → ⚙️ Admin → Settings → 👥 Two people for money out. Leave it On (0 = every payment).", "lesson": "ts-approve2" },
     { "id": "p-outage", "t": "Say yes to an outage notice, then close the outage", "how": "After three fault calls from one area: Home → the 📡 outage card → change the words → ✅ Yes → 📋 Copy (Zuri never sends it). Then ✅ Service is back.", "lesson": "ts-outage" },
-    { "id": "p-alert", "t": "📣 Approve an alert, download the list, then send “service is back”", "how": "Home → the 📣 card → read both languages → ✅ Yes → 📥 Download the list → ✅ It went out → ✅ Send FIX to the same people. Zuri never sends by itself." }
+    { "id": "p-alert", "t": "📣 Approve an alert, send it free by WhatsApp, then send “service is back”", "how": "Home → the 📣 card → read both languages → ✅ Yes → 📇 Save contacts + 📋 Copy the words (WhatsApp, free) → ✅ It went out → ✅ Send FIX to the same people. Then Alerts → Settings → Plan & add-ons: switch Bulk SMS on and see 📥 Download the list appear. Zuri never sends by itself." }
   ]},
   { "group": "projects", "label": "📈 Projects (finance & partners)", "roles": ["admin", "internal"], "dept": "finance", "items": [
     { "id": "pj-watch", "t": "Watch the 📈 Projects videos", "how": "Me → 🎓 Learn → 📈 Projects → ▶ Play all (about 30 min; ✕ stops).", "lesson": "pj-why" },
