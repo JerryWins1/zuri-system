@@ -1,8 +1,8 @@
 {
   "role": "field",
   "title": "Field tech test script",
-  "version": "1.1",
-  "date": "2026-10-10",
+  "version": "1.3",
+  "date": "2026-10-16",
   "who": "You are Peter Kamau, a field tech in Zuri A. Everything is pretend and stays on your phone.",
   "sessions": [
     {
@@ -845,6 +845,46 @@
             [
               "see",
               "Receipt saved"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fal",
+      "title": "📣 Which cabinet is this home wired to?",
+      "mins": 4,
+      "intro": "So an outage message for a cabinet reaches the right homes.",
+      "steps": [
+        {
+          "id": "fal-01",
+          "link": "#jobs",
+          "do": "Open any of your jobs that has a customer. Scroll to 📣 Wired to. Choose Cabinet A-1 and tap Save.",
+          "see": "The button changes to “✓ Saved”.",
+          "look": [
+            "📣 Wired to"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#j-list a.item"
+            ],
+            [
+              "see",
+              "Wired to"
+            ],
+            [
+              "select",
+              "#jd-cab-s",
+              "📦 Cabinet A-1"
+            ],
+            [
+              "tap",
+              "#jd-cab-ok"
+            ],
+            [
+              "see",
+              "Saved"
             ]
           ]
         }
