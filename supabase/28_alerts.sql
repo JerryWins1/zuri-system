@@ -152,7 +152,7 @@ on conflict (code) do nothing;
 update public.alert_codes set follow_up = 'FIX' where code = 'OUT' and follow_up is null;
 
 insert into public.settings (key, value) values
-  ('alerts_setup', '{"sms_price_kes": null, "sender_id": null, "quiet_from": "19:00", "quiet_to": "07:00", "approve_over": 0, "server_on": false}'::jsonb)
+  ('alerts_setup', '{"sms_price_kes": null, "sender_id": null, "quiet_from": "19:00", "quiet_to": "07:00", "approve_over": 0, "server_on": false, "addons": {"sms_list": false, "sms_auto": false}, "wa_group": 256}'::jsonb)
 on conflict (key) do nothing;
 
 -- ---------- the guard: approve before send, no edits after approval ----------

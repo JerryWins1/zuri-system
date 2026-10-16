@@ -45,7 +45,11 @@
     { code: 'RENEW', name: 'Package ending', purpose: 'reminder', urgent: false, follow_up: null, sort: 80, active: false, hint: 'OFF by default: Billnasi already texts customers 3 days before their package ends. Switch on only if Billnasi stops.',
       msg_en: 'Hi {name}, your {company} package ends on {paid_until}.{pay}', msg_sw: 'Habari {name}, kifurushi chako cha {company} kinaisha tarehe {paid_until}.{pay}' },
   ];
-  const SETUP0 = { sms_price_kes: null, sender_id: null, quiet_from: '19:00', quiet_to: '07:00', approve_over: 0, server_on: false };
+  // Plan & add-ons: everything works on Free (WhatsApp groups and texts from the office phone). Anything that costs money is a
+  // switch a partner turns on, and stays off until then. Turning one on never changes the alerts already made.
+  const SETUP0 = { sms_price_kes: null, sender_id: null, quiet_from: '19:00', quiet_to: '07:00', approve_over: 0, server_on: false,
+    addons: { sms_list: false, sms_auto: false }, wa_group: 256 };
+  const has = (cfg, k) => !!(cfg && cfg.addons && cfg.addons[k]);
 
   // ---------- is 28_alerts.sql there? (asked once; a "no" is asked again after 5 minutes) ----------
   let ok = null, okAt = 0;
@@ -64,7 +68,8 @@
   }
   async function setup() {
     const r = await Z.sb.from('settings').select('value').eq('key', 'alerts_setup').maybeSingle();
-    return { ...SETUP0, ...((r.data && r.data.value) || {}) };
+    const v = (r.data && r.data.value) || {};
+    return { ...SETUP0, ...v, addons: { ...SETUP0.addons, ...(v.addons || {}) } };
   }
   // Every customer, a thousand at a time (the database hands out at most 1,000 rows per ask).
   async function everyone() {
@@ -157,7 +162,7 @@
   const argsOf = (args) => { const o = {}; args.forEach((a) => { const i = a.indexOf(':'); if (i > 0) o[a.slice(0, i)] = a.slice(i + 1); }); return o; };
   const quiet = (s) => { const n = new Date(), m = n.getHours() * 60 + n.getMinutes(), t = (x) => { const [h, mi] = String(x || '0:0').split(':').map(Number); return h * 60 + (mi || 0); }; const f = t(s.quiet_from), u = t(s.quiet_to); return f > u ? m >= f || m < u : m >= f && m < u; };
   const csvCell = (v) => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
-  const download = (name, text) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + text], { type: 'text/csv' })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); };
+  const download = (name, text, type = 'text/csv') => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([type === 'text/csv' ? '﻿' + text : text], { type })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); };
   const needSql = (el) => { el.innerHTML = `<div class="card"><b>📣 Alerts needs one more database file.</b><p class="hint">A partner runs <b>supabase/28_alerts.sql</b> on the database (test copy first). Until then this page stays empty and nothing else changes.</p></div>`; };
   const subtabs = (on) => `<div class="subtabs">${[['', 'Alerts'], ['new', '＋ New'], ['codes', 'Messages']].concat(Z.isAdmin() ? [['setup', 'Settings']] : []).map(([k, t]) => `<a href="#alerts${k ? '/' + k : ''}" class="${k === on ? 'on' : ''}">${t}</a>`).join('')}</div>`;
 
@@ -199,7 +204,7 @@
     const t = { mode: parent ? 'same' : o.hub ? 'hub' : 'area', areas: o.area ? [o.area] : Z.area ? [Z.area] : [], hubs: o.hub ? [o.hub] : [], statuses: ['active'], plans: [], within: null, phone2: false, parent };
     const blanks = {};
     const plans = [...new Set(people.map((c) => c.plan).filter(Boolean))].sort();
-    let channel = 'sms';
+    let channel = has(cfg, 'sms_list') ? 'sms' : 'whatsapp';
 
     const draw = () => {
       if (!code) {
@@ -235,7 +240,7 @@
         <div class="card" id="al-read"><b>What they'll read</b> <span class="hint">(${sample ? 'for ' + Z.esc(sample.c.full_name) : 'example'})</span>
           <div style="margin-top:6px"><div class="hint" style="margin:0">🇰🇪 Kiswahili · ${pSw.length} letters · ${smsParts(pSw)} SMS</div><div class="card" style="background:var(--surface-2);margin:4px 0;font-weight:500;white-space:pre-wrap">${Z.esc(pSw)}</div>
           <div class="hint" style="margin:0">🇬🇧 English · ${pEn.length} letters · ${smsParts(pEn)} SMS</div><div class="card" style="background:var(--surface-2);margin:4px 0;font-weight:500;white-space:pre-wrap">${Z.esc(pEn)}</div></div>
-          <div class="row" style="margin-top:6px"><label for="al-ch" style="margin:0">Send by</label><select id="al-ch" style="width:auto">${Z.opts([['sms', 'SMS'], ['whatsapp', 'WhatsApp'], ['both', 'SMS and WhatsApp']], channel)}</select></div>
+          <div class="row" style="margin-top:6px"><label for="al-ch" style="margin:0">Send by</label><select id="al-ch" style="width:auto">${Z.opts(has(cfg, 'sms_list') ? [['sms', 'SMS'], ['whatsapp', 'WhatsApp'], ['both', 'SMS and WhatsApp']] : [['whatsapp', 'WhatsApp (free)']], channel)}</select></div>
         </div>
         <div class="card" id="al-sum" style="border-left:5px solid var(--brand)">
           <div style="font-size:18px;font-weight:800">${Z.fmt(res.pick.length)} customer${res.pick.length === 1 ? '' : 's'} · ${Z.fmt(msgs)} phone${msgs === 1 ? '' : 's'}</div>
@@ -325,13 +330,19 @@
         ? `<div class="card" style="border-left:5px solid var(--warn)"><b>Your yes?</b><p class="hint" style="margin:2px 0 6px">Read both languages. After your yes the words can't change.</p><div class="row"><button class="btn" id="al-yes">✅ Yes, approve</button><button class="btn sec" id="al-no">✖ Cancel it</button></div></div>`
         : `<div class="card"><b>Waiting for a partner's yes.</b><p class="hint" style="margin:2px 0 6px">Call a partner if it's urgent. They approve it here, in 📣 Alerts.</p><button class="btn sec small" id="al-no">✖ Cancel it</button></div>`;
     } else if (a.status === 'approved') {
-      const over = a.purpose === 'offer' && quiet(cfg);
-      act.innerHTML = `<div class="card" style="border-left:5px solid var(--brand)"><b>Send it</b>
+      const over = a.purpose === 'offer' && quiet(cfg), smsOn = has(cfg, 'sms_list');
+      act.innerHTML = `<div class="card" id="al-sendbox" style="border-left:5px solid var(--brand)"><b>Send it</b>
         ${over ? `<div class="alert warn" style="margin:6px 0">Quiet hours (${Z.esc(cfg.quiet_from)}–${Z.esc(cfg.quiet_to)}): send offers in the morning.</div>` : ''}
-        ${cfg.server_on ? '<p class="hint">The Daraja server is switched on, but sending from here arrives with it. For now use the list.</p>' : ''}
-        <ol class="hint" style="margin:6px 0 8px;padding-left:20px"><li><b>SMS:</b> download the list and upload it to the bulk-SMS website. Each row has the customer's own words.</li><li><b>WhatsApp:</b> copy the words into the broadcast list for the area.</li><li>Then tap <b>It went out</b>.</li></ol>
-        <div class="row" id="al-send"><button class="btn" id="al-csv">📥 Download the list (CSV)</button><button class="btn sec" id="al-copy">📋 Copy the Kiswahili words</button><button class="btn sec" id="al-copy-en">📋 English</button><button class="btn sec" id="al-nums">📋 Copy the numbers</button></div>
-        <div class="row" style="margin-top:8px"><button class="btn" id="al-sent">✅ It went out</button>${Z.isAdmin() ? '<button class="btn sec" id="al-no">✖ Cancel it</button>' : ''}</div></div>`;
+        <div id="al-send">
+          <h4 style="margin:10px 0 2px">💬 WhatsApp <span class="pill ok">free</span></h4>
+          <p class="hint" style="margin:0 0 6px">One broadcast list per group below (WhatsApp lets up to ${Z.fmt(cfg.wa_group)} people in one). <b>📇 Save contacts</b> puts the group in this phone's contacts; then in WhatsApp: ⋮ → New broadcast → pick them → paste the words → send. Customers only get a broadcast if they have saved Zuri's number, so ask them to.</p>
+          <div id="al-wa" class="list"><div class="loading">Making the groups…</div></div>
+          <div id="al-one"></div>
+          <h4 style="margin:12px 0 2px">📱 Bulk SMS ${smsOn ? '<span class="pill brand">on</span>' : '<span class="pill">add-on</span>'}</h4>
+          ${smsOn ? `<p class="hint" style="margin:0 0 6px">Reaches every phone, even without WhatsApp. Download the list and upload it to the bulk-SMS website. Each row has that customer's own words.</p><button class="btn" id="al-csv">📥 Download the list (CSV)</button>`
+            : `<div class="card" id="al-sms-locked" style="background:var(--surface-2);margin:4px 0"><b>Reach every customer, even without WhatsApp.</b><p class="hint" style="margin:2px 0 6px">Bulk SMS is an add-on: you pay only for the texts you send (about KES 0.25–0.90 each, from a bulk-SMS company). Nothing to pay until a partner switches it on.</p>${Z.isAdmin() ? '<a class="btn sec small" href="#alerts/setup">Plan &amp; add-ons</a>' : '<span class="hint">Ask a partner if Zuri needs it.</span>'}</div>`}
+        </div>
+        <div class="row" style="margin-top:10px"><button class="btn" id="al-sent">✅ It went out</button>${Z.isAdmin() ? '<button class="btn sec" id="al-no">✖ Cancel it</button>' : ''}</div></div>`;
     }
     const set = async (patch, msg, b) => {
       if (b) b.disabled = true;
@@ -343,11 +354,8 @@
     const ask = (q) => window.ZP_LESSON || confirm(q);
     const no = Z.$('#al-no', el); if (no) no.onclick = () => { if (ask('Cancel this alert? It stays in the history.')) set({ status: 'cancelled' }, 'Cancelled.', no); };
     let how = null;
-    const sent = Z.$('#al-sent', el); if (sent) sent.onclick = () => { if (ask(`Did the ${Z.fmt(a.recipients)} messages go out?`)) set({ status: 'sent', sent_how: how || 'export', sent_by: Z.me.id, sent_at: new Date().toISOString() }, 'Marked as sent.', sent); };
+    const sent = Z.$('#al-sent', el); if (sent) sent.onclick = () => { if (ask(`Did the ${Z.fmt(a.recipients)} messages go out?`)) set({ status: 'sent', sent_how: how || (has(cfg, 'sms_list') ? 'export' : 'copied'), sent_by: Z.me.id, sent_at: new Date().toISOString() }, 'Marked as sent.', sent); };
     const copy = (t, m) => (window.ZP_LESSON ? Promise.resolve() : navigator.clipboard.writeText(t)).then(() => Z.toast(m), () => Z.toast('Press and hold the words to copy them.'));
-    const c1 = Z.$('#al-copy', el); if (c1) c1.onclick = () => { how = how || 'copied'; copy(Z.$('#al-sw', el).textContent, 'Copied. Fill in {name}/{zone} if WhatsApp needs it, or use the list.'); };
-    const c2 = Z.$('#al-copy-en', el); if (c2) c2.onclick = () => { how = how || 'copied'; copy(Z.$('#al-en', el).textContent, 'Copied.'); };
-    const nums = Z.$('#al-nums', el); if (nums) nums.onclick = async () => { const ps = await people(); copy(ps.flatMap((p) => p.phones).join(', '), `Copied ${Z.fmt(ps.reduce((s, p) => s + p.phones.length, 0))} numbers.`); };
     const csv = Z.$('#al-csv', el); if (csv) csv.onclick = async () => {
       csv.disabled = true;
       try {
@@ -360,6 +368,32 @@
       } catch (e) { Z.fail(e); }
       csv.disabled = false;
     };
+    // 💬 WhatsApp groups (free): by language, at most cfg.wa_group people each
+    const waBox = Z.$('#al-wa', el);
+    if (waBox) (async () => {
+      try {
+        const ps = await people(), size = Math.max(1, Number(cfg.wa_group) || 256), groups = [];
+        ['sw', 'en'].forEach((lang) => { const l = ps.filter((x) => (x.c.lang === 'en' ? 'en' : 'sw') === lang); for (let i = 0; i < l.length; i += size) groups.push({ lang, list: l.slice(i, i + size) }); });
+        groups.forEach((g) => { const n = groups.filter((x) => x.lang === g.lang); g.no = n.indexOf(g) + 1; g.of = n.length; });
+        const groupWords = (g) => { const z = {}; g.list.forEach((x) => { const k = x.zone || Z.areaName(x.c.area); z[k] = (z[k] || 0) + 1; }); const zone = Object.keys(z).sort((p, q) => z[q] - z[p])[0];
+          return wordsFor(a, { full_name: '', lang: g.lang, area: g.list[0] ? g.list[0].c.area : '' }, zone).replace(/ +,/g, ',').replace(/\bHabari there\b/g, 'Habari'); };
+        waBox.innerHTML = groups.map((g, i) => `<div class="item" style="flex-wrap:wrap;gap:6px"><div class="grow" style="min-width:180px"><div class="t">${g.lang === 'en' ? '🇬🇧 English' : '🇰🇪 Kiswahili'}${g.of > 1 ? ` · group ${g.no} of ${g.of}` : ''}</div><div class="m">${Z.fmt(g.list.length)} people · ${Z.fmt(g.list.reduce((t, x) => t + x.phones.length, 0))} phones</div></div>
+          <button class="btn sec small" data-vcf="${i}">📇 Save contacts</button><button class="btn sec small" data-words="${i}">📋 Copy the words</button><button class="btn sec small" data-nums="${i}">📋 Numbers</button></div>`).join('') || '<div class="empty">No one to send to.</div>';
+        Z.$$('[data-vcf]', waBox).forEach((bt) => (bt.onclick = () => { const g = groups[bt.dataset.vcf];
+          const v = g.list.flatMap((x) => x.phones.map((ph, k) => ['BEGIN:VCARD', 'VERSION:3.0', `FN:${x.c.full_name}${k ? ' (2)' : ''} · ${company()}${x.c.account_no ? ' ' + x.c.account_no : ''}`.replace(/[\r\n,;]/g, ' '), `TEL;TYPE=CELL:+${ph}`, 'END:VCARD'].join('\r\n'))).join('\r\n');
+          if (!window.ZP_LESSON) download(`zuri-${a.code.toLowerCase()}-${g.lang}-${g.no}.vcf`, v, 'text/vcard'); how = how || 'copied';
+          Z.toast(`${Z.fmt(g.list.length)} contacts ready. Open the file to save them, then make the broadcast list.`); }));
+        Z.$$('[data-words]', waBox).forEach((bt) => (bt.onclick = () => { how = how || 'copied'; copy(groupWords(groups[bt.dataset.words]), 'Copied. Paste it into the broadcast.'); }));
+        Z.$$('[data-nums]', waBox).forEach((bt) => (bt.onclick = () => { const g = groups[bt.dataset.nums]; copy(g.list.flatMap((x) => x.phones.map((ph) => '+' + ph)).join('\n'), `Copied ${Z.fmt(g.list.length)} numbers.`); }));
+        // 📩 a small group: text them one by one from this phone (free, works without data)
+        const one = Z.$('#al-one', el);
+        if (one && ps.length && ps.length <= 30) {
+          one.innerHTML = `<details class="card" style="margin:8px 0 0"><summary><b>📩 Or text them one by one from this phone</b> (${Z.fmt(ps.length)} people)</summary><div class="list" style="margin-top:6px">${ps.map((x) => `<div class="item"><div class="grow"><div class="t">${Z.esc(x.c.full_name)}</div><div class="m">${Z.esc(x.phones[0])} · ${x.c.lang === 'en' ? 'English' : 'Kiswahili'}</div></div>
+            <a class="btn sec small" data-one href="sms:+${x.phones[0]}?body=${encodeURIComponent(x.text)}">📩 Text</a><a class="btn sec small" data-one target="_blank" rel="noopener" href="${Z.waHref ? Z.waHref(x.phones[0], x.text) : 'https://wa.me/' + x.phones[0] + '?text=' + encodeURIComponent(x.text)}">💬</a></div>`).join('')}</div></details>`;
+          Z.$$('[data-one]', one).forEach((l) => l.addEventListener('click', (e) => { how = how || 'copied'; if (window.ZP_LESSON) e.preventDefault(); }));
+        }
+      } catch (er) { waBox.innerHTML = `<div class="empty">${Z.esc(Z.errText(er))}</div>`; }
+    })();
     Z.$('details', el).addEventListener('toggle', async (e) => {
       if (!e.target.open || e.target.dataset.done) return; e.target.dataset.done = 1;
       try {
@@ -406,18 +440,35 @@
   // ---------- settings ----------
   async function setupView(el) {
     if (!Z.isAdmin()) { el.innerHTML = '<div class="card">Only partners can change the alert settings.</div>'; return; }
-    const s = await setup();
+    const s = await setup(), on = (k) => has(s, k);
+    const row = (icon, title, cost, what, ctl) => `<div class="item" style="align-items:flex-start;gap:10px"><span style="font-size:22px">${icon}</span><div class="grow"><div class="t">${title} <span class="pill ${cost[1]}">${cost[0]}</span></div><div class="m">${what}</div></div>${ctl}</div>`;
+    const sw = (name, checked, dis) => `<label style="display:flex;gap:6px;align-items:center;margin:0;white-space:nowrap"><input type="checkbox" name="${name}" ${checked ? 'checked' : ''} ${dis ? 'disabled' : ''} style="width:auto;transform:scale(1.3)"> ${dis ? 'Coming' : checked ? 'On' : 'Off'}</label>`;
     el.innerHTML = `<h2>📣 Alert settings</h2>${subtabs('setup')}
-      <form class="card" id="al-set"><div class="grid2">
+      <form id="al-set">
+      <h3 style="margin-top:0">Plan &amp; add-ons</h3>
+      <p class="hint" style="margin-top:0">Alerts works for free. Anything that costs money is an add-on you switch on when Zuri needs it, and you can switch it off again. Your alerts and history stay the same.</p>
+      <div class="card list" id="al-plan">
+        ${row('💬', 'WhatsApp groups and texts from this phone', ['Free · always on', 'ok'], `Broadcast lists of up to ${Z.fmt(s.wa_group)} people, a contacts file for each group, and one-by-one texts for small groups.`, '<span class="pill ok">On</span>')}
+        ${row('📱', 'Bulk SMS list', ['Pay as you go', 'brand'], 'Reaches every phone, even without WhatsApp. Download the list and upload it to a bulk-SMS company. You pay them only for texts sent (about KES 0.25–0.90 each). No monthly fee.', sw('sms_list', on('sms_list')))}
+        ${row('⚡', 'Automatic sending', ['Prepaid credit', ''], 'Zuri sends the texts itself in seconds, with delivery reports. Paid from M-Pesa credit with a monthly cap, so there is never a bill. Comes with the Daraja server.', sw('sms_auto', false, true))}
+      </div>
+      <div class="card"><b>💬 WhatsApp</b><div class="grid2" style="margin-top:6px"><div><label>People per broadcast list</label><input name="wa_group" type="number" min="5" max="1024" value="${Z.esc(s.wa_group)}"></div></div>
+        <p class="hint" style="margin:4px 0 0">256 is WhatsApp's usual limit. If WhatsApp changes it, change it here.</p></div>
+      <div class="card" id="al-sms-set" ${on('sms_list') ? '' : 'style="opacity:.55"'}><b>📱 Bulk SMS</b>${on('sms_list') ? '' : ' <span class="hint">(switch it on above to use these)</span>'}<div class="grid2" style="margin-top:6px">
         <div><label>Price of one SMS (KES)</label><input name="sms_price_kes" inputmode="decimal" value="${Z.esc(s.sms_price_kes ?? '')}" placeholder="from your bulk-SMS bill"></div>
-        <div><label>Sender name on the SMS</label><input name="sender_id" value="${Z.esc(s.sender_id || '')}" placeholder="e.g. ZURIFIBER (registered with the SMS company)"></div>
+        <div><label>Sender name on the SMS</label><input name="sender_id" value="${Z.esc(s.sender_id || '')}" placeholder="e.g. ZURIFIBER (registered with the SMS company)"></div></div></div>
+      <div class="card"><b>🌙 Quiet hours</b><div class="grid2" style="margin-top:6px">
         <div><label>Quiet hours from</label><input name="quiet_from" type="time" value="${Z.esc(s.quiet_from)}"></div>
         <div><label>Quiet hours until</label><input name="quiet_to" type="time" value="${Z.esc(s.quiet_to)}"></div></div>
-        <p class="hint">Offers never go out in quiet hours (Kenyan rules allow promotional SMS only 7am–7pm, so keep 19:00–07:00 or longer). Urgent alerts (outage, service back, power cut) may.</p>
-        <button class="btn">Save</button></form>`;
-    Z.$('#al-set', el).onsubmit = async (e) => {
+        <p class="hint">Offers never go out in quiet hours (Kenyan rules allow promotional SMS only 7am–7pm, so keep 19:00–07:00 or longer). Urgent alerts (outage, service back, power cut) may.</p></div>
+      <button class="btn">Save</button></form>`;
+    const f = Z.$('#al-set', el);
+    f.querySelector('input[name=sms_list]').onchange = (e) => { const c = Z.$('#al-sms-set', el); c.style.opacity = e.target.checked ? '' : '.55'; e.target.parentNode.lastChild.textContent = e.target.checked ? ' On' : ' Off'; };
+    f.onsubmit = async (e) => {
       e.preventDefault(); const d = Z.formData(e.target);
-      const v = { ...s, sms_price_kes: Z.num(d.sms_price_kes), sender_id: d.sender_id.trim() || null, quiet_from: d.quiet_from || '19:00', quiet_to: d.quiet_to || '07:00' };
+      const v = { ...s, sms_price_kes: Z.num(d.sms_price_kes), sender_id: d.sender_id.trim() || null, quiet_from: d.quiet_from || '19:00', quiet_to: d.quiet_to || '07:00',
+        wa_group: Math.max(5, Math.min(1024, parseInt(d.wa_group, 10) || 256)), addons: { ...s.addons, sms_list: !!d.sms_list, sms_auto: false } };
+      if (v.addons.sms_list && !s.addons.sms_list && !window.ZP_LESSON && !confirm('Switch on Bulk SMS? Zuri will offer a list for the bulk-SMS website. You pay that company for the texts you send.')) return;
       const { error } = await Z.sb.from('settings').upsert({ key: 'alerts_setup', value: v }, { onConflict: 'key' });
       if (error) return Z.fail(error); Z.toast('Saved.'); Z.route();
     };
@@ -434,7 +485,7 @@
     const blanks = o.blanks || {}, r = audience(t, code.purpose, people, prefs);
     const row = { id: Z.uuid(), code: code.code, purpose: code.purpose, areas: parent ? parent.areas || [] : t.areas, hubs: parent ? (parent.hubs || []) : t.hubs, filters: { statuses: t.statuses, mode: t.mode },
       blanks, message_en: fill(code.msg_en, blanks), message_sw: fill(code.msg_sw, swOf(blanks)), recipients: r.pick.length, recipient_ids: r.pick.map((x) => String(x.c.id)),
-      parent_id: parent ? parent.id : null, channel: 'sms', status: 'draft', created_by: o.by || 'p-mary', created_at: new Date(Date.now() - (o.minsAgo || 10) * 60e3).toISOString() };
+      parent_id: parent ? parent.id : null, channel: has(await setup(), 'sms_list') ? 'sms' : 'whatsapp', status: 'draft', created_by: o.by || 'p-mary', created_at: new Date(Date.now() - (o.minsAgo || 10) * 60e3).toISOString() };
     must(await Z.sb.from('alerts').insert(row));
     const now = new Date().toISOString();
     if (o.status === 'approved' || o.status === 'sent') must(await Z.sb.from('alerts').update({ status: 'approved', approved_by: 'p-jerry', approved_at: now }).eq('id', row.id));
