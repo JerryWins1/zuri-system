@@ -1,4 +1,4 @@
-// Zuri System · Customers: search, profile, add/edit, pin, history · v1 · 2026-09-30
+// Zuri System · Customers: search, profile, add/edit, pin, history · v1.1 · 2026-10-17 (💬 Send a quote; v1: 2026-09-30)
 (function () {
   const Z = window.Z;
   const COLS = 'id,full_name,area,landmark,lat,lng,status,account_no,phone,phone2,email,national_id,plan,monthly_rate,billnasi_id,install_date,notes,custom,created_at,updated_at,paid_until';
@@ -98,6 +98,7 @@
         <button class="btn sec" id="cp-pin">📍 ${pin ? 'Move pin to here' : 'Drop pin here'}</button>
         <a class="btn" href="#jobs/new/${c.id}">＋ New job</a>
         <a class="btn sec" href="#customers/${c.id}/edit">✏️ Edit</a>
+        ${c.phone && !Z.isField() ? '<button class="btn sec" id="cp-quote">💬 Send a quote</button>' : ''}
       </div>
       <div class="card"><table class="t">${shown.map(([k, label, type]) => `<tr><th style="width:40%">${label}</th><td>${type === 'number' ? Z.kes(c[k]) : type === 'date' ? Z.day(c[k]) : type === 'readonly' ? Z.when(c[k]) + (new Date(c[k]) < new Date() ? ' <span class="pill bad">ran out</span>' : '') : Z.esc(c[k])}</td></tr>`).join('')}
         ${custom.map((d) => `<tr><th>${Z.esc(d.label)}</th><td>${d.kind === 'yesno' ? (c.custom[d.key] ? 'Yes' : 'No') : Z.esc(c.custom[d.key])}</td></tr>`).join('')}
@@ -124,6 +125,31 @@
         Z.toast(navigator.onLine ? `Pin saved (accurate to about ${acc} m).` : 'Pin saved on this phone — it sends when you have signal.');
         setTimeout(Z.route, 400);
       }, (err) => { b.disabled = false; b.textContent = '📍 Drop pin here'; Z.toast(err && err.code === 1 ? 'Allow location for this app in the phone settings.' : 'Couldn\'t get a location — step outside and try again.'); }, { enableHighAccuracy: true, timeout: 25000, maximumAge: 0 });
+    };
+    // 💬 v1.1 (17 Oct): a quote before the visit — package + one-time install fee, sent by WhatsApp or SMS from this phone.
+    // Nothing is saved to the company's records; the install fee typed last time is remembered on this phone.
+    const qb = Z.$('#cp-quote', el);
+    if (qb) qb.onclick = async () => {
+      const pk = await Z.sb.from('packages').select('name,monthly_rate').order('monthly_rate').then((r) => r.data || [], () => []);
+      const sh = Z.sheet('💬 Send a quote', `<form id="cq" autocomplete="off">
+          <label>Package</label><input name="plan" list="cq-pk" value="${Z.esc(c.plan || '')}" placeholder="e.g. 10 Mbps">
+          ${pk.length ? `<datalist id="cq-pk">${pk.map((x) => `<option value="${Z.esc(x.name)}">KES ${Z.fmt(x.monthly_rate)}</option>`).join('')}</datalist>` : ''}
+          <label>Monthly price (KES)</label><input name="rate" inputmode="numeric" value="${Z.esc(c.monthly_rate || '')}">
+          <label>Install fee, one time (KES)</label><input name="fee" inputmode="numeric" value="${Z.esc(Z.get('quote_install_fee', ''))}" placeholder="e.g. 3,500">
+          <label>The message</label><textarea name="msg" rows="7"></textarea>
+          <p class="hint" style="margin:4px 0 8px">Check it, then send. You can change the words.</p>
+          <div class="row"><a class="btn" id="cq-wa" target="_blank" rel="noopener">💬 WhatsApp it</a><a class="btn sec" id="cq-sms">📩 Text it</a></div></form>`);
+      const f = Z.$('#cq', sh.el), first = String(c.full_name || '').split(/\s+/)[0];
+      let typed = false;
+      const words = () => { const r = Z.num(f.rate.value) || 0, fee = Z.num(f.fee.value) || 0;
+        return `Habari ${first}! Here is your quote from Zuri Fiber:\n📶 ${f.plan.value.trim() || 'Internet'}: KES ${Z.fmt(r)} a month\n🔧 Installation (one time): KES ${Z.fmt(fee)}\n💰 To start: KES ${Z.fmt(r + fee)} (install + first month)\nReply here to book your install day. Asante!`; };
+      const links = () => { if (!typed) f.msg.value = words(); Z.$('#cq-wa', sh.el).href = Z.waHref(c.phone, f.msg.value); Z.$('#cq-sms', sh.el).href = Z.smsHref(c.phone, f.msg.value); };
+      f.plan.oninput = () => { const m = pk.find((x) => x.name.toLowerCase() === f.plan.value.trim().toLowerCase()); if (m) f.rate.value = m.monthly_rate; links(); };
+      f.rate.oninput = f.fee.oninput = links;
+      f.msg.oninput = () => { typed = true; links(); };
+      f.onsubmit = (e) => e.preventDefault();
+      Z.$$('#cq-wa, #cq-sms', sh.el).forEach((a) => a.addEventListener('click', () => { if (Z.num(f.fee.value)) Z.set('quote_install_fee', f.fee.value.trim()); Z.toast('Quote ready — press send in the message app.'); }));
+      links();
     };
     const sb = Z.$('#cp-send', el);
     if (sb) sb.onclick = async () => {

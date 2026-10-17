@@ -1,4 +1,4 @@
-// Zuri System · 👥 Two people for money out · v1 · 2026-10-10 (app v2.33)
+// Zuri System · 👥 Two people for money out · v1.1 · 2026-10-17 (v1: 2026-10-10, app v2.33)
 // Paying a bill, a pay-run line, or any money-out expense above the setting (default KES 0 = every one) is RECORDED by one
 // person and then waits: a SECOND signed-in finance person or partner taps ✅ Approve — never the person who recorded it.
 // Only then does the bill count it as paid / the pay-run line say Sent. The database enforces this (25_time_savers.sql:
@@ -67,12 +67,22 @@
       ${log.length ? `<h3>Declined or withdrawn</h3><div class="card list" id="ap-log">${log.map((l) => `<div class="item"><div class="grow"><div class="t">${Z.esc((l.row && l.row.payee) || '')} · KES ${Z.fmt(l.row && l.row.amount)}</div><div class="m">${l.action === 'withdrawn' ? '↩ Withdrawn' : '✋ Declined'} by ${Z.esc(Z.personName(l.by) || 'someone')} · ${Z.esc(Z.when(l.at))}${l.reason ? ' · “' + Z.esc(l.reason) + '”' : ''}</div></div></div>`).join('')}</div>` : ''}`;
     const byId = (b) => rows.concat(recent).find((r) => r.id === b.closest('[data-id]').dataset.id);
     Z.$$('.ap-photo', el).forEach((b) => (b.onclick = () => Z.receiptPhoto(b.dataset.path, b.dataset.label)));
-    Z.$$('.ap-ok', el).forEach((b) => (b.onclick = async () => {
+    const approve = async (b, r) => {
       b.disabled = true;
-      const r = byId(b);
       const { error } = await Z.sb.rpc('approve_money', { p_expense: r.id, p_ref: null });
       if (error) { b.disabled = false; return Z.fail(error); }
       Z.toast(`✅ Approved: ${r.payee}, KES ${Z.fmt(r.amount)}${r.bill_id ? ' — the bill now counts it as paid.' : '.'}`); Z.route();
+    };
+    // v1.1 (17 Oct, Jerry: "warn and ask approve anyway?"): a payment saved as ❌ no receipt asks first. Not blocked —
+    // some real costs never get a receipt — but the approver has to choose it on purpose.
+    Z.$$('.ap-ok', el).forEach((b) => (b.onclick = () => {
+      const r = byId(b);
+      if (r.receipt !== 'No — chase it' || r.receipt_path) return approve(b, r);
+      const sh = Z.sheet('❌ No receipt', `<p style="margin-top:0"><b>${Z.esc(r.payee)} · KES ${Z.fmt(r.amount)}</b> was saved with <b>no receipt</b>${r.recorded_by ? ' by ' + Z.esc(r.recorded_by) : ''}.</p>
+        <p class="hint">Best: ask them to get the receipt from the shop and snap it first. Approve anyway?</p>
+        <div class="row"><button type="button" class="btn sec" id="ap-nr-wait">Not now</button><button type="button" class="btn" id="ap-nr-ok">✅ Approve anyway</button></div>`);
+      Z.$('#ap-nr-wait', sh.el).onclick = sh.close;
+      Z.$('#ap-nr-ok', sh.el).onclick = () => { sh.close(); approve(b, r); };
     }));
     const ask = (r, title, words, btn, rpc, done) => {
       const sh = Z.sheet(title, `<p class="hint" style="margin-top:0">${Z.esc(r.payee)} · KES ${Z.fmt(r.amount)} · recorded by ${Z.esc(r.recorded_by || 'someone')}</p>

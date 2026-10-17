@@ -1,4 +1,5 @@
-// Zuri System · 🏢 Headquarters: the whole company on one screen, for the partners · v1.1 · 2026-10-15
+// Zuri System · 🏢 Headquarters: the whole company on one screen, for the partners · v1.2 · 2026-10-17
+// v1.2 (17 Oct): job photos show as "📷 Job photo" in Live activity (they showed the raw .jpg path).
 // v1.1 (15 Oct): "waiting for a partner's OK" opens Money → 👥 Approvals (it opened Cash today); Money in shows in the
 //       feed; day-only payments sort at the start of their day; the feed's pickers are full-size taps.
 // Jerry (14 Oct): "At some point we will have a corporate headquarters and many areas running and someone needs to be
@@ -54,7 +55,9 @@
     opened.forEach((t) => out.push({ at: t.opened_at, area: t.area, ic: t.priority === 'urgent' ? '🔴' : '🆕', by: t.opened_by, t: `New ${job(t)}`, m: t.summary || '', href: '#jobs/' + t.id }));
     closed.filter((t) => t.status === 'done').forEach((t) => out.push({ at: t.closed_at, area: t.area, ic: '✅', by: t.assigned_to, t: `Finished ${job(t)}`, m: (N(t.amount_collected) ? `collected ${Z.kes(t.amount_collected)} · ` : '') + (t.summary || ''), href: '#jobs/' + t.id }));
     // Job notes and status changes (skip the "done" ones — the finished job above already says it).
-    events.filter((e) => !(e.kind === 'status' && /done/i.test(e.body || ''))).forEach((e) => { const t = T[e.ticket_id]; out.push({ at: e.at, area: t && t.area, ic: e.kind === 'status' ? '🔄' : '📝', by: e.by, t: `${t ? job(t) : 'Job'} · ${e.kind === 'status' ? 'status' : 'note'}`, m: e.body || '', href: '#jobs/' + e.ticket_id }); });
+    events.filter((e) => !(e.kind === 'status' && /done/i.test(e.body || ''))).forEach((e) => { const t = T[e.ticket_id]; // v1.2 (17 Oct): a photo's body is its storage path — say "📷 Job photo" instead of showing the .jpg path.
+      const ph = e.kind === 'photo';
+      out.push({ at: e.at, area: t && t.area, ic: e.kind === 'status' ? '🔄' : ph ? '📷' : '📝', by: e.by, t: `${t ? job(t) : 'Job'} · ${e.kind === 'status' ? 'status' : ph ? 'photo' : 'note'}`, m: ph ? 'Job photo — tap to see it on the job' : e.body || '', href: '#jobs/' + e.ticket_id }); });
     // v1.1: a payment with only a day (no time) sorts at the START of that day, not above things that happened “just now”.
     pays.forEach((p) => { const at = p.created_at || (p.date + 'T00:00:00'); if (new Date(at) < new Date(since) && !p.created_at) return; out.push({ at, day: !p.created_at, area: p.area, ic: '💵', t: `Payment in · ${Z.kes(p.amount)}`, m: [p.payer_name, p.method, p.source === 'field' ? 'collected by a tech' : p.source].filter(Boolean).join(' · ') }); });
     exps.forEach((e) => out.push({ at: e.created_at, area: e.area, ic: e.approval === 'waiting' ? '⏳' : '💸', by: e.created_by, t: `${e.approval === 'waiting' ? 'Waiting for OK' : 'Money out'} · ${Z.kes(e.amount)}`, m: [e.payee, e.category].filter(Boolean).join(' · '), href: e.approval === 'waiting' ? '#money/approvals' : '' }));

@@ -112,7 +112,7 @@
       { el: '#ap-mine .ap-back', say: 'If he made a mistake, he can withdraw it, with a reason.' },
       { el: '#ap-rule', say: 'What if someone tried to approve their own payment some other way? The database itself refuses.', do: async () => { const mine = (await Z.sb.from('expenses').select('id').eq('approval', 'waiting').eq('created_by', Z.me.id)).data || []; if (mine[0]) { const r = await Z.sb.rpc('approve_money', { p_expense: mine[0].id }); if (r.error) Z.toast(r.error.message); } await sleep(1500); } },
       { el: '#ap-forme', say: 'Waiting for his OK: payments other people recorded. Field technicians\' receipts are here too. They are expenses, and finance confirms them: finance is the second person.' },
-      { el: '#ap-forme .ap-ok', say: 'He checks the amount, the person and the receipt, and taps Approve.', do: tap('#ap-forme .ap-ok') },
+      { el: inside('#ap-forme .ap-item::Total Energies', '.ap-ok'), say: 'He checks the amount, the person and the receipt, and taps Approve. A payment with no receipt asks first: approve anyway?', do: tap(inside('#ap-forme .ap-item::Total Energies', '.ap-ok')) }, // 17 Oct: the first one is Kamau Hardware (no receipt), which now asks first
       { el: '#ap-done', say: 'Approved this week shows it, with his name and the time.' },
       { el: '#ap-switch', say: 'In practice you can play the second person: switch to Jerry. In real life, it is Jerry\'s own phone and his own login. The next chapter does exactly that.' },
     ], ['Pay a bill and see “waiting for a second OK”', 'Try to approve your own — read why not', 'Approve a payment someone else recorded']),
