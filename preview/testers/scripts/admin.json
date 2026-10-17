@@ -1,8 +1,8 @@
 {
   "role": "admin",
   "title": "Partner / manager test script",
-  "version": "1.2",
-  "date": "2026-10-12",
+  "version": "1.3",
+  "date": "2026-10-17",
   "who": "You are Jerry, a partner. You see everything. Everything is pretend and stays on your phone.",
   "sessions": [
     {
@@ -152,7 +152,7 @@
         {
           "id": "a1-06",
           "link": "#jobs",
-          "do": "Open Wanjiku, 0712 345 678 #105 (a new install with no tech). Under WHO'S GOING, AND WHEN pick Tech: Brian Otieno and Visit day: tomorrow. Tap Save.",
+          "do": "Open Halima, 0712 345 678 #105 (a new install with no tech). Under WHO'S GOING, AND WHEN pick Tech: Brian Otieno and Visit day: tomorrow. Tap Save.",
           "see": "“Dispatch saved.” The label changes from Waiting for a tech to Assigned, and NOTES says “Sent to Brian Otieno”.",
           "look": [
             "#105"

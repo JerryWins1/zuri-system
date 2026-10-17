@@ -107,7 +107,7 @@
       T({ customer_id: 'c6', area: 'A', kind: 'fault', status: 'assigned', assigned_to: 'p-peter', summary: 'Internet very slow in the evening' }),
       T({ customer_id: 'c9', area: 'A', kind: 'relocation', status: 'assigned', assigned_to: 'p-peter', scheduled_for: dayOff(2), summary: 'Move router from the house to the new shop next door' }),
       T({ customer_id: 'c13', area: 'A', kind: 'fault', status: 'assigned', assigned_to: 'p-brian', summary: 'Cable cut by the road works' }),
-      T({ customer_id: null, caller: 'Wanjiku, 0712 345 678', area: 'A', kind: 'install', status: 'open', scheduled_for: dayOff(1), summary: 'New install enquiry — wants 10 Mbps for a salon' }),
+      T({ customer_id: null, caller: 'Halima, 0712 345 678', area: 'A', kind: 'install', status: 'open', scheduled_for: dayOff(1), summary: 'New install enquiry — wants 10 Mbps for a salon' }),
       T({ customer_id: 'c37', area: 'B', kind: 'fault', status: 'assigned', assigned_to: 'p-faith', scheduled_for: dayOff(-2), summary: 'Router keeps restarting' }),
       T({ customer_id: 'c3', area: 'A', kind: 'fault', status: 'done', assigned_to: 'p-peter', opened_at: tsOff(-6), closed_at: tsOff(-5), scheduled_for: dayOff(-6), summary: 'No internet', findings: 'Bad connector', work_done: 'Replaced connector · Tested — working', amount_collected: 0 }),
       T({ customer_id: 'c8', area: 'A', kind: 'install', status: 'done', assigned_to: 'p-brian', opened_at: tsOff(-10), closed_at: tsOff(-8), scheduled_for: dayOff(-9), summary: 'New install', work_done: 'Ran new cable · Tested — working', amount_collected: 3500, collection_method: 'mpesa', collection_ref: 'UJ8KD02MXQ' }),
@@ -567,6 +567,8 @@
       if (row.assigned_to && row.status === 'open') row.status = 'assigned';
       if (row.status === 'done' && (!before || before.status !== 'done')) {
         row.closed_at = new Date().toISOString();
+        // 17 Oct: a finished New install turns the Lead into an Active customer (same as supabase/30_install_activates.sql).
+        if (row.kind === 'install') { const c = D.v_customers.find((x) => x.id === row.customer_id); if (c && c.status === 'lead') Object.assign(c, { status: 'active', install_date: c.install_date || today(), updated_at: row.closed_at }); }
         if (Number(row.amount_collected) > 0 && !D.payments.some((p) => p.ticket_id === row.id)) {
           const c = D.v_customers.find((x) => x.id === row.customer_id);
           D.payments.push({ id: uuid(), source: 'field', date: today(), amount: Number(row.amount_collected), method: row.collection_method, mpesa_ref: row.collection_ref, payer_name: c ? c.full_name : row.caller, customer_id: row.customer_id, area: row.area, ticket_id: row.id });
