@@ -1,5 +1,5 @@
 {
- "version": "v1.3 · 2026-10-15",
+ "version": "v1.4 · 2026-10-17",
  "start": "2026-10-17",
  "days_total": 7,
  "code": "ZURI-BW",
@@ -32,7 +32,11 @@
     "Clear 👥 Approvals before 10:00 and again before 12:00 — nobody's money waits for you.",
     "Answer any 📡 outage notice within 15 minutes.",
     "11:45 Read the day's Friday report (Money → 📊 Report) and post one line in the team group: what went well, what went wrong."
-   ]
+   ],
+   "focus": {
+    "t": "Home, Headquarters and reports",
+    "how": "Do the numbers on Home and 🏢 HQ match what your team really did today? Are names and areas right in Live activity? Try 📣 a message to one person from HQ: did it open WhatsApp with the right number and words?"
+   }
   },
   {
    "id": "F",
@@ -56,7 +60,11 @@
     "Check 👥 Approvals: confirm the techs' receipts.",
     "Record every payment the same hour it happens — never at the end of the day.",
     "11:30 Money → 📊 Report: read it. Anything red → tell the Partner."
-   ]
+   ],
+   "focus": {
+    "t": "Every amount, total and M-Pesa code",
+    "how": "Amounts and dates right everywhere? M-Pesa codes are 10 letters and numbers (like UJK4W8NB2Q). Do Cash today, Bills and the Pay run add up? Are VAT and supplier PINs right on receipts?"
+   }
   },
   {
    "id": "C1",
@@ -77,7 +85,11 @@
     "Every call becomes something in Zuri: a customer, a job, a note or a task. Nothing stays only in your head.",
     "Before you make a new customer, SEARCH first (name or phone) — no doubles.",
     "11:50 Jobs → All techs: is any job without a tech or a day? Fix it."
-   ]
+   ],
+   "focus": {
+    "t": "Customer details and message buttons",
+    "how": "Names spelled right? Phone numbers in 07xx xxx xxx form (or +254…)? Directions clear enough for a tech to find the house? Try every 📞 Call, 💬 WhatsApp and 📩 Text button: does it open the right person with the right words?"
+   }
   },
   {
    "id": "C2",
@@ -98,7 +110,11 @@
     "If a red 📡 Possible outage box shows, read it to every caller from that area. No new visit needed.",
     "A customer says “I paid”? Ask for the M-Pesa code, write it in a note, and make a task for Finance.",
     "11:50 Tasks → My day: tick what you finished."
-   ]
+   ],
+   "focus": {
+    "t": "Payment calls and reminder messages",
+    "how": "Do the 💬 WhatsApp and 📩 Text buttons open with the right number and the right words? Do promised dates come back on the right day? Is “Paid until” right for each customer?"
+   }
   },
   {
    "id": "T1",
@@ -119,7 +135,11 @@
     "At every house: ▶ I'm starting now → pin → work → parts with serial → photo → what you found / did (tap at least one “What did you do?”) → money collected → ✅ Job finished.",
     "Spent Zuri money? Snap the receipt the same minute.",
     "Before you stop: My jobs → To do should be empty or have a note on each job."
-   ]
+   ],
+   "focus": {
+    "t": "Install pins and equipment",
+    "how": "At every install drop the 📍 pin, then check on the 🗺️ Map that it is on the right house. Every router/ONT has its serial number. Photos attach and show on the job."
+   }
   },
   {
    "id": "T2",
@@ -140,7 +160,11 @@
     "Business customers first when they are urgent.",
     "Collected money? Type the M-Pesa code every time.",
     "Snap every receipt."
-   ]
+   ],
+   "focus": {
+    "t": "Faults, parts and business customers",
+    "how": "Is what you found and what you did saved right? Parts with serial numbers? Photos show? Does 🗺️ Open map take you to the right place?"
+   }
   },
   {
    "id": "T3",
@@ -161,7 +185,11 @@
     "If many Satellite customers are down, check the cabinet FIRST — tell the Partner what you find.",
     "Snap every receipt.",
     "Pins: stand outside the house, then 📍."
-   ]
+   ],
+   "focus": {
+    "t": "Satellite area and weak signal",
+    "how": "Is the area right on every job? Try a job with no signal (airplane mode), then turn signal back on: does everything send? Pins and photos too."
+   }
   },
   {
    "id": "V",
@@ -180,7 +208,11 @@
     "Say who you are and your pretend phone number. Spell names if asked.",
     "At the end of each call write what happened on your list: ✅ if they did it right, ❌ if not (say what).",
     "Never give real numbers or real names of real people."
-   ]
+   ],
+   "focus": {
+    "t": "What the customer receives",
+    "how": "When Zuri sends you a WhatsApp or text, is your name right, the amount right, the words clear? Take a screenshot of every message you receive and tell us if anything is wrong."
+   }
   }
  ],
  "packages": [
