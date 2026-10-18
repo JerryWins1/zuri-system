@@ -1,5 +1,5 @@
 {
- "version": "v1.5 · 2026-10-18",
+ "version": "v1.6 · 2026-10-18",
  "start": "2026-10-17",
  "days_total": 7,
  "code": "ZURI-BW",
@@ -1394,7 +1394,7 @@
      "at": "15:00",
      "role": "P",
      "t": "Add a “Router serial” field",
-     "do": "Admin → Custom fields: Field name “Router serial”, Kind Text → Add field. Then Who sees what → tick Router serial for Call center.",
+     "do": "Tap Me → ⚙️ Admin → Custom fields. In Field name type: Router serial. Kind: Text. Tap Add field — Router serial now shows in the list above. Then tap Who sees what. Find “Router serial (custom)”: it is already ticked for Call center, so leave it ticked.",
      "where": "Me → ⚙️ Admin → Custom fields",
      "end": "Router serial is a field the call center can fill on a customer. (Techs record serials under the job's Parts.)",
      "route": "admin/fields",

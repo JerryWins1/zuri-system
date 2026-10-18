@@ -53,7 +53,7 @@
     const custom = Z.ref.cfd.filter((d) => d.entity === 'customer').map((d) => [d.key, d.label + ' (custom)']);
     const cur = (field, role) => { const v = Z.ref.vis.find((x) => x.entity === 'customer' && x.field === field && x.role === role); return v ? v.can_see : role !== 'field'; };
     el.innerHTML = `
-      <p class="hint" style="margin-top:0">Tick what each role can see on a customer. The database enforces this — unticked details never reach that person's phone. Name, area, directions and map pin are always shown so the job can be done. Admins see everything.</p>
+      <p class="hint" style="margin-top:0">Your own fields (added under Custom fields) show here with “(custom)”. Tick what each role can see on a customer. The database enforces this — unticked details never reach that person's phone. Name, area, directions and map pin are always shown so the job can be done. Admins see everything.</p>
       <div class="card scroll-x"><table class="t"><tr><th>Customer detail</th>${roles.map(([, t]) => `<th style="text-align:center">${t}</th>`).join('')}</tr>
         ${core.concat(custom).map(([k, label]) => `<tr><td>${Z.esc(label)}</td>${roles.map(([r, rt]) => `<td style="text-align:center"><input type="checkbox" aria-label="${Z.esc(label)} — visible to ${rt}" data-f="${Z.esc(k)}" data-r="${r}" ${cur(k, r) ? 'checked' : ''}></td>`).join('')}</tr>`).join('')}</table></div>`;
     Z.$$('input[data-f]', el).forEach((cb) => (cb.onchange = async () => {
