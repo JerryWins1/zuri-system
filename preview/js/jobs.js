@@ -249,7 +249,16 @@
   // switched off — otherwise the box shows "Nobody yet" and saving a new date silently takes the job off them.
   // v2.37 (16 Oct): techs from other areas come after the area's own, marked "covering" — when a tech leaves or is off,
   //       a partner must be able to send their jobs to someone from the other area (Business Week day 7).
-  const covering = (area, list) => list.concat(Z.techs().filter((p) => !list.some(([id]) => id === p.id)).map((p) => [p.id, p.full_name + ' (other area — covering)']));
+  // v2.42 (18 Oct, Business Week day 1: a Satellite job went to a Town Centre tech): the area's OWN techs come first,
+  //       labelled "📍 covers <area>"; techs with no area set come next, labelled "(no area set)" — before, a tech with no
+  //       area counted as covering every area, so with areas not yet set every tech looked equally right.
+  const covering = (area, list) => {
+    const own = list.filter(([id]) => { const p = Z.ref.people.find((x) => x.id === id); return area && p && p.area === area; });
+    const loose = list.filter((x) => !own.includes(x));
+    return own.map(([id, n]) => [id, n + ' · 📍 covers ' + Z.areaName(area)])
+      .concat(loose.map(([id, n]) => [id, n + (area ? ' (no area set)' : '')]))
+      .concat(Z.techs().filter((p) => !list.some(([id]) => id === p.id)).map((p) => [p.id, p.full_name + ' (other area — covering)']));
+  };
   function techChoices(t) {
     const list = covering(t.area, Z.techs(t.area).map((p) => [p.id, p.full_name]));
     if (t.assigned_to && !list.some(([id]) => id === t.assigned_to)) {
