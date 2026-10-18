@@ -1,4 +1,4 @@
-// Zuri System · 🧪 Test Coach: Business Week challenges inside the app · v1.1 · 2026-10-17
+// Zuri System · 🧪 Test Coach: Business Week challenges inside the app · v1.2 · 2026-10-18 (v1.2: 🎬 1-minute videos question from day 3)
 // v1.1 (17 Oct, Jerry: "make sure everything gets tested … let us know if information in fields are correct … give a
 //       tester a specific thing … a questionnaire every session"): after "How easy?" the coach asks ✅ Is everything on
 //       the screen right? (and, on message steps, did WhatsApp/SMS open with the right number and words); each role has a
@@ -12,7 +12,7 @@
 (function () {
   const Z = window.Z;
   if (!Z) return;
-  const VER = 'coach v1.1';
+  const VER = 'coach v1.2';
   const QS = new URLSearchParams(location.search);
   const ROLES = ['P', 'F', 'C1', 'C2', 'T1', 'T2', 'T3', 'V'];
   const get = (k, d) => { try { const v = localStorage.getItem('zt_' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
@@ -106,7 +106,7 @@
   //       inside Feedback Studio the coach keeps its card short (the studio's talk / point / screenshot bar is below it),
   //       says "✅ Step done" (the studio's own ✅ Done ends the session) and ends the day by pointing at 📨 Send to Claude.
   let inFS = false; try { inFS = window.self !== window.top && /feedback-studio/.test(window.top.location.pathname); } catch (e) { inFS = window.self !== window.top; }
-  let ui = { open: get('coach_open', true), mode: 'card', showHint: false, showEnd: false, ease: null, self: null, said: '', right: null, wrong: '', msg: null, focus: false, svLater: false, sv: { good: '', hard: '', wrong: null, what: '', tried: [], broke: '', day: null } };
+  let ui = { open: get('coach_open', true), mode: 'card', showHint: false, showEnd: false, ease: null, self: null, said: '', right: null, wrong: '', msg: null, focus: false, svLater: false, sv: { good: '', hard: '', wrong: null, what: '', tried: [], broke: '', day: null, vid: null, vidwhy: '' } };
   const st = () => get('bw_state', {});
   const writeState = (id, v) => { const s = st(); if (v) s[id] = v; else delete s[id]; set('bw_state', s); };
   const meas = () => get('coach_m', {});
@@ -280,6 +280,8 @@
       : `<button class="zc-focus" data-a="focus" aria-expanded="false">🎯 Your special job: <b>${esc(f.t)}</b> ▸</button>`; };
   // v1.1: 📝 5 quick questions at the end of each day (also from ☰ All today).
   const surveyDone = () => !!get('bw_survey', {})[today];
+  // v1.2 (18 Oct, Jerry): from day 3 the end-of-day questions also ask about the new 1-minute how-to videos.
+  const VIDS = [['love', '👍 Love them'], ['ok', '🤷 They\'re OK'], ['long', '👎 Prefer the long ones'], ['none', "Haven't watched"]];
   const TRIED = ['📞 Call', '💬 WhatsApp', '📩 Text (SMS)', '🗺️ Map', '📍 Pin', '📷 Photo', '🧾 Receipt', '📤 Share / send'];
   function surveyHtml() {
     const v = ui.sv;
@@ -292,6 +294,9 @@
       <div class="zc-lbl">4 · Which buttons did you try today? Tap each one</div>
       <div class="zc-chips">${TRIED.map((t) => `<button class="zc-b${v.tried.includes(t) ? ' on' : ''}" data-tried="${esc(t)}">${esc(t)}</button>`).join('')}</div>
       <textarea id="zs-broke" maxlength="200" placeholder="Did any of them NOT work? Which one, what happened?">${esc(v.broke)}</textarea>
+      ${today >= 3 ? `<div class="zc-lbl">🎬 The new 1-minute videos (the short ones that show each step)</div>
+      <div class="zc-chips">${VIDS.map(([k, t]) => `<button class="zc-b${v.vid === k ? ' on' : ''}" data-sv="vid:${k}">${t}</button>`).join('')}</div>
+      ${v.vid && v.vid !== 'none' ? `<textarea id="zs-vidwhy" maxlength="200" placeholder="One thing that would make them better?">${esc(v.vidwhy)}</textarea>` : ''}` : ''}
       <div class="zc-lbl">5 · Today, overall</div><div class="zc-faces">
       ${[['😫', 'Very bad'], ['🙁', 'Bad'], ['😐', 'OK'], ['🙂', 'Good'], ['😄', 'Very good']].map(([f, w], i) => `<button class="zc-b${v.day === i + 1 ? ' on' : ''}" data-sv="day:${i + 1}" aria-label="${i + 1} — ${w}"><span>${f}</span>${w}</button>`).join('')}</div>
       <div class="zc-grid"><button class="zc-b go wide" data-a="sv-send">📨 Send my answers</button><button class="zc-b" data-a="back">Later</button></div>`;
@@ -466,17 +471,17 @@
   }
 
   function keepSv() { const g = (id) => { const t = root && root.querySelector(id); return t ? t.value.trim() : null; };
-    [['good', '#zs-good'], ['hard', '#zs-hard'], ['what', '#zs-what'], ['broke', '#zs-broke']].forEach(([k, id]) => { const v = g(id); if (v != null) ui.sv[k] = v; }); }
+    [['good', '#zs-good'], ['hard', '#zs-hard'], ['what', '#zs-what'], ['broke', '#zs-broke'], ['vidwhy', '#zs-vidwhy']].forEach(([k, id]) => { const v = g(id); if (v != null) ui.sv[k] = v; }); }
   async function sendSurvey() {
     keepSv(); const v = ui.sv;
-    if (!v.good && !v.hard && !v.wrong && !v.tried.length && !v.broke && !v.day) return Z.toast('Answer at least one question first.');
-    const ans = { v: 1, day: today, good: v.good.slice(0, 300), hard: v.hard.slice(0, 300), wrong: v.wrong, what: v.what.slice(0, 300), tried: v.tried, broke: v.broke.slice(0, 200), rate: v.day };
-    let txt = JSON.stringify(ans); if (txt.length > 1000) { ans.good = ans.good.slice(0, 150); ans.hard = ans.hard.slice(0, 150); ans.what = ans.what.slice(0, 150); txt = JSON.stringify(ans).slice(0, 1000); }
+    if (!v.good && !v.hard && !v.wrong && !v.tried.length && !v.broke && !v.day && !v.vid) return Z.toast('Answer at least one question first.');
+    const ans = { v: 1, day: today, good: v.good.slice(0, 300), hard: v.hard.slice(0, 300), wrong: v.wrong, what: v.what.slice(0, 300), tried: v.tried, broke: v.broke.slice(0, 200), rate: v.day, vid: v.vid || null, vidwhy: (v.vidwhy || '').slice(0, 200) };
+    let txt = JSON.stringify(ans); if (txt.length > 1000) { ans.good = ans.good.slice(0, 150); ans.hard = ans.hard.slice(0, 150); ans.what = ans.what.slice(0, 150); ans.vidwhy = ans.vidwhy.slice(0, 100); txt = JSON.stringify(ans).slice(0, 1000); }
     const sd = get('bw_survey', {}); sd[today] = 1; set('bw_survey', sd);
-    ui.mode = 'card'; ui.svLater = false; ui.sv = { good: '', hard: '', wrong: null, what: '', tried: [], broke: '', day: null }; render();
+    ui.mode = 'card'; ui.svLater = false; ui.sv = { good: '', hard: '', wrong: null, what: '', tried: [], broke: '', day: null, vid: null, vidwhy: '' }; render();
     const ok = await send([row('note', ('survey:d' + today + ':' + me.role).slice(0, 60), '📝 ' + txt)]);
     hq('daily', `ZURI-BW SURVEY|day ${today}|${me.role}|${me.name}|app ${appV()}|device ${phone()}\n` +
-      `rate ${ans.rate || '–'}/5\n✅ worked: ${ans.good || '–'}\n🤔 confusing: ${ans.hard || '–'}\n✏️ wrong: ${ans.wrong === 'yes' ? ans.what || 'yes (no words)' : ans.wrong || '–'}\n🔘 tried: ${ans.tried.join(', ') || '–'}\n❌ didn't work: ${ans.broke || '–'}`);
+      `rate ${ans.rate || '–'}/5\n✅ worked: ${ans.good || '–'}\n🤔 confusing: ${ans.hard || '–'}\n✏️ wrong: ${ans.wrong === 'yes' ? ans.what || 'yes (no words)' : ans.wrong || '–'}\n🔘 tried: ${ans.tried.join(', ') || '–'}\n❌ didn't work: ${ans.broke || '–'}${ans.vid ? `\n🎬 1-minute videos: ${ans.vid}${ans.vidwhy ? ' — ' + ans.vidwhy : ''}` : ''}`);
     Z.toast(ok ? 'Thank you! Sent to Jerry.' : 'Saved — sends when you have signal.');
   }
 
