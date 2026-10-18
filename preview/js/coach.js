@@ -1,4 +1,4 @@
-// Zuri System · 🧪 Test Coach: Business Week challenges inside the app · v1.2 · 2026-10-18 (v1.2: 🎬 1-minute videos question from day 3)
+// Zuri System · 🧪 Test Coach: Business Week challenges inside the app · v1.3 · 2026-10-18 (v1.3: Do this as numbered lines · v1.2: 🎬 videos question)
 // v1.1 (17 Oct, Jerry: "make sure everything gets tested … let us know if information in fields are correct … give a
 //       tester a specific thing … a questionnaire every session"): after "How easy?" the coach asks ✅ Is everything on
 //       the screen right? (and, on message steps, did WhatsApp/SMS open with the right number and words); each role has a
@@ -12,7 +12,7 @@
 (function () {
   const Z = window.Z;
   if (!Z) return;
-  const VER = 'coach v1.2';
+  const VER = 'coach v1.3';
   const QS = new URLSearchParams(location.search);
   const ROLES = ['P', 'F', 'C1', 'C2', 'T1', 'T2', 'T3', 'V'];
   const get = (k, d) => { try { const v = localStorage.getItem('zt_' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
@@ -201,6 +201,7 @@
   #zcoach .zc-li .grow { flex:1; min-width:0; }
   #zcoach .zc-li .zc-b { min-height:44px; padding:6px 10px; font-size:13.5px; }
   #zcoach .zc-pay { background:var(--accent-soft); border-radius:10px; padding:8px 10px; font-weight:700; font-size:14px; margin:8px 0; }
+  #zcoach .zc-do { margin:2px 0 6px; padding-left:22px; line-height:1.45; } #zcoach .zc-do li { margin:4px 0; }
   #zcoach .zc-small { font-size:12.5px; color:var(--ink-faint); }
   #zcoach .zc-focus { display:block; width:100%; text-align:left; background:var(--brand-soft); border:0; border-radius:10px; padding:6px 10px; margin:4px 0 6px; color:var(--ink); font:inherit; font-size:13.5px; cursor:pointer; }
   #zcoach .zc-b.on { outline:3px solid var(--brand); outline-offset:1px; font-weight:800; }
@@ -271,6 +272,13 @@
       ${open ? `<div class="zc-body">${body}</div>` : ''}</div>`;
     wire(c);
   }
+  // v1.3 (18 Oct, Kevin: "the 'Do this' steps are a bit complicated"): a long instruction shows as numbered short lines,
+  //       one action each, instead of one block of text.
+  const doHtml = (t) => {
+    const parts = String(t || '').split(/(?<=[.!?])\s+(?=[A-Z0-9“"(📱💵✅📷🔒👥📍➕＋])/u).map((x) => x.trim()).filter(Boolean);
+    if (parts.length < 2) return `<p>${esc(t)}</p>`;
+    return `<ol class="zc-do">${parts.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`;
+  };
   const offBtn = () => `<button class="zc-b wide" data-a="off">Hide the coach on this phone</button>`;
   // v1.1: a step that sends a message or makes a call also asks whether it opened right.
   const isMsg = (c) => (c.feat || []).some((f) => /message|text|send|share|call|wa|sms|remind/.test(f)) || /WhatsApp|📩|💬|Text it|SMS|📞/.test((c.do || '') + ' ' + (c.end || ''));
@@ -336,7 +344,7 @@
     if (scen && !x.hint && pageHint(c.id)) { x.hint = 1; saveM(c.id, x); }
     const hintOpen = ui.showHint || (scen && x.hint);
     return head + focusHtml() + `
-      <div class="zc-lbl">${scen ? 'The situation' : 'Do this'}</div><p>${esc(c.do)}</p>
+      <div class="zc-lbl">${scen ? 'The situation' : 'Do this'}</div>${scen ? `<p>${esc(c.do)}</p>` : doHtml(c.do)}
       ${call && say.length ? `<div class="zc-lbl">📞 Say this</div><div class="zc-hint">${say.map((l) => esc(l)).join('<br>')}</div>` : ''}
       ${c.copy ? `<div class="zc-copy"><span>${esc(c.copy)}</span><button class="zc-b" data-a="copy">Copy</button></div>` : ''}
       ${c.file ? `<p><a class="zc-b" href="${esc('testers/' + c.file)}" download>⬇️ ${esc(c.file.split('/').pop())}</a></p>` : ''}
