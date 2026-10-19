@@ -1,4 +1,4 @@
-// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v3 · 2026-10-18 (v2: 2026-10-01)
+// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v4 · 2026-10-19 (v3: 2026-10-18, v2: 2026-10-01)
 // v2: the code can ride in the link (…/testers/?code=ZURI-TEST) so testers just tap — no typing.
 // Codes live on the training database (Admin → Access codes). This phone remembers its code and re-checks it once a day,
 // so weak signal doesn't lock anyone out. The real app keeps its ordinary login; this is for everything without one.
@@ -31,14 +31,19 @@
   // a link with ?code=XXXX carries the invite: check it, remember it, then take it out of the address bar
   // v3 (18 Oct, Business Week day 2: testers stopped at this screen 13 times): a Business Week link (?bw) is itself the
   // invite — if it carries no code and the phone has none, use ZURI-BW; and if the check can't reach the server, let them in.
-  const QS0 = new URLSearchParams(location.search), bwLink = QS0.has('bw');
+  // v4 (19 Oct: still stopped after v3 — the sign-up email link lands on ?training#access_token=…, an expired one on
+  // ?training#error_code=…, and the coach's practice link is ?practice&coach… — none carry ?bw, and they often open in a
+  // different browser (Gmail's, WhatsApp's) that has no code saved). Until the week's follow-up ends, those count as BW links too.
+  const QS0 = new URLSearchParams(location.search), bwOpen = today() <= '2026-10-31';
+  const authBack = /(^|[#&])(access_token|refresh_token|error_code|error)=/.test(location.hash);
+  const bwLink = QS0.has('bw') || (bwOpen && (here === 'training' || QS0.has('coach') || authBack));
   let linked = (QS0.get('code') || '').trim().toUpperCase();
   if (!linked && bwLink && !((get() || {}).code)) linked = 'ZURI-BW';
   if (linked) {
     try { const u = new URL(location.href); u.searchParams.delete('code'); history.replaceState(null, '', u.pathname + (u.search.replace(/=(&|$)/g, '$1')) + u.hash); } catch (e) {}
     const had = get();
     if (!had || had.code !== linked) {
-      ask(linked).then((j) => { if (j.ok) { put({ code: linked, until: j.until, label: j.label, checked: today() }); resolve(true); } else if (had && had.code) { start(); } else block(WORDS[j.reason] || 'This code does not work.', true); })
+      ask(linked).then((j) => { if (j.ok) { put({ code: linked, until: j.until, label: j.label, checked: today() }); resolve(true); } else if (had && had.code) { start(); } else if (bwLink && j.reason === 'full') { put({ code: linked, until: '2026-10-31', label: 'Business Week', checked: today() }); resolve(true); } else block(WORDS[j.reason] || 'This code does not work.', true); })
         .catch(() => { if (bwLink) { put({ code: linked, until: '2026-10-31', label: 'Business Week', checked: today() }); resolve(true); } else start(); });
       return;
     }
