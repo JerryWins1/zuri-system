@@ -47,8 +47,17 @@
     //       missed Leads and switched-off customers, and the same person was added twice.
     if (f.status && !clean(f.q)) q = q.eq('status', f.status);
     if (Z.area) q = q.eq('area', Z.area);
-    const { data, count, error } = await q.order('full_name').range(f.page * per, f.page * per + per - 1);
+    let { data, count, error } = await q.order('full_name').range(f.page * per, f.page * per + per - 1);
     if (error) throw error;
+    // v2.46 (19 Oct, Business Week day 2: Kevin saw "0 customers" while 6 Leads existed): the list opens on Active. If Active is
+    //       empty but other customers exist, show them all and say so, instead of a bare "0" that looks like a fault.
+    let hiddenNote = '';
+    if (!clean(f.q) && f.status && !count) {
+      let q2 = Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status,plan,lat', { count: 'exact' });
+      if (Z.area) q2 = q2.eq('area', Z.area);
+      const r2 = await q2.order('full_name').range(0, per - 1);
+      if (!r2.error && r2.count) { data = r2.data; count = r2.count; hiddenNote = `<p class="hint" style="margin:-4px 0 8px">No customers are ${Z.esc((STATUSES.find((x) => x[0] === f.status) || [f.status, f.status])[1].split(' (')[0])} yet, so here is everyone (${Z.fmt(r2.count)}). Change the box above to filter.</p>`; }
+    }
     const pages = Math.max(1, Math.ceil((count || 0) / per));
 
     el.innerHTML = `
@@ -59,6 +68,7 @@
         <select id="c-st" aria-label="Show customers with this status" style="width:auto"><option value="">Any status</option>${Z.opts(STATUSES.map(([k, t]) => [k, t.split(' (')[0]]), f.status)}</select>
       </div>
       ${clean(f.q) && f.status ? '<p class="hint" style="margin:-4px 0 8px">Searching every status (Lead, Active, switched off…).</p>' : ''}
+      ${hiddenNote}
       <div class="card list">${data.length ? data.map((c) => `<a class="item" href="#customers/${c.id}"><div class="grow">
           <div class="t">${Z.esc(c.full_name)}</div>
           <div class="m">${Z.esc([c.phone, c.account_no, c.plan].filter(Boolean).join(' · '))}</div>
