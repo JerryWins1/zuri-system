@@ -54,6 +54,7 @@
       </div>
 
       <div id="h-outage"></div>
+      <div id="h-golive"></div>
       ${Z.isAdmin() && Z.routes.hq ? `<a class="card" href="#hq" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--brand)"><b>🏢 Headquarters</b><p class="hint" style="margin:4px 0 0">Every area side by side, live activity, and a message to anyone in the company →</p></a>` : ''}
       ${mgr ? `<a class="card" href="#tasks/mine" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--brand)">
         <div class="row" style="justify-content:space-between"><b>🤖 Zuri manager</b><span class="hint" style="margin:0">${mgr.run ? 'last ran ' + Z.when(mgr.run.started_at) : 'hasn\'t run yet'}</span></div>
@@ -110,6 +111,7 @@
       </div>` : ''}`;
 
     Z.$('#h-refresh', el).onclick = (e) => { e.preventDefault(); Z.route(); };
+    if (Z.goliveCard) Z.goliveCard().then((h) => { const b = Z.$('#h-golive', el); if (b) b.innerHTML = h; }).catch(() => {}); // 🚀 v2.48: the go-live list
     if (Z.outageBox) Z.outageBox(Z.$('#h-outage', el), 'home', Z.area || null); // ⏱ v2.33: 📡 possible outage + the notice for the partners' yes
     if (!m) return;
     try {
