@@ -112,7 +112,7 @@
       </div>
       <p class="hint" id="j-near-hint" ${nearOn() ? '' : 'hidden'} style="margin-top:-4px">Today's jobs from where you stand — urgent ones stay on top. <span id="j-near-state">Finding you…</span></p>
       <div id="j-list"></div>
-      ${Z.isOffice() ? `<div class="card" style="margin-top:12px"><div class="row"><div class="grow"><b>💳 Payment follow-ups</b><div class="hint" style="margin:2px 0 0">Open by themselves every morning for customers whose time ran out, and close when they renew.</div></div><a class="btn small" href="#texts" id="j-texts">📩 Today's texts<span id="j-texts-n"></span></a><button class="btn sec small" id="j-follow">Check now</button></div></div>` : ''}`;
+      ${Z.isOffice() ? `<div class="card" style="margin-top:12px"><div class="row"><div class="grow"><b>💳 Payment follow-ups</b><div class="hint" style="margin:2px 0 0">Open by themselves every morning for customers whose time ran out, and close when they renew. Nothing here yet? They only start after Finance has brought in the billing file (Money → 🏦 Statements → 📥 Bring in a file).</div></div><a class="btn small" href="#texts" id="j-texts">📩 Today's texts<span id="j-texts-n"></span></a><button class="btn sec small" id="j-follow">Check now</button></div></div>` : ''}`;
     draw();
 
     Z.$$('[data-show]', el).forEach((a) => (a.onclick = (e) => { e.preventDefault(); f.show = a.dataset.show; Z.set('jobs_filter', f); Z.route(); }));
