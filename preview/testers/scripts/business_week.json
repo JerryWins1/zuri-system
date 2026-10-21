@@ -1,5 +1,5 @@
 {
- "version": "v1.9 · 2026-10-21",
+ "version": "v2.0 · 2026-10-21",
  "start": "2026-10-17",
  "days_total": 7,
  "code": "ZURI-BW",
@@ -3316,7 +3316,7 @@
      "at": "09:00",
      "role": "C1",
      "t": "Today's texts — customers who ran out",
-     "do": "Jobs → 📩 Today's texts (if it is empty, tap Jobs → Check now first). Esther Wairimu: call the voice → she will pay Saturday → 🤝 Will pay → In 3 days → Save. Samuel Otieno: call → no answer → 📵 No answer.",
+     "do": "Jobs → 📩 Today's texts (if it is empty, tap Jobs → Check now first). Esther Wairimu: call the voice → she will pay Saturday → 🤝 Will pay → In 3 days → Save. Samuel Otieno: call → no answer → 📵 No answer. (The “voice” is the Customer voice tester: ring the real phone number they wrote in the Kenyan Testers group, not the 0700 number on screen.)",
      "where": "Jobs → 📩 Today's texts",
      "end": "Esther: “Promised to pay by …”. Samuel: “Called — no answer”, back tomorrow.",
      "route": "texts",
@@ -3363,7 +3363,7 @@
      "at": "09:00",
      "role": "V",
      "t": "Answer the payment calls",
-     "do": "Call center will call YOU today. Answer as: Esther Wairimu — “I will pay on Saturday.” Samuel Otieno — don't answer (let it ring). Peter Mwangi — “I'm moving to Naivasha, please stop it.” Joseph Kibet — “The office fixed it yesterday, thank you.”",
+     "do": "FIRST: write your own phone number in the Kenyan Testers group (or send it to Call center 1 and 2), so they can ring you. Call center will then call YOU today. Answer as: Esther Wairimu — “I will pay on Saturday.” Samuel Otieno — don't answer (let it ring). Peter Mwangi — “I'm moving to Naivasha, please stop it.” Joseph Kibet — “The office fixed it yesterday, thank you.”",
      "where": "Calls from Call center 1 and 2",
      "end": "Each call ended with the right button in Zuri (ask them what they pressed).",
      "route": "",
@@ -3429,7 +3429,7 @@
      "at": "09:30",
      "role": "C1",
      "t": "Peter Mwangi wants to stop",
-     "do": "Peter's follow-up: call the voice → he is moving to Naivasha → ✋ Wants to stop → OK.",
+     "do": "Peter's follow-up: call the voice → he is moving to Naivasha → ✋ Wants to stop → OK. (The “voice” is the Customer voice tester: ring the real phone number they wrote in the Kenyan Testers group, not the 0700 number on screen.)",
      "where": "Jobs → Peter's follow-up",
      "end": "Closed. “Office can disconnect on the billing website.”",
      "route": "jobs/:id",
@@ -3832,13 +3832,14 @@
      "kind": "scenario",
      "t": "🧠 Real-world problem: The fuel message is gone",
      "do": "On Tuesday you bought fuel for 1,000 at Rubis with Zuri M-Pesa, but you forgot to snap it. Now the M-Pesa message is deleted from your phone. Finance says: “No receipt, no money back.” Is there still a way? What do you do?",
-     "hint": "Open your M-Pesa app (or the Safaricom app) → statement / transactions → find Rubis 1,000 on 20 Oct → take a screenshot. Then Me → 📸 Snap a receipt → 🖼️ From my photos → the screenshot. Paid to Rubis, Amount 1000, What was it for? Transport / Fuel, Date 20 Oct (change it — not today!), Area Town Centre, Paid with 📱 M-Pesa, the code from the statement → ✅ Save.",
+     "hint": "No Rubis message on your phone? Use the practice message below: copy it, then Me → 📸 Snap a receipt → 📩 Paste M-Pesa message → paste it → Read the message. Paid to Rubis, Amount 1000, What was it for? Transport / Fuel, Date 20 Oct (change it — not today!), Area Town Centre, Paid with 📱 M-Pesa → ✅ Save. With a real phone you would screenshot the statement line and use 🖼️ From my photos instead.",
      "end": "🧾 My receipts shows Rubis 1,000 dated 20 Oct with a 📷 photo. (Tell us: was the date easy to change?)",
      "route": "receipt",
      "feat": [
       "receipts.snap.photo",
       "receipts.date"
-     ]
+     ],
+     "copy": "UKR20RUBIS Confirmed. Ksh1,000.00 paid to RUBIS ENERGY MAAI MAHIU. on 20/10/26 at 4:10 PM. New M-PESA balance is Ksh3,200.00. Transaction cost, Ksh0.00."
     },
     {
      "id": "d5-p-04",
