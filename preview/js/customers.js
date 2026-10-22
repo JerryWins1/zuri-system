@@ -77,7 +77,7 @@
       ${pages > 1 ? `<div class="row" style="justify-content:center"><button class="btn sec small" id="c-prev" ${f.page ? '' : 'disabled'}>← Prev</button><span class="hint">Page ${f.page + 1} of ${pages}</span><button class="btn sec small" id="c-next" ${f.page + 1 < pages ? '' : 'disabled'}>Next →</button></div>` : ''}`;
 
     const qi = Z.$('#c-q', el); let tmr;
-    qi.oninput = () => { clearTimeout(tmr); tmr = setTimeout(() => { f.q = qi.value; f.page = 0; Z.set('cust_filter', f); Z.route().then(() => { const n = Z.$('#c-q'); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }); }, 400); };
+    qi.oninput = () => { clearTimeout(tmr); tmr = setTimeout(() => { f.q = qi.value; f.page = 0; Z.set('cust_filter', f); if (!/^#customers/.test(location.hash)) return; /* v2.51: they already left this screen */ Z.route().then(() => { const n = Z.$('#c-q'); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }); }, 400); };
     Z.$('#c-st', el).onchange = (e) => { f.status = e.target.value; f.page = 0; Z.set('cust_filter', f); Z.route(); };
     const pv = Z.$('#c-prev', el), nx = Z.$('#c-next', el);
     if (pv) pv.onclick = () => { f.page--; Z.set('cust_filter', f); Z.route(); };

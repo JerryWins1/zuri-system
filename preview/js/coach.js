@@ -505,6 +505,13 @@
   function setup() {
     RL = Object.fromEntries((bw.roles || []).map((r) => [r.id, r]));
     me = get('bw_me', null);
+    // v2.51 (22 Oct, Business Week day 6): the seat follows the ACCOUNT. A phone that still held an old link (r=P, r=F ...) showed steps
+    // the signed-in account cannot do ("Requires an admin to do it"). If the saved seat does not fit the account, move to the seat that does.
+    if (me && Z.me && Z.training) {
+      const fit = { admin: ROLES, internal: ['F'], callcenter: ['C1', 'C2', 'V'], field: ['T1', 'T2', 'T3', 'V'] }[Z.me.role];
+      const next = { internal: 'F', callcenter: Z.me.area === 'SA' ? 'C2' : 'C1', field: Z.me.area === 'SA' ? 'T3' : 'T1' }[Z.me.role];
+      if (fit && next && !fit.includes(me.role)) { me = { name: me.name, role: next }; set('bw_me', me); }
+    }
     if (!me || !RL[me.role]) {
       // Practice with ?coach and no tester link yet: be the tester for this practice job.
       const r = (QS.get('r') || '').toUpperCase();
