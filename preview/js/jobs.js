@@ -112,7 +112,7 @@
       </div>
       <p class="hint" id="j-near-hint" ${nearOn() ? '' : 'hidden'} style="margin-top:-4px">Today's jobs from where you stand — urgent ones stay on top. <span id="j-near-state">Finding you…</span></p>
       <div id="j-list"></div>
-      ${Z.isOffice() ? `<div class="card" style="margin-top:12px"><div class="row"><div class="grow"><b>💳 Payment follow-ups</b><div class="hint" style="margin:2px 0 0">Open by themselves every morning for customers whose time ran out, and close when they renew.</div></div><a class="btn small" href="#texts" id="j-texts">📩 Today's texts<span id="j-texts-n"></span></a><button class="btn sec small" id="j-follow">Check now</button></div></div>` : ''}`;
+      ${Z.isOffice() ? `<div class="card" style="margin-top:12px"><div class="row"><div class="grow"><b>💳 Payment follow-ups</b><div class="hint" style="margin:2px 0 0">Open by themselves every morning for customers whose time ran out, and close when they renew. Nothing here yet? They only start after Finance has brought in the billing file (Money → 🏦 Statements → 📥 Bring in a file).</div></div><a class="btn small" href="#texts" id="j-texts">📩 Today's texts<span id="j-texts-n"></span></a><button class="btn sec small" id="j-follow">Check now</button></div></div>` : ''}`;
     draw();
 
     Z.$$('[data-show]', el).forEach((a) => (a.onclick = (e) => { e.preventDefault(); f.show = a.dataset.show; Z.set('jobs_filter', f); Z.route(); }));
@@ -249,7 +249,16 @@
   // switched off — otherwise the box shows "Nobody yet" and saving a new date silently takes the job off them.
   // v2.37 (16 Oct): techs from other areas come after the area's own, marked "covering" — when a tech leaves or is off,
   //       a partner must be able to send their jobs to someone from the other area (Business Week day 7).
-  const covering = (area, list) => list.concat(Z.techs().filter((p) => !list.some(([id]) => id === p.id)).map((p) => [p.id, p.full_name + ' (other area — covering)']));
+  // v2.42 (18 Oct, Business Week day 1: a Satellite job went to a Town Centre tech): the area's OWN techs come first,
+  //       labelled "📍 covers <area>"; techs with no area set come next, labelled "(no area set)" — before, a tech with no
+  //       area counted as covering every area, so with areas not yet set every tech looked equally right.
+  const covering = (area, list) => {
+    const own = list.filter(([id]) => { const p = Z.ref.people.find((x) => x.id === id); return area && p && p.area === area; });
+    const loose = list.filter((x) => !own.includes(x));
+    return own.map(([id, n]) => [id, n + ' · 📍 covers ' + Z.areaName(area)])
+      .concat(loose.map(([id, n]) => [id, n + (area ? ' (no area set)' : '')]))
+      .concat(Z.techs().filter((p) => !list.some(([id]) => id === p.id)).map((p) => [p.id, p.full_name + ' (other area — covering)']));
+  };
   function techChoices(t) {
     const list = covering(t.area, Z.techs(t.area).map((p) => [p.id, p.full_name]));
     if (t.assigned_to && !list.some(([id]) => id === t.assigned_to)) {
@@ -323,7 +332,7 @@
           </div>`
         : `<b>No customer linked</b><div class="hint">${Z.esc(Z.areaName(t.area))}</div>`}
         <div class="row" style="margin-top:10px">
-          ${lat != null ? `<a class="btn sec" href="${mapLink(lat, lng)}" target="_blank" rel="noopener">🗺️ Open map</a><button class="btn sec" id="jd-send">📤 Send pin</button>` : `<span class="hint">No map pin yet.</span>${c && c.phone ? `<a class="btn sec" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, `Hello ${c.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. So our technician can find you, please send us your location: in WhatsApp tap 📎 → Location → Send your current location. Thank you!`))}">💬 Ask customer for location</a>` : ''}`}
+          ${lat != null ? `<a class="btn sec" href="${mapLink(lat, lng)}" target="_blank" rel="noopener">🗺️ Open map</a><button class="btn sec" id="jd-send">📤 Send pin</button>` : `<span class="hint">No map pin yet.</span>${c && c.phone ? `<a class="btn sec" target="_blank" rel="noopener" href="${Z.esc(wa(c.phone, `Hello ${c.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. So our technician can find you, please send us your location: in WhatsApp tap 📎 → Location → Send your current location. Thank you!`))}">💬 Ask customer for location</a><a class="btn sec" href="${Z.esc(Z.smsHref(c.phone, `Hello ${c.full_name.split(' ')[0]}, this is ${Z.co ? Z.co().name : 'Zuri Fiber'}. So our technician can find you, please reply with directions to your home: a landmark nearby and your gate colour. If you have Google Maps, you can send your location too. Thank you!`))}">📩 Ask by text (no WhatsApp)</a>` : ''}`}<!-- v2.44 (18 Oct, Veronica): customers without WhatsApp get the request by SMS -->
           ${canPin ? `<button class="btn sec" id="jd-pin">📍 ${lat != null ? 'Move pin to here' : 'Drop pin here'}</button>` : canWork && Z.isField() ? '<span class="hint">Pins are dropped before the job is finished — ask the office to move it.</span>' : ''}
         </div>
         ${Z.pinRough && Z.pinRough(c) ? `<div class="alert warn" id="jd-rough" style="margin:8px 0 0">📍 This pin is rough (±${Z.esc(c.custom.pin_accuracy)} m). Standing at the house? ${canPin ? 'Tap 📍 Move pin to here (outside), or say yes when Zuri offers it at "I\'m starting now".' : 'Ask the tech to move it.'}</div>` : ''}

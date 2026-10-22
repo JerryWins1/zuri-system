@@ -40,7 +40,7 @@
     if (qp.get('role') && ROLES[qp.get('role')]) { localStorage.setItem(ROLE_KEY, qp.get('role')); sessionStorage.setItem('zp_open', '1'); }
     if (qp.get('play')) localStorage.setItem('zuri_learn_autoplay', qp.get('play').replace(/[^a-z0-9-]/gi, ''));
     // v2.34: &chain=projects plays the whole group from that video on (the Testers' List Projects script uses it); ✕ stops
-    const CHAINS = { projects: '📈 Projects', receipts: '🧾 Receipts', timesavers: '⏱ Time savers', alerts: '📣 Alerts' };
+    const CHAINS = { projects: '📈 Projects', receipts: '🧾 Receipts', timesavers: '⏱ Time savers', golive: '🚀 Getting ready', alerts: '📣 Alerts' };
     if (qp.get('play') && CHAINS[qp.get('chain')]) sessionStorage.setItem('zuri_learn_chain', CHAINS[qp.get('chain')]);
     if (!sessionStorage.getItem('zp_open') && !localStorage.getItem('zuri_learn_autoplay')) {
       const last = localStorage.getItem(ROLE_KEY); if (last) localStorage.setItem('zuri_practice_last', last);
@@ -107,7 +107,7 @@
       T({ customer_id: 'c6', area: 'A', kind: 'fault', status: 'assigned', assigned_to: 'p-peter', summary: 'Internet very slow in the evening' }),
       T({ customer_id: 'c9', area: 'A', kind: 'relocation', status: 'assigned', assigned_to: 'p-peter', scheduled_for: dayOff(2), summary: 'Move router from the house to the new shop next door' }),
       T({ customer_id: 'c13', area: 'A', kind: 'fault', status: 'assigned', assigned_to: 'p-brian', summary: 'Cable cut by the road works' }),
-      T({ customer_id: null, caller: 'Wanjiku, 0712 345 678', area: 'A', kind: 'install', status: 'open', scheduled_for: dayOff(1), summary: 'New install enquiry — wants 10 Mbps for a salon' }),
+      T({ customer_id: null, caller: 'Halima, 0712 345 678', area: 'A', kind: 'install', status: 'open', scheduled_for: dayOff(1), summary: 'New install enquiry — wants 10 Mbps for a salon' }),
       T({ customer_id: 'c37', area: 'B', kind: 'fault', status: 'assigned', assigned_to: 'p-faith', scheduled_for: dayOff(-2), summary: 'Router keeps restarting' }),
       T({ customer_id: 'c3', area: 'A', kind: 'fault', status: 'done', assigned_to: 'p-peter', opened_at: tsOff(-6), closed_at: tsOff(-5), scheduled_for: dayOff(-6), summary: 'No internet', findings: 'Bad connector', work_done: 'Replaced connector · Tested — working', amount_collected: 0 }),
       T({ customer_id: 'c8', area: 'A', kind: 'install', status: 'done', assigned_to: 'p-brian', opened_at: tsOff(-10), closed_at: tsOff(-8), scheduled_for: dayOff(-9), summary: 'New install', work_done: 'Ran new cable · Tested — working', amount_collected: 3500, collection_method: 'mpesa', collection_ref: 'UJ8KD02MXQ' }),
@@ -493,6 +493,10 @@
   if (!D.hubs) { const f = build(D._mode); D.hubs = f.hubs; D.settings = f.settings; } // phones that started practice before hubs existed
   if (!D._ts) { tsSeed(D, D._mode === 'empty'); }
   if (!D.packages) D.packages = D._mode === 'empty' ? [] : PKGS(); // 💲 v2.35: phones that started practice before the price list
+  // 🚀 v2.48: the go-live list (golive.js) — the pretend partners have done Part 1 and started Part 2; Dickson is stuck on 3.1.
+  if (!D._gl) { D._gl = 1; if (D._mode !== 'empty' && !D.settings.some((x) => x.key === 'golive')) { const at = (d) => new Date(Date.now() + d * 864e5).toISOString();
+    D.settings.push({ key: 'golive', value: { done: { '1.1': { by: 'Dickson', at: at(-6), note: 'Did it at the office, both of us.' }, '1.2': { by: 'Kelvin', at: at(-6), note: 'Mondays 8:00' }, '1.3': { by: 'Dickson', at: at(-5) }, '1.4': { by: 'Kelvin', at: at(-5), note: 'Aim: Monday 11 January' }, '2.1': { by: 'Kelvin', at: at(-3), note: 'Google Drive' } },
+      later: {}, stuck: { '3.1': { by: 'Dickson', at: at(-1), note: 'We have no spare phone for the company SIM yet.' } }, who: {} } }); } }
   if (!D._pj) projSeed(D, D._mode === 'empty'); // v2.34 // v2.33: phones that started practice before the time savers
   if (!D._rc) { const f = build(D._mode); D.expenses = D.expenses.concat(f.expenses.filter((e) => String(e.id).startsWith('e-'))); if (!D.settings.some((x) => x.key === 'receipts_ai')) D.settings.push({ key: 'receipts_ai', value: { on: false } }); D._rc = 1; } // v2.32
   let saveT;
@@ -567,6 +571,8 @@
       if (row.assigned_to && row.status === 'open') row.status = 'assigned';
       if (row.status === 'done' && (!before || before.status !== 'done')) {
         row.closed_at = new Date().toISOString();
+        // 17 Oct: a finished New install turns the Lead into an Active customer (same as supabase/30_install_activates.sql).
+        if (row.kind === 'install') { const c = D.v_customers.find((x) => x.id === row.customer_id); if (c && c.status === 'lead') Object.assign(c, { status: 'active', install_date: c.install_date || today(), updated_at: row.closed_at }); }
         if (Number(row.amount_collected) > 0 && !D.payments.some((p) => p.ticket_id === row.id)) {
           const c = D.v_customers.find((x) => x.id === row.customer_id);
           D.payments.push({ id: uuid(), source: 'field', date: today(), amount: Number(row.amount_collected), method: row.collection_method, mpesa_ref: row.collection_ref, payer_name: c ? c.full_name : row.caller, customer_id: row.customer_id, area: row.area, ticket_id: row.id });

@@ -1,9 +1,12 @@
-// Zuri System · self-check: problems report themselves to the testers' board · v1 · 2026-10-06
+// Zuri System · self-check: problems report themselves to the testers' board · v1.1 · 2026-10-18 (v1: 2026-10-06)
 // Jerry: "How can you check on your own if there is an issue?" Until now Claude only heard about a problem when a
 // tester wrote. Now any crash, any file that fails to load, the "Zuri didn't finish loading" card and the invite-code
 // screen each post one line to tester_log (kind 'note', step 'auto:…', note starts with 🤖), with the phone type and version.
 // Same problem once per phone per day, at most five a visit. Long numbers and emails are blanked out. No signal → saved, sent later.
 (function () {
+  // v1.1 (18 Oct): errors thrown by something the PHONE added — a crypto-wallet add-on or in-app browser ("window.ethereum",
+  // "web3", "solana", "tronWeb"…) — are not Zuri's. Veronica's iPhone Safari sent these as crashes on 17 Oct.
+  const NOT_ZURI = /ethereum|web3|solana|tronweb|phantom|metamask|__gCrWeb|webkit\.messageHandlers|selectedAddress/i;
   const C = window.ZURI_CONFIG && window.ZURI_CONFIG.training; if (!C) return;
   const PAGE = location.pathname.includes('/testers/') ? 'testers' : /[?&]training\b/.test(location.search) ? 'training' : /[?&]practice\b/.test(location.search) ? 'practice' : 'app';
   const ls = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
@@ -39,7 +42,7 @@
   }
   let sent = 0; const mem = new Set(); // memory too, in case this phone won't store anything
   function report(where, msg) {
-    msg = clean(msg); if (!msg || /ResizeObserver loop/i.test(msg)) return;
+    msg = clean(msg); if (!msg || /ResizeObserver loop/i.test(msg) || NOT_ZURI.test(msg)) return;
     /* 8 Oct: Veronica's Firefox (iPhone) injects its own scripts into every page and they throw on their own — not Zuri's fault, not worth a report */
     if (/window\.ethereum|selectedAddress|__firefox__|user-script:|webkit-masked-url|^Script error\.?$/i.test(msg)) return;
     const day = new Date().toISOString().slice(0, 10), key = day + '|' + where + '|' + msg.slice(0, 120);

@@ -41,7 +41,7 @@
         {
           "id": "f1-02",
           "link": "#jobs",
-          "do": "Look at the bottom of the screen. Tap each tab once: Jobs, Tasks, Me.",
+          "do": "Look at the bottom of your phone screen (on a computer or a wide window, look at the left side instead). Tap each tab once: Jobs, Tasks, Me.",
           "see": "Three tabs. Jobs says “My jobs”. Tasks says “Hi Peter”. Me shows your name.",
           "look": [
             "My jobs"

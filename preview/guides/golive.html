@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🚀 Getting Zuri ready — the go-live list</title><style>
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; }
+body { font: 14px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: #152322; background: #fff; margin: 0; padding: 16px; max-width: 760px; margin: 0 auto; }
+h1 { font-size: 24px; margin: 0; color: #0F6E5C; }
+.sub { color: #56645F; font-size: 12.5px; margin: 2px 0 12px; }
+h2 { font-size: 15px; margin: 16px 0 6px; color: #0F6E5C; border-bottom: 2px solid #0F6E5C; padding-bottom: 2px; text-transform: uppercase; letter-spacing: .4px; }
+ol, ul { margin: 4px 0 4px 20px; padding: 0; } li { margin: 3px 0; }
+.box { border-radius: 10px; padding: 10px 12px; margin: 8px 0; }
+.ok { background: #E8F4EE; border-left: 5px solid #2E8B57; } .warn { background: #FDF1E4; border-left: 5px solid #D9822B; } .info { background: #E7F1EF; border-left: 5px solid #0F6E5C; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; } th, td { border: 1px solid #D8DFDC; padding: 5px 7px; text-align: left; vertical-align: top; } th { background: #EDF1EF; }
+td.tick { width: 26px; font-size: 18px; text-align: center; } td.id { width: 38px; white-space: nowrap; font-weight: 700; } td.who { width: 92px; } td.min { width: 70px; white-space: nowrap; }
+.why { color: #56645F; font-size: 12px; }
+.part { break-inside: avoid; }
+.foot { margin-top: 12px; border-top: 1px solid #D8DFDC; padding-top: 6px; font-size: 11px; color: #56645F; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.print { position: fixed; right: 12px; bottom: 12px; background: #0F6E5C; color: #fff; border: none; border-radius: 10px; padding: 12px 16px; font: inherit; font-weight: 700; }
+.lines div { border-bottom: 1px solid #B9C4C0; height: 26px; }
+@media (max-width: 560px) { td.who, th.who { display: none; } }
+@media print { .print { display: none; } body { padding: 0; font-size: 12.5px; } h1 { font-size: 21px; } }
+</style></head><body>
+<h1>🚀 Getting Zuri ready</h1><div class="sub" id="sub">The go-live list for Dickson and Kelvin</div>
+
+<div class="box info"><b>A note before you start.</b> You have both worked hard to get Zuri this far, and the team is ready to learn. The team can start learning <b>today</b> in 🎓 Practice — it uses pretend customers, so nothing can break. Using Zuri <b>for real</b> is different: it is only as true as what goes into it. This list gets you to a true start, one small step at a time. Nobody expects it done fast. Expect it to be done <b>right</b>.</div>
+
+<h2>How this list works</h2>
+<ol id="rules"></ol>
+<div class="box ok" id="pace"></div>
+
+<h2>The ten parts at a glance</h2>
+<table id="parts"><tr><th>Part</th><th>What</th><th>Aim</th><th>Steps</th></tr></table>
+
+<div id="list"></div>
+
+<h2>In the app</h2>
+<ul><li><b>Me → 🚀 Getting ready</b> (also the 🚀 card on Home and 🏢 HQ). <b>👣 One step at a time</b> shows only your next step; <b>📋 The whole list</b> shows this page with live ticks.</li>
+<li>On a step: <b>✅ Done</b> (with a note) · <b>⏭ Later</b> (back of your line) · <b>🆘 I'm stuck</b> (Jerry sees it on HQ) · <b>📌 Put it in Tasks</b> (due in a week).</li>
+<li>Ticks are shared: when Dickson ticks a step, Kelvin sees it. ⏳ means the step waits for another one first.</li>
+<li>Videos: Me → 🎓 Learn → <b>🚀 Getting ready</b> (4 short videos with sound, about 14 minutes). Silent copies to send on WhatsApp: <a href="../videos/golive/getting-ready-all.mp4">all four in one (7 min)</a> · <a href="../videos/golive/gl-why.mp4">1</a> · <a href="../videos/golive/gl-parts.mp4">2</a> · <a href="../videos/golive/gl-one.mp4">3</a> · <a href="../videos/golive/gl-who.mp4">4</a>.</li></ul>
+
+<h2>Notes from our weekly check-in</h2>
+<div class="lines"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+
+<div class="foot"><span>Zuri System · 🚀 Getting ready</span><span id="ver"></span></div>
+<button class="print" onclick="print()">🖨 Print</button>
+<script src="../js/golive_data.js"></script>
+<script>
+(function () {
+  const G = window.ZURI_GOLIVE; if (!G) return;
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const mins = (m) => (!m ? '—' : m >= 120 ? Math.round(m / 60) + ' h' : m >= 60 ? (m === 60 ? '1 h' : Math.round(m / 30) / 2 + ' h') : m + ' min');
+  document.getElementById('rules').innerHTML = G.rules.map((r) => `<li>${esc(r)}</li>`).join('');
+  document.getElementById('pace').textContent = G.pace;
+  document.getElementById('ver').textContent = G.version;
+  document.getElementById('sub').textContent = `The go-live list for Dickson and Kelvin · ${G.steps.length} steps in 10 parts · ${G.version}`;
+  document.getElementById('parts').innerHTML += G.parts.map((p) => `<tr><td>${p.ic} ${p.n}</td><td><b>${esc(p.title)}</b><div class="why">${esc(p.blurb)}</div></td><td>${esc(p.aim)}</td><td>${G.steps.filter((s) => s.part === p.n).length}</td></tr>`).join('');
+  document.getElementById('list').innerHTML = G.parts.map((p) => `<div class="part"><h2>${p.ic} Part ${p.n} · ${esc(p.title)} <span style="text-transform:none;font-weight:400;color:#56645F">· ${esc(p.aim)}</span></h2>
+    <table><tr><th></th><th>#</th><th>Step · done when</th><th class="who">Who</th><th>Time</th></tr>
+    ${G.steps.filter((s) => s.part === p.n).map((s) => `<tr><td class="tick">☐</td><td class="id">${esc(s.id)}</td><td><b>${esc(s.t)}</b>${(G.after[s.id] || []).length ? ` <span class="why">(after ${G.after[s.id].join(', ')})</span>` : ''}<div class="why">✔ ${esc(s.done)}</div></td><td class="who">${esc(G.people[s.who] || s.who)}</td><td class="min">${mins(s.mins)}</td></tr>`).join('')}</table></div>`).join('');
+})();
+</script>
+</body></html>

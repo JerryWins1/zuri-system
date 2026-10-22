@@ -1,4 +1,4 @@
-// Zuri System · offline shell · v13 · 2026-10-16 (v13: v2.39 — alerts.js + lessons_alerts.js, 📣 Alerts · v12: v2.38 — Business Week coach video · v11: v2.37 — coach.js, the in-app Business Week Test Coach · v10: v2.36 — customer search across every status, HQ approvals link · v9: v2.35 price list, VAT box, who opened a job · v8: planner_math.js, projects.js, lessons_projects.js · v7: timesavers.js, approvals.js, lessons_timesavers.js · v6: receipts)
+// Zuri System · offline shell · v14 · 2026-10-22 (v14: v2.53 — 📣 Alerts: alerts.js, lessons_alerts.js, guides/alerts.html · v13: v2.52 — 🚀 Getting ready: golive.js, golive_data.js, lessons_golive.js, guides/golive.html · v12: v2.38 — Business Week coach video · v11: v2.37 — coach.js, the in-app Business Week Test Coach · v10: v2.36 — customer search across every status, HQ approvals link · v9: v2.35 price list, VAT box, who opened a job · v8: planner_math.js, projects.js, lessons_projects.js · v7: timesavers.js, approvals.js, lessons_timesavers.js · v6: receipts)
 // v5 (7 Oct deep check #40): CDN files are copied BEFORE the page gets the response ("body already used" left
 //     charts, the map and importing broken offline).
 // v4: a missing file is never answered with the home page (that turned a dropped practice.js into "Something went wrong");
@@ -6,9 +6,9 @@
 // App files: network first (always fresh when there's signal), cached copy when there isn't.
 // Libraries from the CDN: cache first (they never change at a pinned version).
 // Database calls are never cached here — the app keeps its own copy of the jobs it needs.
-const CACHE = 'zuri-v47';
-const SHELL = ['./', 'index.html', 'manifest.json', 'icon.svg', 'js/config.js', 'js/app.js', 'js/hq.js', 'js/alerts.js', 'js/coach.js', 'js/home.js', 'js/tasks.js', 'js/jobs.js', 'js/customers.js', 'js/money.js', 'js/statements.js', 'js/imports.js', 'js/admin.js', 'js/practice.js', 'js/training.js', 'js/checklist_data.js', 'js/testing.js', 'js/lessons_fields.js', 'js/lessons_day.js', 'js/map.js', 'js/staffpay.js', 'js/gate.js', 'js/selfcheck.js', 'js/codes.js', 'js/company.js', 'js/receipts.js', 'js/lessons_receipts.js', 'js/timesavers.js', 'js/approvals.js', 'js/lessons_timesavers.js', 'js/planner_math.js', 'js/projects.js', 'js/lessons_projects.js', 'js/lessons_alerts.js', 'guides/testers.html', 'guides/welcome.html', 'guides/alerts.html',
-  'guides/field.html', 'guides/callcenter.html', 'guides/finance.html', 'guides/partners.html', 'guides/trainer.html', 'guides/videos.html',
+const CACHE = 'zuri-v61';
+const SHELL = ['./', 'index.html', 'manifest.json', 'icon.svg', 'js/config.js', 'js/app.js', 'js/hq.js', 'js/alerts.js', 'js/lessons_alerts.js', 'js/golive_data.js', 'js/golive.js', 'js/lessons_golive.js', 'js/coach.js', 'js/home.js', 'js/tasks.js', 'js/jobs.js', 'js/customers.js', 'js/money.js', 'js/statements.js', 'js/imports.js', 'js/admin.js', 'js/practice.js', 'js/training.js', 'js/checklist_data.js', 'js/testing.js', 'js/lessons_fields.js', 'js/lessons_day.js', 'js/map.js', 'js/staffpay.js', 'js/gate.js', 'js/selfcheck.js', 'js/codes.js', 'js/company.js', 'js/receipts.js', 'js/lessons_receipts.js', 'js/timesavers.js', 'js/approvals.js', 'js/lessons_timesavers.js', 'js/planner_math.js', 'js/projects.js', 'js/lessons_projects.js', 'guides/testers.html', 'guides/welcome.html',
+  'guides/field.html', 'guides/callcenter.html', 'guides/finance.html', 'guides/partners.html', 'guides/trainer.html', 'guides/videos.html', 'guides/golive.html', 'guides/alerts.html',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'];
 
 self.addEventListener('install', (e) => {

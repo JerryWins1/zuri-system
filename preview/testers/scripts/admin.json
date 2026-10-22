@@ -1,8 +1,8 @@
 {
   "role": "admin",
   "title": "Partner / manager test script",
-  "version": "1.3",
-  "date": "2026-10-16",
+  "version": "1.5",
+  "date": "2026-10-22",
   "who": "You are Jerry, a partner. You see everything. Everything is pretend and stays on your phone.",
   "sessions": [
     {
@@ -152,7 +152,7 @@
         {
           "id": "a1-06",
           "link": "#jobs",
-          "do": "Open Wanjiku, 0712 345 678 #105 (a new install with no tech). Under WHO'S GOING, AND WHEN pick Tech: Brian Otieno and Visit day: tomorrow. Tap Save.",
+          "do": "Open Halima, 0712 345 678 #105 (a new install with no tech). Under WHO'S GOING, AND WHEN pick Tech: Brian Otieno and Visit day: tomorrow. Tap Save.",
           "see": "“Dispatch saved.” The label changes from Waiting for a tech to Assigned, and NOTES says “Sent to Brian Otieno”.",
           "look": [
             "#105"
@@ -780,6 +780,179 @@
             [
               "see",
               "Missing"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agl",
+      "title": "🚀 Getting ready — the go-live list",
+      "steps": [
+        {
+          "id": "agl-01",
+          "link": "#hq",
+          "do": "On 🏢 HQ, find the 🚀 Getting ready card at the top.",
+          "see": "How many of the 57 steps are done, Dickson's next step, Kelvin's next step, and anything stuck (in practice: 3.1, no spare phone).",
+          "look": [
+            "Getting ready",
+            "Dickson next",
+            "Kelvin next"
+          ],
+          "auto": [
+            [
+              "see",
+              "Getting ready"
+            ],
+            [
+              "see",
+              "Dickson next"
+            ],
+            [
+              "see",
+              "stuck"
+            ]
+          ]
+        },
+        {
+          "id": "agl-02",
+          "link": "#golive",
+          "do": "Under “Whose list?”, choose Kelvin.",
+          "see": "Only ONE step: “Make one company account”, with Why, How and Done when. Below it only the next two.",
+          "look": [
+            "Your next step",
+            "Why",
+            "Done when"
+          ],
+          "auto": [
+            [
+              "select",
+              "#gl-me",
+              "💰 Kelvin"
+            ],
+            [
+              "see",
+              "Make one company account"
+            ],
+            [
+              "see",
+              "Done when"
+            ],
+            [
+              "has",
+              "#gl-after"
+            ]
+          ]
+        },
+        {
+          "id": "agl-03",
+          "link": "#golive",
+          "do": "Choose Kelvin again if needed, tap ✅ Done, write a short note and tap Save as done.",
+          "see": "A kind message (“Nice work…”), and the next step appears by itself: “Make the folders”.",
+          "look": [
+            "✅ Done",
+            "Save as done"
+          ],
+          "auto": [
+            [
+              "select",
+              "#gl-me",
+              "💰 Kelvin"
+            ],
+            [
+              "tap",
+              "#gl-done"
+            ],
+            [
+              "fill",
+              "#gl-note",
+              "Practice note"
+            ],
+            [
+              "tap",
+              "#gl-note-go"
+            ],
+            [
+              "see",
+              "Make the folders"
+            ]
+          ]
+        },
+        {
+          "id": "agl-04",
+          "link": "#golive",
+          "do": "On Kelvin's step, tap 🆘 I'm stuck, write one line and tap Ask for help.",
+          "see": "The step moves to “Waiting for help” with your line, and the next step shows on top.",
+          "look": [
+            "I'm stuck",
+            "Waiting for help"
+          ],
+          "auto": [
+            [
+              "select",
+              "#gl-me",
+              "💰 Kelvin"
+            ],
+            [
+              "tap",
+              "#gl-stuck"
+            ],
+            [
+              "fill",
+              "#gl-note",
+              "Practice: need help"
+            ],
+            [
+              "tap",
+              "#gl-note-go"
+            ],
+            [
+              "has",
+              "#gl-stucklist"
+            ],
+            [
+              "see",
+              "Practice: need help"
+            ]
+          ]
+        },
+        {
+          "id": "agl-05",
+          "link": "#golive/s/7.5",
+          "do": "Open step 7.5 (Bring in the clean customer list).",
+          "see": "⏳ It waits for 7.2 (Jerry) and 6.7 (Kelvin), and ✅ Done is greyed out until they are ticked.",
+          "look": [
+            "waits for",
+            "7.2"
+          ],
+          "auto": [
+            [
+              "see",
+              "This one waits for"
+            ],
+            [
+              "js",
+              "document.querySelector('#gl-done').disabled"
+            ]
+          ]
+        },
+        {
+          "id": "agl-06",
+          "link": "#golive/all",
+          "do": "Tap 📋 The whole list, then 🖨 Print the list.",
+          "see": "Ten parts with ✅ ⬜ ⏳ 🆘 marks; the printable list opens with tick boxes for all 57 steps.",
+          "look": [
+            "The whole list",
+            "Print the list"
+          ],
+          "auto": [
+            [
+              "has",
+              "#gl-part-10"
+            ],
+            [
+              "has",
+              "#gl-print"
             ]
           ]
         }

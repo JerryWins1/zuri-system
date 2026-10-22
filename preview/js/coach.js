@@ -1,4 +1,8 @@
-// Zuri System · 🧪 Test Coach: Business Week challenges inside the app · v1 · 2026-10-16
+// Zuri System · 🧪 Test Coach: Business Week challenges inside the app · v1.3 · 2026-10-18 (v1.3: Do this as numbered lines · v1.2: 🎬 videos question)
+// v1.1 (17 Oct, Jerry: "make sure everything gets tested … let us know if information in fields are correct … give a
+//       tester a specific thing … a questionnaire every session"): after "How easy?" the coach asks ✅ Is everything on
+//       the screen right? (and, on message steps, did WhatsApp/SMS open with the right number and words); each role has a
+//       🎯 special job for the week (business_week.json roles[].focus); and each day ends with 📝 5 quick questions.
 // Jerry (15 Oct): testers get each step INSIDE Zuri (no bouncing to the Testers' List), and we learn where they went,
 // how long it took and how easy it felt. The Testers' List (testers/?bw) and this coach share the same phone storage:
 //   zt_bw_me {name, role} · zt_bw_state {challenge id: 'done'|'fail'} · zt_device · zt_queue (rows waiting for signal).
@@ -8,7 +12,7 @@
 (function () {
   const Z = window.Z;
   if (!Z) return;
-  const VER = 'coach v1';
+  const VER = 'coach v1.3';
   const QS = new URLSearchParams(location.search);
   const ROLES = ['P', 'F', 'C1', 'C2', 'T1', 'T2', 'T3', 'V'];
   const get = (k, d) => { try { const v = localStorage.getItem('zt_' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
@@ -102,7 +106,7 @@
   //       inside Feedback Studio the coach keeps its card short (the studio's talk / point / screenshot bar is below it),
   //       says "✅ Step done" (the studio's own ✅ Done ends the session) and ends the day by pointing at 📨 Send to Claude.
   let inFS = false; try { inFS = window.self !== window.top && /feedback-studio/.test(window.top.location.pathname); } catch (e) { inFS = window.self !== window.top; }
-  let ui = { open: get('coach_open', true), mode: 'card', showHint: false, showEnd: false, ease: null, self: null, said: '' };
+  let ui = { open: get('coach_open', true), mode: 'card', showHint: false, showEnd: false, ease: null, self: null, said: '', right: null, wrong: '', msg: null, focus: false, svLater: false, sv: { good: '', hard: '', wrong: null, what: '', tried: [], broke: '', day: null, vid: null, vidwhy: '' } };
   const st = () => get('bw_state', {});
   const writeState = (id, v) => { const s = st(); if (v) s[id] = v; else delete s[id]; set('bw_state', s); };
   const meas = () => get('coach_m', {});
@@ -197,7 +201,13 @@
   #zcoach .zc-li .grow { flex:1; min-width:0; }
   #zcoach .zc-li .zc-b { min-height:44px; padding:6px 10px; font-size:13.5px; }
   #zcoach .zc-pay { background:var(--accent-soft); border-radius:10px; padding:8px 10px; font-weight:700; font-size:14px; margin:8px 0; }
+  #zcoach .zc-do { margin:2px 0 6px; padding-left:22px; line-height:1.45; } #zcoach .zc-do li { margin:4px 0; }
   #zcoach .zc-small { font-size:12.5px; color:var(--ink-faint); }
+  #zcoach .zc-focus { display:block; width:100%; text-align:left; background:var(--brand-soft); border:0; border-radius:10px; padding:6px 10px; margin:4px 0 6px; color:var(--ink); font:inherit; font-size:13.5px; cursor:pointer; }
+  #zcoach .zc-b.on { outline:3px solid var(--brand); outline-offset:1px; font-weight:800; }
+  #zcoach .zc-chips { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+  #zcoach .zc-chips .zc-b { min-height:40px; padding:6px 10px; font-size:13.5px; }
+  #zcoach .zc-chips .zc-b.on { background:var(--brand); color:var(--on-brand); border-color:transparent; }
   #zcoach .zc-x { flex:none; width:44px; height:44px; border-radius:10px; border:0; background:transparent; color:var(--ink); font-size:20px; cursor:pointer; }
   body.zc-on main { padding-bottom:calc(100px + 70px); }
   body.zc-on .toast { bottom:calc(var(--zc-nav, 60px) + 66px); }
@@ -229,6 +239,7 @@
 
   // ---------- drawing ----------
   function render() {
+    if (root && root.querySelector('#zs-good')) keepSv(); // v1.1: keep the day's answers when the screen redraws
     if (!bw || !me || !Z.me || !document.body.classList.contains('app')) { if (root) root.hidden = true; return; }
     mount(); root.hidden = false; placeNav();
     const s = st();
@@ -242,6 +253,9 @@
     } else if (today > bw.days.length) {
       title = '🧪 Business Week is over — asante sana!';
       body = `<div class="zc-pay">${esc(payLine())}</div><div class="zc-grid"><a class="zc-b wide" href="testers/?bw">📋 Open my Testers' List</a>${offBtn()}</div>`;
+    } else if (ui.mode === 'survey' || (!c && !surveyDone() && ui.mode !== 'list' && !ui.svLater)) {
+      title = `📝 Day ${today} · 5 quick questions`;
+      body = surveyHtml();
     } else if (ui.mode === 'list') {
       title = `🧪 ${count} · Today's challenges`;
       body = listHtml(s);
@@ -258,13 +272,59 @@
       ${open ? `<div class="zc-body">${body}</div>` : ''}</div>`;
     wire(c);
   }
+  // v1.3 (18 Oct, Kevin: "the 'Do this' steps are a bit complicated"): a long instruction shows as numbered short lines,
+  //       one action each, instead of one block of text.
+  const doHtml = (t) => {
+    const parts = String(t || '').split(/(?<=[.!?])\s+(?=[A-Z0-9“"(📱💵✅📷🔒👥📍➕＋])/u).map((x) => x.trim()).filter(Boolean);
+    if (parts.length < 2) return `<p>${esc(t)}</p>`;
+    return `<ol class="zc-do">${parts.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`;
+  };
   const offBtn = () => `<button class="zc-b wide" data-a="off">Hide the coach on this phone</button>`;
+  // v1.1: a step that sends a message or makes a call also asks whether it opened right.
+  const isMsg = (c) => (c.feat || []).some((f) => /message|text|send|share|call|wa|sms|remind/.test(f)) || /WhatsApp|📩|💬|Text it|SMS|📞/.test((c.do || '') + ' ' + (c.end || ''));
+  const focusOf = () => (RL[me.role] || {}).focus || null;
+  const focusHtml = (open) => { const f = focusOf(); if (!f) return '';
+    return (open || ui.focus) ? `<button class="zc-focus" data-a="focus" aria-expanded="true">🎯 <b>Your special job this week: ${esc(f.t)}</b><br>${esc(f.how)}</button>`
+      : `<button class="zc-focus" data-a="focus" aria-expanded="false">🎯 Your special job: <b>${esc(f.t)}</b> ▸</button>`; };
+  // v1.1: 📝 5 quick questions at the end of each day (also from ☰ All today).
+  const surveyDone = () => !!get('bw_survey', {})[today];
+  // v1.2 (18 Oct, Jerry): from day 3 the end-of-day questions also ask about the new 1-minute how-to videos.
+  const VIDS = [['love', '👍 Love them'], ['ok', '🤷 They\'re OK'], ['long', '👎 Prefer the long ones'], ['none', "Haven't watched"]];
+  const TRIED = ['📞 Call', '💬 WhatsApp', '📩 Text (SMS)', '🗺️ Map', '📍 Pin', '📷 Photo', '🧾 Receipt', '📤 Share / send'];
+  function surveyHtml() {
+    const v = ui.sv;
+    return `<div class="zc-time">📝 Day ${today} · 5 quick questions</div><h4>How did today go?</h4>
+      <div class="zc-lbl">1 · What worked well?</div><textarea id="zs-good" maxlength="300" placeholder="(🎤 tap the microphone on your keyboard to talk)">${esc(v.good)}</textarea>
+      <div class="zc-lbl">2 · What was confusing or slow?</div><textarea id="zs-hard" maxlength="300">${esc(v.hard)}</textarea>
+      <div class="zc-lbl">3 · Did anything look wrong? A name, address, phone number, amount, date or equipment detail</div>
+      <div class="zc-grid"><button class="zc-b${v.wrong === 'no' ? ' on ok' : ''}" data-sv="wrong:no">No, all right</button><button class="zc-b${v.wrong === 'yes' ? ' on bad' : ''}" data-sv="wrong:yes">Yes</button></div>
+      ${v.wrong === 'yes' ? `<textarea id="zs-what" maxlength="300" placeholder="What was wrong, and where?">${esc(v.what)}</textarea>` : ''}
+      <div class="zc-lbl">4 · Which buttons did you try today? Tap each one</div>
+      <div class="zc-chips">${TRIED.map((t) => `<button class="zc-b${v.tried.includes(t) ? ' on' : ''}" data-tried="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+      <textarea id="zs-broke" maxlength="200" placeholder="Did any of them NOT work? Which one, what happened?">${esc(v.broke)}</textarea>
+      ${today >= 3 ? `<div class="zc-lbl">🎬 The new 1-minute videos (the short ones that show each step)</div>
+      <div class="zc-chips">${VIDS.map(([k, t]) => `<button class="zc-b${v.vid === k ? ' on' : ''}" data-sv="vid:${k}">${t}</button>`).join('')}</div>
+      ${v.vid && v.vid !== 'none' ? `<textarea id="zs-vidwhy" maxlength="200" placeholder="One thing that would make them better?">${esc(v.vidwhy)}</textarea>` : ''}` : ''}
+      <div class="zc-lbl">5 · Today, overall</div><div class="zc-faces">
+      ${[['😫', 'Very bad'], ['🙁', 'Bad'], ['😐', 'OK'], ['🙂', 'Good'], ['😄', 'Very good']].map(([f, w], i) => `<button class="zc-b${v.day === i + 1 ? ' on' : ''}" data-sv="day:${i + 1}" aria-label="${i + 1} — ${w}"><span>${f}</span>${w}</button>`).join('')}</div>
+      <div class="zc-grid"><button class="zc-b go wide" data-a="sv-send">📨 Send my answers</button><button class="zc-b" data-a="back">Later</button></div>`;
+  }
   const isScen = (c) => c.kind === 'scenario';
   // The Testers' List keeps zt_bw_hint for hints opened there: count those here too (map or list of ids).
   const pageHint = (id) => { const h = get('bw_hint', null); return !!h && (Array.isArray(h) ? h.includes(id) : !!h[id]); };
   function cardHtml(c) {
     const x = m(c);
     const head = `<div class="zc-time">⏰ ${esc(c.at || '')} · Day ${today} · ${esc((RL[me.role] || {}).short || me.role)}</div><h4>${esc(c.t)}</h4>`;
+    if (ui.mode === 'right') {
+      const msg = isMsg(c);
+      return head + `<div class="zc-lbl">Is everything on the screen right?</div>
+      <p class="zc-small">Names and spelling, address and directions, phone numbers (07xx xxx xxx or +254…), amounts, dates, equipment and serial numbers.</p>
+      <div class="zc-grid"><button class="zc-b ok${ui.right === 'yes' ? ' on' : ''}" data-right="yes">✅ All correct</button><button class="zc-b bad${ui.right === 'no' ? ' on' : ''}" data-right="no">✏️ Something's wrong</button></div>
+      ${ui.right === 'no' ? `<textarea id="zc-wrong" maxlength="400" placeholder="What is wrong? e.g. phone shows 712345678, missing the 0">${esc(ui.wrong)}</textarea>` : ''}
+      ${msg ? `<div class="zc-lbl">💬 Did WhatsApp / SMS / Call open with the right number and the right words?</div>
+      <div class="zc-grid" style="grid-template-columns:1fr 1fr 1fr"><button class="zc-b${ui.msg === 'yes' ? ' on ok' : ''}" data-msg="yes">Yes</button><button class="zc-b${ui.msg === 'no' ? ' on bad' : ''}" data-msg="no">No</button><button class="zc-b${ui.msg === 'na' ? ' on' : ''}" data-msg="na">Didn't try</button></div>` : ''}
+      <div class="zc-grid">${ui.right ? '<button class="zc-b go wide" data-a="right-next">Next →</button>' : ''}<button class="zc-b wide" data-a="right-skip">Skip</button></div>`;
+    }
     if (ui.mode === 'what') return head + `<div class="zc-lbl">What did you do?</div><p class="zc-small">A few words is plenty — or skip.</p>
       <textarea id="zc-said" maxlength="200" placeholder="e.g. I found her in Customers and opened a Repair job">${esc(ui.said)}</textarea>
       <div class="zc-grid"><button class="zc-b go wide" data-a="what-next">Next →</button><button class="zc-b" data-a="back">← Back</button><button class="zc-b" data-a="what-skip">Skip</button></div>`;
@@ -283,8 +343,8 @@
     const say = call ? (Array.isArray(c.say) ? c.say : c.say ? [c.say] : []) : [];
     if (scen && !x.hint && pageHint(c.id)) { x.hint = 1; saveM(c.id, x); }
     const hintOpen = ui.showHint || (scen && x.hint);
-    return head + `
-      <div class="zc-lbl">${scen ? 'The situation' : 'Do this'}</div><p>${esc(c.do)}</p>
+    return head + focusHtml() + `
+      <div class="zc-lbl">${scen ? 'The situation' : 'Do this'}</div>${scen ? `<p>${esc(c.do)}</p>` : doHtml(c.do)}
       ${call && say.length ? `<div class="zc-lbl">📞 Say this</div><div class="zc-hint">${say.map((l) => esc(l)).join('<br>')}</div>` : ''}
       ${c.copy ? `<div class="zc-copy"><span>${esc(c.copy)}</span><button class="zc-b" data-a="copy">Copy</button></div>` : ''}
       ${c.file ? `<p><a class="zc-b" href="${esc('testers/' + c.file)}" download>⬇️ ${esc(c.file.split('/').pop())}</a></p>` : ''}
@@ -302,13 +362,19 @@
     return `<div>${mine.map((c) => `<div class="zc-li"><div class="grow"><div class="zc-time">⏰ ${esc(c.at || '')}${s[c.id] === 'done' ? ' · ✅ done' : s[c.id] === 'fail' ? ' · ❌ problem sent' : cur && cur.id === c.id ? ' · ▶ now' : ''}</div><div style="font-weight:700">${esc(c.t)}</div></div>
         ${s[c.id] === 'done' ? `<button class="zc-b" data-undo="${esc(c.id)}">Undo</button>` : s[c.id] === 'fail' ? `<button class="zc-b" data-reopen="${esc(c.id)}">Try again</button>` : `<button class="zc-b go" data-pick="${esc(c.id)}">Do this</button>`}</div>`).join('') || '<p>Nothing for you today.</p>'}</div>
       <div class="zc-pay">${esc(payLine())}</div>
-      <div class="zc-grid"><button class="zc-b go" data-a="back">← Back</button><a class="zc-b" href="testers/?bw">📋 Testers' List</a>${offBtn()}</div>`;
+      ${focusHtml(true)}
+      <div class="zc-grid"><button class="zc-b wide${surveyDone() ? '' : ' ok'}" data-a="survey">📝 Today's 5 questions${surveyDone() ? ' ✓ sent' : ''}</button><button class="zc-b go" data-a="back">← Back</button><a class="zc-b" href="testers/?bw">📋 Testers' List</a>${offBtn()}</div>`;
   }
 
   function wire(c) {
     const on = (sel, fn) => root.querySelectorAll(sel).forEach((b) => (b.onclick = (e) => { e.preventDefault(); fn(b); }));
     on('[data-a]', (b) => act(b.dataset.a, c));
-    on('[data-ease]', (b) => { ui.ease = b.dataset.ease ? +b.dataset.ease : null; finish(c); });
+    on('[data-ease]', (b) => { ui.ease = b.dataset.ease ? +b.dataset.ease : null; ui.right = null; ui.wrong = ''; ui.msg = null; ui.mode = 'right'; render(); });
+    on('[data-right]', (b) => { ui.right = b.dataset.right; render(); const t = root.querySelector('#zc-wrong'); if (t) t.focus(); });
+    on('[data-msg]', (b) => { ui.msg = b.dataset.msg; render(); });
+    on('[data-sv]', (b) => { const [k, v] = b.dataset.sv.split(':'); keepSv(); ui.sv[k] = k === 'day' ? +v : v; render(); });
+    on('[data-tried]', (b) => { keepSv(); const t = b.dataset.tried, a = ui.sv.tried; ui.sv.tried = a.includes(t) ? a.filter((x) => x !== t) : a.concat(t); render(); });
+    const wr = root.querySelector('#zc-wrong'); if (wr) wr.oninput = () => (ui.wrong = wr.value);
     on('[data-self]', (b) => { ui.self = b.dataset.self || null; ui.mode = 'ease'; render(); });
     on('[data-pick]', (b) => { set('coach_pick', b.dataset.pick); setLater(later().filter((x) => x !== b.dataset.pick)); ui.mode = 'card'; ui.open = true; ui.showHint = false; render(); });
     on('[data-undo]', async (b) => { const id = b.dataset.undo; writeState(id, null); render(); await send([row('undone', bwStep(today, me.role, id), null)]); Z.toast('Unticked.'); });
@@ -318,7 +384,10 @@
   async function act(a, c) {
     if (a === 'toggle') { if (ui.mode !== 'card') { ui.mode = 'card'; ui.open = true; } else ui.open = !ui.open; set('coach_open', ui.open); return render(); }
     if (a === 'list') { ui.mode = 'list'; return render(); }
-    if (a === 'back') { ui.mode = 'card'; return render(); }
+    if (a === 'back') { if (ui.mode === 'survey' || (!c && !surveyDone())) { keepSv(); ui.svLater = true; } ui.mode = 'card'; return render(); }
+    if (a === 'focus') { ui.focus = !ui.focus; return render(); }
+    if (a === 'survey') { ui.mode = 'survey'; ui.open = true; return render(); }
+    if (a === 'sv-send') return sendSurvey();
     if (a === 'off') { set('coach_off', true); if (root) root.remove(); root = null; document.body.classList.remove('zc-on'); Z.toast('Coach hidden. Your Business Week link brings it back.'); return; }
     if (!c) return;
     if (a === 'go') { tick(); ui.open = false; set('coach_open', false); if (goTo(c.route)) Z.go(goTo(c.route)); return render(); }
@@ -327,6 +396,7 @@
     if (a === 'later') { const l = later().filter((x) => x !== c.id); l.push(c.id); setLater(l); set('coach_pick', null); ui.showHint = false; ui.open = true; Z.toast('Moved to the end of today.'); return render(); }
     if (a === 'done') { ui.ease = null; ui.self = null; ui.said = ''; ui.mode = isScen(c) ? 'what' : 'ease'; return render(); }
     if (a === 'what-next' || a === 'what-skip') { if (a === 'what-skip') ui.said = ''; else { const t = root.querySelector('#zc-said'); ui.said = t ? t.value.trim() : ''; } ui.mode = 'self'; return render(); }
+    if (a === 'right-next' || a === 'right-skip') { if (a === 'right-skip') { ui.right = null; ui.wrong = ''; ui.msg = null; } else { const t = root.querySelector('#zc-wrong'); ui.wrong = t ? t.value.trim() : ui.wrong; } return finish(c); }
     if (a === 'problem') { ui.mode = 'problem'; render(); const t = root.querySelector('#zc-prob'); if (t) t.focus(); return; }
     if (a === 'prob-send') {
       const t = (root.querySelector('#zc-prob') || {}).value; const words = String(t || '').trim();
@@ -386,18 +456,41 @@
   async function finish(c) {
     tick();
     const x = meas()[c.id] || { s: 0, n: 0, p: [], hit: 0, hint: 0 };
-    const note = { v: 1, via: 'coach', s: Math.round(x.s), n: x.n, p: x.p.slice(-12).join('>'), hit: c.route ? (x.hit ? 1 : 0) : null, ease: ui.ease, hint: x.hint ? 1 : 0, self: isScen(c) ? ui.self : null, said: (ui.said || '').slice(0, 200) };
+    const note = { v: 1, via: 'coach', s: Math.round(x.s), n: x.n, p: x.p.slice(-12).join('>'), hit: c.route ? (x.hit ? 1 : 0) : null, ease: ui.ease, hint: x.hint ? 1 : 0, self: isScen(c) ? ui.self : null, said: (ui.said || '').slice(0, 200),
+      right: ui.right, msg: isMsg(c) ? ui.msg : null }; // v1.1: the data check (the words of a ✏️ go in their own row below)
+    const wrong = ui.right === 'no' ? (ui.wrong || '').trim() : '';
     let txt = JSON.stringify(note);
     while (txt.length > 900 && note.p) { note.p = note.p.split('>').slice(1).join('>'); txt = JSON.stringify(note); }
     if (txt.length > 900) { note.said = note.said.slice(0, 60); txt = JSON.stringify(note); }
     writeState(c.id, 'done');
     const all = meas(); delete all[c.id]; set('coach_m', all);
     set('coach_pick', null); setLater(later().filter((i) => i !== c.id));
-    ui.mode = 'card'; ui.open = true; ui.showHint = false; ui.said = ''; ui.ease = null; ui.self = null;
+    ui.mode = 'card'; ui.open = true; ui.showHint = false; ui.said = ''; ui.ease = null; ui.self = null; ui.right = null; ui.wrong = ''; ui.msg = null;
     render();
     noteResult(c, note);
-    const ok = await send([row('done', bwStep(today, me.role, c.id), txt)]);
+    const rows = [row('done', bwStep(today, me.role, c.id), txt)];
+    if (wrong || note.right === 'no' || note.msg === 'no') {
+      const w = '✏️ Data check — ' + c.t + ' — ' + (note.right === 'no' ? (wrong || 'something on the screen is wrong (no words)') : 'screen OK') + (note.msg === 'no' ? ' · 💬 message/call did NOT open right' : '');
+      rows.push(row('note', ('check:' + c.id).slice(0, 60), w.slice(0, 1000)));
+      hq('problem', `ZURI-BW|day ${today}|${me.role}|${me.name}|app ${appV()}|device ${phone()}\n${w}`);
+    }
+    const ok = await send(rows);
     Z.toast(ok ? 'Done ✓ — next one is up.' : 'Done ✓ (saved on the phone — sends when you have signal)');
+  }
+
+  function keepSv() { const g = (id) => { const t = root && root.querySelector(id); return t ? t.value.trim() : null; };
+    [['good', '#zs-good'], ['hard', '#zs-hard'], ['what', '#zs-what'], ['broke', '#zs-broke'], ['vidwhy', '#zs-vidwhy']].forEach(([k, id]) => { const v = g(id); if (v != null) ui.sv[k] = v; }); }
+  async function sendSurvey() {
+    keepSv(); const v = ui.sv;
+    if (!v.good && !v.hard && !v.wrong && !v.tried.length && !v.broke && !v.day && !v.vid) return Z.toast('Answer at least one question first.');
+    const ans = { v: 1, day: today, good: v.good.slice(0, 300), hard: v.hard.slice(0, 300), wrong: v.wrong, what: v.what.slice(0, 300), tried: v.tried, broke: v.broke.slice(0, 200), rate: v.day, vid: v.vid || null, vidwhy: (v.vidwhy || '').slice(0, 200) };
+    let txt = JSON.stringify(ans); if (txt.length > 1000) { ans.good = ans.good.slice(0, 150); ans.hard = ans.hard.slice(0, 150); ans.what = ans.what.slice(0, 150); ans.vidwhy = ans.vidwhy.slice(0, 100); txt = JSON.stringify(ans).slice(0, 1000); }
+    const sd = get('bw_survey', {}); sd[today] = 1; set('bw_survey', sd);
+    ui.mode = 'card'; ui.svLater = false; ui.sv = { good: '', hard: '', wrong: null, what: '', tried: [], broke: '', day: null, vid: null, vidwhy: '' }; render();
+    const ok = await send([row('note', ('survey:d' + today + ':' + me.role).slice(0, 60), '📝 ' + txt)]);
+    hq('daily', `ZURI-BW SURVEY|day ${today}|${me.role}|${me.name}|app ${appV()}|device ${phone()}\n` +
+      `rate ${ans.rate || '–'}/5\n✅ worked: ${ans.good || '–'}\n🤔 confusing: ${ans.hard || '–'}\n✏️ wrong: ${ans.wrong === 'yes' ? ans.what || 'yes (no words)' : ans.wrong || '–'}\n🔘 tried: ${ans.tried.join(', ') || '–'}\n❌ didn't work: ${ans.broke || '–'}${ans.vid ? `\n🎬 1-minute videos: ${ans.vid}${ans.vidwhy ? ' — ' + ans.vidwhy : ''}` : ''}`);
+    Z.toast(ok ? 'Thank you! Sent to Jerry.' : 'Saved — sends when you have signal.');
   }
 
   // ---------- start ----------
@@ -412,6 +505,13 @@
   function setup() {
     RL = Object.fromEntries((bw.roles || []).map((r) => [r.id, r]));
     me = get('bw_me', null);
+    // v2.51 (22 Oct, Business Week day 6): the seat follows the ACCOUNT. A phone that still held an old link (r=P, r=F ...) showed steps
+    // the signed-in account cannot do ("Requires an admin to do it"). If the saved seat does not fit the account, move to the seat that does.
+    if (me && Z.me && Z.training) {
+      const fit = { admin: ROLES, internal: ['F'], callcenter: ['C1', 'C2', 'V'], field: ['T1', 'T2', 'T3', 'V'] }[Z.me.role];
+      const next = { internal: 'F', callcenter: Z.me.area === 'SA' ? 'C2' : 'C1', field: Z.me.area === 'SA' ? 'T3' : 'T1' }[Z.me.role];
+      if (fit && next && !fit.includes(me.role)) { me = { name: me.name, role: next }; set('bw_me', me); }
+    }
     if (!me || !RL[me.role]) {
       // Practice with ?coach and no tester link yet: be the tester for this practice job.
       const r = (QS.get('r') || '').toUpperCase();
@@ -444,7 +544,7 @@
     window.addEventListener('online', () => { flush(); sendCover(true); });
     window.addEventListener('pagehide', tick);
   }
-  function refresh() { if (!bw) return; if (ui.mode === 'what' || ui.mode === 'problem') return; setup(); render(); }
+  function refresh() { if (!bw) return; if (['what', 'problem', 'right', 'survey'].includes(ui.mode)) return; setup(); render(); } // v1.1: never wipe words being typed
 
   // Hook the app's page changes: every visit is a screen seen (and starts the coach once someone is signed in).
   const route0 = Z.route;
