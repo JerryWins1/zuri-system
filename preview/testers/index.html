@@ -110,6 +110,10 @@
 <main id="main"><div class="card">Loading…</div></main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+  // v2.48: a Business Week link on this phone means "use the training copy" from now on (see ../index.html).
+  try { if (/[?&](bw|training)\b/.test(location.search)) localStorage.setItem('zuri_bw_train', '2026-10-31'); } catch (e) {}
+</script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
 <script src="../js/gate.js?v=45"></script>
