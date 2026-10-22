@@ -1,4 +1,4 @@
-// Zuri System · the tester checklist — everything a tester should try, by job · v5 · 2026-10-20 (🚀 go-live list added · v4: 📈 Projects · v3: 🧾 receipts, ⏱ time savers)
+// Zuri System · the tester checklist — everything a tester should try, by job · v6 · 2026-10-22 (📣 Alerts added · v5: 🚀 go-live list · v4: 📈 Projects · v3: 🧾 receipts, ⏱ time savers)
 // Kept as plain JSON so the printable guide (tools/make_guides.py) reads the same list.
 window.ZURI_CHECKLIST = [
   { "group": "everyone", "label": "Everyone — first", "roles": ["admin", "internal", "callcenter", "field"], "items": [
@@ -38,7 +38,8 @@ window.ZURI_CHECKLIST = [
     { "id": "c-newcust", "t": "Add a new customer", "how": "Customers → ＋ New customer → fill in → Save." },
     { "id": "c-texts", "t": "Send today's texts from one list", "how": "Jobs → 📩 Today's texts → read the step → 📩 Text (send it to your own number in training) → Next. Skip one. Does the count go up? Does the job show the note?", "lesson": "ts-texts" },
     { "id": "c-expired", "t": "Fault call from a customer whose package expired", "how": "Jobs → ＋ New job → find a customer whose service ran out → Fault. A warning says “probably not a fault”. Tap 💳 Turn this into a payment follow-up — no tech is sent.", "lesson": "ts-expired" },
-    { "id": "c-outage", "t": "Three fault calls from one area = an outage", "how": "Make three fault jobs in the same area within a few minutes. A red “Possible outage” card should appear on Jobs, and one task for technical.", "lesson": "ts-outage" }
+    { "id": "c-outage", "t": "Three fault calls from one area = an outage", "how": "Make three fault jobs in the same area within a few minutes. A red “Possible outage” card should appear on Jobs, and one task for technical.", "lesson": "ts-outage" },
+    { "id": "c-alert", "t": "📣 Write an outage alert for a whole area", "how": "Customers → 📣 Alerts → 📡 OUT → pick the area → type when it is expected back (and in Kiswahili) → 📨 Ask a partner for a yes. Check the count and the words first." }
   ]},
   { "group": "finance", "label": "Finance", "roles": ["admin", "internal"], "dept": "finance", "items": [
     { "id": "m-today", "t": "Read Cash today and the warnings", "how": "Money → 💵 Today. What is each red or orange box telling you?", "lesson": "fin-daily" },
@@ -74,7 +75,8 @@ window.ZURI_CHECKLIST = [
     { "id": "p-approve", "t": "Approve a payment Kelvin recorded", "how": "Home → 👥 payments waiting for your OK → ✅ Approve. Then Money → Bills: the bill counts it as paid.", "lesson": "ts-approve2" },
     { "id": "p-two-rule", "t": "Find the two-person rule and its amount", "how": "Me → ⚙️ Admin → Settings → 👥 Two people for money out. Leave it On (0 = every payment).", "lesson": "ts-approve2" },
     { "id": "p-golive", "t": "🚀 Work one step of the go-live list", "how": "Me → 🚀 Getting ready → choose your name → read Why, How and Done when → ✅ Done (with a note) or 🆘 I'm stuck. Then 📋 The whole list → 🖨 Print the list.", "lesson": "gl-one" },
-    { "id": "p-outage", "t": "Say yes to an outage notice, then close the outage", "how": "After three fault calls from one area: Home → the 📡 outage card → change the words → ✅ Yes → 📋 Copy (Zuri never sends it). Then ✅ Service is back.", "lesson": "ts-outage" }
+    { "id": "p-outage", "t": "Say yes to an outage notice, then close the outage", "how": "After three fault calls from one area: Home → the 📡 outage card → change the words → ✅ Yes → 📋 Copy (Zuri never sends it). Then ✅ Service is back.", "lesson": "ts-outage" },
+    { "id": "p-alert", "t": "📣 Approve an alert, send it free by WhatsApp, then send “service is back”", "how": "Home → the 📣 card → read both languages → ✅ Yes → 📇 Save contacts + 📋 Copy the words (WhatsApp, free) → ✅ It went out → ✅ Send FIX to the same people. Then Alerts → Settings → Plan & add-ons: switch Bulk SMS on and see 📥 Download the list appear. Zuri never sends by itself." }
   ]},
   { "group": "projects", "label": "📈 Projects (finance & partners)", "roles": ["admin", "internal"], "dept": "finance", "items": [
     { "id": "pj-watch", "t": "Watch the 📈 Projects videos", "how": "Me → 🎓 Learn → 📈 Projects → ▶ Play all (about 30 min; ✕ stops).", "lesson": "pj-why" },

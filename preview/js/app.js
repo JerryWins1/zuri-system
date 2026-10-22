@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.52 · 2026-10-22';
+  Z.version = 'v2.53 · 2026-10-22';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -149,6 +149,7 @@
     { id: 'texts', ic: '📩', label: "Today's texts", ok: () => Z.isOffice(), nav: () => false }, // ⏱ v2.33 (timesavers.js)
     { id: 'projects', ic: '📈', label: 'Projects', ok: () => Z.isFinance(), nav: () => false }, // 📈 v2.34 (projects.js): from Home and Money
     { id: 'hq', ic: '🏢', label: 'HQ', ok: () => Z.isAdmin(), nav: () => false },
+    { id: 'alerts', ic: '📣', label: 'Alerts', ok: () => Z.isOffice(), nav: () => false }, // 📣 v2.39 (alerts.js): from Customers, Home and the outage card
     { id: 'golive', ic: '🚀', label: 'Getting ready', ok: () => Z.isStaff(), nav: () => false }, // 🚀 v2.48 (golive.js): the partners' go-live list, from HQ, Home and Me // 🏢 v2.36 (hq.js): Headquarters, from Home
     { id: 'me', ic: '🙂', label: 'Me', ok: () => true },
   ];
@@ -158,7 +159,7 @@
     return Z.isField() ? ['jobs', 'tasks', 'me'].map((id) => t.find((x) => x.id === id)).filter(Boolean) : t;
   };
   // Which bottom tab lights up for a page that has no tab of its own.
-  const PARENT = { import: 'money', admin: 'me', learn: 'me', test: 'me', texts: 'jobs', projects: 'money', hq: 'home', golive: () => (Z.isAdmin() ? 'hq' : 'home'), receipt: () => (Z.isFinance() ? 'money' : Z.isField() ? 'jobs' : 'tasks') };
+  const PARENT = { import: 'money', admin: 'me', learn: 'me', test: 'me', texts: 'jobs', projects: 'money', hq: 'home', alerts: 'customers', golive: () => (Z.isAdmin() ? 'hq' : 'home'), receipt: () => (Z.isFinance() ? 'money' : Z.isField() ? 'jobs' : 'tasks') };
   Z.routes = {};
 
   function buildChrome() {

@@ -1,8 +1,8 @@
 {
   "role": "admin",
   "title": "Partner / manager test script",
-  "version": "1.4",
-  "date": "2026-10-20",
+  "version": "1.5",
+  "date": "2026-10-22",
   "who": "You are Jerry, a partner. You see everything. Everything is pretend and stays on your phone.",
   "sessions": [
     {
@@ -953,6 +953,297 @@
             [
               "has",
               "#gl-print"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aal",
+      "title": "📣 Alerts — your yes, WhatsApp groups and the add-ons",
+      "mins": 15,
+      "intro": "Approve an outage alert, send it the free way (WhatsApp), see what the Bulk SMS add-on adds, and send “service is back” to the same people.",
+      "steps": [
+        {
+          "id": "aal-01",
+          "link": "#me",
+          "do": "Tap 🧹 Start over (pretend company), then tap OK.",
+          "see": "The page reloads. The Me page shows Jerry (owner) · Admin.",
+          "look": [
+            "🧹 Start over (pretend company)"
+          ],
+          "auto": [
+            [
+              "tap",
+              "button:has-text('Start over (pretend company)')"
+            ],
+            [
+              "waitme"
+            ],
+            [
+              "see",
+              "Jerry (owner)"
+            ]
+          ]
+        },
+        {
+          "id": "aal-02",
+          "link": "#alerts/setup",
+          "do": "Open 📣 Alerts → Settings. Read Plan & add-ons.",
+          "see": "💬 WhatsApp groups is Free · always on. 📱 Bulk SMS list is Off (pay as you go). ⚡ Automatic sending says Coming.",
+          "look": [
+            "Plan & add-ons"
+          ],
+          "auto": [
+            [
+              "see",
+              "Free · always on"
+            ],
+            [
+              "js",
+              "!document.querySelector('input[name=sms_list]').checked && document.querySelector('input[name=sms_auto]').disabled"
+            ]
+          ]
+        },
+        {
+          "id": "aal-03",
+          "link": "#alerts",
+          "do": "Tap 📡 OUT, tap Zuri A, fill in Expected back by: 4pm, tap outside the box, then tap ✅ Save and approve.",
+          "see": "The alert opens: “Approved · ready to send”, with a Send it box.",
+          "look": [
+            "📡 OUT"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-quick a:has-text('OUT')"
+            ],
+            [
+              "tap",
+              "#al-areas button:has-text('Zuri A')"
+            ],
+            [
+              "fill",
+              "#al-b-eta",
+              "4pm"
+            ],
+            [
+              "tap",
+              "#al-read"
+            ],
+            [
+              "tap",
+              "#al-save"
+            ],
+            [
+              "see",
+              "Approved · ready to send"
+            ],
+            [
+              "has",
+              "#al-sendbox"
+            ]
+          ]
+        },
+        {
+          "id": "aal-04",
+          "link": "#alerts",
+          "do": "Open the alert (📣 Alerts → Ready to send). In Send it, under 💬 WhatsApp (free), find the 🇰🇪 Kiswahili group. Tap 📇 Save contacts.",
+          "see": "A contacts file downloads (zuri-out-sw-1.vcf) and Zuri says “… contacts ready. Open the file to save them, then make the broadcast list.” Don't open it on a real phone you use: they are pretend customers.",
+          "look": [
+            "📇 Save contacts"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-l-ready a.item"
+            ],
+            [
+              "see",
+              "Kiswahili"
+            ],
+            [
+              "tap",
+              "[data-vcf='0']"
+            ],
+            [
+              "see",
+              "contacts ready"
+            ]
+          ]
+        },
+        {
+          "id": "aal-05",
+          "link": "#alerts",
+          "do": "On the same alert (Ready to send), under 📱 Bulk SMS read the grey card.",
+          "see": "“Reach every customer, even without WhatsApp.” It says Bulk SMS is an add-on and there is nothing to pay until a partner switches it on. There is no Download the list button.",
+          "look": [
+            "Bulk SMS"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-l-ready a.item"
+            ],
+            [
+              "see",
+              "Reach every customer, even without WhatsApp"
+            ],
+            [
+              "notsee",
+              "Download the list (CSV)"
+            ]
+          ]
+        },
+        {
+          "id": "aal-06",
+          "link": "#alerts",
+          "do": "On the same alert, tap ✅ It went out, then OK.",
+          "see": "The alert says Sent, and the history says “📤 Sent by Jerry (owner) (copied into WhatsApp)”. A green card offers ✅ Send FIX to the same people.",
+          "look": [
+            "✅ It went out"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-l-ready a.item"
+            ],
+            [
+              "tap",
+              "#al-sent"
+            ],
+            [
+              "see",
+              "copied into WhatsApp"
+            ],
+            [
+              "has",
+              "#al-fix"
+            ]
+          ]
+        },
+        {
+          "id": "aal-07",
+          "link": "#alerts",
+          "do": "Open the sent OUT alert (📣 Alerts → Sent and cancelled). Tap ✅ Send FIX to the same people, then ✅ Save and approve.",
+          "see": "First: “Going to the same … people who got OUT”. After saving: “Approved · ready to send”, to the same number of customers.",
+          "look": [
+            "✅ Send FIX to the same people"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-l-done a.item"
+            ],
+            [
+              "tap",
+              "#al-fix a"
+            ],
+            [
+              "see",
+              "Going to the same"
+            ],
+            [
+              "tap",
+              "#al-save"
+            ],
+            [
+              "see",
+              "Approved · ready to send"
+            ],
+            [
+              "see",
+              "the same people as before"
+            ]
+          ]
+        },
+        {
+          "id": "aal-08",
+          "link": "#alerts/setup",
+          "do": "In Settings, switch on 📱 Bulk SMS list. Type Price of one SMS: 0.80. Tap Save, then OK.",
+          "see": "“Saved.” Bulk SMS list now says On.",
+          "look": [
+            "Bulk SMS list"
+          ],
+          "auto": [
+            [
+              "tap",
+              "input[name=sms_list]"
+            ],
+            [
+              "fill",
+              "input[name=sms_price_kes]",
+              "0.80"
+            ],
+            [
+              "tap",
+              "#al-set > button"
+            ],
+            [
+              "see",
+              "Saved"
+            ],
+            [
+              "js",
+              "document.querySelector('input[name=sms_list]').checked"
+            ]
+          ]
+        },
+        {
+          "id": "aal-09",
+          "link": "#alerts",
+          "do": "On 📣 Alerts, under Ready to send, open the FIX alert.",
+          "see": "Send it now has 📥 Download the list (CSV) under 📱 Bulk SMS, as well as the free WhatsApp groups.",
+          "look": [
+            "Ready to send"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-l-ready a.item"
+            ],
+            [
+              "see",
+              "Download the list (CSV)"
+            ],
+            [
+              "see",
+              "Save contacts"
+            ]
+          ]
+        },
+        {
+          "id": "aal-10",
+          "link": "#alerts/setup",
+          "do": "Switch 📱 Bulk SMS list off again and tap Save.",
+          "see": "“Saved.” It says Off. Your alerts and their history are all still there.",
+          "look": [
+            "Bulk SMS list"
+          ],
+          "auto": [
+            [
+              "tap",
+              "input[name=sms_list]"
+            ],
+            [
+              "tap",
+              "#al-set > button"
+            ],
+            [
+              "see",
+              "Saved"
+            ],
+            [
+              "js",
+              "!document.querySelector('input[name=sms_list]').checked"
+            ],
+            [
+              "go",
+              "#alerts"
+            ],
+            [
+              "see",
+              "FIX"
             ]
           ]
         }

@@ -40,7 +40,7 @@
     if (qp.get('role') && ROLES[qp.get('role')]) { localStorage.setItem(ROLE_KEY, qp.get('role')); sessionStorage.setItem('zp_open', '1'); }
     if (qp.get('play')) localStorage.setItem('zuri_learn_autoplay', qp.get('play').replace(/[^a-z0-9-]/gi, ''));
     // v2.34: &chain=projects plays the whole group from that video on (the Testers' List Projects script uses it); ✕ stops
-    const CHAINS = { projects: '📈 Projects', receipts: '🧾 Receipts', timesavers: '⏱ Time savers', golive: '🚀 Getting ready' };
+    const CHAINS = { projects: '📈 Projects', receipts: '🧾 Receipts', timesavers: '⏱ Time savers', golive: '🚀 Getting ready', alerts: '📣 Alerts' };
     if (qp.get('play') && CHAINS[qp.get('chain')]) sessionStorage.setItem('zuri_learn_chain', CHAINS[qp.get('chain')]);
     if (!sessionStorage.getItem('zp_open') && !localStorage.getItem('zuri_learn_autoplay')) {
       const last = localStorage.getItem(ROLE_KEY); if (last) localStorage.setItem('zuri_practice_last', last);

@@ -58,7 +58,7 @@
     hubs.forEach((h) => {
       const k = Z.HUB_KINDS.find((x) => x[0] === h.kind) || Z.HUB_KINDS[2];
       L.marker([h.lat, h.lng], { icon: Z.hubIcon(L, h), zIndexOffset: 1000 }).addTo(hubLayer)
-        .bindPopup(`<b style="font-size:15px">${k[1]} ${Z.esc(h.name)}</b><br>${Z.esc([k[2], h.area ? Z.areaName(h.area) : 'All areas'].join(' · '))}${h.landmark ? '<br>📍 ' + Z.esc(h.landmark) : ''}${h.note ? '<br>' + Z.esc(h.note) : ''}
+        .bindPopup(`<b style="font-size:15px">${k[1]} ${Z.esc(h.name)}</b><br>${Z.esc([k[2], h.area ? Z.areaName(h.area) : 'All areas'].join(' · '))}${h.landmark ? '<br>📍 ' + Z.esc(h.landmark) : ''}${h.note ? '<br>' + Z.esc(h.note) : ''}${Z.routes.alerts && Z.isOffice() && ['hub', 'tower', 'olt'].includes(h.kind) ? `<br><a href="#alerts/new/OUT/hub:${encodeURIComponent(h.id)}" style="font-weight:700">📣 Text the homes on this ${h.kind === 'olt' ? 'OLT' : h.kind === 'tower' ? 'tower' : 'cabinet'}</a>` : ''}
           <div style="margin-top:6px"><a href="https://maps.google.com/?q=${h.lat},${h.lng}" target="_blank" rel="noopener" class="btn sec small">Directions</a></div>`, { maxWidth: 260 });
       pts.push([h.lat, h.lng]);
     });

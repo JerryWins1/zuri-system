@@ -62,7 +62,7 @@
 
     el.innerHTML = `
       <div class="row" style="justify-content:space-between"><h2>Customers${Z.area ? ' · ' + Z.esc(Z.areaName(Z.area)) : ''} <span class="muted" style="font-size:15px">${Z.fmt(count)}</span></h2>
-        <div class="row"><a class="btn sec" href="#customers/map">🗺️ Map</a><a class="btn" href="#customers/new">＋ New customer</a></div></div>
+        <div class="row"><a class="btn sec" href="#customers/map">🗺️ Map</a><a class="btn sec" href="#alerts">📣 Alerts</a><a class="btn" href="#customers/new">＋ New customer</a></div></div>
       <div class="row" style="margin-bottom:10px">
         <input id="c-q" placeholder="Search name, phone, account" value="${Z.esc(f.q)}" style="flex:1">
         <select id="c-st" aria-label="Show customers with this status" style="width:auto"><option value="">Any status</option>${Z.opts(STATUSES.map(([k, t]) => [k, t.split(' (')[0]]), f.status)}</select>
@@ -114,12 +114,14 @@
         ${custom.map((d) => `<tr><th>${Z.esc(d.label)}</th><td>${d.kind === 'yesno' ? (c.custom[d.key] ? 'Yes' : 'No') : Z.esc(c.custom[d.key])}</td></tr>`).join('')}
         ${!shown.length && !custom.length ? '<tr><td class="muted">No other details yet.</td></tr>' : ''}</table></div>
 
+      <div id="cp-alerts"></div>
       <h3>Payments</h3>
       <div class="card">${pays.length ? `<table class="t"><tr><th>Date</th><th class="r">KES</th><th>How</th><th>Ref</th></tr>${pays.map((p) => `<tr><td>${Z.day(p.date)}</td><td class="r num">${Z.fmt(p.amount)}</td><td>${Z.esc(p.method)}${p.source === 'field' ? ' (on a job)' : ''}</td><td>${Z.esc(p.mpesa_ref || '')}</td></tr>`).join('')}</table>` : '<div class="muted">No payments recorded yet.</div>'}</div>
 
       <h3>Jobs</h3>
       <div class="card list">${tickets.length ? tickets.map((t) => `<a class="item" href="#jobs/${t.id}"><div class="grow"><div class="t">#${t.ticket_no} · ${Z.esc(t.summary)}</div><div class="m">${Z.when(t.opened_at)}${t.closed_at ? ' → done ' + Z.when(t.closed_at) : ''}</div></div><span class="pill ${t.status === 'done' ? 'ok' : t.status === 'cancelled' ? '' : 'warn'}">${Z.esc(t.status.replace('_', ' '))}</span></a>`).join('') : '<div class="muted">No jobs yet.</div>'}</div>`;
 
+    if (Z.alertPrefsBox) Z.alertPrefsBox(Z.$('#cp-alerts', el), c); // 📣 v2.39: cabinet, language, what they agreed to get
     Z.$('#cp-pin', el).onclick = (e) => {
       const b = e.currentTarget;
       if (!navigator.geolocation) return Z.toast('This device can\'t share its location.');

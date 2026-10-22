@@ -417,8 +417,8 @@
   Z.routes.learn = async (_, el) => {
     const done = Z.get('learn_done', {});
     const mine = GROUP_FOR();
-    const groups = ['Everyone', '🚀 Getting ready', 'A day in the life', '⏱ Time savers', '📈 Projects', '🧾 Receipts', 'Field techs', 'Call center', 'Finance', 'Partners & admin', 'Every screen, every field'];
-    const order = [ 'Everyone', ...(Z.isStaff() ? ['🚀 Getting ready'] : []), mine, '⏱ Time savers', ...(['Finance', 'Partners & admin'].includes(mine) ? ['📈 Projects'] : []), ...(['Field techs', 'Finance', 'Partners & admin'].includes(mine) ? ['🧾 Receipts'] : []), ...groups.filter((g) => g !== 'Everyone' && g !== mine)];
+    const groups = ['Everyone', '🚀 Getting ready', 'A day in the life', '⏱ Time savers', '📣 Alerts', '📈 Projects', '🧾 Receipts', 'Field techs', 'Call center', 'Finance', 'Partners & admin', 'Every screen, every field'];
+    const order = [ 'Everyone', ...(Z.isStaff() ? ['🚀 Getting ready'] : []), mine, '⏱ Time savers', ...(Z.isOffice() ? ['📣 Alerts'] : []), ...(['Finance', 'Partners & admin'].includes(mine) ? ['📈 Projects'] : []), ...(['Field techs', 'Finance', 'Partners & admin'].includes(mine) ? ['🧾 Receipts'] : []), ...groups.filter((g) => g !== 'Everyone' && g !== mine)];
     const uniq = [...new Set(order)];
     const n = LESSONS.filter((l) => done[l.id]).length;
     el.innerHTML = `
@@ -433,20 +433,22 @@
       ${uniq.map((g) => {
         const ls = LESSONS.filter((l) => l.group === g); if (!ls.length) return '';
         if (g === '📈 Projects' && !Z.isFinance()) return ''; // finance & partners only, like the screens
+        if (g === '📣 Alerts' && !Z.isOffice()) return ''; // 📣 v2.39: the office and partners, like the screens
         if (g === '🚀 Getting ready' && !Z.isStaff()) return ''; // 🚀 v2.48: the partners' go-live list
         const blurb = { 'Every screen, every field': '📖 The whole system, one chapter per screen — explains every field.', 'A day in the life': '🌅 One working day through four people: Kelvin, Mary, Peter and a partner. The story carries from one chapter to the next.',
           '🧾 Receipts': '🧾 Receipts, start to finish: why they matter, snapping one on a job, checking it, M-Pesa messages, repeats, no signal, the AI setting, missing receipts and the Friday report.',
+          '📣 Alerts': '📣 Alerts: one message to a whole area or one cabinet. An outage texted before the phones ring, a partner\'s yes, the list for the bulk-SMS website, service-back to the same people, planned work, and each customer\'s language and yes to offers.',
           '🚀 Getting ready': '🚀 Getting ready (partners & office): why we don\'t just switch Zuri on, the ten parts of the go-live list, doing it one step at a time (Done, Later, I\'m stuck), and who does what.',
           '📈 Projects': '📈 Projects (finance & partners): what payback and break-even mean, planning a new area in three parts, the what-ifs, a loan, comparing two areas, saying “we\'re doing it” with a second OK, updating the forecast, and tracking actual against the plan.',
           '⏱ Time savers': '⏱ Time savers: Today\'s texts, the Friday report that writes itself, expired packages on fault calls, map pins and nearest-first, outage spotting, and two people for every payment.' }[g];
-        const chain = ['🧾 Receipts', '⏱ Time savers', '📈 Projects', '🚀 Getting ready'].includes(g) ? g : ''; // chapters with their own "Your turn" chain via sessionStorage
+        const chain = ['🧾 Receipts', '⏱ Time savers', '📈 Projects', '🚀 Getting ready', '📣 Alerts'].includes(g) ? g : ''; // chapters with their own "Your turn" chain via sessionStorage
         const all = blurb ? `<div class="card row" id="${chain ? ({ '🧾 Receipts': 'ln-rc-all', '📈 Projects': 'ln-pj-all', '🚀 Getting ready': 'ln-gl-all' }[g] || 'ln-ts-all') : ''}" style="border-left:4px solid var(--brand)"><div class="grow"><b>${blurb}</b><div class="hint" style="margin:0">About ${ls.reduce((n, l) => n + l.mins, 0)} minutes. Chapters play one after another; ✕ stops.${chain ? ' Each one also has its own “Your turn” when you watch it alone.' : ''}</div></div><button class="btn small" data-learn="${ls[0].id}" ${chain ? `data-chain="${Z.esc(chain)}"` : ''}>▶ Play all</button></div>` : '';
         return `<h3>${g}${g === mine && g !== 'Everyone' ? ' · your job' : ''}</h3>${all}<div class="card list">${ls.map((l) => `
           <div class="item"><span style="font-size:24px">${done[l.id] ? '✅' : '▶️'}</span><div class="grow"><div class="t">${l.star ? '⭐ ' : ''}${Z.esc(l.title)}${l.star && !done[l.id] ? ' <span class="pill warn">start here</span>' : ''}</div><div class="m">${l.mins} min · ${l.steps.length} steps</div></div>
           <button class="btn small" data-learn="${l.id}">${done[l.id] ? 'Watch again' : '▶ Watch'}</button></div>`).join('')}</div>`;
       }).join('')}
       <h3>Print & keep</h3>
-      <div class="card list">${[...(Z.isStaff() ? [['golive', '🚀 Getting ready — the whole go-live list, with tick boxes']] : []), ['field', '🛠️ Field tech — one-page guide'], ['callcenter', '📞 Call center — one-page guide'], ['finance', '💰 Finance — one-page guide'], ['partners', '⭐ Partners — one-page guide'], ['videos', '🎬 Every video, in order — for trainers'], ['trainer', '🧑‍🏫 Trainer\'s guide: running a training day'], ['testers', '🧪 Tester checklist (printable)']].map(([k, t]) =>
+      <div class="card list">${[...(Z.isStaff() ? [['golive', '🚀 Getting ready — the whole go-live list, with tick boxes']] : []), ['field', '🛠️ Field tech — one-page guide'], ['callcenter', '📞 Call center — one-page guide'], ['finance', '💰 Finance — one-page guide'], ['partners', '⭐ Partners — one-page guide'], ...(Z.isOffice() ? [['alerts', '📣 Alerts — one-page guide']] : []), ['videos', '🎬 Every video, in order — for trainers'], ['trainer', '🧑‍🏫 Trainer\'s guide: running a training day'], ['testers', '🧪 Tester checklist (printable)']].map(([k, t]) =>
         `<a class="item" href="guides/${k}.html" target="_blank" rel="noopener"><div class="grow"><div class="t">${t}</div><div class="m">One page · print it or keep it on your phone</div></div><span>›</span></a>`).join('')}</div>`;
     Z.$$('[data-learn]', el).forEach((b) => (b.onclick = () => { try { if (b.dataset.chain) sessionStorage.setItem(CHAIN, b.dataset.chain); else chainOff(); } catch (e) {} start(b.dataset.learn); }));
     const vb = Z.$('#ln-voice', el); if (vb) vb.onclick = chooseVoice;

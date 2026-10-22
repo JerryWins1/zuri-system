@@ -347,6 +347,7 @@
       <div style="font-weight:600;margin:2px 0">${n} fault call${n === 1 ? '' : 's'} since ${Z.esc(t)}${o.local ? ' (worked out on this phone)' : ''}.</div>
       <div class="hint" style="margin:0">${where === 'form' ? `New fault calls from ${Z.esc(an)} join the outage by themselves. Tell the caller: we know, the technicians are on it — no visit needed.` : o.local ? 'Check the cabinet / OLT for the area before sending techs house by house.' : `One task went to the technical team. New fault calls from ${Z.esc(an)} join this outage by themselves.`}</div>
       ${notice}
+      ${Z.alertLink ? Z.alertLink(o, where) : ''}
       ${!o.local && canClose() && where !== 'form' ? `<div class="row" style="margin-top:8px"><button type="button" class="btn small ou-close" data-id="${o.id}">✅ Service is back — close it</button></div>` : ''}
     </div>`;
   }).join('');
