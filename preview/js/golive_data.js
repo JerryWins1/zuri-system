@@ -4,7 +4,7 @@
 // One plain list, read by the 🚀 Getting ready screen (golive.js) and the printable guide (guides/golive.html).
 // who: D = Dickson (technical) · K = Kelvin (finance & office) · DK = both together · J = Jerry. Owners can be changed on the screen.
 window.ZURI_GOLIVE = {
-  version: 'v1 · 20 October 2026',
+  version: 'v1.1 · 22 October 2026',
   people: { D: 'Dickson', K: 'Kelvin', DK: 'Dickson & Kelvin', J: 'Jerry' },
   rules: [
     'Do the step on top. Tick it. The next one appears. That is all.',
@@ -214,8 +214,8 @@ window.ZURI_GOLIVE = {
       link: '#money/count', done: 'Cash today, Bills and Staff & pay match your sheets.' },
     { id: '7.8', part: 7, who: 'D', mins: 30, t: 'Switch on the people',
       why: 'Each person sees only what their job needs.',
-      how: ['Each staff member signs up on their own phone.', 'Me → ⚙️ Admin → People: choose their job and area, switch On, Save.', 'Who sees what: hide ID numbers from jobs that do not need them.'],
-      link: '#admin', done: 'Every staff member is switched on with the right job and area.' },
+      how: ['Each staff member signs up on their own phone.', 'Dickson and Kelvin first: they are partners, so their job is ⭐ Admin (partner). Jerry sets it if they cannot yet.', 'Me → ⚙️ Admin → People: choose everyone else\'s job and area, switch On, Save.', 'Who sees what: hide ID numbers from jobs that do not need them.'],
+      link: '#admin', done: 'Dickson and Kelvin are Admin (partner), and every staff member is switched on with the right job and area.' },
     { id: '7.9', part: 7, who: 'DK', mins: 45, t: 'Check it like a stranger',
       why: 'Before anyone relies on it: do Zuri\'s numbers match the real world?',
       how: ['Home: active customers — about the same as the billing websites?', 'Money → 💵 Today: the same as the bank + M-Pesa?', '🏢 HQ: every area there, with the right people?', 'Anything far off: fix it now, or tap 🆘 for Jerry.'],
