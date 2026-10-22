@@ -1,4 +1,5 @@
-// Zuri System · 🏢 Headquarters: the whole company on one screen, for the partners · v1.2 · 2026-10-17
+// Zuri System · 🏢 Headquarters: the whole company on one screen, for the partners · v1.3 · 2026-10-20
+// v1.3 (20 Oct): 🚀 Getting ready card at the top (golive.js) while the go-live list is not finished.
 // v1.2 (17 Oct): job photos show as "📷 Job photo" in Live activity (they showed the raw .jpg path).
 // v1.1 (15 Oct): "waiting for a partner's OK" opens Money → 👥 Approvals (it opened Cash today); Money in shows in the
 //       feed; day-only payments sort at the start of their day; the feed's pickers are full-size taps.
@@ -94,6 +95,7 @@
         <span class="hint">${Z.training ? 'training copy · ' : Z.practice ? 'practice · ' : ''}<a href="#" id="hq-refresh" class="tap44" style="min-width:0;padding:0 6px">refresh</a></span>
       </div>
       <p class="hint" style="margin-top:4px">The whole company on one screen: what needs a decision, every area side by side, what everyone is doing, and a message to anyone.</p>
+      <div id="hq-gl"></div>
       <h3>Needs a decision</h3><div id="hq-dec"><div class="card muted">Loading…</div></div>
       <h3>Areas side by side</h3><div id="hq-areas"><div class="card muted">Loading…</div></div>
       <h3 style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">Live activity
@@ -109,6 +111,8 @@
     Z.$('#hq-area', el).onchange = (e) => { Z.set('hq_area', e.target.value); Z.route(); };
     Z.$('#hq-msg-all', el).onclick = () => composer({});
 
+    // 🚀 v1.3 (20 Oct): the go-live list — how far along, each partner's next step, anything stuck
+    if (Z.goliveCard) Z.goliveCard().then((h) => { const b = Z.$('#hq-gl', el); if (b) b.innerHTML = h; }).catch(() => {});
     // ① decisions
     decisions().then((d) => {
       Z.$('#hq-dec', el).innerHTML = d.length ? d.map(([k, t, h]) => `<a class="alert ${k}" href="${h}" style="display:block;text-decoration:none">${Z.esc(t)}</a>`).join('')

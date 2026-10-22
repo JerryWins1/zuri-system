@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.51 · 2026-10-22';
+  Z.version = 'v2.52 · 2026-10-22';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -148,7 +148,8 @@
     { id: 'receipt', ic: '🧾', label: 'Receipts', ok: () => true, nav: () => false },
     { id: 'texts', ic: '📩', label: "Today's texts", ok: () => Z.isOffice(), nav: () => false }, // ⏱ v2.33 (timesavers.js)
     { id: 'projects', ic: '📈', label: 'Projects', ok: () => Z.isFinance(), nav: () => false }, // 📈 v2.34 (projects.js): from Home and Money
-    { id: 'hq', ic: '🏢', label: 'HQ', ok: () => Z.isAdmin(), nav: () => false }, // 🏢 v2.36 (hq.js): Headquarters, from Home
+    { id: 'hq', ic: '🏢', label: 'HQ', ok: () => Z.isAdmin(), nav: () => false },
+    { id: 'golive', ic: '🚀', label: 'Getting ready', ok: () => Z.isStaff(), nav: () => false }, // 🚀 v2.48 (golive.js): the partners' go-live list, from HQ, Home and Me // 🏢 v2.36 (hq.js): Headquarters, from Home
     { id: 'me', ic: '🙂', label: 'Me', ok: () => true },
   ];
   // Field techs live in Jobs, so it comes first for them.
@@ -157,7 +158,7 @@
     return Z.isField() ? ['jobs', 'tasks', 'me'].map((id) => t.find((x) => x.id === id)).filter(Boolean) : t;
   };
   // Which bottom tab lights up for a page that has no tab of its own.
-  const PARENT = { import: 'money', admin: 'me', learn: 'me', test: 'me', texts: 'jobs', projects: 'money', hq: 'home', receipt: () => (Z.isFinance() ? 'money' : Z.isField() ? 'jobs' : 'tasks') };
+  const PARENT = { import: 'money', admin: 'me', learn: 'me', test: 'me', texts: 'jobs', projects: 'money', hq: 'home', golive: () => (Z.isAdmin() ? 'hq' : 'home'), receipt: () => (Z.isFinance() ? 'money' : Z.isField() ? 'jobs' : 'tasks') };
   Z.routes = {};
 
   function buildChrome() {
@@ -527,6 +528,7 @@
         <a class="item" href="#learn"><span style="font-size:22px">🎓</span><div class="grow"><div class="t">Learn Zuri</div><div class="m">Short videos for your job, and a practice area</div></div><span>›</span></a>
         <a class="item" href="#test"><span style="font-size:22px">🧪</span><div class="grow"><div class="t">Testing Zuri</div><div class="m">Your Testers' List: one step at a time, and how to tell us</div></div><span>›</span></a>
         ${Z.isAdmin() ? '<a class="item" href="#admin"><span style="font-size:22px">⚙️</span><div class="grow"><div class="t">Admin</div><div class="m">Switch people on, roles, areas, who sees what</div></div><span>›</span></a>' : ''}
+        ${Z.isStaff() && Z.routes.golive ? '<a class="item" href="#golive" id="me-golive"><span style="font-size:22px">🚀</span><div class="grow"><div class="t">Getting ready</div><div class="m">The partners\' go-live list: one step at a time</div></div><span>›</span></a>' : ''}
         ${Z.isStaff() ? '<a class="item" href="#import"><span style="font-size:22px">📥</span><div class="grow"><div class="t">Bring in a file</div><div class="m">Customers or payments from the billing website (Excel)</div></div><span>›</span></a>' : ''}
       </div>
       <h3>Screen</h3>

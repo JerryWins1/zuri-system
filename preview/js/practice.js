@@ -40,7 +40,7 @@
     if (qp.get('role') && ROLES[qp.get('role')]) { localStorage.setItem(ROLE_KEY, qp.get('role')); sessionStorage.setItem('zp_open', '1'); }
     if (qp.get('play')) localStorage.setItem('zuri_learn_autoplay', qp.get('play').replace(/[^a-z0-9-]/gi, ''));
     // v2.34: &chain=projects plays the whole group from that video on (the Testers' List Projects script uses it); ✕ stops
-    const CHAINS = { projects: '📈 Projects', receipts: '🧾 Receipts', timesavers: '⏱ Time savers' };
+    const CHAINS = { projects: '📈 Projects', receipts: '🧾 Receipts', timesavers: '⏱ Time savers', golive: '🚀 Getting ready' };
     if (qp.get('play') && CHAINS[qp.get('chain')]) sessionStorage.setItem('zuri_learn_chain', CHAINS[qp.get('chain')]);
     if (!sessionStorage.getItem('zp_open') && !localStorage.getItem('zuri_learn_autoplay')) {
       const last = localStorage.getItem(ROLE_KEY); if (last) localStorage.setItem('zuri_practice_last', last);
@@ -493,6 +493,10 @@
   if (!D.hubs) { const f = build(D._mode); D.hubs = f.hubs; D.settings = f.settings; } // phones that started practice before hubs existed
   if (!D._ts) { tsSeed(D, D._mode === 'empty'); }
   if (!D.packages) D.packages = D._mode === 'empty' ? [] : PKGS(); // 💲 v2.35: phones that started practice before the price list
+  // 🚀 v2.48: the go-live list (golive.js) — the pretend partners have done Part 1 and started Part 2; Dickson is stuck on 3.1.
+  if (!D._gl) { D._gl = 1; if (D._mode !== 'empty' && !D.settings.some((x) => x.key === 'golive')) { const at = (d) => new Date(Date.now() + d * 864e5).toISOString();
+    D.settings.push({ key: 'golive', value: { done: { '1.1': { by: 'Dickson', at: at(-6), note: 'Did it at the office, both of us.' }, '1.2': { by: 'Kelvin', at: at(-6), note: 'Mondays 8:00' }, '1.3': { by: 'Dickson', at: at(-5) }, '1.4': { by: 'Kelvin', at: at(-5), note: 'Aim: Monday 11 January' }, '2.1': { by: 'Kelvin', at: at(-3), note: 'Google Drive' } },
+      later: {}, stuck: { '3.1': { by: 'Dickson', at: at(-1), note: 'We have no spare phone for the company SIM yet.' } }, who: {} } }); } }
   if (!D._pj) projSeed(D, D._mode === 'empty'); // v2.34 // v2.33: phones that started practice before the time savers
   if (!D._rc) { const f = build(D._mode); D.expenses = D.expenses.concat(f.expenses.filter((e) => String(e.id).startsWith('e-'))); if (!D.settings.some((x) => x.key === 'receipts_ai')) D.settings.push({ key: 'receipts_ai', value: { on: false } }); D._rc = 1; } // v2.32
   let saveT;
