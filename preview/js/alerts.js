@@ -1,4 +1,6 @@
-// Zuri System · 📣 Alerts: one message to many customers, by area or by cabinet · v1 · 2026-10-16 (app v2.39)
+// Zuri System · 📣 Alerts: one message to many customers, by area or by cabinet · v1.1 · 2026-10-27 (app v2.56)
+// v1.1 (27 Oct): ✉️ Email, free — BCC batches for the office email account, only to customers who said yes to emails
+//   (customer page → Messages → Emails). Needs supabase/29_alerts_email.sql; without it the email part says so.
 //   #alerts                 the list: waiting for a partner, ready to send, sent
 //   #alerts/new/CODE/...    write one (CODE = OUT, FIX, MAINT…; then area:A, hub:<id>, outage:<id>, parent:<alert id>)
 //   #alerts/<id>            one alert: the words, the people, approve, send, the follow-up
@@ -8,7 +10,7 @@
 //   Z.alertLink(o, where)   the "📣 Alert customers" button on the outage card (timesavers.js)
 // NOTHING here sends by itself. An approved alert is downloaded as a list for the bulk-SMS service (or copied for a WhatsApp
 // broadcast) and marked sent. Later the Daraja server sends it straight from here; the screens stay the same.
-// Needs supabase/28_alerts.sql. Before it, the page says so and nothing else changes.
+// Needs supabase/28_alerts.sql (and 29_alerts_email.sql for email). Before it, the page says so and nothing else changes.
 (function () {
   const Z = window.Z;
   const must = (r) => { if (r.error) throw r.error; return r.data; };
@@ -48,17 +50,18 @@
   // Plan & add-ons: everything works on Free (WhatsApp groups and texts from the office phone). Anything that costs money is a
   // switch a partner turns on, and stays off until then. Turning one on never changes the alerts already made.
   const SETUP0 = { sms_price_kes: null, sender_id: null, quiet_from: '19:00', quiet_to: '07:00', approve_over: 0, server_on: false,
-    addons: { sms_list: false, sms_auto: false }, wa_group: 256 };
+    addons: { sms_list: false, sms_auto: false }, wa_group: 256, email_batch: 50 };
   const has = (cfg, k) => !!(cfg && cfg.addons && cfg.addons[k]);
 
   // ---------- is 28_alerts.sql there? (asked once; a "no" is asked again after 5 minutes) ----------
-  let ok = null, okAt = 0;
+  let ok = null, okAt = 0, ver = 0;
   Z.alertsOk = async () => {
-    if (Z.practice) return true;
+    if (Z.practice) { ver = 2; return true; }
     if (ok === true || (ok === false && Date.now() - okAt < 300e3)) return ok;
-    try { const r = await Z.sb.rpc('alerts_version'); if (r.error && Z.isNet(r.error)) return false; ok = !r.error && Number(r.data) >= 1; } catch (e) { return false; }
+    try { const r = await Z.sb.rpc('alerts_version'); if (r.error && Z.isNet(r.error)) return false; ver = r.error ? 0 : Number(r.data) || 0; ok = ver >= 1; } catch (e) { return false; }
     okAt = Date.now(); return ok;
   };
+  const emailOk = () => ver >= 2; // 29_alerts_email.sql has been run (always in practice)
 
   // ---------- data ----------
   async function codes() {
@@ -75,7 +78,7 @@
   async function everyone() {
     const out = [];
     for (let from = 0; from < 50000; from += 1000) {
-      const rows = must(await Z.sb.from('v_customers').select('id,full_name,phone,phone2,area,status,plan,paid_until,account_no,lat,lng').order('id').range(from, from + 999));
+      const rows = must(await Z.sb.from('v_customers').select('id,full_name,phone,phone2,email,area,status,plan,paid_until,account_no,lat,lng').order('id').range(from, from + 999));
       out.push(...rows); if (rows.length < 1000) break;
     }
     return out;
@@ -120,6 +123,10 @@
   // SMS: 160 letters fit in one; longer ones go in parts of 153. Emoji or unusual letters cut that to 70 / 67.
   const smsParts = (t) => { const uni = /[^\n\r -~£¥èéùìòÇØøÅåÆæßÉÄÖÑÜ§¿äöñüà€]/.test(t); const one = uni ? 70 : 160, part = uni ? 67 : 153; return t.length <= one ? 1 : Math.ceil(t.length / part); };
 
+  // ✉️ Email: a real-looking address, and the customer said yes to emails
+  const emailOf = (c) => { const e = String((c && c.email) || '').trim(); return /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]{2,}$/.test(e) ? e : ''; };
+  const STOP = { en: (co) => `\n\n—\nYou get this because you said yes to emails from ${co}. To stop them, reply STOP.`, sw: (co) => `\n\n—\nUnapokea barua hii kwa sababu ulikubali kupokea barua pepe kutoka ${co}. Kuacha, jibu STOP.` };
+
   // ---------- who gets it ----------
   // t = { mode: 'area'|'hub'|'same', areas:[], hubs:[], statuses:[], plans:[], within: days|null, phone2: bool, parent: alert|null }
   function audience(t, purpose, people, prefs) {
@@ -152,7 +159,7 @@
       if (!phones.length) { skip.nophone++; return; }
       const fresh = phones.filter((x) => !seen.has(x)); if (!fresh.length) { skip.dup++; return; }
       fresh.forEach((x) => seen.add(x));
-      pick.push({ c: { ...c, lang: (p && p.lang) || 'sw' }, phones: fresh, zone });
+      pick.push({ c: { ...c, lang: (p && p.lang) || 'sw', ok_email: !!(p && p.ok_email) }, phones: fresh, zone });
     });
     return { pick, skip };
   }
@@ -245,6 +252,7 @@
         <div class="card" id="al-sum" style="border-left:5px solid var(--brand)">
           <div style="font-size:18px;font-weight:800">${Z.fmt(res.pick.length)} customer${res.pick.length === 1 ? '' : 's'} · ${Z.fmt(msgs)} phone${msgs === 1 ? '' : 's'}</div>
           <div class="hint" style="margin:2px 0 0">Kiswahili ${Z.fmt(nSw)} · English ${Z.fmt(nEn)}${res.skip.no ? ` · ${Z.fmt(res.skip.no)} said no to ${code.purpose === 'offer' ? 'offers (or never said yes)' : 'these messages'}` : ''}${res.skip.nophone ? ` · ${Z.fmt(res.skip.nophone)} with no phone` : ''}${res.skip.dup ? ` · ${Z.fmt(res.skip.dup)} sharing a phone` : ''}</div>
+          ${emailOk() ? (() => { const ne = res.pick.filter((x) => x.c.ok_email && emailOf(x.c)).length; return `<div class="hint" style="margin:2px 0 0" id="al-sum-mail">✉️ ${Z.fmt(ne)} of them also get it by email (free): they have an email and said yes to emails.</div>`; })() : ''}
           ${channel !== 'whatsapp' ? `<div class="hint" style="margin:2px 0 0">${cost != null ? `About <b>${Z.kes(cost)}</b> in SMS (${Z.fmt(msgs * parts)} SMS × KES ${Z.esc(cfg.sms_price_kes)}).` : 'Set the SMS price in Alerts → Settings to see the cost.'}</div>` : ''}
           ${code.purpose === 'offer' && quiet(cfg) ? `<div class="alert warn" style="margin:6px 0 0">It's quiet hours (${Z.esc(cfg.quiet_from)}–${Z.esc(cfg.quiet_to)}). Offers wait until morning.</div>` : ''}
           ${res.skip.unknown.length ? `<div class="alert warn" style="margin:6px 0 0">${Z.fmt(res.skip.unknown.length)} home${res.skip.unknown.length === 1 ? '' : 's'} in these areas have no map pin and no cabinet set, so they are left out: ${res.skip.unknown.slice(0, 5).map((c) => `<a href="#customers/${c.id}">${Z.esc(c.full_name)}</a>`).join(', ')}${res.skip.unknown.length > 5 ? '…' : ''}. Set their cabinet on the customer page, or send by area.</div>` : ''}
@@ -301,7 +309,7 @@
       return list.filter((c) => ids.has(String(c.id))).map((c) => {
         const p = prefs.get(String(c.id)), s = hubSet.size ? servedBy(c, p) : null;
         const zone = s && hubSet.has(s.id) ? hubName(s.id) : hubSet.size ? hubName([...hubSet][0]) : null;
-        const cc = { ...c, lang: (p && p.lang) || 'sw' };
+        const cc = { ...c, lang: (p && p.lang) || 'sw', ok_email: !!(p && p.ok_email) };
         return { c: cc, zone, phones: [c.phone].concat(a.filters && a.filters.phone2 ? [c.phone2] : []).map(Z.phone254).filter((x) => x.length >= 12), text: wordsFor(a, cc, zone) };
       });
     };
@@ -317,7 +325,7 @@
       <div class="card timeline" id="al-tl">
         <div class="ev">✍️ Written by ${Z.esc(Z.personName(a.created_by) || 'the office')} <span class="m">${Z.when(a.created_at)}</span></div>
         ${a.approved_at ? `<div class="ev">✅ Approved by ${Z.esc(Z.personName(a.approved_by) || 'a partner')} <span class="m">${Z.when(a.approved_at)}</span></div>` : ''}
-        ${a.sent_at ? `<div class="ev">📤 Sent by ${Z.esc(Z.personName(a.sent_by) || 'the office')} (${Z.esc(a.sent_how === 'server' ? 'Daraja server' : a.sent_how === 'copied' ? 'copied into WhatsApp' : 'bulk-SMS list')}) <span class="m">${Z.when(a.sent_at)}</span>${a.delivered != null ? ` · ${Z.fmt(a.delivered)} delivered, ${Z.fmt(a.failed || 0)} failed` : ''}</div>` : ''}
+        ${a.sent_at ? `<div class="ev">📤 Sent by ${Z.esc(Z.personName(a.sent_by) || 'the office')} (${Z.esc(a.sent_how === 'server' ? 'Daraja server' : a.sent_how === 'copied' ? 'copied into WhatsApp' : a.sent_how === 'email' ? 'by email' : 'bulk-SMS list')}) <span class="m">${Z.when(a.sent_at)}</span>${a.delivered != null ? ` · ${Z.fmt(a.delivered)} delivered, ${Z.fmt(a.failed || 0)} failed` : ''}</div>` : ''}
         ${a.status === 'cancelled' ? '<div class="ev">✖ Cancelled</div>' : ''}
       </div>
       <div id="al-act"></div>
@@ -338,6 +346,10 @@
           <p class="hint" style="margin:0 0 6px">One broadcast list per group below (WhatsApp lets up to ${Z.fmt(cfg.wa_group)} people in one). <b>📇 Save contacts</b> puts the group in this phone's contacts; then in WhatsApp: ⋮ → New broadcast → pick them → paste the words → send. Customers only get a broadcast if they have saved Zuri's number, so ask them to.</p>
           <div id="al-wa" class="list"><div class="loading">Making the groups…</div></div>
           <div id="al-one"></div>
+          <h4 style="margin:12px 0 2px">✉️ Email <span class="pill ok">free</span></h4>
+          ${emailOk() ? `<p class="hint" style="margin:0 0 6px">From the office email account (Gmail or Outlook), only to customers who said yes to emails. Paste the addresses into <b>BCC</b>, never To or Cc, so nobody sees anyone else's address. Email accounts limit how many emails you can send in a day, so the batches are small: send one, then the next.</p>
+            <div id="al-mail" class="list"><div class="loading">Finding emails…</div></div>`
+            : '<div class="card" id="al-mail-sql" style="background:var(--surface-2);margin:4px 0"><b>Email needs one more database file.</b><p class="hint" style="margin:2px 0 0">A partner runs <b>supabase/29_alerts_email.sql</b> (test copy first). WhatsApp and SMS work without it.</p></div>'}
           <h4 style="margin:12px 0 2px">📱 Bulk SMS ${smsOn ? '<span class="pill brand">on</span>' : '<span class="pill">add-on</span>'}</h4>
           ${smsOn ? `<p class="hint" style="margin:0 0 6px">Reaches every phone, even without WhatsApp. Download the list and upload it to the bulk-SMS website. Each row has that customer's own words.</p><button class="btn" id="al-csv">📥 Download the list (CSV)</button>`
             : `<div class="card" id="al-sms-locked" style="background:var(--surface-2);margin:4px 0"><b>Reach every customer, even without WhatsApp.</b><p class="hint" style="margin:2px 0 6px">Bulk SMS is an add-on: you pay only for the texts you send (about KES 0.25–0.90 each, from a bulk-SMS company). Nothing to pay until a partner switches it on.</p>${Z.isAdmin() ? '<a class="btn sec small" href="#alerts/setup">Plan &amp; add-ons</a>' : '<span class="hint">Ask a partner if Zuri needs it.</span>'}</div>`}
@@ -394,6 +406,37 @@
         }
       } catch (er) { waBox.innerHTML = `<div class="empty">${Z.esc(Z.errText(er))}</div>`; }
     })();
+    // ✉️ Email (free): BCC batches by language, only the people who said yes to emails
+    const mailBox = Z.$('#al-mail', el);
+    if (mailBox) (async () => {
+      try {
+        const ps = await people(), size = Math.max(5, Number(cfg.email_batch) || 50), co = company();
+        const yes = ps.filter((x) => x.c.ok_email && emailOf(x.c)), noMail = ps.filter((x) => !emailOf(x.c)).length, noYes = ps.filter((x) => emailOf(x.c) && !x.c.ok_email).length;
+        const seen = new Set(), list = yes.filter((x) => { const k = emailOf(x.c).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
+        const groups = [];
+        ['sw', 'en'].forEach((lang) => { const l = list.filter((x) => (x.c.lang === 'en' ? 'en' : 'sw') === lang); for (let i = 0; i < l.length; i += size) groups.push({ lang, list: l.slice(i, i + size) }); });
+        groups.forEach((g) => { const n = groups.filter((x) => x.lang === g.lang); g.no = n.indexOf(g) + 1; g.of = n.length; });
+        const subject = (g) => `${co} · ${code.name || a.code}`;
+        const body = (g) => { const z = {}; g.list.forEach((x) => { const k = x.zone || Z.areaName(x.c.area); z[k] = (z[k] || 0) + 1; }); const zone = Object.keys(z).sort((p, q) => z[q] - z[p])[0];
+          return wordsFor(a, { full_name: '', lang: g.lang, area: g.list[0] ? g.list[0].c.area : '' }, zone).replace(/ +,/g, ',').replace(/\bHabari there\b/g, 'Habari').replace(/\bHi there\b/g, 'Hello') + STOP[g.lang](co); };
+        const addrs = (g) => g.list.map((x) => emailOf(x.c)).join(', ');
+        mailBox.innerHTML = `<div class="hint" id="al-mail-count" style="margin:0 0 4px">${Z.fmt(list.length)} of the ${Z.fmt(ps.length)} have an email and said yes${noYes ? ` · ${Z.fmt(noYes)} have an email but haven't said yes` : ''}${noMail ? ` · ${Z.fmt(noMail)} have no email` : ''}. The rest get WhatsApp${has(cfg, 'sms_list') ? ' or SMS' : ''}.</div>`
+          + (groups.map((g, i) => `<div class="item" style="flex-wrap:wrap;gap:6px"><div class="grow" style="min-width:180px"><div class="t">${g.lang === 'en' ? '🇬🇧 English' : '🇰🇪 Kiswahili'}${g.of > 1 ? ` · batch ${g.no} of ${g.of}` : ''}</div><div class="m">${Z.fmt(g.list.length)} email${g.list.length === 1 ? '' : 's'}</div></div>
+            <button class="btn sec small" data-bcc="${i}">📋 Addresses (BCC)</button><button class="btn sec small" data-msubj="${i}">📋 Subject</button><button class="btn sec small" data-mbody="${i}">📋 The words</button><a class="btn sec small" data-mopen="${i}" href="mailto:?bcc=${encodeURIComponent(addrs(g))}&subject=${encodeURIComponent(subject(g))}&body=${encodeURIComponent(body(g))}">✉️ Open email</a></div>`).join('')
+            || '<div class="empty" id="al-mail-none">No one to email yet. On a customer\'s page, add their email and tick <b>Emails</b> in Messages when they say yes.</div>')
+          + (list.length ? `<div class="row" style="margin-top:6px"><button class="btn sec small" id="al-mail-csv">📥 Email list (CSV)</button><span class="hint" style="margin:0">If a customer replies STOP, untick Emails on their page.</span></div>` : '');
+        const mark = () => { how = how || 'email'; };
+        Z.$$('[data-bcc]', mailBox).forEach((bt) => (bt.onclick = () => { mark(); copy(addrs(groups[bt.dataset.bcc]), `Copied ${Z.fmt(groups[bt.dataset.bcc].list.length)} addresses. Paste them into BCC.`); }));
+        Z.$$('[data-msubj]', mailBox).forEach((bt) => (bt.onclick = () => copy(subject(groups[bt.dataset.msubj]), 'Copied the subject.')));
+        Z.$$('[data-mbody]', mailBox).forEach((bt) => (bt.onclick = () => { mark(); copy(body(groups[bt.dataset.mbody]), 'Copied the words, with the STOP line at the end.'); }));
+        Z.$$('[data-mopen]', mailBox).forEach((l) => l.addEventListener('click', (e) => { mark(); if (window.ZP_LESSON) e.preventDefault(); }));
+        const mc = Z.$('#al-mail-csv', mailBox); if (mc) mc.onclick = () => {
+          const lines = [['email', 'name', 'account', 'language', 'subject', 'message'].join(',')].concat(list.map((x) => [emailOf(x.c), x.c.full_name, x.c.account_no || '', x.c.lang === 'en' ? 'English' : 'Kiswahili', subject(), x.text + STOP[x.c.lang === 'en' ? 'en' : 'sw'](co)].map(csvCell).join(',')));
+          if (!window.ZP_LESSON) download(`zuri-${a.code.toLowerCase()}-email-${Z.ymd()}.csv`, lines.join('\r\n')); mark();
+          Z.toast(`${Z.fmt(list.length)} emails in the list.`);
+        };
+      } catch (er) { mailBox.innerHTML = `<div class="empty">${Z.esc(Z.errText(er))}</div>`; }
+    })();
     Z.$('details', el).addEventListener('toggle', async (e) => {
       if (!e.target.open || e.target.dataset.done) return; e.target.dataset.done = 1;
       try {
@@ -449,11 +492,14 @@
       <p class="hint" style="margin-top:0">Alerts works for free. Anything that costs money is an add-on you switch on when Zuri needs it, and you can switch it off again. Your alerts and history stay the same.</p>
       <div class="card list" id="al-plan">
         ${row('💬', 'WhatsApp groups and texts from this phone', ['Free · always on', 'ok'], `Broadcast lists of up to ${Z.fmt(s.wa_group)} people, a contacts file for each group, and one-by-one texts for small groups.`, '<span class="pill ok">On</span>')}
+        ${row('✉️', 'Email from the office account', ['Free · always on', 'ok'], `Batches of up to ${Z.fmt(s.email_batch)} addresses to paste into BCC in Gmail or Outlook, only to customers who said yes to emails. Every email ends with how to stop.`, '<span class="pill ok">On</span>')}
         ${row('📱', 'Bulk SMS list', ['Pay as you go', 'brand'], 'Reaches every phone, even without WhatsApp. Download the list and upload it to a bulk-SMS company. You pay them only for texts sent (about KES 0.25–0.90 each). No monthly fee.', sw('sms_list', on('sms_list')))}
         ${row('⚡', 'Automatic sending', ['Prepaid credit', ''], 'Zuri sends the texts itself in seconds, with delivery reports. Paid from M-Pesa credit with a monthly cap, so there is never a bill. Comes with the Daraja server.', sw('sms_auto', false, true))}
       </div>
       <div class="card"><b>💬 WhatsApp</b><div class="grid2" style="margin-top:6px"><div><label>People per broadcast list</label><input name="wa_group" type="number" min="5" max="1024" value="${Z.esc(s.wa_group)}"></div></div>
         <p class="hint" style="margin:4px 0 0">256 is WhatsApp's usual limit. If WhatsApp changes it, change it here.</p></div>
+      <div class="card"><b>✉️ Email</b><div class="grid2" style="margin-top:6px"><div><label for="al-eb">Addresses per email (BCC)</label><input id="al-eb" name="email_batch" type="number" min="5" max="500" value="${Z.esc(s.email_batch)}"></div></div>
+        <p class="hint" style="margin:4px 0 0">Gmail and Outlook limit how many people one email can go to, and how many emails an account sends in a day. 50 is a safe size. If the email account complains, make it smaller.</p></div>
       <div class="card" id="al-sms-set" ${on('sms_list') ? '' : 'style="opacity:.55"'}><b>📱 Bulk SMS</b>${on('sms_list') ? '' : ' <span class="hint">(switch it on above to use these)</span>'}<div class="grid2" style="margin-top:6px">
         <div><label>Price of one SMS (KES)</label><input name="sms_price_kes" inputmode="decimal" value="${Z.esc(s.sms_price_kes ?? '')}" placeholder="from your bulk-SMS bill"></div>
         <div><label>Sender name on the SMS</label><input name="sender_id" value="${Z.esc(s.sender_id || '')}" placeholder="e.g. ZURIFIBER (registered with the SMS company)"></div></div></div>
@@ -467,7 +513,7 @@
     f.onsubmit = async (e) => {
       e.preventDefault(); const d = Z.formData(e.target);
       const v = { ...s, sms_price_kes: Z.num(d.sms_price_kes), sender_id: d.sender_id.trim() || null, quiet_from: d.quiet_from || '19:00', quiet_to: d.quiet_to || '07:00',
-        wa_group: Math.max(5, Math.min(1024, parseInt(d.wa_group, 10) || 256)), addons: { ...s.addons, sms_list: !!d.sms_list, sms_auto: false } };
+        wa_group: Math.max(5, Math.min(1024, parseInt(d.wa_group, 10) || 256)), email_batch: Math.max(5, Math.min(500, parseInt(d.email_batch, 10) || 50)), addons: { ...s.addons, sms_list: !!d.sms_list, sms_auto: false } };
       if (v.addons.sms_list && !s.addons.sms_list && !window.ZP_LESSON && !confirm('Switch on Bulk SMS? Zuri will offer a list for the bulk-SMS website. You pay that company for the texts you send.')) return;
       const { error } = await Z.sb.from('settings').upsert({ key: 'alerts_setup', value: v }, { onConflict: 'key' });
       if (error) return Z.fail(error); Z.toast('Saved.'); Z.route();
@@ -499,7 +545,8 @@
     let p = null;
     try { p = must(await Z.sb.from('customer_alert_prefs').select('*').eq('customer_id', c.id).maybeSingle()); } catch (e) { return; }
     if (!box.isConnected) return;
-    const v = { served_by_hub: '', lang: 'sw', ok_service: true, ok_reminders: true, ok_offers: false, consent_note: '', ...(p || {}) };
+    const v = { served_by_hub: '', lang: 'sw', ok_service: true, ok_reminders: true, ok_offers: false, ok_email: false, consent_note: '', ...(p || {}) };
+    const mail = emailOf(c);
     const serving = hubs().filter((h) => SERVING.includes(h.kind));
     const near = c.lat != null && Z.nearestHub ? Z.nearestHub(c.lat, c.lng, serving.filter((h) => !h.area || h.area === c.area).length ? serving.filter((h) => !h.area || h.area === c.area) : serving) : null;
     const dist = (d) => (d < 1 ? Math.round(d * 1000) + ' m' : d.toFixed(1) + ' km');
@@ -509,13 +556,16 @@
       <div style="margin:8px 0;display:grid;gap:4px">
         <label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" name="ok_service" ${v.ok_service ? 'checked' : ''} style="width:auto"> Outages and planned work</label>
         <label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" name="ok_reminders" ${v.ok_reminders ? 'checked' : ''} style="width:auto"> Payment reminders</label>
-        <label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" name="ok_offers" ${v.ok_offers ? 'checked' : ''} style="width:auto"> Offers and upgrades <span class="hint" style="margin:0">(only if they said yes)</span></label></div>
+        <label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" name="ok_offers" ${v.ok_offers ? 'checked' : ''} style="width:auto"> Offers and upgrades <span class="hint" style="margin:0">(only if they said yes)</span></label>
+        ${emailOk() ? `<label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" name="ok_email" ${v.ok_email ? 'checked' : ''} style="width:auto"> ✉️ Emails too <span class="hint" style="margin:0">(only if they said yes${mail ? ' · ' + Z.esc(mail) : ' · <b>no email on file yet</b>: add it with ✏️ Edit'})</span></label>` : ''}</div>
       <label>How and when they said yes or no</label><input name="consent_note" value="${Z.esc(v.consent_note || '')}" placeholder="e.g. Said yes to offers on the phone, 16 Oct">
       <button class="btn small" style="margin-top:6px">Save</button></form>`;
     Z.$('#cap-f', box).onsubmit = async (e) => {
       e.preventDefault(); const d = Z.formData(e.target);
       const row = { customer_id: c.id, served_by_hub: d.served_by_hub || null, lang: d.lang, ok_service: !!d.ok_service, ok_reminders: !!d.ok_reminders, ok_offers: !!d.ok_offers, consent_note: d.consent_note.trim() || null };
+      if (emailOk()) row.ok_email = !!d.ok_email;
       if (row.ok_offers && !(v.ok_offers) && !row.consent_note) return Z.toast('Write how and when they said yes to offers.');
+      if (row.ok_email && !v.ok_email && !row.consent_note) return Z.toast('Write how and when they said yes to emails.');
       const { error } = await Z.sb.from('customer_alert_prefs').upsert(row, { onConflict: 'customer_id' });
       if (error) return Z.fail(error); Z.toast('Saved.');
     };

@@ -1,8 +1,8 @@
 {
   "role": "callcenter",
   "title": "Call center test script",
-  "version": "1.3",
-  "date": "2026-10-16",
+  "version": "1.4",
+  "date": "2026-10-27",
   "who": "You are Mary Wanjiku in the call center. Everything is pretend and stays on your phone — no real customer is called or texted.",
   "sessions": [
     {
@@ -1068,6 +1068,56 @@
               "fill",
               "#cap-f input[name=consent_note]",
               "Said yes on the phone today"
+            ],
+            [
+              "tap",
+              "#cap-f button"
+            ],
+            [
+              "see",
+              "Saved"
+            ]
+          ]
+        },
+        {
+          "id": "cal-08",
+          "link": "#customers/c2",
+          "do": "On John Mwangi's page, in 📣 Messages, tick ✉️ Emails too and tap Save without a note. Then type “Said yes to emails on the phone” in the note box and Save again.",
+          "see": "The first Save says “Write how and when they said yes to emails.” The second says “Saved.” His email address shows next to the tick.",
+          "look": [
+            "Emails too",
+            "@example.com"
+          ],
+          "auto": [
+            [
+              "see",
+              "John Mwangi"
+            ],
+            [
+              "see",
+              "@example.com"
+            ],
+            [
+              "js",
+              "document.querySelector('#cap-f input[name=ok_email]').checked || (document.querySelector('#cap-f input[name=ok_email]').click(), true)"
+            ],
+            [
+              "fill",
+              "#cap-f input[name=consent_note]",
+              ""
+            ],
+            [
+              "tap",
+              "#cap-f button"
+            ],
+            [
+              "see",
+              "yes to emails"
+            ],
+            [
+              "fill",
+              "#cap-f input[name=consent_note]",
+              "Said yes to emails on the phone"
             ],
             [
               "tap",
