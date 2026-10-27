@@ -57,6 +57,15 @@
   const PLANS = [['5 Mbps', 1500], ['10 Mbps', 2000], ['10 Mbps', 2000], ['20 Mbps', 3000], ['20 Mbps', 3000], ['30 Mbps Business', 4500]];
 
   // mode 'empty': a brand-new company — only the areas, the seed lists and the staff. You enter everything else.
+  // ✉️ v2.55: pretend emails (example.com, never real) for two in three customers; about half of those said yes to emails
+  // (Grace and John, the first two, are left for the testers to say yes themselves.)
+  function emSeed(D) {
+    D._em = 1; if (D._mode === 'empty') return; D.customer_alert_prefs = D.customer_alert_prefs || [];
+    D.v_customers.forEach((c, i) => { if (i % 3 === 2 || c.status === 'lead') return;
+      if (!c.email) c.email = String(c.full_name).toLowerCase().replace(/[^a-z ]/g, '').trim().replace(/\s+/g, '.') + '@example.com';
+      if (i % 2 === 0 && i > 1) { const p = D.customer_alert_prefs.find((x) => String(x.customer_id) === String(c.id));
+        if (p) { if (p.ok_email == null) p.ok_email = true; } else D.customer_alert_prefs.push({ customer_id: c.id, lang: i % 5 === 0 ? 'en' : 'sw', ok_service: true, ok_reminders: true, ok_offers: false, ok_email: true, consent_note: 'Said yes to emails at the install' }); } });
+  }
   function build(mode) {
     seed = 7;
     const D = {};
@@ -236,6 +245,7 @@
     D.packages = mode === 'empty' ? [] : PKGS(); // 💲 v2.35: the price list (Admin → Price list)
     projSeed(D, mode === 'empty');
     if (mode !== 'empty') { receiptRules(D); tsRules(D); D.nudges.forEach((n) => { const t = D.tasks.find((x) => x.assigned_to === n.profile_id && String(x.ref_key || '').startsWith('rcpt-')); if (t) n.message = n.message.replace('\nOpen Zuri', '\n• ' + t.title + '\nOpen Zuri'); }); }
+    emSeed(D);
     return D;
   }
 
@@ -493,6 +503,7 @@
   if (!D.hubs) { const f = build(D._mode); D.hubs = f.hubs; D.settings = f.settings; } // phones that started practice before hubs existed
   if (!D._ts) { tsSeed(D, D._mode === 'empty'); }
   if (!D.packages) D.packages = D._mode === 'empty' ? [] : PKGS(); // 💲 v2.35: phones that started practice before the price list
+  if (!D._em) emSeed(D); // ✉️ v2.55: phones that started practice before email
   // 🚀 v2.48: the go-live list (golive.js) — the pretend partners have done Part 1 and started Part 2; Dickson is stuck on 3.1.
   if (!D._gl) { D._gl = 1; if (D._mode !== 'empty' && !D.settings.some((x) => x.key === 'golive')) { const at = (d) => new Date(Date.now() + d * 864e5).toISOString();
     D.settings.push({ key: 'golive', value: { done: { '1.1': { by: 'Dickson', at: at(-6), note: 'Did it at the office, both of us.' }, '1.2': { by: 'Kelvin', at: at(-6), note: 'Mondays 8:00' }, '1.3': { by: 'Dickson', at: at(-5) }, '1.4': { by: 'Kelvin', at: at(-5), note: 'Aim: Monday 11 January' }, '2.1': { by: 'Kelvin', at: at(-3), note: 'Google Drive' } },
