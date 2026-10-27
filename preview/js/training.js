@@ -254,7 +254,7 @@
      Clips come through fetch(), so the offline shell keeps every clip once watched. A line changed since the recording
      has no clip and uses the phone's voice, as before. */
   let CLIPS = null;
-  fetch('voice/index.json?v=1').then((r) => (r.ok ? r.json() : null)).then((j) => { CLIPS = j; }).catch(() => {});
+  fetch('voice/index.json?v=2').then((r) => (r.ok ? r.json() : null)).then((j) => { CLIPS = j; }).catch(() => {});
   const audio = typeof Audio === 'function' ? new Audio() : null;
   const SILENT = 'data:audio/wav;base64,UklGRiwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQgAAACAgICAgICAgA==';
   function unlockAudio() { // inside a tap: after this the phone lets the same player play by itself
