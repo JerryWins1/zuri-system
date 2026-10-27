@@ -116,7 +116,7 @@
 </script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
-<script src="../js/gate.js?v=45"></script>
+<script src="../js/gate.js?v=46"></script>
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
@@ -734,7 +734,7 @@
           ${live.map((x) => `<tr><td class="s" title="${esc(tokens(x.do))}">${passed.includes(x) ? '✅' : '⬜'} ${esc(x.id)} ${esc(tokens(x.do).slice(0, 26))}</td>${ts.map((t) => { const a = t.latest[x.id]; return `<td class="c ${a ? a.answer : 'none'}" data-cell="${esc(t.name)}|${esc(x.id)}" data-tip="${esc(t.name + ' · ' + x.id + ': ' + (a ? ANS[a.answer][1] + (a.note ? ' — ' + a.note : '') : 'not answered yet'))}">${a ? { ok: '✓', fail: '✗', unsure: '?' }[a.answer] : ''}</td>`; }).join('')}</tr>`).join('')}</table></div>` : '<div style="color:var(--faint)">Nobody in this job has started the script yet.</div>'}</div>`;
     };
     // ── the nudge: a WhatsApp message with the text written, which Jerry sends himself ──
-    const testersLink = 'https://jerrywins1.github.io/zuri-system/testers/';
+    const testersLink = 'https://jerrywins1.github.io/zuri-system/preview/testers/';
     const nudgeText = (t) => { const s = sc[t.role]; const ss = t.stop ? liveSessions(s).find((x) => x.id === t.stop.sid) : null; const si = ss ? liveSessions(s).indexOf(ss) + 1 : 0; const k = ss ? ss.steps.findIndex((x) => x.id === t.stop.id) + 1 : 0;
       return `Habari ${t.name.split(' ')[0]}! 👋 Your Zuri test script is waiting.` + (t.rows.length && t.stop ? ` You stopped at session ${si}, step ${k}: “${tokens(t.stop.do).slice(0, 90)}${tokens(t.stop.do).length > 90 ? '…' : ''}” — about ${ss.mins} minutes to finish that session.` : ' It starts with 20 minutes of easy steps in practice.')
         + ` Open it here: ${testersLink}` + (t.fby ? ` Please finish by ${fmtDay(t.fby)}.` : '') + ` Finishing earns KES ${rw.kes_per_script}, and each real problem you find +KES ${rw.kes_per_problem}. Asante! — Jerry`; };
