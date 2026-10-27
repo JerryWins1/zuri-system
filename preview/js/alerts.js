@@ -1,4 +1,4 @@
-// Zuri System · 📣 Alerts: one message to many customers, by area or by cabinet · v1.1 · 2026-10-27 (app v2.55)
+// Zuri System · 📣 Alerts: one message to many customers, by area or by cabinet · v1.1 · 2026-10-27 (app v2.56)
 // v1.1 (27 Oct): ✉️ Email, free — BCC batches for the office email account, only to customers who said yes to emails
 //   (customer page → Messages → Emails). Needs supabase/29_alerts_email.sql; without it the email part says so.
 //   #alerts                 the list: waiting for a partner, ready to send, sent

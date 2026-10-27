@@ -1,4 +1,4 @@
-// Zuri System · 📣 Alerts — narrated lessons on the real screens (practice), one per job · v1.1 · 2026-10-27 (app v2.55: + 7 · Email)
+// Zuri System · 📣 Alerts — narrated lessons on the real screens (practice), one per job · v1.1 · 2026-10-27 (app v2.56: + 7 · Email)
 // Each chapter sets its own scene (an outage, a waiting alert…), so it plays on its own; ▶ Play all chains them (✕ stops).
 (function () {
   const Z = window.Z;

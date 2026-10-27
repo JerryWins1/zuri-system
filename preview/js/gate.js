@@ -79,7 +79,7 @@
       <input id="zgate-in" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="e.g. ZURI-TEST" style="width:100%;box-sizing:border-box;font:inherit;font-size:20px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border:1.5px solid #B9C4C0;border-radius:10px;background:#fff;color:#152322;color-scheme:light">
       <button id="zgate-go" style="width:100%;margin-top:10px;font:inherit;font-weight:800;font-size:16px;padding:13px;border:0;border-radius:10px;background:#0F6E5C;color:#fff;min-height:48px;cursor:pointer">Open Zuri</button>` : ''}
       <p id="zgate-msg" style="margin:12px 0 0;font-size:14px;color:${msg ? '#C0392B' : '#56645F'};font-weight:${msg ? '700' : '500'}">${msg || 'Jerry or a partner gives you the code. It is tied to this phone and runs out on a date.'}</p>
-      <p style="margin:12px 0 0;font-size:13px;color:#56645F"><a href="https://jerrywins1.github.io/zuri-system/" style="color:#0F6E5C">Staff with an account: sign in here</a></p></div>`;
+      <p style="margin:12px 0 0;font-size:13px;color:#56645F"><a href="https://jerrywins1.github.io/zuri-system/preview/" style="color:#0F6E5C">Staff with an account: sign in here</a></p></div>`;
     document.body.appendChild(w);
     const go = document.getElementById('zgate-go'), inp = document.getElementById('zgate-in');
     if (!go) return;

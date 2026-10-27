@@ -1,4 +1,4 @@
--- Zuri System · 📣 Alerts by email (free, from the office email account) · v1 · 2026-10-27 (app v2.55)
+-- Zuri System · 📣 Alerts by email (free, from the office email account) · v1 · 2026-10-27 (app v2.56)
 -- Run AFTER 28_alerts.sql. Safe to run twice.
 --   customer_alert_prefs.ok_email   the customer said yes to emails from Zuri (off until they do)
 --   alerts.sent_how 'email'         an alert that went out by email
