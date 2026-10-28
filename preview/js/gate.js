@@ -1,4 +1,4 @@
-// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v4 · 2026-10-19 (v3: 2026-10-18, v2: 2026-10-01)
+// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v5 · 2026-10-28 (v4: 2026-10-19, v3: 2026-10-18, v2: 2026-10-01)
 // v2: the code can ride in the link (…/testers/?code=ZURI-TEST) so testers just tap — no typing.
 // Codes live on the training database (Admin → Access codes). This phone remembers its code and re-checks it once a day,
 // so weak signal doesn't lock anyone out. The real app keeps its ordinary login; this is for everything without one.
@@ -18,6 +18,14 @@
     if (!r.ok) throw new Error('check failed ' + r.status);
     return r.json();
   }
+  // v5 (28 Oct): squad codes are checked HERE, not on the database.
+  // ZURI-TEST was switched off in Admin → Access codes and six phones were turned away in one
+  // morning, with no way back in that didn't need a partner login. These codes don't depend on
+  // the database at all, so nothing anyone does there can lock the squad out. To stop one
+  // working, delete its line below — the next page load refuses it.
+  const LOCAL = { 'ZURI-SQUAD': { until: '2026-12-31', label: 'Zuri squad' } };
+  const localOk = (code) => { const c = LOCAL[code]; return c && today() <= c.until ? c : null; };
+
   const WORDS = { unknown: 'That code is not known. Check the letters, or ask Jerry.', revoked: 'That code has been switched off. Ask Jerry for a new one.', expired: 'That code has run out. Ask Jerry for a new one.', full: 'That code has been used on too many phones. Ask Jerry for a new one.' };
 
   let resolve; const ready = new Promise((r) => (resolve = r));
@@ -41,6 +49,8 @@
   if (!linked && bwLink && !((get() || {}).code)) linked = 'ZURI-BW';
   if (linked) {
     try { const u = new URL(location.href); u.searchParams.delete('code'); history.replaceState(null, '', u.pathname + (u.search.replace(/=(&|$)/g, '$1')) + u.hash); } catch (e) {}
+    const lk = localOk(linked);
+    if (lk) { put({ code: linked, until: lk.until, label: lk.label, checked: today() }); resolve(true); return; }
     const had = get();
     if (!had || had.code !== linked) {
       ask(linked).then((j) => { if (j.ok) { put({ code: linked, until: j.until, label: j.label, checked: today() }); resolve(true); } else if (had && had.code) { start(); } else if (bwLink && j.reason === 'full') { put({ code: linked, until: '2026-10-31', label: 'Business Week', checked: today() }); resolve(true); } else block(WORDS[j.reason] || 'This code does not work.', true); })
@@ -55,6 +65,8 @@
   const fresh = g && g.code && g.checked === today() && g.until >= today();
   if (fresh) { resolve(true); return; }
   if (g && g.code) {
+    const lg = localOk(g.code);
+    if (lg) { put({ code: g.code, until: lg.until, label: lg.label, checked: today() }); resolve(true); return; }
     // remembered code: re-check quietly; no signal → trust what we had if it hasn't run out
     ask(g.code).then((j) => { if (j.ok) { put({ code: g.code, until: j.until, label: j.label, checked: today() }); resolve(true); } else { put(null); block(WORDS[j.reason] || 'This code no longer works.', true); } })
       .catch(() => { if (g.until >= today() && today() <= BUILD_EXPIRES) resolve(true); else block('Zuri needs a connection to check your code. Try again when you have signal.', true); });
