@@ -249,10 +249,58 @@
   } catch (e) { voice = null; } };
   try { if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } } catch (e) {}
   const muted = () => Z.get('learn_mute', false);
+  /* v2.54 (25 Oct): the recorded voice. iPhones stop the phone's own voice after a few words, so every line is recorded
+     (voice/index.json: {line: [file, seconds]}) and played through ONE audio player, unlocked by the first tap.
+     Clips come through fetch(), so the offline shell keeps every clip once watched. A line changed since the recording
+     has no clip and uses the phone's voice, as before. */
+  let CLIPS = null;
+  fetch('voice/index.json?v=2').then((r) => (r.ok ? r.json() : null)).then((j) => { CLIPS = j; }).catch(() => {});
+  const audio = typeof Audio === 'function' ? new Audio() : null;
+  const SILENT = 'data:audio/wav;base64,UklGRiwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQgAAACAgICAgICAgA==';
+  function unlockAudio() { // inside a tap: after this the phone lets the same player play by itself
+    if (!audio || audio.dataset.ok) return;
+    try { audio.src = SILENT; const p = audio.play(); audio.dataset.ok = '1'; if (p && p.catch) p.catch(() => { delete audio.dataset.ok; }); } catch (e) {}
+  }
+  const blobs = new Map(); // file -> Promise<playable URL>; only the last few, phones are short of memory
+  function clipUrl(file) {
+    if (!blobs.has(file)) {
+      blobs.set(file, fetch(file).then((r) => (r.ok ? r.blob() : Promise.reject())).then((b) => URL.createObjectURL(b)).catch(() => file));
+      if (blobs.size > 6) { const [old, p] = blobs.entries().next().value; blobs.delete(old); p.then((u) => setTimeout(() => u.startsWith('blob:') && URL.revokeObjectURL(u), 60000)); }
+    }
+    return blobs.get(file);
+  }
+  const clipFor = (text) => (CLIPS && text && CLIPS[text]) || null;
+  let endClip = null, hushes = 0; // finishes the clip now playing (skip, close, mute)
+  function hush() { hushes++; if (audio) try { audio.pause(); } catch (e) {} if (endClip) endClip(true); if (window.speechSynthesis) speechSynthesis.cancel(); }
+  function playClip([file, secs]) {
+    const h = hushes;
+    return clipUrl(file).then((url) => new Promise((res) => {
+      if (h !== hushes) return res(true); // skipped or closed while it was still loading
+      let done = false, last = -1, still = 0, all = 0;
+      const fin = (ok) => { if (done) return; done = true; clearInterval(t); if (endClip === fin) { endClip = null; audio.onended = audio.onerror = null; } res(ok); };
+      // Some phones never say "ended", and weak signal can stall: give up after 8 seconds stuck (not counting a pause).
+      const t = setInterval(() => {
+        if (P && P.paused) return;
+        all += 250; if (audio.currentTime !== last) { last = audio.currentTime; still = 0; } else still += 250;
+        if (still > 8000 || all > secs * 3000 + 10000) fin(true);
+      }, 250);
+      endClip = fin;
+      audio.onended = () => fin(true);
+      audio.onerror = () => fin(false);
+      audio.src = url;
+      try { const p = audio.play(); if (p && p.catch) p.catch(() => fin(false)); } catch (e) { fin(false); }
+    }));
+  }
   function speak(text) {
     const min = Math.max(2600, text.split(/\s+/).length * 420); // reading time when sound is off
     if (window.ZURI_LEARN_FAST) return sleep(60); // checking every video quickly
-    if (muted() || !window.speechSynthesis) return sleep(min);
+    if (muted()) return sleep(min);
+    const clip = audio && clipFor(text);
+    if (clip) return playClip(clip).then((ok) => (ok || !P || P.paused ? null : sayAloud(text, min)));
+    return sayAloud(text, min);
+  }
+  function sayAloud(text, min) {
+    if (!window.speechSynthesis) return sleep(min);
     return new Promise((res) => {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
@@ -267,6 +315,7 @@
 
   let P = null; // the playing lesson
   async function play(lesson, from = 0) {
+    unlockAudio(); // still inside the tap on the video
     // v2.37: the coach video needs the coach on (?coach) and a Business Week day to show (?today=1 before the week starts).
     if (lesson.coach && !document.getElementById('zcoach') && !/[?&]coach\b/.test(location.search)) {
       try { localStorage.setItem(AUTO, lesson.id); localStorage.setItem('zuri_practice_role', lesson.role || 'callcenter'); } catch (e) {}
@@ -293,29 +342,30 @@
     bar.querySelector('[data-a=back]').onclick = () => jump(Math.max(0, P.i - 1));
     bar.querySelector('[data-a=next]').onclick = () => jump(P.i + 1);
     bar.querySelector('[data-a=stop]').onclick = () => stop();
-    bar.querySelector('[data-a=mute]').onclick = (e) => { Z.set('learn_mute', !muted()); e.target.textContent = muted() ? '🔇' : '🔊'; if (muted() && window.speechSynthesis) speechSynthesis.cancel(); };
+    bar.querySelector('[data-a=mute]').onclick = (e) => { unlockAudio(); Z.set('learn_mute', !muted()); e.target.textContent = muted() ? '🔇' : '🔊'; if (muted()) hush(); };
     bar.querySelector('[data-a=pause]').onclick = (e) => {
       P.paused = !P.paused; e.target.textContent = P.paused ? '▶' : '⏸';
+      if (endClip) try { P.paused ? audio.pause() : audio.play().catch(() => endClip && endClip(true)); } catch (err) {}
       if (window.speechSynthesis) P.paused ? speechSynthesis.pause() : speechSynthesis.resume();
     };
     // Opened from a link (a new tab), the phone hasn't been tapped yet, and phones refuse to speak until it has.
     // So wait for one tap; otherwise the video races by in silence and looks like it "doesn't play" (v3, 5 Oct).
     const ua = navigator.userActivation;
-    if (ua && !ua.hasBeenActive && !muted() && window.speechSynthesis && !window.ZURI_LEARN_FAST) {
+    if (ua && !ua.hasBeenActive && !muted() && (audio || window.speechSynthesis) && !window.ZURI_LEARN_FAST) {
       const go = Object.assign(document.createElement('button'), { className: 'btn block', textContent: '▶ Tap to start (sound on)' });
       go.style.cssText = 'margin:8px 0 2px;font-size:18px;min-height:52px';
       bar.querySelector('.cap').textContent = 'Turn your sound up, then tap the green button.';
       bar.querySelector('.ctl').before(go);
       const tok = P.token;
-      go.onclick = () => { go.remove(); try { speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } catch (e) {} if (P && P.token === tok) run(tok); };
+      go.onclick = () => { go.remove(); unlockAudio(); try { speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } catch (e) {} if (P && P.token === tok) run(tok); };
       return;
     }
     run(P.token);
   }
-  function jump(i) { if (!P) return; if (window.speechSynthesis) speechSynthesis.cancel(); P.i = i; P.token = {}; P.paused = false; P.bar.querySelector('[data-a=pause]').textContent = '⏸'; run(P.token); }
+  function jump(i) { if (!P) return; hush(); P.i = i; P.token = {}; P.paused = false; P.bar.querySelector('[data-a=pause]').textContent = '⏸'; run(P.token); }
   function stop(silent) {
     if (!P) return;
-    if (window.speechSynthesis) speechSynthesis.cancel();
+    hush();
     [P.block, P.ring, P.bar].forEach((x) => x.remove());
     const lesson = P.lesson, finished = P.i >= lesson.steps.length;
     P = null;
@@ -343,8 +393,12 @@
       if (!el) console.warn(`[learn] ${L.id} step ${P.i + 1}: nothing to point at (${typeof s.el === 'string' ? s.el : 'custom'})`);
       if (el) { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); await sleep(450); }
       if (!P || P.token !== token) return; // closed or skipped while scrolling
+      while (P && P.token === token && P.paused) await sleep(200); // paused between lines: the next one waits
+      if (!P || P.token !== token) return;
       placeRing(el);
       P.bar.querySelector('.cap').textContent = s.say;
+      const nx = L.steps[P.i + 1], nc = nx && clipFor(nx.say);
+      if (nc && !muted()) clipUrl(nc[0]); // fetch the next line while this one plays
       await speak(s.say);
       while (P && P.token === token && P.paused) await sleep(200);
       if (!P || P.token !== token) return;
@@ -403,7 +457,7 @@
     pickVoice();
     const vs = englishVoices().slice(0, 6);
     if (!vs.length) return Z.toast('This phone has no voices to choose from — the captions still show.');
-    const sh = Z.sheet('🔊 Choose the voice', `<p class="hint" style="margin-top:0">Tap ▶ to hear each one. Then tap the one you like.</p>
+    const sh = Z.sheet('🔊 Choose the voice', `<p class="hint" style="margin-top:0">The videos have their own recorded voice. This phone voice is only used for a line that is newer than the recording. Tap ▶ to hear each one. Then tap the one you like.</p>
       <div class="list">${vs.map((v, i) => `<div class="item"><button class="btn sec small" data-hear="${i}" aria-label="Hear ${Z.esc(v.name)}">▶</button>
         <div class="grow"><div class="t">${Z.esc(v.name.replace(/\s*\(.*\)$/, ''))}${voice && v.name === voice.name ? ' <span class="pill ok">chosen</span>' : ''}</div><div class="m">${Z.esc(v.lang)}</div></div>
         <button class="btn small" data-use="${i}">Use this</button></div>`).join('')}</div>`);
@@ -437,7 +491,7 @@
         if (g === '🚀 Getting ready' && !Z.isStaff()) return ''; // 🚀 v2.48: the partners' go-live list
         const blurb = { 'Every screen, every field': '📖 The whole system, one chapter per screen — explains every field.', 'A day in the life': '🌅 One working day through four people: Kelvin, Mary, Peter and a partner. The story carries from one chapter to the next.',
           '🧾 Receipts': '🧾 Receipts, start to finish: why they matter, snapping one on a job, checking it, M-Pesa messages, repeats, no signal, the AI setting, missing receipts and the Friday report.',
-          '📣 Alerts': '📣 Alerts: one message to a whole area or one cabinet. An outage texted before the phones ring, a partner\'s yes, the list for the bulk-SMS website, service-back to the same people, planned work, and each customer\'s language and yes to offers.',
+          '📣 Alerts': '📣 Alerts: one message to a whole area or one cabinet. An outage texted before the phones ring, a partner\'s yes, the list for the bulk-SMS website, service-back to the same people, planned work, free email to customers who said yes, and each customer\'s language and yes to offers.',
           '🚀 Getting ready': '🚀 Getting ready (partners & office): why we don\'t just switch Zuri on, the ten parts of the go-live list, doing it one step at a time (Done, Later, I\'m stuck), and who does what.',
           '📈 Projects': '📈 Projects (finance & partners): what payback and break-even mean, planning a new area in three parts, the what-ifs, a loan, comparing two areas, saying “we\'re doing it” with a second OK, updating the forecast, and tracking actual against the plan.',
           '⏱ Time savers': '⏱ Time savers: Today\'s texts, the Friday report that writes itself, expired packages on fault calls, map pins and nearest-first, outage spotting, and two people for every payment.' }[g];

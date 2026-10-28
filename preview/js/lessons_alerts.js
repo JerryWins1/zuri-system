@@ -1,4 +1,4 @@
-// Zuri System · 📣 Alerts — narrated lessons on the real screens (practice), one per job · v1 · 2026-10-16 (app v2.39)
+// Zuri System · 📣 Alerts — narrated lessons on the real screens (practice), one per job · v1.1 · 2026-10-27 (app v2.56: + 7 · Email)
 // Each chapter sets its own scene (an outage, a waiting alert…), so it plays on its own; ▶ Play all chains them (✕ stops).
 (function () {
   const Z = window.Z;
@@ -84,7 +84,7 @@
       { el: '#cap-f button', say: 'Save.', do: tap('#cap-f button') },
     ], ['Set a customer\'s cabinet and language', 'Try to save a yes to offers without a note', 'Add the note and save']),
 
-    C('al-partner', '6 · Partners: the words, the add-ons and quiet hours', 3, 'admin', 'al-turn', [
+    C('al-partner', '6 · Partners: the words, the add-ons and quiet hours', 3, 'admin', 'al-email', [
       { go: 'alerts/codes', el: 'form[data-code=OUT]', say: 'The partners own the words. Messages lists every ready-made alert.' },
       { el: 'form[data-code=OUT] textarea[name=msg_sw]', say: 'Read every Kiswahili message and change anything that doesn\'t sound right. Keep them short: up to 160 letters is one SMS.' },
       { el: 'form[data-code=RENEW]', say: 'Package ending is off. Billnasi already texts customers three days before the cutoff, so we don\'t send it twice.' },
@@ -99,13 +99,27 @@
       { el: '#al-set button', say: 'Save.', do: tap('#al-set button') },
     ], ['Read every Kiswahili message', 'Find Plan & add-ons and read what each costs', 'Check the quiet hours']),
 
-    C('al-turn', '7 · Your turn: try every part of Alerts', 2, 'admin', null, [
+    C('al-email', '7 · Email: free, to customers who said yes', 2, 'admin', 'al-turn', [
+      { pre: async () => { made = await Z.alertMake({ code: 'MAINT', areas: ['B'], blanks: { date: 'Saturday', date_sw: 'Jumamosi', time: '10am', time_sw: 'saa 4 asubuhi', duration: '2 hours', duration_sw: 'saa 2' }, status: 'approved', minsAgo: 30 }); },
+        get go() { return 'alerts/' + made; }, el: '#al-mail', say: 'Email is free too. Zuri has no email system of its own, so it uses the office email account: Gmail or Outlook.' },
+      { el: '#al-mail-count', say: 'Only customers who have an email on their page and said yes to emails get one. Everyone else still gets WhatsApp.' },
+      { el: '#al-mail [data-bcc]', say: 'Copy the addresses for one batch. In the office email, paste them into BCC. Never To or Cc, or every customer sees everyone else\'s address.', do: tap('#al-mail [data-bcc]') },
+      { el: '#al-mail [data-mbody]', say: 'Then copy the subject and the words. The words end with one line telling the customer how to stop: reply STOP.', do: tap('#al-mail [data-mbody]') },
+      { el: '#al-mail [data-mopen]', say: 'On a phone, Open email can fill in all three for you.' },
+      { el: '#al-mail-csv', say: 'If a customer replies STOP, untick Emails on their page. That is all it takes.' },
+      { pre: async () => { const r = await Z.sb.from('v_customers').select('id,email').eq('area', 'A').eq('status', 'active').order('full_name'); const c = (r.data || []).find((x) => x.email); grace = c ? c.id : null; },
+        get go() { return 'customers/' + grace; }, el: '#cap-f input[name=ok_email]', say: 'On the customer page, in Messages: Emails too. Tick it only when the customer says yes.', do: check('#cap-f input[name=ok_email]') },
+      { el: '#cap-f input[name=consent_note]', say: 'And write how and when they said yes. Zuri won\'t save a yes to emails without it.', do: type('#cap-f input[name=consent_note]', 'Said yes to emails on the phone') },
+      { el: '#cap-f button', say: 'Save.', do: tap('#cap-f button') },
+    ], ['Open an approved alert and find ✉️ Email', 'Copy the BCC addresses and the words', 'Tick Emails on a customer, with a note']),
+
+    C('al-turn', '8 · Your turn: try every part of Alerts', 2, 'admin', null, [
       { pre: async () => { await Z.alertMake({ ...OUT_B, status: 'sent', minsAgo: 180 }); await Z.alertMake({ code: 'MAINT', areas: ['A'], blanks: { date: 'Sat 18 Oct', date_sw: 'Jumamosi 18 Okt', time: '10am', time_sw: 'saa 4 asubuhi', duration: '2 hours', duration_sw: 'saa 2' }, status: 'draft', minsAgo: 6 }); },
         go: 'alerts', el: '#al-quick', say: 'That\'s Alerts. Now try it yourself, in practice. Nothing here is real, and nothing is sent.' },
       { el: '#al-l-wait', say: 'Alerts waiting for a partner\'s yes are here, and on the partners\' Home screen.' },
       { el: '#al-l-done', say: 'Everything that went out stays here: who wrote it, who said yes, and when.' },
       { go: 'me', el: 'a[href="#learn"]', say: 'Every chapter is on the Learn page, to watch again any time.' },
-    ], ['Text an outage to Zuri B (Call center)', 'Approve it and download the list (Partner)', 'Send FIX to the same people (Partner)', 'Planned work for one cabinet (Technical)', 'Set a customer\'s cabinet, language and offers (Call center)', 'Set the SMS price (Partner)']),
+    ], ['Text an outage to Zuri B (Call center)', 'Approve it and download the list (Partner)', 'Send FIX to the same people (Partner)', 'Planned work for one cabinet (Technical)', 'Set a customer\'s cabinet, language and offers (Call center)', 'Set the SMS price (Partner)', 'Email a batch of customers who said yes (Partner)']),
   ];
   if (Z.lessons) Z.lessons.push(...CH);
 })();

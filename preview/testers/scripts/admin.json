@@ -1,8 +1,8 @@
 {
   "role": "admin",
   "title": "Partner / manager test script",
-  "version": "1.5",
-  "date": "2026-10-22",
+  "version": "1.6",
+  "date": "2026-10-27",
   "who": "You are Jerry, a partner. You see everything. Everything is pretend and stays on your phone.",
   "sessions": [
     {
@@ -1244,6 +1244,100 @@
             [
               "see",
               "FIX"
+            ]
+          ]
+        },
+        {
+          "id": "aal-11",
+          "link": "#alerts/new/POWER/area:B",
+          "do": "Make a ⚡ POWER alert for Zuri B and tap ✅ Save and approve.",
+          "see": "Under “Send it” there is a ✉️ Email part marked free: how many have an email and said yes, and one batch per language.",
+          "look": [
+            "✉️ Email",
+            "free",
+            "have an email and said yes"
+          ],
+          "auto": [
+            [
+              "see",
+              "of them also get it by email"
+            ],
+            [
+              "tap",
+              "#al-save"
+            ],
+            [
+              "see",
+              "have an email and said yes"
+            ],
+            [
+              "has",
+              "#al-mail [data-bcc]"
+            ]
+          ]
+        },
+        {
+          "id": "aal-12",
+          "link": "#alerts",
+          "do": "Open the POWER alert under Ready to send. In ✉️ Email tap 📋 Addresses (BCC), then 📋 The words.",
+          "see": "“Copied … addresses. Paste them into BCC.” and then “Copied the words, with the STOP line at the end.”",
+          "look": [
+            "Addresses (BCC)",
+            "The words"
+          ],
+          "auto": [
+            [
+              "tap",
+              "#al-l-ready a.item:has-text('POWER')"
+            ],
+            [
+              "js",
+              "(navigator.clipboard.writeText = () => Promise.resolve(), true)"
+            ],
+            [
+              "tap",
+              "#al-mail [data-bcc]"
+            ],
+            [
+              "see",
+              "Paste them into BCC"
+            ],
+            [
+              "tap",
+              "#al-mail [data-mbody]"
+            ],
+            [
+              "see",
+              "STOP line"
+            ]
+          ]
+        },
+        {
+          "id": "aal-13",
+          "link": "#alerts/setup",
+          "do": "In Plan & add-ons find ✉️ Email from the office account. Change Addresses per email to 40 and tap Save.",
+          "see": "Email is free and always on. “Saved.”",
+          "look": [
+            "Email from the office account",
+            "Addresses per email"
+          ],
+          "auto": [
+            [
+              "see",
+              "Email from the office account"
+            ],
+            [
+              "fill",
+              "#al-eb",
+              "40"
+            ],
+            [
+              "tap",
+              "#al-set > button"
+            ],
+            [
+              "see",
+              "Saved"
             ]
           ]
         }
