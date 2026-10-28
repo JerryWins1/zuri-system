@@ -231,6 +231,10 @@
 "voice/d1cfa8ba7118.m4a",
 4.37
 ],
+"And write how and when they said yes. Zuri won't save a yes to emails without it.": [
+"voice/077ffcbee46e.m4a",
+6.57
+],
 "Another one: a Paybill payment for the office electricity.": [
 "voice/c8134750b1a9.m4a",
 4.69
@@ -499,6 +503,10 @@
 "voice/0d5ed6a0aefd.m4a",
 4.27
 ],
+"Copy the addresses for one batch. In the office email, paste them into BCC. Never To or Cc, or every customer sees everyone else's address.": [
+"voice/3b9fb3928c6d.m4a",
+12.1
+],
 "Copy the words for that group, paste them into the broadcast, and send. Customers only get broadcasts if they have saved Zuri's number, so ask them to.": [
 "voice/dd6d56716ef3.m4a",
 12.15
@@ -618,6 +626,10 @@
 "Edit opens every field.": [
 "voice/3163e57da4e9.m4a",
 2.38
+],
+"Email is free too. Zuri has no email system of its own, so it uses the office email account: Gmail or Outlook.": [
+"voice/6f9a345f8778.m4a",
+10.08
 ],
 "Every Friday, Zuri adds up the week: how much was spent, how many spends have a receipt, and how many are still missing.": [
 "voice/e0a6f2757a69.m4a",
@@ -942,6 +954,10 @@
 "I can open anyone's list. Dickson's.": [
 "voice/0303103b0356.m4a",
 3.81
+],
+"If a customer replies STOP, untick Emails on their page. That is all it takes.": [
+"voice/03a7f3aede90.m4a",
+6.84
 ],
 "If a step suits someone else better, change who does it, right here. Nobody has to carry a step that is not theirs.": [
 "voice/d8acebe09b58.m4a",
@@ -1391,6 +1407,10 @@
 "voice/c1f96fdb36cc.m4a",
 8.57
 ],
+"On a phone, Open email can fill in all three for you.": [
+"voice/e48e2599f3fa.m4a",
+4.41
+],
 "On day three and day fourteen the card says: call first. Ask how the service was. If it was not working, open the job and tap Service problem, so a technician goes.": [
 "voice/fbe89755fb93.m4a",
 13.81
@@ -1402,6 +1422,10 @@
 "On means the photo is sent to Zuri's reading helper, Claude, made by Anthropic. It reads the shop, amount, date, code, VAT and PIN, and suggests the category from Zuri's own list. It writes nothing by itself: the person checks and taps Save.": [
 "voice/4290e9d1ce7f.m4a",
 20.34
+],
+"On the customer page, in Messages: Emails too. Tick it only when the customer says yes.": [
+"voice/8f4ceeded929.m4a",
+7.74
 ],
 "Once a month, bring in each statement. Excel, CSV or the M-Pesa PDF all work. Bringing the same one twice is safe: repeats are skipped.": [
 "voice/14c677e7d9f8.m4a",
@@ -1442,6 +1466,10 @@
 "Only Active customers. Someone who is switched off isn't affected by an outage.": [
 "voice/3e032d43982c.m4a",
 6.53
+],
+"Only customers who have an email on their page and said yes to emails get one. Everyone else still gets WhatsApp.": [
+"voice/89a9f10b815e.m4a",
+8.71
 ],
 "Only if it really is a different payment with the same code, which almost never happens, tap Save anyway. Otherwise, just leave the page.": [
 "voice/209582d1e419.m4a",
@@ -2330,6 +2358,10 @@
 "Then choose who should do it: a person, or a whole group like Field techs.": [
 "voice/0960c7dca7df.m4a",
 5.75
+],
+"Then copy the subject and the words. The words end with one line telling the customer how to stop: reply STOP.": [
+"voice/6acee5121ecd.m4a",
+8.41
 ],
 "Then each area: the bank balance from the last count, the M-Pesa float against its target, bills still owing, and cash after bills: bank plus M-Pesa minus what is owed.": [
 "voice/432f85355fb8.m4a",
