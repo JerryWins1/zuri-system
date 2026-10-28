@@ -120,7 +120,8 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.9 · 2026-10-22';
+  const VERSION = 'v2.10 · 2026-10-28';
+  // v2.10 (28 Oct): the 🎯 focus card names whoever set the plan (tester_plan.by_who), not always Jerry — Emmanuel now runs the squad.
   // v2.9 (22 Oct): 📣 Alerts in the scripts — callcenter.json 1.3 (cal), admin.json 1.5 (aal, after agl), field.json 1.3 (fal).
   // v2.8 (20 Oct): admin.json 1.4 — session agl, 🚀 Getting ready (the partners' go-live list): HQ card, one step at a time, Done, I'm stuck, a step that waits, the whole list.
   // v2.7 (16 Oct): a “Watch: your coach (2 min)” link under the Feedback Studio button.
@@ -237,6 +238,11 @@
           || rows.find((r) => r.tester === '*' && (!r.role || r.role === me.role)) || null;
       set('plan', plan);
     } catch (e) { plan = get('plan', null); }
+  }
+  // whoever set the plan — a partner's first name, so an instruction from Emmanuel does not arrive under Jerry's name
+  function planBy() {
+    const w = (plan && plan.by_who || 'Jerry').trim();
+    return w.split(/\s+/)[0] || 'Jerry';
   }
   function planned(steps) {
     if (!plan || !Array.isArray(plan.steps) || !plan.steps.length) return steps;
@@ -566,7 +572,7 @@
     $('#main').innerHTML = `
       <div class="bar"><i style="width:${Math.round((done / Math.max(1, steps.length)) * 100)}%"></i></div>
       ${sxCard()}
-      ${plan && plan.focus ? `<div class="card" style="border-left:4px solid var(--now)"><b>🎯 Jerry asked you to focus on:</b> ${esc(plan.focus)}</div>` : ''}
+      ${plan && plan.focus ? `<div class="card" style="border-left:4px solid var(--now)"><b>🎯 ${esc(planBy())} asked you to focus on:</b> ${esc(plan.focus)}</div>` : ''}
       ${cur ? `<div class="now"><div class="lbl"><span>Now · step ${steps.indexOf(cur) + 1} of ${steps.length}</span><span>${esc(cur.sec)}</span></div>
         <h2>${esc(cur.t)}</h2><div class="why">${esc(cur.why)}</div>
         <ol>${cur.how.map((h) => `<li>${esc(h)}</li>`).join('')}</ol>
