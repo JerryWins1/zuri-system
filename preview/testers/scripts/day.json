@@ -3,13 +3,13 @@
  "title": "A whole business day",
  "version": "1.0",
  "date": "2026-10-29",
- "who": "Today you run the whole company on your own. You will be the call center, then the technician, then finance, then the partner — switching with 🔄 Try another job on the Me page. Everything is pretend and stays on your phone. Follow ONE customer, Grace Mwende, from the phone call to the books.",
+ "who": "This is the team's script, not one person's. Emmanuel leads it: he says which parts are yours to go deep on, and he decides which of the problems you find are real. Between you, the four of you cover a whole working day at Zuri Fiber, following ONE customer — Grace Mwende — from her phone call to the books. On your own phone you can be every job in turn: switch with 🔄 Try another job on the Me page. Everything is pretend and stays on your phone.",
  "sessions": [
   {
    "id": "d1",
    "title": "A new customer buys",
    "mins": 25,
-   "intro": "Someone rings wanting internet. Everything that happens from that call until a tech has a job to go to. Use the SAME customer all the way through today — write their name down.",
+   "intro": "📞 Best suited to the call centre — Veronicah. Someone rings wanting internet. Everything that happens from that call until a tech has a job to go to. Use the SAME customer all the way through today — write their name down.",
    "steps": [
     {
      "id": "d1-01",
@@ -206,7 +206,7 @@
    "id": "d2",
    "title": "Stock, and getting a tech there",
    "mins": 15,
-   "intro": "Before you send anyone you want to know there is a router on the shelf. Then you book the tech.",
+   "intro": "📞 Best suited to the call centre — Veronicah. Before you send anyone you want to know there is a router on the shelf. Then you book the tech.",
    "steps": [
     {
      "id": "d2-01",
@@ -290,7 +290,7 @@
    "id": "d3",
    "title": "The install",
    "mins": 30,
-   "intro": "Now be the technician. On Me tap 🔄 Try another job and pick 🛠️ Field tech. Same pretend company, different pair of eyes.",
+   "intro": "🛠️ Best suited to the field tech — Brian. Now be the technician. On Me tap 🔄 Try another job and pick 🛠️ Field tech. Same pretend company, different pair of eyes.",
    "steps": [
     {
      "id": "d3-01",
@@ -473,7 +473,7 @@
    "id": "d4",
    "title": "The money",
    "mins": 30,
-   "intro": "Be finance now. On Me tap 🔄 Try another job and pick 💰 Finance.",
+   "intro": "💰 Best suited to finance — Kevin and Fredrick. Be finance now. On Me tap 🔄 Try another job and pick 💰 Finance.",
    "steps": [
     {
      "id": "d4-01",
@@ -625,7 +625,7 @@
    "id": "d5",
    "title": "Watching the whole business",
    "mins": 20,
-   "intro": "The owner's view. What would Jerry look at on a Monday morning?",
+   "intro": "⭐ Best suited to the team lead — Emmanuel. The owner's view. What would Jerry look at on a Monday morning?",
    "steps": [
     {
      "id": "d5-01",
@@ -723,7 +723,7 @@
    "id": "d6",
    "title": "When it breaks",
    "mins": 20,
-   "intro": "Two weeks later Grace rings: her internet is down. Back to the call center — Me, 🔄 Try another job, 📞 Call center.",
+   "intro": "📞🛠️ Call centre and field together — Veronicah and Brian. Two weeks later Grace rings: her internet is down. Back to the call center — Me, 🔄 Try another job, 📞 Call center.",
    "steps": [
     {
      "id": "d6-01",
@@ -821,7 +821,7 @@
    "id": "d7",
    "title": "Anything we have not thought of",
    "mins": 20,
-   "intro": "The last part is yours. We have walked you through our idea of a normal day — now go looking for the parts of a real day we have forgotten.",
+   "intro": "👥 Everybody. The last part is yours. We have walked you through our idea of a normal day — now go looking for the parts of a real day we have forgotten.",
    "steps": [
     {
      "id": "d7-01",
@@ -866,6 +866,92 @@
       [
        "go",
        "#customers"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "d8",
+   "title": "For Emmanuel — pulling the day together",
+   "mins": 20,
+   "intro": "⭐ The team lead's part. Do this once the others have been through their sessions. Nobody is paid until you have done it.",
+   "steps": [
+    {
+     "id": "d8-01",
+     "link": "#home",
+     "do": "Read what each of the four reported today, on the board.",
+     "see": "You can see everyone's notes in one place.",
+     "look": [
+      "board"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ],
+     "tip": "The board is at ?board on the testers' list. Ask Jerry if it will not open for you."
+    },
+    {
+     "id": "d8-02",
+     "link": "#home",
+     "do": "Go through the problems they reported and mark each one Real problem or Not a problem.",
+     "see": "Each one is ruled on. A tester earns nothing for a problem until you confirm it.",
+     "look": [
+      "Real problem",
+      "Not a problem"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ],
+     "tip": "There is a backlog of 190 that nobody has ever ruled on. Start with your own four."
+    },
+    {
+     "id": "d8-03",
+     "link": "#home",
+     "do": "Of the real ones, decide which are SERIOUS — money wrong, VAT wrong, money to the wrong place, work that disappears. Write those down; there is no button for it yet.",
+     "see": "You have a short list of the ones that actually matter.",
+     "look": [
+      "serious"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ]
+    },
+    {
+     "id": "d8-04",
+     "link": "#home",
+     "do": "Pick the one thing from today that would embarrass Zuri most in front of a real customer.",
+     "see": "One sentence. That is the thing Jerry needs to read first.",
+     "look": [
+      "Home"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ]
+    },
+    {
+     "id": "d8-05",
+     "link": "#home",
+     "do": "Say what you want each of the four on next, and what you need from Jerry.",
+     "see": "Short is fine. Leave it on your own page under Notes for Jerry, or send it on WhatsApp.",
+     "look": [
+      "Home"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
       ]
      ]
     }
