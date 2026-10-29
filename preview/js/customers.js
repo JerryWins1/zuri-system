@@ -41,32 +41,49 @@
 
     const f = Z.get('cust_filter', { q: '', status: 'active', page: 0 });
     const per = 50;
-    let q = Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status,plan,lat', { count: 'exact' });
-    if (clean(f.q)) q = q.or(findOr(clean(f.q))); // #12
-    // v2.36 (15 Oct): a search looks at EVERY status. The list opens on Active, so “search first” before a new customer
-    //       missed Leads and switched-off customers, and the same person was added twice.
-    if (f.status && !clean(f.q)) q = q.eq('status', f.status);
-    if (Z.area) q = q.eq('area', Z.area);
-    let { data, count, error } = await q.order('full_name').range(f.page * per, f.page * per + per - 1);
-    if (error) throw error;
-    // v2.46 (19 Oct, Business Week day 2: Kevin saw "0 customers" while 6 Leads existed): the list opens on Active. If Active is
-    //       empty but other customers exist, show them all and say so, instead of a bare "0" that looks like a fault.
-    let hiddenNote = '';
-    if (!clean(f.q) && f.status && !count) {
-      let q2 = Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status,plan,lat', { count: 'exact' });
-      if (Z.area) q2 = q2.eq('area', Z.area);
-      const r2 = await q2.order('full_name').range(0, per - 1);
-      if (!r2.error && r2.count) { data = r2.data; count = r2.count; hiddenNote = `<p class="hint" style="margin:-4px 0 8px">No customers are ${Z.esc((STATUSES.find((x) => x[0] === f.status) || [f.status, f.status])[1].split(' (')[0])} yet, so here is everyone (${Z.fmt(r2.count)}). Change the box above to filter.</p>`; }
-    }
-    const pages = Math.max(1, Math.ceil((count || 0) / per));
 
+    // v2.53 (Veronicah, 29 Oct: "when typing the customer name it kept disappearing, or if i wanted to
+    //        delete the name so as to search another one"). Every keystroke used to re-run the whole route,
+    //        which rebuilt this screen — the search box included. While it was being rebuilt nothing had
+    //        focus, so keys pressed in that gap were dropped by the browser, and the caret was then forced
+    //        to the end, which made correcting or clearing the box a fight. Typing "Grace" one key at a
+    //        time gave "Gae". So the box and the heading are built ONCE here and never touched again;
+    //        only the body below is repainted.
     el.innerHTML = `
-      <div class="row" style="justify-content:space-between"><h2>Customers${Z.area ? ' · ' + Z.esc(Z.areaName(Z.area)) : ''} <span class="muted" style="font-size:15px">${Z.fmt(count)}</span></h2>
+      <div class="row" style="justify-content:space-between"><h2>Customers${Z.area ? ' · ' + Z.esc(Z.areaName(Z.area)) : ''} <span class="muted" id="c-count" style="font-size:15px"></span></h2>
         <div class="row"><a class="btn sec" href="#customers/map">🗺️ Map</a><a class="btn sec" href="#alerts">📣 Alerts</a><a class="btn" href="#customers/new">＋ New customer</a></div></div>
       <div class="row" style="margin-bottom:10px">
         <input id="c-q" placeholder="Search name, phone, account" value="${Z.esc(f.q)}" style="flex:1">
         <select id="c-st" aria-label="Show customers with this status" style="width:auto"><option value="">Any status</option>${Z.opts(STATUSES.map(([k, t]) => [k, t.split(' (')[0]]), f.status)}</select>
       </div>
+      <div id="c-body"><div class="loading">Loading…</div></div>`;
+
+    async function paint() {
+      const body = Z.$('#c-body', el); if (!body) return;
+      let q = Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status,plan,lat', { count: 'exact' });
+      if (clean(f.q)) q = q.or(findOr(clean(f.q))); // #12
+      // v2.36 (15 Oct): a search looks at EVERY status. The list opens on Active, so “search first” before a new customer
+      //       missed Leads and switched-off customers, and the same person was added twice.
+      if (f.status && !clean(f.q)) q = q.eq('status', f.status);
+      if (Z.area) q = q.eq('area', Z.area);
+      let data, count;
+      try {
+        const r = await q.order('full_name').range(f.page * per, f.page * per + per - 1);
+        if (r.error) throw r.error;
+        data = r.data; count = r.count;
+      } catch (e) { body.innerHTML = `<div class="card">${Z.esc(Z.errText(e))}</div>`; return; }
+      // v2.46 (19 Oct, Business Week day 2: Kevin saw "0 customers" while 6 Leads existed): the list opens on Active. If Active is
+      //       empty but other customers exist, show them all and say so, instead of a bare "0" that looks like a fault.
+      let hiddenNote = '';
+      if (!clean(f.q) && f.status && !count) {
+        let q2 = Z.sb.from('v_customers').select('id,full_name,phone,account_no,area,landmark,status,plan,lat', { count: 'exact' });
+        if (Z.area) q2 = q2.eq('area', Z.area);
+        const r2 = await q2.order('full_name').range(0, per - 1);
+        if (!r2.error && r2.count) { data = r2.data; count = r2.count; hiddenNote = `<p class="hint" style="margin:-4px 0 8px">No customers are ${Z.esc((STATUSES.find((x) => x[0] === f.status) || [f.status, f.status])[1].split(' (')[0])} yet, so here is everyone (${Z.fmt(r2.count)}). Change the box above to filter.</p>`; }
+      }
+      const pages = Math.max(1, Math.ceil((count || 0) / per));
+      const cnt = Z.$('#c-count', el); if (cnt) cnt.textContent = Z.fmt(count);
+      body.innerHTML = `
       ${clean(f.q) && f.status ? '<p class="hint" style="margin:-4px 0 8px">Searching every status (Lead, Active, switched off…).</p>' : ''}
       ${hiddenNote}
       <div class="card list">${data.length ? data.map((c) => `<a class="item" href="#customers/${c.id}"><div class="grow">
@@ -75,13 +92,15 @@
           <div class="m">${Z.esc(Z.areaName(c.area))}${c.landmark ? ' · ' + Z.esc(c.landmark) : ''}${c.lat == null ? ' · <span style="color:var(--warn-ink)">no pin</span>' : ''}</div>
         </div>${statusPill(c.status)}</a>`).join('') : '<div class="empty">No customers found. Import your billing list under <a href="#import">Import</a>, or add one.</div>'}</div>
       ${pages > 1 ? `<div class="row" style="justify-content:center"><button class="btn sec small" id="c-prev" ${f.page ? '' : 'disabled'}>← Prev</button><span class="hint">Page ${f.page + 1} of ${pages}</span><button class="btn sec small" id="c-next" ${f.page + 1 < pages ? '' : 'disabled'}>Next →</button></div>` : ''}`;
+      const pv = Z.$('#c-prev', body), nx = Z.$('#c-next', body);
+      if (pv) pv.onclick = () => { f.page--; Z.set('cust_filter', f); paint(); };
+      if (nx) nx.onclick = () => { f.page++; Z.set('cust_filter', f); paint(); };
+    }
 
     const qi = Z.$('#c-q', el); let tmr;
-    qi.oninput = () => { clearTimeout(tmr); tmr = setTimeout(() => { f.q = qi.value; f.page = 0; Z.set('cust_filter', f); if (!/^#customers/.test(location.hash)) return; /* v2.51: they already left this screen */ Z.route().then(() => { const n = Z.$('#c-q'); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }); }, 400); };
-    Z.$('#c-st', el).onchange = (e) => { f.status = e.target.value; f.page = 0; Z.set('cust_filter', f); Z.route(); };
-    const pv = Z.$('#c-prev', el), nx = Z.$('#c-next', el);
-    if (pv) pv.onclick = () => { f.page--; Z.set('cust_filter', f); Z.route(); };
-    if (nx) nx.onclick = () => { f.page++; Z.set('cust_filter', f); Z.route(); };
+    qi.oninput = () => { clearTimeout(tmr); tmr = setTimeout(() => { f.q = qi.value; f.page = 0; Z.set('cust_filter', f); if (!/^#customers/.test(location.hash)) return; /* v2.51: they already left this screen */ paint(); }, 400); };
+    Z.$('#c-st', el).onchange = (e) => { f.status = e.target.value; f.page = 0; Z.set('cust_filter', f); paint(); };
+    await paint();
   };
 
   async function profile(id, el) {
