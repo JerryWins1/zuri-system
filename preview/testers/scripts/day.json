@@ -1,0 +1,875 @@
+{
+ "role": "admin",
+ "title": "A whole business day",
+ "version": "1.0",
+ "date": "2026-10-29",
+ "who": "Today you run the whole company on your own. You will be the call center, then the technician, then finance, then the partner — switching with 🔄 Try another job on the Me page. Everything is pretend and stays on your phone. Follow ONE customer, Grace Mwende, from the phone call to the books.",
+ "sessions": [
+  {
+   "id": "d1",
+   "title": "A new customer buys",
+   "mins": 25,
+   "intro": "Someone rings wanting internet. Everything that happens from that call until a tech has a job to go to. Use the SAME customer all the way through today — write their name down.",
+   "steps": [
+    {
+     "id": "d1-01",
+     "link": "#me",
+     "do": "Tap 🧹 Start over (pretend company), then OK. Then check the top of the page says Call center. If not, tap 🔄 Try another job and pick 📞 Call center.",
+     "see": "The page reloads and shows you as the call center.",
+     "look": [
+      "🧹 Start over (pretend company)",
+      "Call center"
+     ],
+     "auto": [
+      [
+       "tap",
+       "button:has-text('Start over (pretend company)')"
+      ],
+      [
+       "waitme"
+      ],
+      [
+       "see",
+       "Call center"
+      ]
+     ]
+    },
+    {
+     "id": "d1-02",
+     "link": "#customers",
+     "do": "Tap 👥 Customers, then ＋ New customer.",
+     "see": "A form opens with Full name at the top.",
+     "look": [
+      "＋ New customer",
+      "Full name"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ],
+      [
+       "tap",
+       "a:has-text('New customer'), button:has-text('New customer')"
+      ],
+      [
+       "see",
+       "Full name"
+      ]
+     ]
+    },
+    {
+     "id": "d1-03",
+     "link": "#customers/new",
+     "do": "Fill it in as if the caller is on the line. Full name: Grace Mwende. Area: Zuri A. Status: Lead (not installed yet). Phone: 0722 456 789. Package / plan: 10 Mbps. Monthly rate: 2500. Directions / landmark: Behind the Catholic church. Then tap Save customer.",
+     "see": "Grace Mwende's page opens, showing Lead.",
+     "look": [
+      "Save customer",
+      "Grace Mwende"
+     ],
+     "auto": [
+      [
+       "fill",
+       "input[name=full_name]",
+       "Grace Mwende"
+      ],
+      [
+       "select",
+       "select[name=area]",
+       "Zuri A"
+      ],
+      [
+       "fill",
+       "input[name=phone]",
+       "0722456789"
+      ],
+      [
+       "fill",
+       "input[name=plan]",
+       "10 Mbps"
+      ],
+      [
+       "fill",
+       "input[name=monthly_rate]",
+       "2500"
+      ],
+      [
+       "tap",
+       "button:has-text('Save customer')"
+      ],
+      [
+       "see",
+       "Grace Mwende"
+      ]
+     ],
+     "copy": "Grace Mwende"
+    },
+    {
+     "id": "d1-04",
+     "link": "#customers/new",
+     "do": "Open ＋ New customer again. Leave Full name empty and tap Save customer.",
+     "see": "It refuses and points at Full name. Nothing is saved.",
+     "look": [
+      "Full name"
+     ],
+     "auto": [
+      [
+       "tap",
+       "button:has-text('Save customer')"
+      ],
+      [
+       "see",
+       "Full name"
+      ]
+     ]
+    },
+    {
+     "id": "d1-05",
+     "link": "#customers/new",
+     "do": "Try ＋ New customer once more. This time put a phone number that is obviously wrong — type abc in Phone — and a Monthly rate of -500. Try to save.",
+     "see": "TELL US WHAT HAPPENS. Does it save nonsense, or stop you? Either answer is useful.",
+     "look": [
+      "Phone",
+      "Monthly rate"
+     ],
+     "auto": [
+      [
+       "see",
+       "Phone"
+      ]
+     ],
+     "tip": "If it saves rubbish, that is a real problem — report it."
+    },
+    {
+     "id": "d1-06",
+     "link": "#customers",
+     "do": "Find Grace Mwende in the Customers list.",
+     "see": "She is there, with her phone, package and area. Her account number was made for her.",
+     "look": [
+      "Grace Mwende"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ],
+      [
+       "see",
+       "Grace Mwende"
+      ]
+     ]
+    },
+    {
+     "id": "d1-07",
+     "link": "#jobs",
+     "do": "Now raise the work order for her installation. Tap 🛠️ Jobs, then ＋ New job. Make it a new install for Grace Mwende, area Zuri A, and in the problem box write: New install — 10 Mbps, behind the Catholic church. Save it.",
+     "see": "A new job appears with its own number and says it is waiting for a tech.",
+     "look": [
+      "＋ New job",
+      "New install"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ],
+      [
+       "tap",
+       "a:has-text('New job'), button:has-text('New job')"
+      ],
+      [
+       "see",
+       "Job"
+      ]
+     ]
+    },
+    {
+     "id": "d1-08",
+     "link": "#jobs",
+     "do": "Open the job you just made. Look for whether Grace is linked to it.",
+     "see": "IMPORTANT — tell us what it says. If it says 'No customer linked', say so: that means the job and the customer are not joined up.",
+     "look": [
+      "No customer linked",
+      "Grace"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ],
+     "tip": "This is the handover between the sale and the work. If it breaks here, nothing downstream works."
+    }
+   ]
+  },
+  {
+   "id": "d2",
+   "title": "Stock, and getting a tech there",
+   "mins": 15,
+   "intro": "Before you send anyone you want to know there is a router on the shelf. Then you book the tech.",
+   "steps": [
+    {
+     "id": "d2-01",
+     "link": "#home",
+     "do": "Before booking anyone, try to find out whether there is a router in stock. Look anywhere you think it would be — Home, Jobs, Me, Admin.",
+     "see": "WE THINK THERE IS NOWHERE TO DO THIS. Spend three minutes, then tell us where you looked and what you found. If you find it, we are wrong and we want to know.",
+     "look": [
+      "Home"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ],
+     "tip": "A real answer here is 'I could not find it anywhere'. That is the point of the step."
+    },
+    {
+     "id": "d2-02",
+     "link": "#jobs",
+     "do": "Open Grace's install job. Find WHO'S GOING, AND WHEN. Pick Tech: Brian Otieno. Pick a Visit day of tomorrow. Leave Priority on Normal. Tap Save.",
+     "see": "The job now shows Brian and the day instead of 'Waiting for a tech'.",
+     "look": [
+      "WHO'S GOING, AND WHEN",
+      "Brian Otieno",
+      "Save"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ],
+      [
+       "see",
+       "WHO'S GOING, AND WHEN"
+      ]
+     ]
+    },
+    {
+     "id": "d2-03",
+     "link": "#jobs",
+     "do": "Change your mind — reopen the job and set Priority to Urgent. Save.",
+     "see": "It saves and shows Urgent.",
+     "look": [
+      "Urgent"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ],
+      [
+       "see",
+       "Urgent"
+      ]
+     ]
+    },
+    {
+     "id": "d2-04",
+     "link": "#home",
+     "do": "Go to Home and read NEEDS ATTENTION.",
+     "see": "Does the count of jobs with no tech go down now Brian is booked? Tell us the number before and after if you can.",
+     "look": [
+      "NEEDS ATTENTION",
+      "no tech"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ],
+      [
+       "see",
+       "NEEDS ATTENTION"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "d3",
+   "title": "The install",
+   "mins": 30,
+   "intro": "Now be the technician. On Me tap 🔄 Try another job and pick 🛠️ Field tech. Same pretend company, different pair of eyes.",
+   "steps": [
+    {
+     "id": "d3-01",
+     "link": "#me",
+     "do": "On Me, tap 🔄 Try another job and pick 🛠️ Field tech.",
+     "see": "The top of the page now says Field tech.",
+     "look": [
+      "🔄 Try another job",
+      "Field tech"
+     ],
+     "auto": [
+      [
+       "go",
+       "#me"
+      ],
+      [
+       "tap",
+       "button:has-text('Try another job')"
+      ],
+      [
+       "see",
+       "Field tech"
+      ]
+     ]
+    },
+    {
+     "id": "d3-02",
+     "link": "#jobs",
+     "do": "Find Grace Mwende's install job in your list.",
+     "see": "It is there, assigned to you.",
+     "look": [
+      "Grace"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ],
+     "tip": "If you cannot see it as the tech, that is a serious problem — say so."
+    },
+    {
+     "id": "d3-03",
+     "link": "#jobs",
+     "do": "Open the job and tap 📍 Drop pin here to put the location pin on it.",
+     "see": "The job shows a pin instead of 'No map pin yet'.",
+     "look": [
+      "📍 Drop pin here"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ],
+      [
+       "see",
+       "pin"
+      ]
+     ],
+     "tip": "Jerry wants this one tested hard. The pin is how the next tech finds the house."
+    },
+    {
+     "id": "d3-04",
+     "link": "#jobs",
+     "do": "Now take the pin away or move it, if you can, and put it back.",
+     "see": "TELL US: can a pin be corrected once it is wrong? A tech who drops it at the wrong house needs to fix it.",
+     "look": [
+      "pin"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ]
+    },
+    {
+     "id": "d3-05",
+     "link": "#jobs",
+     "do": "Under the work, add the parts you used: a router, and 50m of drop cable. Put a serial number on the router — write SN-TEST-0001.",
+     "see": "Both parts are listed on the job with the serial showing.",
+     "look": [
+      "parts",
+      "serial"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ]
+    },
+    {
+     "id": "d3-06",
+     "link": "#jobs",
+     "do": "Add a photo to the job if you can — any picture on your phone will do.",
+     "see": "The photo attaches and you can see it afterwards.",
+     "look": [
+      "photo"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ]
+    },
+    {
+     "id": "d3-07",
+     "link": "#jobs",
+     "do": "Finish the job off the way you would on site.",
+     "see": "The job closes or moves to done. Write down what you had to tap.",
+     "look": [
+      "done"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ]
+    },
+    {
+     "id": "d3-08",
+     "link": "#customers",
+     "do": "Go to Customers, open Grace Mwende and change her Status from Lead to Active, since she is now installed. Put today in Install date. Fill in Router model, and put 10001 in Billing website ID. Save.",
+     "see": "She saves as Active with the router and the billing ID on her page.",
+     "look": [
+      "Status",
+      "Active",
+      "Router model",
+      "Billing website ID"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ],
+      [
+       "see",
+       "Grace"
+      ]
+     ]
+    },
+    {
+     "id": "d3-09",
+     "link": "#customers",
+     "do": "Take her first payment of 2500 and give her a receipt.",
+     "see": "A payment shows on her page and a receipt is produced. Tell us exactly where you had to go to do this.",
+     "look": [
+      "payment",
+      "receipt"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ]
+     ],
+     "tip": "If you cannot find where to take a payment from a customer, that is the finding."
+    },
+    {
+     "id": "d3-10",
+     "link": "#customers",
+     "do": "Look at Grace's page again, top to bottom.",
+     "see": "Is everything there — phone, package, rate, pin, install date, router, billing ID, her payment, her job? Name anything missing.",
+     "look": [
+      "Grace"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "d4",
+   "title": "The money",
+   "mins": 30,
+   "intro": "Be finance now. On Me tap 🔄 Try another job and pick 💰 Finance.",
+   "steps": [
+    {
+     "id": "d4-01",
+     "link": "#me",
+     "do": "On Me, tap 🔄 Try another job and pick 💰 Finance (office).",
+     "see": "The top of the page says Finance.",
+     "look": [
+      "🔄 Try another job",
+      "Finance"
+     ],
+     "auto": [
+      [
+       "go",
+       "#me"
+      ],
+      [
+       "tap",
+       "button:has-text('Try another job')"
+      ],
+      [
+       "see",
+       "Finance"
+      ]
+     ]
+    },
+    {
+     "id": "d4-02",
+     "link": "#money",
+     "do": "Open Money and find today's takings. Look for Grace's 2500.",
+     "see": "Her payment is in today's money. If it is not, say so loudly — that is money that has gone missing between the tech and the books.",
+     "look": [
+      "Money",
+      "2500"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ],
+      [
+       "see",
+       "Money"
+      ]
+     ],
+     "tip": "This is the single most important check of the whole day."
+    },
+    {
+     "id": "d4-03",
+     "link": "#money",
+     "do": "Record money going out: a receipt from Mama Njeri Hardware for 2400 of cable clips, paid in cash.",
+     "see": "It saves and appears in money out.",
+     "look": [
+      "Mama Njeri",
+      "2400"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ]
+     ]
+    },
+    {
+     "id": "d4-04",
+     "link": "#money",
+     "do": "Open that expense again and open More details — approval, VAT, note. Put 331 in VAT included and P051234567X in Supplier KRA PIN. Save.",
+     "see": "The VAT and the PIN save against the expense.",
+     "look": [
+      "VAT included",
+      "Supplier KRA PIN"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ],
+      [
+       "see",
+       "VAT"
+      ]
+     ],
+     "tip": "Zuri records VAT only on money going OUT, so you can claim it back. There is no VAT on what you charge a customer — if you think there should be, say so."
+    },
+    {
+     "id": "d4-05",
+     "link": "#money",
+     "do": "Try to produce a VAT report — everything you could claim back this month.",
+     "see": "TELL US WHAT YOU FIND. We think there is no VAT return in Zuri. Look properly, then say what is there and what is not.",
+     "look": [
+      "VAT"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ]
+     ]
+    },
+    {
+     "id": "d4-06",
+     "link": "#money",
+     "do": "Find the bills that are waiting to be paid, and approve or pay one.",
+     "see": "It moves out of waiting. Tell us how you knew which ones needed doing.",
+     "look": [
+      "bills",
+      "approve"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ]
+     ]
+    },
+    {
+     "id": "d4-07",
+     "link": "#money",
+     "do": "Find the pay run for the staff. Look at what each person is owed and how it was worked out.",
+     "see": "The pay run opens. Say whether you could tell where the numbers came from.",
+     "look": [
+      "pay run"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ]
+     ]
+    },
+    {
+     "id": "d4-08",
+     "link": "#money",
+     "do": "Open the statements and find Grace Mwende.",
+     "see": "Her statement shows her 2500. If a brand new customer has no statement, say so.",
+     "look": [
+      "statement",
+      "Grace"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "d5",
+   "title": "Watching the whole business",
+   "mins": 20,
+   "intro": "The owner's view. What would Jerry look at on a Monday morning?",
+   "steps": [
+    {
+     "id": "d5-01",
+     "link": "#me",
+     "do": "On Me, tap 🔄 Try another job and pick ⭐ Partner / manager.",
+     "see": "The top says Partner.",
+     "look": [
+      "🔄 Try another job",
+      "Partner"
+     ],
+     "auto": [
+      [
+       "go",
+       "#me"
+      ],
+      [
+       "tap",
+       "button:has-text('Try another job')"
+      ],
+      [
+       "see",
+       "Partner"
+      ]
+     ]
+    },
+    {
+     "id": "d5-02",
+     "link": "#home",
+     "do": "Read the whole of Home slowly — Zuri at a glance, NEEDS ATTENTION, CUSTOMERS.",
+     "see": "Does it tell you what you would actually need to know this morning? Name one thing you wish it said and does not.",
+     "look": [
+      "Zuri at a glance",
+      "NEEDS ATTENTION"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ],
+      [
+       "see",
+       "NEEDS ATTENTION"
+      ]
+     ]
+    },
+    {
+     "id": "d5-03",
+     "link": "#money",
+     "do": "Open the Friday report.",
+     "see": "Read it as if you were the owner. Does Grace appear anywhere in it? Does the 2500 appear?",
+     "look": [
+      "report"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ]
+     ]
+    },
+    {
+     "id": "d5-04",
+     "link": "#customers",
+     "do": "Open the customer map.",
+     "see": "Is Grace's pin on it, where the tech dropped it?",
+     "look": [
+      "Map"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ]
+     ]
+    },
+    {
+     "id": "d5-05",
+     "link": "#admin",
+     "do": "Open Admin and look at Staff & pay, People, and the Price list.",
+     "see": "Is the price Grace is paying the same as the one on the price list? If they disagree, that is a real problem.",
+     "look": [
+      "Staff & pay",
+      "Price list"
+     ],
+     "auto": [
+      [
+       "go",
+       "#admin"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "d6",
+   "title": "When it breaks",
+   "mins": 20,
+   "intro": "Two weeks later Grace rings: her internet is down. Back to the call center — Me, 🔄 Try another job, 📞 Call center.",
+   "steps": [
+    {
+     "id": "d6-01",
+     "link": "#me",
+     "do": "On Me, tap 🔄 Try another job and pick 📞 Call center.",
+     "see": "The top says Call center.",
+     "look": [
+      "Call center"
+     ],
+     "auto": [
+      [
+       "go",
+       "#me"
+      ],
+      [
+       "tap",
+       "button:has-text('Try another job')"
+      ],
+      [
+       "see",
+       "Call center"
+      ]
+     ]
+    },
+    {
+     "id": "d6-02",
+     "link": "#jobs",
+     "do": "Raise a service job for Grace Mwende — her internet is down.",
+     "see": "A service job appears, separate from her install.",
+     "look": [
+      "New job",
+      "Grace"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ]
+    },
+    {
+     "id": "d6-03",
+     "link": "#customers",
+     "do": "Open Grace's page.",
+     "see": "Can you see BOTH jobs — the install and the fault — and her payment, in one place? That is what a customer calling in needs.",
+     "look": [
+      "Grace"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ]
+     ]
+    },
+    {
+     "id": "d6-04",
+     "link": "#jobs",
+     "do": "Send a tech, then switch to Field tech and work the job. Under THE WORK, say what you found — pick one of the choices like Fibre cut.",
+     "see": "The job records what was wrong.",
+     "look": [
+      "THE WORK",
+      "What did you find?"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ],
+      [
+       "see",
+       "What did you find?"
+      ]
+     ]
+    },
+    {
+     "id": "d6-05",
+     "link": "#jobs",
+     "do": "Turn your phone onto airplane mode. Add a note to the job. Then turn airplane mode off and wait a few seconds.",
+     "see": "The note should save on your phone and go up on its own once you have signal. If it vanishes, that is a serious problem.",
+     "look": [
+      "note"
+     ],
+     "auto": [
+      [
+       "go",
+       "#jobs"
+      ]
+     ],
+     "tip": "Techs work where there is no signal. This one matters."
+    }
+   ]
+  },
+  {
+   "id": "d7",
+   "title": "Anything we have not thought of",
+   "mins": 20,
+   "intro": "The last part is yours. We have walked you through our idea of a normal day — now go looking for the parts of a real day we have forgotten.",
+   "steps": [
+    {
+     "id": "d7-01",
+     "link": "#home",
+     "do": "Think about a real working day at an internet company. Go and look for anything we did NOT ask you to do today.",
+     "see": "Write down anything a real company does that you cannot do in Zuri. Be blunt.",
+     "look": [
+      "Home"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ],
+     "tip": "Examples of the kind of thing: a customer moving house, someone wanting a refund, a tech who quits, a price going up."
+    },
+    {
+     "id": "d7-02",
+     "link": "#home",
+     "do": "Now do the opposite. Find a screen we never mentioned, open it, and try to break it.",
+     "see": "Say what you opened and what happened.",
+     "look": [
+      "Home"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ]
+    },
+    {
+     "id": "d7-03",
+     "link": "#customers",
+     "do": "Pick any one thing you did today and do it again as fast and carelessly as a tired person would at 5pm on a Friday.",
+     "see": "Does Zuri stop you doing something daft, or let you?",
+     "look": [
+      "Customers"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}
