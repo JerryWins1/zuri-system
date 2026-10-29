@@ -120,7 +120,8 @@
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.11 · 2026-10-28';
+  const VERSION = 'v2.12 · 2026-10-29';
+  // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
   // v2.11 (28 Oct): the 🎯 focus card names whoever set the plan (tester_plan.by_who), not always Jerry — Emmanuel now runs the squad.
   // v2.10 (27 Oct): ✉️ Alerts by email — callcenter.json 1.4 (cal-08: a customer's yes to emails, with a note), admin.json 1.6 (aal-11–13: the Email part of Send it, BCC and the words, the batch size).
   // v2.9 (22 Oct): 📣 Alerts in the scripts — callcenter.json 1.3 (cal), admin.json 1.5 (aal, after agl), field.json 1.3 (fal).
@@ -172,7 +173,13 @@
   const SHORT = { field: 'a field tech', callcenter: 'the call center', finance: 'finance', admin: 'a partner' }; // 7 Oct deep check #33
   // v2.1: a one-script link (?script=projects) — its own "me", practising as finance
   const QS = new URLSearchParams(location.search);
-  const ONE = { projects: { role: 'finance', label: '📈 Projects tester', title: 'Test 📈 Projects' } };
+  const ONE = {
+    projects: { role: 'finance', label: '📈 Projects tester', title: 'Test 📈 Projects', tag: '📈 Projects', about: 'Projects',
+                video: { name: '📈 Projects', mins: 'about 30 min · 9 short chapters' },
+                intro: `<div class="why">Zuri Fiber sells home internet in Maai Mahiu. Before the partners bring internet to a <b>new town</b>, Zuri helps them think it through, in three steps:</div><ol><li><b>Plan:</b> what it costs to start (cable, equipment, a shop), what it costs every month, and how many people will pay.</li><li><b>Decide:</b> two partners agree, and the plan is kept as the yardstick.</li><li><b>Track:</b> every month, the real numbers are compared with the plan — on track, behind or ahead.</li></ol><div class="why" style="margin-top:6px"><b>Two words you will see:</b><br>• <b>Break-even</b> — the first month when the money coming in is more than the money going out that month.<br>• <b>Payback</b> — the month when all the money you spent to start has come back to you.</div><div class="why" style="margin-top:6px">Everything is <b>pretend</b> and stays on your phone. The numbers are examples. You cannot break anything — if something is confusing, that is exactly what we want to hear.</div>` },
+    day: { role: 'callcenter', label: '🏢 A whole business day', title: 'Test a whole business day', tag: '🏢 A business day', about: 'the business day',
+           video: null,
+           intro: `<div class="why">This is the <b>team's</b> day, not one person's. <b>Emmanuel leads it</b> — he says which parts are yours to go deep on, and he decides which of the problems you find are real.</div><div class="why" style="margin-top:6px">Between you, you cover a whole working day at Zuri Fiber, following <b>one customer</b> — Grace Mwende — from her phone call to the books:</div><ol><li><b>She buys</b> — the call, her details, the work order. <i>Call centre</i></li><li><b>The tech goes</b> — the pin, the parts, the router, her first payment. <i>Field</i></li><li><b>The money</b> — her 2,500 reaching the books, bills, the pay run, VAT. <i>Finance</i></li><li><b>It breaks</b> — she rings again two weeks later. <i>Everyone</i></li></ol><div class="why" style="margin-top:6px">Your own part is marked at the top of each session, but you can do <b>any</b> of it on your own phone — change jobs on the <b>Me</b> page with <b>🔄 Try another job</b>. If you have time, go past your own part: two pairs of eyes on a screen beats one.</div><div class="why" style="margin-top:6px">Everything is <b>pretend</b> and stays on your phone. You cannot break anything. <b>What we want is the things that do not work</b> — say so at the step where it happened, and Emmanuel will rule on it.</div>` } };
   const SCRIPT_ONLY = ONE[QS.get('script')] ? QS.get('script') : null;
   const MEKEY = SCRIPT_ONLY ? 'me_' + SCRIPT_ONLY : 'me';
   let me = get(MEKEY, null);                                               // { name, role, device } (+ script)
@@ -614,19 +621,14 @@
     const vidStep = SX.script && liveSteps(SX.script).find((x) => /play=/.test(x.link || ''));
     const vid = APP + withCode('?practice&role=' + me.role) + (vidStep ? vidStep.link : '#learn');
     $('#main').innerHTML = `
-      <div class="now" id="one-what"><div class="lbl"><span>What you are testing</span><span>📈 Projects</span></div>
+      <div class="now" id="one-what"><div class="lbl"><span>What you are testing</span><span>${esc(ONE[SCRIPT_ONLY].tag)}</span></div>
         <h2>Hello ${esc(me.name.split(' ')[0])} — thank you for helping!</h2>
-        <div class="why">Zuri Fiber sells home internet in Maai Mahiu. Before the partners bring internet to a <b>new town</b>, Zuri helps them think it through, in three steps:</div>
-        <ol><li><b>Plan:</b> what it costs to start (cable, equipment, a shop), what it costs every month, and how many people will pay.</li>
-          <li><b>Decide:</b> two partners agree, and the plan is kept as the yardstick.</li>
-          <li><b>Track:</b> every month, the real numbers are compared with the plan — on track, behind or ahead.</li></ol>
-        <div class="why" style="margin-top:6px"><b>Two words you will see:</b><br>• <b>Break-even</b> — the first month when the money coming in is more than the money going out that month.<br>• <b>Payback</b> — the month when all the money you spent to start has come back to you.</div>
-        <div class="why" style="margin-top:6px">Everything is <b>pretend</b> and stays on your phone. The numbers are examples. You cannot break anything — if something is confusing, that is exactly what we want to hear.</div></div>
-      <div class="card" id="one-video" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:180px"><b>▶ Your video: 📈 Projects</b> <span style="color:var(--faint);font-size:13px">about 30 min · 9 short chapters</span>
+        ${ONE[SCRIPT_ONLY].intro}</div>
+      ${ONE[SCRIPT_ONLY].video ? `<div class="card" id="one-video" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:180px"><b>▶ Your video: ${ONE[SCRIPT_ONLY].video.name}</b> <span style="color:var(--faint);font-size:13px">${ONE[SCRIPT_ONLY].video.mins}</span>
         <div style="color:var(--soft);font-size:14px">Sound on. It plays on the real screens and shows where to tap. You can stop it with ✕ at any time. It is also step 1 of your test script.</div></div>
-        <a class="big" style="display:inline-block;width:auto;text-decoration:none;text-align:center;padding:12px 16px" href="${esc(vid)}" target="_blank" rel="noopener">▶ Play</a></div>
+        <a class="big" style="display:inline-block;width:auto;text-decoration:none;text-align:center;padding:12px 16px" href="${esc(vid)}" target="_blank" rel="noopener">▶ Play</a></div>` : ''}
       ${SX.script ? sxCard() : '<div class="card">Loading your test script…</div>'}
-      <div class="tell card"><textarea id="tell" placeholder="✍️ Anything to tell Jerry about Projects? What was confusing, slow, or wrong"></textarea>
+      <div class="tell card"><textarea id="tell" placeholder="✍️ Anything to tell Jerry about ${esc(ONE[SCRIPT_ONLY].about)}? What was confusing, slow, or wrong"></textarea>
         <div class="row"><button id="b-tell">Send</button><span style="font-size:12.5px;color:var(--faint)">Goes straight to Jerry and Claude, with your name.</span></div></div>
       <p class="foot">Zuri Testers' List ${VERSION} · ${esc(WHO())} <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button></p>`;
     const sg = $('#sx-go'); if (sg) sg.onclick = () => { sxPick = null; const s2 = sxState(); if (s2.reported) sxFinish(); else sxPlay(); window.scrollTo(0, 0); };
