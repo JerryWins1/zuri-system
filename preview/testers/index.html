@@ -247,6 +247,39 @@
       set('plan', plan);
     } catch (e) { plan = get('plan', null); }
   }
+  // ---------- the notice board ----------
+  // A message to the testers that does not need a new build. It lives on the repo's "notices" branch, so it can be
+  // written and reach them in minutes, and nothing on main changes. Plain text only — it is escaped before it is shown.
+  const NOTICE_URL = 'https://raw.githubusercontent.com/JerryWins1/zuri-system/notices/notices.json';
+  let notices = [];
+  const dayStr = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  async function loadNotices() {
+    try {
+      const r = await fetch(NOTICE_URL + '?t=' + Math.floor(Date.now() / 300000), { cache: 'no-store' });   // GitHub caches it ~5 min anyway
+      if (!r.ok) throw new Error('notices ' + r.status);
+      const j = await r.json(), today = dayStr();
+      notices = (j.notices || []).filter((n) => n && n.id && n.text && (!n.until || n.until >= today));
+      set('notices', notices);
+    } catch (e) { notices = get('notices', []); }                                                          // no signal: show what this phone already had
+  }
+  function noticeCard() {
+    const seen = get('notices_seen', []);
+    const live = notices.filter((n) => seen.indexOf(n.id) < 0);
+    if (!live.length) return '';
+    return live.map((n) => `<div class="card" style="border-left:4px solid var(--brand)">
+      <b>📣 ${esc(n.title || 'A note from the team')}</b>
+      <div style="color:var(--soft);white-space:pre-wrap;margin:6px 0 10px">${esc(n.text)}</div>
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <button class="btn sec small" data-seen="${esc(n.id)}">Got it</button>
+        <span style="font-size:12.5px;color:var(--faint)">${esc(n.from || 'Jerry')}</span></div></div>`).join('');
+  }
+  function wireNotices() {
+    $$('[data-seen]').forEach((b) => (b.onclick = () => {
+      const seen = get('notices_seen', []); seen.push(b.dataset.seen); set('notices_seen', seen.slice(-40));
+      const c = b.closest('.card'); if (c) c.remove();
+    }));
+  }
+
   // whoever set the plan — a partner's first name, so an instruction from Emmanuel does not arrive under Jerry's name
   function planBy() {
     const w = (plan && plan.by_who || 'Jerry').trim();
@@ -579,6 +612,7 @@
     const secs = [...new Set(steps.map((s) => s.sec))];
     $('#main').innerHTML = `
       <div class="bar"><i style="width:${Math.round((done / Math.max(1, steps.length)) * 100)}%"></i></div>
+      ${noticeCard()}
       ${sxCard()}
       ${plan && plan.focus ? `<div class="card" style="border-left:4px solid var(--now)"><b>🎯 ${esc(planBy())} asked you to focus on:</b> ${esc(plan.focus)}</div>` : ''}
       ${cur ? `<div class="now"><div class="lbl"><span>Now · step ${steps.indexOf(cur) + 1} of ${steps.length}</span><span>${esc(cur.sec)}</span></div>
@@ -596,6 +630,7 @@
     if (cur) {
       $('#b-done').onclick = async () => { pick = null; state[cur.id] = 'done'; set('state', state); const ok = await log('done', cur.id); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); render(); };
       $('#b-skip').onclick = () => { pick = null; state[cur.id] = 'skip'; set('state', state); render(); };
+      wireNotices();
       $('#b-tell').onclick = async () => { const n = $('#tell').value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', cur.id, n); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
     }
     $$('.row[data-id]').forEach((r) => (r.onclick = async (e) => {
@@ -627,11 +662,13 @@
       ${ONE[SCRIPT_ONLY].video ? `<div class="card" id="one-video" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:180px"><b>▶ Your video: ${ONE[SCRIPT_ONLY].video.name}</b> <span style="color:var(--faint);font-size:13px">${ONE[SCRIPT_ONLY].video.mins}</span>
         <div style="color:var(--soft);font-size:14px">Sound on. It plays on the real screens and shows where to tap. You can stop it with ✕ at any time. It is also step 1 of your test script.</div></div>
         <a class="big" style="display:inline-block;width:auto;text-decoration:none;text-align:center;padding:12px 16px" href="${esc(vid)}" target="_blank" rel="noopener">▶ Play</a></div>` : ''}
+      ${noticeCard()}
       ${SX.script ? sxCard() : '<div class="card">Loading your test script…</div>'}
       <div class="tell card"><textarea id="tell" placeholder="✍️ Anything to tell Jerry about ${esc(ONE[SCRIPT_ONLY].about)}? What was confusing, slow, or wrong"></textarea>
         <div class="row"><button id="b-tell">Send</button><span style="font-size:12.5px;color:var(--faint)">Goes straight to Jerry and Claude, with your name.</span></div></div>
       <p class="foot">Zuri Testers' List ${VERSION} · ${esc(WHO())} <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button></p>`;
     const sg = $('#sx-go'); if (sg) sg.onclick = () => { sxPick = null; const s2 = sxState(); if (s2.reported) sxFinish(); else sxPlay(); window.scrollTo(0, 0); };
+    wireNotices();
     $('#b-tell').onclick = async () => { const n = $('#tell').value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', 'projects:home', n); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
     $('#b-who').onclick = () => { if (confirm('Change your name? Your answers stay on this phone.')) { localStorage.removeItem('zt_' + MEKEY); location.href = location.pathname + '?script=' + SCRIPT_ONLY; } };
   }
@@ -1261,7 +1298,7 @@
     const scriptView = () => (SCRIPT_ONLY || get('intro_done', false)) && get('view', 'list') === 'script' && SX.script && !sxState().reported;
     if (scriptView()) sxPlay(); else render();
     // fresh script, rewards and plan from the server; the list repaints, the player only if it isn't mid-answer
-    Promise.all([loadPlan(), loadScript(SID()).then((sc) => { SX.script = sc; }), loadRewards()]).then(() => { if ($('#sx-note')) { const c = $('#sx-coins'); if (c) { const k = myCoins(sxState()); c.textContent = '🪙 ' + k.coins + ' ≈ KES ' + k.kes.toLocaleString('en-GB'); } return; } if (scriptView()) sxPlay(); else render(); });
+    Promise.all([loadPlan(), loadNotices(), loadScript(SID()).then((sc) => { SX.script = sc; }), loadRewards()]).then(() => { if ($('#sx-note')) { const c = $('#sx-coins'); if (c) { const k = myCoins(sxState()); c.textContent = '🪙 ' + k.coins + ' ≈ KES ' + k.kes.toLocaleString('en-GB'); } return; } if (scriptView()) sxPlay(); else render(); });
     if (!get('hello', false)) { log('hello', 'start').then(() => set('hello', true)); }
     flush(); sxFlush();
   }
