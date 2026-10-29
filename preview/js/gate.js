@@ -1,4 +1,4 @@
-// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v5 · 2026-10-28 (v4: 2026-10-19, v3: 2026-10-18, v2: 2026-10-01)
+// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v5.1 · 2026-10-29 (v4: 2026-10-19, v3: 2026-10-18, v2: 2026-10-01)
 // v2: the code can ride in the link (…/testers/?code=ZURI-TEST) so testers just tap — no typing.
 // Codes live on the training database (Admin → Access codes). This phone remembers its code and re-checks it once a day,
 // so weak signal doesn't lock anyone out. The real app keeps its ordinary login; this is for everything without one.
@@ -97,6 +97,11 @@
     if (!go) return;
     const submit = async () => {
       const code = (inp.value || '').trim().toUpperCase(); if (!code) return;
+      // v5.1: a squad code typed by hand is checked here too. v5 only read LOCAL on the link
+      // and the remembered code, so anyone who opened the page without the full link and typed
+      // ZURI-SQUAD was told "That code is not known" — the database has never heard of it.
+      const lc = localOk(code);
+      if (lc) { put({ code, until: lc.until, label: lc.label, checked: today() }); w.remove(); resolve(true); return; }
       go.disabled = true; go.textContent = 'Checking…';
       try {
         const j = await ask(code);
