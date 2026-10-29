@@ -1,0 +1,13 @@
+{
+  "_what": "Messages shown at the top of the Zuri testers' list. This branch is edited directly, so a note reaches the squad without shipping code or merging anything. The app fetches it from raw.githubusercontent.com, which caches for about 5 minutes.",
+  "_fields": "id (unique, never reuse) · title · text (plain words, no HTML) · until (YYYY-MM-DD, hidden after this day) · from",
+  "notices": [
+    {
+      "id": "2026-10-29-veronicah-search",
+      "from": "Jerry and Claude",
+      "title": "Veronicah found a real one — and it is already fixed",
+      "text": "When you typed a customer's name into the search box, letters were being thrown away, and deleting fought back. Veronicah reported it at 8:36 this morning and it is fixed and live now.\n\nThat is the job: not finishing steps, but finding what does not work and saying so plainly. Keep them coming — including the small ones and the \"this is probably just me\" ones.\n\nAsante sana.",
+      "until": "2026-11-05"
+    }
+  ]
+}
