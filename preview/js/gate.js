@@ -1,4 +1,4 @@
-// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v5 · 2026-10-28 (v4: 2026-10-19, v3: 2026-10-18, v2: 2026-10-01)
+// Zuri System · the gate: an invite code before practice, the training copy and the Testers' List · v5.1 · 2026-10-29 (v4: 2026-10-19, v3: 2026-10-18, v2: 2026-10-01)
 // v2: the code can ride in the link (…/testers/?code=ZURI-TEST) so testers just tap — no typing.
 // Codes live on the training database (Admin → Access codes). This phone remembers its code and re-checks it once a day,
 // so weak signal doesn't lock anyone out. The real app keeps its ordinary login; this is for everything without one.
@@ -88,7 +88,7 @@
       <div style="font-size:26px;font-weight:800;color:#0F6E5C;margin-bottom:2px">Zuri System</div>
       <div style="color:#56645F;margin-bottom:14px">${here === 'testers' ? "The Testers' List" : here === 'training' ? 'The training copy' : 'Practice'} is by invitation.</div>
       ${canEnter ? `<label style="display:block;font-size:13px;font-weight:700;color:#3F4F4C;margin:10px 0 4px">Your invite code</label>
-      <input id="zgate-in" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="e.g. ZURI-TEST" style="width:100%;box-sizing:border-box;font:inherit;font-size:20px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border:1.5px solid #B9C4C0;border-radius:10px;background:#fff;color:#152322;color-scheme:light">
+      <input id="zgate-in" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="e.g. ZURI-SQUAD" style="width:100%;box-sizing:border-box;font:inherit;font-size:20px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border:1.5px solid #B9C4C0;border-radius:10px;background:#fff;color:#152322;color-scheme:light">
       <button id="zgate-go" style="width:100%;margin-top:10px;font:inherit;font-weight:800;font-size:16px;padding:13px;border:0;border-radius:10px;background:#0F6E5C;color:#fff;min-height:48px;cursor:pointer">Open Zuri</button>` : ''}
       <p id="zgate-msg" style="margin:12px 0 0;font-size:14px;color:${msg ? '#C0392B' : '#56645F'};font-weight:${msg ? '700' : '500'}">${msg || 'Jerry or a partner gives you the code. It is tied to this phone and runs out on a date.'}</p>
       <p style="margin:12px 0 0;font-size:13px;color:#56645F"><a href="https://jerrywins1.github.io/zuri-system/preview/" style="color:#0F6E5C">Staff with an account: sign in here</a></p></div>`;
@@ -97,6 +97,11 @@
     if (!go) return;
     const submit = async () => {
       const code = (inp.value || '').trim().toUpperCase(); if (!code) return;
+      // v5.1: a squad code typed by hand is checked here too. v5 only read LOCAL on the link
+      // and the remembered code, so anyone who opened the page without the full link and typed
+      // ZURI-SQUAD was told "That code is not known" — the database has never heard of it.
+      const lc = localOk(code);
+      if (lc) { put({ code, until: lc.until, label: lc.label, checked: today() }); w.remove(); resolve(true); return; }
       go.disabled = true; go.textContent = 'Checking…';
       try {
         const j = await ask(code);

@@ -51,7 +51,7 @@
   const PLAIN = [
     [/invalid login credentials/i, 'Wrong email or password.'],
     [/email not confirmed/i, 'Open the confirmation email first, then sign in.'],
-    [/row-level security|permission denied|violates row level/i, "You don't have permission to do that. Ask Kelvin or Dickson."],
+    [/row-level security|permission denied|violates row level/i, "You don't have permission to do that. Ask Jerry."],
     [/duplicate key|already exists|unique constraint/i, "That's already saved — no need to add it again."],
     [/violates not-null/i, 'A box that must be filled in is empty.'],
     [/violates check constraint|invalid input syntax/i, "Something in the form isn't allowed — check the numbers and dates."],
