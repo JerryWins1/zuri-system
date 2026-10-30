@@ -763,6 +763,18 @@
       if (me().role === 'field' && !(c && D.tickets.some((t) => t.customer_id === c.id && t.assigned_to === meId() && !['done', 'cancelled'].includes(t.status)))) throw new Error('Field techs can only update customers on their own open jobs.');
       if (c) Object.assign(c, p, { custom: { ...(c.custom || {}), ...(p.custom || {}) }, updated_at: new Date().toISOString() });
       else { c = { id: uuid(), status: 'active', custom: {}, created_at: new Date().toISOString(), ...p }; D.v_customers.push(c); }
+      // 🏷️ The real database gives every new customer an account number. Practice did not, so a customer
+      // made here had none at all — Emmanuel reported it on 30 Oct at d1-06 ("Her account number wasn't
+      // made for her"), and the step promises one. Same shape as the seeded customers: ZA-0101.
+      if (!c.account_no) {
+        const pre = 'Z' + (c.area || '') + '-';
+        const used = D.v_customers
+          .map((x) => String(x.account_no || ''))
+          .filter((n) => n.startsWith(pre))
+          .map((n) => parseInt(n.slice(pre.length), 10))
+          .filter((n) => !isNaN(n));
+        c.account_no = pre + String((used.length ? Math.max(...used) : 100) + 1).padStart(4, '0');
+      }
       return c.id;
     },
     refresh_payment_followups: () => ({ opened: 0, closed: 0 }),
