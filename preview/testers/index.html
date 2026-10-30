@@ -477,10 +477,18 @@
     // 💬 anyone, any time — not only when a step fails. Prefix 'say:' so the board can tell a
     // remark apart from a step that went wrong ('sx:') or the app reporting itself ('auto:').
     $('#sx-saybtn').onclick = async () => {
-      const t = $('#sx-say').value.trim(); if (!t) return toast('Write something first.');
-      const btn = $('#sx-saybtn'); btn.disabled = true;
+      // Same race as the three older 'Tell Jerry' boxes, all fixed together.
+      // Hold on to the boxes BEFORE sending. Sending takes a moment, and in that moment the tester
+      // may have moved to the next step, which redraws this whole panel — looking the box up again
+      // afterwards then finds nothing and the page throws. Emmanuel hit exactly that on 30 Oct at
+      // 09:34 ("Cannot set properties of null (setting 'value')").
+      const box = $('#sx-say'), btn = $('#sx-saybtn');
+      if (!box || !btn) return;
+      const t = box.value.trim(); if (!t) return toast('Write something first.');
+      btn.disabled = true;
       const ok = await log('note', ('say:' + cur.id).slice(0, 60), t.slice(0, 1000));
-      btn.disabled = false; $('#sx-say').value = '';
+      if (btn.isConnected) btn.disabled = false;
+      if (box.isConnected) box.value = '';
       toast(ok ? 'Sent — asante!' : 'Saved on this phone — sends when you have signal.');
     };
   }
@@ -654,7 +662,7 @@
       $('#b-done').onclick = async () => { pick = null; state[cur.id] = 'done'; set('state', state); const ok = await log('done', cur.id); toast(ok ? 'Done ✓' : 'Done ✓ (saved on the phone — sends when you have signal)'); render(); };
       $('#b-skip').onclick = () => { pick = null; state[cur.id] = 'skip'; set('state', state); render(); };
       wireNotices();
-      $('#b-tell').onclick = async () => { const n = $('#tell').value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', cur.id, n); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
+      $('#b-tell').onclick = async () => { const box = $('#tell'); if (!box) return; const n = box.value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', cur.id, n); if (box.isConnected) box.value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
     }
     $$('.row[data-id]').forEach((r) => (r.onclick = async (e) => {
       const id = r.dataset.id;
@@ -692,7 +700,7 @@
       <p class="foot">Zuri Testers' List ${VERSION} · ${esc(WHO())} <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button></p>`;
     const sg = $('#sx-go'); if (sg) sg.onclick = () => { sxPick = null; const s2 = sxState(); if (s2.reported) sxFinish(); else sxPlay(); window.scrollTo(0, 0); };
     wireNotices();
-    $('#b-tell').onclick = async () => { const n = $('#tell').value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', 'projects:home', n); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
+    $('#b-tell').onclick = async () => { const box = $('#tell'); if (!box) return; const n = box.value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', 'projects:home', n); if (box.isConnected) box.value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
     $('#b-who').onclick = () => { if (confirm('Change your name? Your answers stay on this phone.')) { localStorage.removeItem('zt_' + MEKEY); location.href = location.pathname + '?script=' + SCRIPT_ONLY; } };
   }
 
@@ -1074,7 +1082,7 @@
         const ok = await bwLog('note', bwStep(d.n, bme.role, id), ('❌ ' + c.t + ' — ' + t).slice(0, 1000));
         toast(ok ? 'Sent — thank you! Jerry checks it tonight.' : 'Saved — sends when you have signal.'); draw();
       }));
-      $('#b-tell').onclick = async () => { const t = $('#tell').value.trim(); if (!t) return toast('Write something first.'); const ok = await bwLog('note', bwStep(d.n, bme.role, 'tell'), t.slice(0, 1000)); $('#tell').value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
+      $('#b-tell').onclick = async () => { const box = $('#tell'); if (!box) return; const t = box.value.trim(); if (!t) return toast('Write something first.'); const ok = await bwLog('note', bwStep(d.n, bme.role, 'tell'), t.slice(0, 1000)); if (box.isConnected) box.value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
       $('#bw-who').onclick = () => { if (confirm('Change your name or role? Your ticks stay on this phone.')) { localStorage.removeItem('zt_bw_me'); location.href = location.pathname + '?bw'; } };
     };
     draw();
