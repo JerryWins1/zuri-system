@@ -445,12 +445,18 @@
     if (k === 0 && !st.answers[cur.id] && !seen[sess.id]) return sxSessionIntro(sess, si, sessions.length);
     const a = st.answers[cur.id]; const c = myCoins(st);
     const fb = finishBy(st); const late = fb && Date.now() > fb.getTime();
-    const link = cur.link ? APP + withCode('?practice&role=' + me.role) + cur.link : APP + withCode('?practice&role=' + me.role);
+    // A step usually opens the practice app at a screen (#jobs). Session 8 is Emmanuel's and sends him
+    // to the testers' BOARD instead, which is a different page altogether — so a link starting http is
+    // taken as it stands. Without this, d8 pointed at the practice home and nobody could find the board;
+    // Veronicah and Emmanuel each lost time to it on 30 Oct.
+    const link = /^https?:/.test(cur.link || '') ? cur.link
+      : cur.link ? APP + withCode('?practice&role=' + me.role) + cur.link
+      : APP + withCode('?practice&role=' + me.role);
     const idx = all.findIndex((s) => s.id === cur.id);
     $('#main').innerHTML = `
       <div class="chips"><span class="chip timer" id="sx-timer">⏱</span><span class="chip coin" id="sx-coins">🪙 ${c.coins} ≈ KES ${c.kes.toLocaleString('en-GB')}</span>${fb ? `<span class="chip ${late ? 'late' : ''}">${late ? '⏰ Overdue' : '📅 by ' + fmtDay(fb)}</span>` : ''}</div>
       <div class="sx"><div class="lbl"><span>Session ${si + 1} of ${sessions.length} · ${esc(sess.title)}</span><span>Step ${k + 1} of ${inSess.length}</span></div>
-        <a class="open" id="sx-open" href="${esc(link)}" target="_blank" rel="noopener">🎓 Open practice at this screen</a>
+        <a class="open" id="sx-open" href="${esc(link)}" target="_blank" rel="noopener">${/^https?:/.test(cur.link || '') ? '📊 Open the board' : '🎓 Open practice at this screen'}</a>
         <div class="part do"><b class="h">1 · Do this</b><p>${esc(tokens(cur.do))}</p>
           ${cur.copy ? `<div class="copy"><span id="sx-copytext">${esc(tokens(cur.copy))}</span><button type="button" id="sx-copy">📋 Copy</button></div>` : ''}
           ${cur.tip ? `<p class="tip">💡 ${esc(tokens(cur.tip))}</p>` : ''}</div>

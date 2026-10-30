@@ -38,7 +38,7 @@
      "id": "d1-02",
      "link": "#customers",
      "do": "Tap 👥 Customers, then ＋ New customer.",
-     "see": "A blank form opens, and the first box on it is labelled Full name. Everything is empty except Area, which already says Zuri A \u2014 that is correct, not a fault.",
+     "see": "A blank form opens, and the first box on it is labelled Full name. Everything is empty except Area, which already says Zuri A — that is correct, not a fault.",
      "look": [
       "＋ New customer",
       "Full name"
@@ -61,7 +61,7 @@
     {
      "id": "d1-03",
      "link": "#customers/new",
-     "do": "Fill it in as if the caller is on the line. Full name: Grace Mwende. Area: Zuri A. Status: Lead (not installed yet). Phone: 0722 456 789. Package / plan: 10 Mbps \u2014 type 10 and pick it from the list that drops down, then watch the Monthly rate box: it should fill itself in as 2000. TELL US IF IT DOES NOT. Then type over it with 2500, because Grace is on an old price. Directions / landmark: Behind the Catholic church. Then tap Save customer.",
+     "do": "Fill it in as if the caller is on the line. Full name: Grace Mwende. Area: Zuri A. Status: Lead (not installed yet). Phone: 0722 456 789. Package / plan: 10 Mbps — type 10 and pick it from the list that drops down, then watch the Monthly rate box: it should fill itself in as 2000. TELL US IF IT DOES NOT. Then type over it with 2500, because Grace is on an old price. Directions / landmark: Behind the Catholic church. Then tap Save customer.",
      "see": "Grace Mwende's page opens, showing Lead.",
      "look": [
       "Save customer",
@@ -803,7 +803,7 @@
      "id": "d6-05",
      "link": "#jobs",
      "do": "Turn your phone onto airplane mode — on a laptop, switch the Wi-Fi off. Add a note to the job. Then turn the signal back on and wait a few seconds.",
-     "see": "Watch the small badge in the top bar — it is a badge that stays there, not a pop-up that flashes by. With no signal it reads \ud83d\udcf4 Offline, and once you have added the note it reads ⏳ 1 waiting to send. When the signal comes back the badge clears on its own. If it turns red and says 1 didn't send, or if the note vanishes altogether, that is a serious problem — say so.",
+     "see": "Watch the small badge in the top bar — it is a badge that stays there, not a pop-up that flashes by. With no signal it reads 📴 Offline, and once you have added the note it reads ⏳ 1 waiting to send. When the signal comes back the badge clears on its own. If it turns red and says 1 didn't send, or if the note vanishes altogether, that is a serious problem — say so.",
      "look": [
       "note"
      ],
@@ -879,9 +879,9 @@
    "steps": [
     {
      "id": "d8-01",
-     "link": "#home",
-     "do": "Read what each of the four reported today, on the board.",
-     "see": "You can see everyone's notes in one place.",
+     "link": "https://jerrywins1.github.io/zuri-system/preview/testers/?board&code=ZURI-SQUAD",
+     "do": "EMMANUEL ONLY — everyone else, you are finished, skip to the end. Emmanuel: tap Open the board above. It shows every answer, tick and note from all five of you, newest first. You need to be signed in to the training copy as a partner on this phone; if it says Partners only, tell Jerry and he will sort it.",
+     "see": "Everyone's notes in one place. If you get Partners only instead, say so — that is Jerry's to fix, not yours.",
      "look": [
       "board"
      ],
@@ -895,7 +895,7 @@
     },
     {
      "id": "d8-02",
-     "link": "#home",
+     "link": "https://jerrywins1.github.io/zuri-system/preview/testers/?board&code=ZURI-SQUAD",
      "do": "Go through the problems they reported and mark each one Real problem or Not a problem.",
      "see": "Each one is ruled on. A tester earns nothing for a problem until you confirm it.",
      "look": [
@@ -912,7 +912,7 @@
     },
     {
      "id": "d8-03",
-     "link": "#home",
+     "link": "https://jerrywins1.github.io/zuri-system/preview/testers/?board&code=ZURI-SQUAD",
      "do": "Of the real ones, decide which are SERIOUS — money wrong, VAT wrong, money to the wrong place, work that disappears. Write those down; there is no button for it yet.",
      "see": "You have a short list of the ones that actually matter.",
      "look": [
@@ -927,7 +927,7 @@
     },
     {
      "id": "d8-04",
-     "link": "#home",
+     "link": "https://jerrywins1.github.io/zuri-system/preview/testers/?board&code=ZURI-SQUAD",
      "do": "Pick the one thing from today that would embarrass Zuri most in front of a real customer.",
      "see": "One sentence. That is the thing Jerry needs to read first.",
      "look": [
@@ -942,7 +942,7 @@
     },
     {
      "id": "d8-05",
-     "link": "#home",
+     "link": "https://jerrywins1.github.io/zuri-system/preview/testers/?board&code=ZURI-SQUAD",
      "do": "Say what you want each of the four on next, and what you need from Jerry.",
      "see": "Short is fine. Leave it on your own page under Notes for Jerry, or send it on WhatsApp.",
      "look": [
