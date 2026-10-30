@@ -227,6 +227,17 @@
     Z.$('#nj', el).onsubmit = (e) => {
       e.preventDefault();
       const d = Z.formData(e.target);
+      // 🔗 Typing a name into the search box is not the same as picking one: the customer is only
+      // attached when you TAP them in the results. Saving with text still sitting in that box made a
+      // job with nobody on it, and said nothing. Kevin walked into it on 30 Oct (day script d1-08,
+      // "it says no customer linked"). A job with no customer is legitimate — somebody rings who is
+      // not on the books yet — so this only catches the case where they plainly meant to attach one.
+      if (!chosen && qi && qi.value.trim()) {
+        const box = Z.$('#nj-res', el);
+        if (box) box.innerHTML = '<div class="alert warn">Tap the customer\'s name in the list to link them to this job. If this caller is not a customer yet, clear this box and put their name in <b>Caller name &amp; phone</b> instead.</div>';
+        qi.focus();
+        return;
+      }
       const row = {
         id: Z.uuid(),
         customer_id: chosen ? chosen.id : null,
