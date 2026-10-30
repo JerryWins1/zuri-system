@@ -116,11 +116,12 @@
 </script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
-<script src="../js/gate.js?v=46"></script>
+<script src="../js/gate.js?v=47"></script>
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.13 · 2026-10-29';
+  const VERSION = 'v2.14 · 2026-10-30';
+  // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom).
   // v2.13 (29 Oct): one short link for the squad (/preview/t/) and names tapped, not typed — the log held "Kevin ngugi" and "kevin ngugi" as two people.
   // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
   // v2.11 (28 Oct): the 🎯 focus card names whoever set the plan (tester_plan.by_who), not always Jerry — Emmanuel now runs the squad.
@@ -182,7 +183,7 @@
            // tapping a name beats typing it: the log already held "Kevin ngugi" and "kevin ngugi" as two people
            squad: ['Veronicah Kimani', 'Kevin Ngugi', 'Fredrick Nganga', 'Brian Maina Kamau', 'Emmanuel Koki'],
            video: null,
-           intro: `<div class="why">This is the <b>team's</b> day, and <b>nobody is stuck in one job</b>. You will be the call centre, then the technician, then finance, then the partner — all on your own phone. The script tells you when to change; you do it on the <b>Me</b> page with <b>🔄 Try another job</b>.</div><div class="why" style="margin-top:6px"><b>Emmanuel leads it</b> — he says where to start and he decides which problems are real.</div><div class="why" style="margin-top:6px">You follow <b>one customer</b>, Grace Mwende, from her phone call to the books:</div><ol><li><b>She buys</b> — the call, her details, the work order.</li><li><b>The tech goes</b> — the pin, the parts, the router, her first payment.</li><li><b>The money</b> — her 2,500 reaching the books, bills, the pay run, VAT.</li><li><b>It breaks</b> — she rings again two weeks later.</li></ol><div class="why" style="margin-top:6px">Start where the session says, then keep going. Two pairs of eyes on a screen beats one, so going past your own part is a good thing, not a waste.</div><div class="why" style="margin-top:6px">Everything is <b>pretend</b> and stays on your phone, and you need <b>no account</b> for any of it. You cannot break anything. <b>What we want is the things that do not work</b> — say so at the step where it happened, and Emmanuel will rule on it.</div>` } };
+           intro: `<div class="why">This is the <b>team's</b> day, and <b>nobody is stuck in one job</b>. You will be the call centre, then the technician, then finance, then the partner — all on your own phone — or your laptop, which works just as well. On a laptop the tabs sit down the <b>left-hand side</b> instead of along the bottom; everything else is the same. The script tells you when to change; you do it on the <b>Me</b> page with <b>🔄 Try another job</b>.</div><div class="why" style="margin-top:6px"><b>Emmanuel leads it</b> — he says where to start and he decides which problems are real.</div><div class="why" style="margin-top:6px">You follow <b>one customer</b>, Grace Mwende, from her phone call to the books:</div><ol><li><b>She buys</b> — the call, her details, the work order.</li><li><b>The tech goes</b> — the pin, the parts, the router, her first payment.</li><li><b>The money</b> — her 2,500 reaching the books, bills, the pay run, VAT.</li><li><b>It breaks</b> — she rings again two weeks later.</li></ol><div class="why" style="margin-top:6px">Start where the session says, then keep going. Two pairs of eyes on a screen beats one, so going past your own part is a good thing, not a waste.</div><div class="why" style="margin-top:6px">Everything is <b>pretend</b> and stays on your phone, and you need <b>no account</b> for any of it. You cannot break anything. <b>What we want is the things that do not work</b> — say so at the step where it happened, and Emmanuel will rule on it.</div>` } };
   const SCRIPT_ONLY = ONE[QS.get('script')] ? QS.get('script') : null;
   const MEKEY = SCRIPT_ONLY ? 'me_' + SCRIPT_ONLY : 'me';
   let me = get(MEKEY, null);                                               // { name, role, device } (+ script)

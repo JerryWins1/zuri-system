@@ -370,7 +370,7 @@
     {
      "id": "d3-05",
      "link": "#jobs",
-     "do": "Under the work, add the parts you used: a router, and 50m of drop cable. Put a serial number on the router — write SN-TEST-0001.",
+     "do": "Under the work, add the parts you used: a router, and 50m of drop cable. Put a serial number on the router — write SN-TEST-0001. Each part also has a Qty box, already filled in with 1 — leave it at 1 for the router, and change it to 50 for the cable.",
      "see": "Both parts are listed on the job with the serial showing.",
      "look": [
       "parts",
@@ -523,7 +523,7 @@
     {
      "id": "d4-03",
      "link": "#money",
-     "do": "Record money going out: a receipt from Mama Njeri Hardware for 2400 of cable clips, paid in cash.",
+     "do": "Record money going out: a receipt from Mama Njeri Hardware for 2400 of cable clips, paid in cash. The form also makes you pick a Category before it will save — choose whichever one fits.",
      "see": "It saves and appears in money out.",
      "look": [
       "Mama Njeri",
@@ -802,8 +802,8 @@
     {
      "id": "d6-05",
      "link": "#jobs",
-     "do": "Turn your phone onto airplane mode. Add a note to the job. Then turn airplane mode off and wait a few seconds.",
-     "see": "The note should save on your phone and go up on its own once you have signal. If it vanishes, that is a serious problem.",
+     "do": "Turn your phone onto airplane mode — on a laptop, switch the Wi-Fi off. Add a note to the job. Then turn the signal back on and wait a few seconds.",
+     "see": "Watch the small badge in the top bar — it is a badge that stays there, not a pop-up that flashes by. With no signal it reads \ud83d\udcf4 Offline, and once you have added the note it reads ⏳ 1 waiting to send. When the signal comes back the badge clears on its own. If it turns red and says 1 didn't send, or if the note vanishes altogether, that is a serious problem — say so.",
      "look": [
       "note"
      ],

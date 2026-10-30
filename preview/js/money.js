@@ -107,7 +107,7 @@
       return `<h3>${Z.esc(a.name)}</h3>
         <div class="kpis">
           <div class="kpi"><div class="k">Bank</div><div class="v num">${lc ? Z.fmt(lc.bank) : '—'}</div><div class="f">${lc ? 'counted ' + Z.day(lc.date) : 'no count yet'}</div></div>
-          <div class="kpi"><div class="k">M-Pesa float</div><div class="v num ${mp == null ? '' : mp < target * 0.5 ? 'bad' : mp < target ? 'warn' : 'ok'}">${lc ? Z.fmt(lc.mpesa) : '—'}</div><div class="f">target ${Z.fmt(target)}</div></div>
+          <div class="kpi"><div class="k">M-Pesa float</div><div class="v num ${mp == null ? '' : mp < target * 0.5 ? 'bad' : mp < target ? 'warn' : 'ok'}">${lc ? Z.fmt(lc.mpesa) : '—'}</div><div class="f">target ${Z.fmt(target)}${lc ? ' · counted ' + Z.day(lc.date) : ' · no count yet'}</div></div>
           <div class="kpi"><div class="k">Bills still owing</div><div class="v num">${Z.fmt(unpaid)}</div><div class="f">${ab.filter((b) => !b.paid).length} of ${ab.length} bills</div></div>
           <div class="kpi"><div class="k">Cash after bills</div><div class="v num ${after == null ? '' : after < 0 ? 'bad' : 'ok'}">${after == null ? '—' : Z.fmt(after)}</div><div class="f">bank + M-Pesa − owing</div></div>
         </div>${al.map(([k, t]) => `<div class="alert ${k}">${Z.esc(t)}</div>`).join('')}`;
