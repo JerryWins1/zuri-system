@@ -24,7 +24,7 @@
   .links { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; } .links a { font-size:15px; font-weight:800; text-decoration:none; color:#fff; background:var(--brand); border-radius:999px; padding:10px 15px; min-height:44px; display:inline-flex; align-items:center; }
   .btns { display:flex; gap:8px; } .btns button { font:inherit; font-weight:800; font-size:16px; padding:13px; border-radius:14px; border:none; cursor:pointer; min-height:48px; }
   .btns .done { flex:1; background:var(--ok); color:#fff; } .btns .skip { background:var(--surface); color:var(--soft); border:1px solid var(--line-strong); }
-  .tell { margin-top:12px; } .tell textarea { width:100%; font:inherit; font-size:15px; padding:10px 12px; border:1.5px solid var(--line-strong); border-radius:12px; background:var(--surface); color:var(--ink); min-height:64px; resize:vertical; }
+  .tell { margin-top:12px; } .say .sayh { display:block; margin-bottom:4px; } .tell textarea { width:100%; font:inherit; font-size:15px; padding:10px 12px; border:1.5px solid var(--line-strong); border-radius:12px; background:var(--surface); color:var(--ink); min-height:64px; resize:vertical; }
   .tell .row { display:flex; gap:8px; margin-top:6px; align-items:center; } .tell button { font:inherit; font-weight:700; padding:9px 14px; border-radius:10px; border:1px solid var(--line-strong); background:var(--surface); color:var(--brand); cursor:pointer; min-height:40px; }
   .next { background:var(--brand-soft); border:1px dashed var(--brand); border-radius:14px; padding:10px 14px; margin-bottom:14px; font-size:14px; } .next b { color:var(--brand); font-size:11px; letter-spacing:.1em; text-transform:uppercase; display:block; }
   h3 { margin:16px 0 6px; font-size:12.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--faint); display:flex; justify-content:space-between; }
@@ -121,7 +121,7 @@
 <script>
 (function () {
   const VERSION = 'v2.14 · 2026-10-30';
-  // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom).
+  // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom). Also a 💬 Say something box on every step, so a tester can speak up without having to mark the step failed (Emmanuel asked; it is open to all five).
   // v2.13 (29 Oct): one short link for the squad (/preview/t/) and names tapped, not typed — the log held "Kevin ngugi" and "kevin ngugi" as two people.
   // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
   // v2.11 (28 Oct): the 🎯 focus card names whoever set the plan (tester_plan.by_who), not always Jerry — Emmanuel now runs the squad.
@@ -461,6 +461,10 @@
         <div class="nav2"><button type="button" id="sx-back" ${idx > 0 ? '' : 'disabled'}>← Back</button><button type="button" id="sx-list">☰ My list</button><button type="button" id="sx-next" ${a ? '' : 'disabled'}>Next →</button></div>
         <div class="dots" aria-label="Steps in this session">${inSess.map((s, i) => { const aa = st.answers[s.id]; const open = canOpen(st, s.id); return `<button type="button" data-step="${s.id}" class="${aa ? aa.a : ''} ${s.id === cur.id ? 'cur' : ''}" ${open ? '' : 'disabled'} aria-label="Step ${i + 1}${aa ? ': ' + ANS[aa.a][1] : open ? '' : ' (locked)'}">${i + 1}</button>`; }).join('')}</div>
       </div>
+      <div class="tell say"><b class="sayh">💬 Say something — about anything</b>
+        <div class="hint">You do not have to wait for something to break. Ideas, questions, what is missing, "this feels wrong to me" — all of it is useful, and all of it counts. Goes to Jerry, Emmanuel and Claude with your name on it.</div>
+        <textarea id="sx-say" aria-label="Say something" placeholder="e.g. nothing here checks whether this customer already exists"></textarea>
+        <div class="row"><button type="button" id="sx-saybtn">Send</button><span class="hint" style="margin:0">You can send as many as you like.</span></div></div>
       <p class="foot">Zuri Testers' List ${VERSION} · script ${esc(SX.script.version || '')}${SX.serverOk === false ? ' · answers wait on this phone until the board is switched on' : ''}</p>`;
     timerStart(sess.id, sess.mins || 20);
     const cp = $('#sx-copy'); if (cp) cp.onclick = () => { const t = $('#sx-copytext').textContent; (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Copied — paste it in Zuri.'), () => { const r = document.createRange(); r.selectNodeContents($('#sx-copytext')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Selected — tap Copy on your phone.'); }); };
@@ -470,6 +474,15 @@
     $('#sx-next').onclick = () => { if (!a) return; const nx = all[idx + 1]; sxPick = nx && st.answers[nx.id] ? nx.id : null; sxPlay(); window.scrollTo(0, 0); };
     $('#sx-list').onclick = () => { timerStop(); set('view', 'list'); sxPick = null; render(); window.scrollTo(0, 0); };
     $$('.dots button[data-step]').forEach((b) => (b.onclick = () => { if (b.disabled) return; sxPick = st.answers[b.dataset.step] ? b.dataset.step : null; sxPlay(); }));
+    // 💬 anyone, any time — not only when a step fails. Prefix 'say:' so the board can tell a
+    // remark apart from a step that went wrong ('sx:') or the app reporting itself ('auto:').
+    $('#sx-saybtn').onclick = async () => {
+      const t = $('#sx-say').value.trim(); if (!t) return toast('Write something first.');
+      const btn = $('#sx-saybtn'); btn.disabled = true;
+      const ok = await log('note', ('say:' + cur.id).slice(0, 60), t.slice(0, 1000));
+      btn.disabled = false; $('#sx-say').value = '';
+      toast(ok ? 'Sent — asante!' : 'Saved on this phone — sends when you have signal.');
+    };
   }
 
   function sxSessionIntro(sess, si, n) {
