@@ -23,7 +23,8 @@
   // morning, with no way back in that didn't need a partner login. These codes don't depend on
   // the database at all, so nothing anyone does there can lock the squad out. To stop one
   // working, delete its line below — the next page load refuses it.
-  const LOCAL = { 'ZURI-SQUAD': { until: '2026-12-31', label: 'Zuri squad' } };
+  const SQUAD = 'ZURI-SQUAD';
+  const LOCAL = { [SQUAD]: { until: '2026-12-31', label: 'Zuri squad' } };
   const localOk = (code) => { const c = LOCAL[code]; return c && today() <= c.until ? c : null; };
 
   const WORDS = { unknown: 'That code is not known. Check the letters, or ask Jerry.', revoked: 'That code has been switched off. Ask Jerry for a new one.', expired: 'That code has run out. Ask Jerry for a new one.', full: 'That code has been used on too many phones. Ask Jerry for a new one.' };
@@ -87,6 +88,9 @@
     w.innerHTML = `<div style="width:100%;max-width:420px;background:#fff;border:1px solid #D8DFDC;border-radius:16px;padding:18px">
       <div style="font-size:26px;font-weight:800;color:#0F6E5C;margin-bottom:2px">Zuri System</div>
       <div style="color:#56645F;margin-bottom:14px">${here === 'testers' ? "The Testers' List" : here === 'training' ? 'The training copy' : 'Practice'} is by invitation.</div>
+      ${here === 'testers' && localOk(SQUAD) ? `<button id="zgate-squad" style="width:100%;margin-top:4px;font:inherit;font-weight:800;font-size:16px;padding:13px;border:0;border-radius:10px;background:#0F6E5C;color:#fff;min-height:48px;cursor:pointer">I am on Jerry's test squad</button>
+      <p style="margin:8px 0 2px;font-size:13px;color:#56645F">One tap \u2014 nothing to type. Use this if you opened an old link or the icon on your home screen.</p>
+      <p style="margin:10px 0 0;font-size:12px;color:#8A9792;text-align:center">\u2014 or \u2014</p>` : ''}
       ${canEnter ? `<label style="display:block;font-size:13px;font-weight:700;color:#3F4F4C;margin:10px 0 4px">Your invite code</label>
       <input id="zgate-in" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="e.g. ZURI-SQUAD" style="width:100%;box-sizing:border-box;font:inherit;font-size:20px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border:1.5px solid #B9C4C0;border-radius:10px;background:#fff;color:#152322;color-scheme:light">
       <button id="zgate-go" style="width:100%;margin-top:10px;font:inherit;font-weight:800;font-size:16px;padding:13px;border:0;border-radius:10px;background:#0F6E5C;color:#fff;min-height:48px;cursor:pointer">Open Zuri</button>` : ''}
@@ -94,6 +98,20 @@
       <p style="margin:12px 0 0;font-size:13px;color:#56645F"><a href="https://jerrywins1.github.io/zuri-system/preview/" style="color:#0F6E5C">Staff with an account: sign in here</a></p></div>`;
     document.body.appendChild(w);
     const go = document.getElementById('zgate-go'), inp = document.getElementById('zgate-in');
+    // An old link, or the home-screen icon the onboarding told them to make, carries a code that
+    // has since been switched off — and the squad code lives in this file, not in the database,
+    // so there is nothing for them to ask Jerry for. One tap, rather than a dead end.
+    const sq = document.getElementById('zgate-squad');
+    if (sq) sq.onclick = () => {
+      const lc = localOk(SQUAD); if (!lc) return;
+      put({ code: SQUAD, until: lc.until, label: lc.label, checked: today() });
+      // Send them to the squad's own short link rather than just letting them through here: an old
+      // link has no ?script, and without it they are asked to TYPE their name, which is how the log
+      // ended up holding "Kevin ngugi" and "kevin ngugi" as two people. The short link taps a name.
+      const squadLink = location.href.replace(/\/testers\/.*$/, '/t/');
+      if (!/[?&]script=/.test(location.search) && squadLink !== location.href) { location.replace(squadLink); return; }
+      w.remove(); resolve(true);
+    };
     if (!go) return;
     const submit = async () => {
       const code = (inp.value || '').trim().toUpperCase(); if (!code) return;
