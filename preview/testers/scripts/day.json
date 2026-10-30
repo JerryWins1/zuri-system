@@ -38,7 +38,7 @@
      "id": "d1-02",
      "link": "#customers",
      "do": "Tap 👥 Customers, then ＋ New customer.",
-     "see": "A form opens with Full name at the top.",
+     "see": "A blank form opens, and the first box on it is labelled Full name. Everything is empty except Area, which already says Zuri A \u2014 that is correct, not a fault.",
      "look": [
       "＋ New customer",
       "Full name"
