@@ -61,7 +61,7 @@
     {
      "id": "d1-03",
      "link": "#customers/new",
-     "do": "Fill it in as if the caller is on the line. Full name: Grace Mwende. Area: Zuri A. Status: Lead (not installed yet). Phone: 0722 456 789. Package / plan: 10 Mbps. Monthly rate: 2500. Directions / landmark: Behind the Catholic church. Then tap Save customer.",
+     "do": "Fill it in as if the caller is on the line. Full name: Grace Mwende. Area: Zuri A. Status: Lead (not installed yet). Phone: 0722 456 789. Package / plan: 10 Mbps \u2014 type 10 and pick it from the list that drops down, then watch the Monthly rate box: it should fill itself in as 2000. TELL US IF IT DOES NOT. Then type over it with 2500, because Grace is on an old price. Directions / landmark: Behind the Catholic church. Then tap Save customer.",
      "see": "Grace Mwende's page opens, showing Lead.",
      "look": [
       "Save customer",
