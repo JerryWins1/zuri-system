@@ -88,7 +88,7 @@
     w.innerHTML = `<div style="width:100%;max-width:420px;background:#fff;border:1px solid #D8DFDC;border-radius:16px;padding:18px">
       <div style="font-size:26px;font-weight:800;color:#0F6E5C;margin-bottom:2px">Zuri System</div>
       <div style="color:#56645F;margin-bottom:14px">${here === 'testers' ? "The Testers' List" : here === 'training' ? 'The training copy' : 'Practice'} is by invitation.</div>
-      ${here === 'testers' && localOk(SQUAD) ? `<button id="zgate-squad" style="width:100%;margin-top:4px;font:inherit;font-weight:800;font-size:16px;padding:13px;border:0;border-radius:10px;background:#0F6E5C;color:#fff;min-height:48px;cursor:pointer">I am on Jerry's test squad</button>
+      ${localOk(SQUAD) ? `<button id="zgate-squad" style="width:100%;margin-top:4px;font:inherit;font-weight:800;font-size:16px;padding:13px;border:0;border-radius:10px;background:#0F6E5C;color:#fff;min-height:48px;cursor:pointer">I am on Jerry's test squad</button>
       <p style="margin:8px 0 2px;font-size:13px;color:#56645F">One tap \u2014 nothing to type. Use this if you opened an old link or the icon on your home screen.</p>
       <p style="margin:10px 0 0;font-size:12px;color:#8A9792;text-align:center">\u2014 or \u2014</p>` : ''}
       ${canEnter ? `<label style="display:block;font-size:13px;font-weight:700;color:#3F4F4C;margin:10px 0 4px">Your invite code</label>
@@ -101,6 +101,12 @@
     // An old link, or the home-screen icon the onboarding told them to make, carries a code that
     // has since been switched off — and the squad code lives in this file, not in the database,
     // so there is nothing for them to ask Jerry for. One tap, rather than a dead end.
+    //
+    // 31 Oct: on every gate now, not just the testers' list. bwOpen above expires tonight, and with
+    // it the leniency that has been quietly admitting ?training links, ?coach links and sign-up
+    // returns with no code at all. From tomorrow a browser with nothing saved — Gmail's, WhatsApp's,
+    // one whose storage was cleared — meets the gate on the training copy and on practice too.
+    // Veronicah already hit the practice gate on 30 Oct, where this button did not yet reach.
     const sq = document.getElementById('zgate-squad');
     if (sq) sq.onclick = () => {
       const lc = localOk(SQUAD); if (!lc) return;
