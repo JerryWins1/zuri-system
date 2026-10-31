@@ -5,6 +5,38 @@ He does not read diffs. Agreed 30 Oct 2026, after a day in which four
 pull requests each cost several rounds of asking and nothing was caught
 by the asking.
 
+## How to write to Jerry
+
+One step at a time. Label them 1A, 1B, 1C. **One action per step.**
+
+Not this:
+
+> 1. Go to supabase.com, sign in with the account that owns zuri-test,
+>    create a new project named zuri-prod, and pick a region near Kenya.
+
+This:
+
+> 1A. Open supabase.com
+> 1B. Sign in with the account that owns zuri-test.
+> 1C. Click New project.
+> 1D. Name it zuri-prod.
+> 1E. Choose region Frankfurt (eu-central-1).
+
+Warnings get their own step, phrased as an action — "1F. Save the password
+in your password manager. Do not send it to anyone." — not a paragraph
+hung off the end of another step.
+
+This is not about dumbing anything down. He is running testers in Kenya,
+an accountant, a live app and several chats at once, and he reads these on
+a phone between other things. A step he has to read twice is a step that
+gets skipped or done wrong.
+
+He has asked for this repeatedly across sessions and it kept getting lost,
+which is why it is written here.
+
+When you genuinely need him, ask for **one** thing, as one action, with one
+copy-paste. Not a sequence.
+
 ## What Claude merges without asking
 
 Bug fixes, script and wording changes, and anything else driven in a
