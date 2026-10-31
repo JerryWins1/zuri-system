@@ -37,6 +37,13 @@ which is why it is written here.
 When you genuinely need him, ask for **one** thing, as one action, with one
 copy-paste. Not a sequence.
 
+Never send him hunting for something. When a reply points at the Test Desk,
+**open it and give the link in the same message** — never just "open the
+Test Desk". Same for any other page: the link goes in the message, every
+time.
+
+The Test Desk: https://claude.ai/artifact/Bsjf9a7sqK7YbVAuDAuqpE
+
 ## What Claude merges without asking
 
 Bug fixes, script and wording changes, and anything else driven in a
