@@ -116,11 +116,11 @@
 </script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
-<script src="../js/gate.js?v=49"></script>
+<script src="../js/gate.js?v=50"></script>
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.14 · 2026-10-30';
+  const VERSION = 'v2.15 · 2026-10-31';
   // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom). Also a 💬 Say something box on every step, so a tester can speak up without having to mark the step failed (Emmanuel asked; it is open to all five).
   // v2.13 (29 Oct): one short link for the squad (/preview/t/) and names tapped, not typed — the log held "Kevin ngugi" and "kevin ngugi" as two people.
   // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
@@ -173,6 +173,20 @@
   const $ = (s, r = document) => r.querySelector(s); const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const ROLES = { field: '🛠️ Field tech', callcenter: '📞 Call center', finance: '💰 Finance (office)', admin: '⭐ Partner / manager' };
   const SHORT = { field: 'a field tech', callcenter: 'the call center', finance: 'finance', admin: 'a partner' }; // 7 Oct deep check #33
+  // Everyone testing Zuri, with the job they actually do. Tapping a name beats typing it: the log once
+  // held "Kevin ngugi" and "kevin ngugi" as two people. Dickson (field) and Kelvin (finance) are real
+  // Zuri staff — they are also the characters in the practice videos, which is why those names look
+  // familiar inside the app. Anyone not listed can still type their own name.
+  const SQUAD = [
+    { name: 'Veronicah Kimani', role: 'callcenter' },
+    { name: 'Kevin Ngugi', role: 'finance' },
+    { name: 'Fredrick Nganga', role: 'finance' },
+    { name: 'Brian Maina Kamau', role: 'field' },
+    { name: 'Emmanuel Koki', role: 'admin' },
+    { name: 'Dickson', role: 'field' },
+    { name: 'Kelvin', role: 'finance' },
+  ];
+  const SQUAD_NAMES = SQUAD.map((p) => p.name);
   // v2.1: a one-script link (?script=projects) — its own "me", practising as finance
   const QS = new URLSearchParams(location.search);
   const ONE = {
@@ -181,7 +195,7 @@
                 intro: `<div class="why">Zuri Fiber sells home internet in Maai Mahiu. Before the partners bring internet to a <b>new town</b>, Zuri helps them think it through, in three steps:</div><ol><li><b>Plan:</b> what it costs to start (cable, equipment, a shop), what it costs every month, and how many people will pay.</li><li><b>Decide:</b> two partners agree, and the plan is kept as the yardstick.</li><li><b>Track:</b> every month, the real numbers are compared with the plan — on track, behind or ahead.</li></ol><div class="why" style="margin-top:6px"><b>Two words you will see:</b><br>• <b>Break-even</b> — the first month when the money coming in is more than the money going out that month.<br>• <b>Payback</b> — the month when all the money you spent to start has come back to you.</div><div class="why" style="margin-top:6px">Everything is <b>pretend</b> and stays on your phone. The numbers are examples. You cannot break anything — if something is confusing, that is exactly what we want to hear.</div>` },
     day: { role: 'callcenter', label: '🏢 A whole business day', title: 'Test a whole business day', tag: '🏢 A business day', about: 'the business day',
            // tapping a name beats typing it: the log already held "Kevin ngugi" and "kevin ngugi" as two people
-           squad: ['Veronicah Kimani', 'Kevin Ngugi', 'Fredrick Nganga', 'Brian Maina Kamau', 'Emmanuel Koki'],
+           squad: SQUAD_NAMES,
            video: null,
            intro: `<div class="why">This is the <b>team's</b> day, and <b>nobody is stuck in one job</b>. You will be the call centre, then the technician, then finance, then the partner — all on your own phone — or your laptop, which works just as well. On a laptop the tabs sit down the <b>left-hand side</b> instead of along the bottom; everything else is the same. The script tells you when to change; you do it on the <b>Me</b> page with <b>🔄 Try another job</b>.</div><div class="why" style="margin-top:6px"><b>Emmanuel leads it</b> — he says where to start and he decides which problems are real.</div><div class="why" style="margin-top:6px">You follow <b>one customer</b>, Grace Mwende, from her phone call to the books:</div><ol><li><b>She buys</b> — the call, her details, the work order.</li><li><b>The tech goes</b> — the pin, the parts, the router, her first payment.</li><li><b>The money</b> — her 2,500 reaching the books, bills, the pay run, VAT.</li><li><b>It breaks</b> — she rings again two weeks later.</li></ol><div class="why" style="margin-top:6px">Start where the session says, then keep going. Two pairs of eyes on a screen beats one, so going past your own part is a good thing, not a waste.</div><div class="why" style="margin-top:6px">Everything is <b>pretend</b> and stays on your phone, and you need <b>no account</b> for any of it. You cannot break anything. <b>What we want is the things that do not work</b> — say so at the step where it happened, and Emmanuel will rule on it.</div>` } };
   const SCRIPT_ONLY = ONE[QS.get('script')] ? QS.get('script') : null;
@@ -601,11 +615,20 @@
       <div class="card">
         <h2 style="margin:0 0 4px">Karibu! Who are you?</h2>
         <p style="color:var(--soft);margin:0 0 8px">This list walks you through testing Zuri, one step at a time. Your name goes with your ticks and notes, so Jerry and Claude know who found what.</p>
-        <label>Your name</label><input id="w-name" placeholder="e.g. Peter Kamau" autocomplete="name">
+        <div style="font-weight:700;margin:0 0 6px">Tap your name</div>
+        <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:14px">${SQUAD.map((p) => `<button type="button" class="btn" data-who="${esc(p.name)}" data-whorole="${esc(p.role)}" style="flex:1 1 44%">${esc(p.name.split(' ')[0])}</button>`).join('')}</div>
+        <details><summary style="cursor:pointer;color:var(--soft);font-size:14px">Not one of these?</summary>
+        <label style="margin-top:8px">Your name</label><input id="w-name" placeholder="e.g. Peter Kamau" autocomplete="name">
         <label>Your job at Zuri</label>
         <div class="seg" id="w-role">${Object.entries(ROLES).map(([k, t]) => `<button type="button" data-role="${k}">${t}</button>`).join('')}</div>
-        <button class="big" id="w-go">Start my list →</button>
+        <button class="big" id="w-go">Start my list →</button></details>
       </div>`;
+    // One tap sets the name AND the job, because we already know what each of them does. Typing is still
+    // there for anyone not on the roster.
+    $$('[data-who]').forEach((b) => (b.onclick = () => {
+      set('me', { name: b.dataset.who, role: b.dataset.whorole });
+      set('intro_done', false); location.reload();
+    }));
     let role = null;
     $$('#w-role button').forEach((b) => (b.onclick = () => { role = b.dataset.role; $$('#w-role button').forEach((x) => x.classList.toggle('on', x === b)); }));
     $('#w-go').onclick = async () => {
