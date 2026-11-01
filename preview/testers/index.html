@@ -116,11 +116,11 @@
 </script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
-<script src="../js/gate.js?v=51"></script>
+<script src="../js/gate.js?v=52"></script>
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.16 · 2026-11-01';
+  const VERSION = 'v2.17 · 2026-11-01';
   // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom). Also a 💬 Say something box on every step, so a tester can speak up without having to mark the step failed (Emmanuel asked; it is open to all five).
   // v2.13 (29 Oct): one short link for the squad (/preview/t/) and names tapped, not typed — the log held "Kevin ngugi" and "kevin ngugi" as two people.
   // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
@@ -568,6 +568,33 @@
     sxPick = null; sxPlay(); window.scrollTo(0, 0);
   }
 
+  // ---------- the rotation: nobody waits to be given the next job ----------
+  // v2.17 (1 Nov): finishing a script was a dead end — "Report sent", and then you waited for a WhatsApp
+  // message before you could do anything else. Now the win screen hands you your next job with one tap.
+  // Each tester walks the same six scripts in a DIFFERENT order, starting where Monday's plan put them, so
+  // every script collects several pairs of eyes and nobody simply repeats somebody else's run. A script you
+  // have already sent a report for is skipped, so the list only ever shrinks. When it is empty you are told
+  // to ask Emmanuel to sign you off, which is what the pay rules turn on.
+  const ROT = ['admin', 'projects', 'field', 'callcenter', 'finance', 'day'];
+  const ROT_LABEL = { admin: '\u2b50 Partner / manager', projects: '\ud83d\udcc8 Projects', field: '\ud83d\udee0\ufe0f Field tech',
+                      callcenter: '\ud83d\udcde Call centre', finance: '\ud83d\udcb0 Finance (office)', day: '\ud83c\udfe2 A whole business day' };
+  const ROT_START = { 'Emmanuel Koki': 0, 'Kevin Ngugi': 1, 'Veronicah Kimani': 2, 'Brian Maina Kamau': 3, 'Fredrick Nganga': 5 };
+  const rotDone = (sc) => { const st = get('sx_' + sc, null); return !!(st && st.reported); };
+  const rotLeft = (name) => { const off = ROT_START[name] || 0;
+    return ROT.map((_, i) => ROT[(off + i) % ROT.length]).filter((sc) => !rotDone(sc)); };
+  const rotLink = (sc, name) => location.pathname + ((sc === 'projects' || sc === 'day')
+    ? withCode('?script=' + sc + '&n=' + encodeURIComponent(name))
+    : withCode('?n=' + encodeURIComponent(name) + '&role=' + sc));
+  function rotCard(name) {
+    const left = rotLeft(name); const nxt = left.find((sc) => sc !== SID());
+    if (!nxt) return `<div class="card" style="border-left:4px solid var(--now)"><b>\ud83c\udfc1 That is the whole list.</b>
+      <div class="why" style="margin:6px 0 0">You have finished every script we have \u2014 all six. Tell Emmanuel, and he will sign you off.</div></div>`;
+    const more = left.length - 1;
+    return `<div class="card" style="border-left:4px solid var(--now)"><b>Your next job: ${esc(ROT_LABEL[nxt])}</b>
+      <div class="why" style="margin:6px 0 10px">${more ? more + (more === 1 ? ' more job' : ' more jobs') + ' after this one.' : 'This is your last one.'} Nothing to type \u2014 it remembers who you are.</div>
+      <a class="big" style="display:block;text-align:center;text-decoration:none" href="${esc(rotLink(nxt, name))}">Start ${esc(ROT_LABEL[nxt])} \u2192</a></div>`;
+  }
+
   // ---------- finished: the report ----------
   function sxSummary(st) {
     const live = liveSteps(SX.script); const n = (k) => live.filter((s) => st.answers[s.id] && st.answers[s.id].a === k).length;
@@ -581,6 +608,7 @@
     $('#prog').textContent = `${c.answered} / ${c.total}`;
     if (st.reported) {
       $('#main').innerHTML = `<div class="win"><div style="font-size:40px">🎉</div><h2>Report sent — asante sana, ${esc(me.name.split(' ')[0])}!</h2><p>🪙 ${c.coins} coins ≈ KES ${c.kes.toLocaleString('en-GB')}. Jerry sees your answers on the board; you are paid once he checks them.</p></div>
+        ${rotCard(me.name)}
         <div class="card"><b>Your report</b><pre style="white-space:pre-wrap;font:inherit;font-size:14px;margin:6px 0 0">${esc(sum)}</pre></div>
         <div class="nav2"><button type="button" id="sx-review">← Look at my answers</button><button type="button" id="sx-list">☰ My list</button></div>`;
     } else {
