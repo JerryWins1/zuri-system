@@ -586,13 +586,14 @@
     ? withCode('?script=' + sc + '&n=' + encodeURIComponent(name))
     : withCode('?n=' + encodeURIComponent(name) + '&role=' + sc));
   function rotCard(name) {
+    if (!rotDone(SID())) return '';            // still mid-script: do not nag them to leave it
     const left = rotLeft(name); const nxt = left.find((sc) => sc !== SID());
     if (!nxt) return `<div class="card" style="border-left:4px solid var(--now)"><b>\ud83c\udfc1 That is the whole list.</b>
       <div class="why" style="margin:6px 0 0">You have finished every script we have \u2014 all six. Tell Emmanuel, and he will sign you off.</div></div>`;
     const more = left.length - 1;
     return `<div class="card" style="border-left:4px solid var(--now)"><b>Your next job: ${esc(ROT_LABEL[nxt])}</b>
       <div class="why" style="margin:6px 0 10px">${more ? more + (more === 1 ? ' more job' : ' more jobs') + ' after this one.' : 'This is your last one.'} Nothing to type \u2014 it remembers who you are.</div>
-      <a class="big" style="display:block;text-align:center;text-decoration:none" href="${esc(rotLink(nxt, name))}">Start ${esc(ROT_LABEL[nxt])} \u2192</a></div>`;
+      <a class="big" id="rot-next" data-next="${esc(nxt)}" style="display:block;text-align:center;text-decoration:none" href="${esc(rotLink(nxt, name))}">Start ${esc(ROT_LABEL[nxt])} \u2192</a></div>`;
   }
 
   // ---------- finished: the report ----------
@@ -712,6 +713,7 @@
     const secs = [...new Set(steps.map((s) => s.sec))];
     $('#main').innerHTML = `
       <div class="bar"><i style="width:${Math.round((done / Math.max(1, steps.length)) * 100)}%"></i></div>
+      ${rotCard(me.name)}
       ${noticeCard()}
       ${sxCard()}
       ${plan && plan.focus ? `<div class="card" style="border-left:4px solid var(--now)"><b>🎯 ${esc(planBy())} asked you to focus on:</b> ${esc(plan.focus)}</div>` : ''}
@@ -762,6 +764,7 @@
       ${ONE[SCRIPT_ONLY].video ? `<div class="card" id="one-video" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:180px"><b>▶ Your video: ${ONE[SCRIPT_ONLY].video.name}</b> <span style="color:var(--faint);font-size:13px">${ONE[SCRIPT_ONLY].video.mins}</span>
         <div style="color:var(--soft);font-size:14px">Sound on. It plays on the real screens and shows where to tap. You can stop it with ✕ at any time. It is also step 1 of your test script.</div></div>
         <a class="big" style="display:inline-block;width:auto;text-decoration:none;text-align:center;padding:12px 16px" href="${esc(vid)}" target="_blank" rel="noopener">▶ Play</a></div>` : ''}
+      ${rotCard(me.name)}
       ${noticeCard()}
       ${SX.script ? sxCard() : '<div class="card">Loading your test script…</div>'}
       <div class="tell card"><textarea id="tell" placeholder="✍️ Anything to tell Jerry about ${esc(ONE[SCRIPT_ONLY].about)}? What was confusing, slow, or wrong"></textarea>
