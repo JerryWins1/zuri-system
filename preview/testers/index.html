@@ -116,11 +116,11 @@
 </script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
-<script src="../js/gate.js?v=52"></script>
+<script src="../js/gate.js?v=53"></script>
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.17 · 2026-11-01';
+  const VERSION = 'v2.18 · 2026-11-01';
   // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom). Also a 💬 Say something box on every step, so a tester can speak up without having to mark the step failed (Emmanuel asked; it is open to all five).
   // v2.13 (29 Oct): one short link for the squad (/preview/t/) and names tapped, not typed — the log held "Kevin ngugi" and "kevin ngugi" as two people.
   // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
@@ -588,8 +588,9 @@
   function rotCard(name) {
     if (!rotDone(SID())) return '';            // still mid-script: do not nag them to leave it
     const left = rotLeft(name); const nxt = left.find((sc) => sc !== SID());
-    if (!nxt) return `<div class="card" style="border-left:4px solid var(--now)"><b>\ud83c\udfc1 That is the whole list.</b>
-      <div class="why" style="margin:6px 0 0">You have finished every script we have \u2014 all six. Tell Emmanuel, and he will sign you off.</div></div>`;
+    if (!nxt) return `<div class="card" style="border-left:4px solid var(--now)"><b>\ud83c\udfc1 That is the whole list \u2014 all six.</b>
+      <div class="why" style="margin:6px 0 10px">Two things. <b>Tell Emmanuel</b> so he can sign you off: that is what your pay turns on. And if you would rather keep going, there is still work \u2014 go and use Zuri as if it were a normal working day of your own, and tell us in the group anything that is slow, confusing or wrong. That is how the two best finds of last week turned up, and neither was on any script.</div>
+      <a class="big" id="rot-roam" style="display:block;text-align:center;text-decoration:none" href="${esc(APP + withCode('?practice&role=' + me.role))}">Open Zuri and have a look round \u2192</a></div>`;
     const more = left.length - 1;
     return `<div class="card" style="border-left:4px solid var(--now)"><b>Your next job: ${esc(ROT_LABEL[nxt])}</b>
       <div class="why" style="margin:6px 0 10px">${more ? more + (more === 1 ? ' more job' : ' more jobs') + ' after this one.' : 'This is your last one.'} Nothing to type \u2014 it remembers who you are.</div>
@@ -772,7 +773,7 @@
       <p class="foot">Zuri Testers' List ${VERSION} · ${esc(WHO())} <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button></p>`;
     const sg = $('#sx-go'); if (sg) sg.onclick = () => { sxPick = null; const s2 = sxState(); if (s2.reported) sxFinish(); else sxPlay(); window.scrollTo(0, 0); };
     wireNotices();
-    $('#b-tell').onclick = async () => { const box = $('#tell'); if (!box) return; const n = box.value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', 'projects:home', n); if (box.isConnected) box.value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
+    $('#b-tell').onclick = async () => { const box = $('#tell'); if (!box) return; const n = box.value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', SCRIPT_ONLY + ':home', n);   // was hard-coded 'projects:home' — a note sent from the business-day link was filed under Projects if (box.isConnected) box.value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
     $('#b-who').onclick = () => { if (confirm('Change your name? Your answers stay on this phone.')) { localStorage.removeItem('zt_' + MEKEY); location.href = location.pathname + '?script=' + SCRIPT_ONLY; } };
   }
 
