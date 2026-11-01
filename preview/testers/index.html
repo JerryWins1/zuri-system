@@ -751,6 +751,8 @@
   }
 
   // ---------- v2.1 · a one-script link: plain words, the video, the script ----------
+  // v2.18 (1 Nov): the box below filed EVERY note as 'projects:home', whichever one-script link the
+  // tester was on, so a note sent from the business-day link read as Projects. It now uses SCRIPT_ONLY.
   function oneHome() {
     set('view', 'list');
     const st = SX.script ? sxState() : null; const c = SX.script ? myCoins(st) : null;
@@ -773,7 +775,7 @@
       <p class="foot">Zuri Testers' List ${VERSION} · ${esc(WHO())} <button id="b-who">Not ${esc(me.name.split(' ')[0])}? Change</button></p>`;
     const sg = $('#sx-go'); if (sg) sg.onclick = () => { sxPick = null; const s2 = sxState(); if (s2.reported) sxFinish(); else sxPlay(); window.scrollTo(0, 0); };
     wireNotices();
-    $('#b-tell').onclick = async () => { const box = $('#tell'); if (!box) return; const n = box.value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', SCRIPT_ONLY + ':home', n);   // was hard-coded 'projects:home' — a note sent from the business-day link was filed under Projects if (box.isConnected) box.value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
+    $('#b-tell').onclick = async () => { const box = $('#tell'); if (!box) return; const n = box.value.trim(); if (!n) return toast('Write something first.'); const ok = await log('note', SCRIPT_ONLY + ':home', n); if (box.isConnected) box.value = ''; toast(ok ? 'Sent — thank you!' : 'Saved — sends when you have signal.'); };
     $('#b-who').onclick = () => { if (confirm('Change your name? Your answers stay on this phone.')) { localStorage.removeItem('zt_' + MEKEY); location.href = location.pathname + '?script=' + SCRIPT_ONLY; } };
   }
 
