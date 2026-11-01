@@ -116,11 +116,11 @@
 </script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
-<script src="../js/gate.js?v=50"></script>
+<script src="../js/gate.js?v=51"></script>
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.15 · 2026-10-31';
+  const VERSION = 'v2.16 · 2026-11-01';
   // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom). Also a 💬 Say something box on every step, so a tester can speak up without having to mark the step failed (Emmanuel asked; it is open to all five).
   // v2.13 (29 Oct): one short link for the squad (/preview/t/) and names tapped, not typed — the log held "Kevin ngugi" and "kevin ngugi" as two people.
   // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
@@ -205,6 +205,18 @@
     const n = (QS.get('n') || '').trim().replace(/\s+/g, ' ').slice(0, 60);
     if (n && (!me || me.name !== n)) { me = { name: n, role: ONE[SCRIPT_ONLY].role, script: SCRIPT_ONLY }; set(MEKEY, me); }
     if (me) { me.role = ONE[SCRIPT_ONLY].role; me.script = SCRIPT_ONLY; }
+  }
+  // v2.16 (1 Nov): a personal link — ?n=Veronicah%20Kimani&role=field — says who you are AND which job's
+  // script you run. Monday's plan is then one tap per person in the WhatsApp group, instead of Jerry filling
+  // in the focus form seven times. Each of the four role scripts keeps its own progress (sx_field,
+  // sx_callcenter, …), so moving somebody onto a new script never loses what they already did on the old one.
+  if (!SCRIPT_ONLY) {
+    const n = (QS.get('n') || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+    const rq = (QS.get('role') || '').trim().toLowerCase();
+    const r = ROLES[rq] ? rq : null;
+    if (n && r) { if (!me || me.name !== n || me.role !== r) { me = { name: n, role: r }; set(MEKEY, me); } }
+    else if (n) { const sq = SQUAD.find((x) => x.name === n); if (sq && (!me || me.name !== n)) { me = { name: n, role: sq.role }; set(MEKEY, me); } }
+    else if (r && me && me.role !== r) { me = { name: me.name, role: r }; set(MEKEY, me); }
   }
   const SID = () => (me && me.script) || (me && me.role);                // which script file / progress this phone runs
   const WHO = () => (me && me.script ? ONE[me.script].label : ROLES[me.role]);
