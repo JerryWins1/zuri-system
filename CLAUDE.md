@@ -74,6 +74,31 @@ Open them **not as drafts**. Jerry works from an iPad, where the
 "Ready for review" button sits at the bottom of the conversation and is
 repeatedly missed. A draft PR costs a round trip every time.
 
+## How long the testing runs, and when it stops
+
+Jerry's decision, 1 Nov: **the whole list wins, not the week.** Let it run
+past the week. It stops at whichever of these comes first:
+
+- **The list is done** — every tester has reported on all six scripts and
+  Emmanuel has signed them off.
+- **Two clean days in a row.**
+
+A **clean day** means: at least two testers each did real work that day
+(roughly ten steps or more), and nothing any of them reported that day was
+ruled `real`. A day with rulings still pending is not clean yet — it is
+undecided, so the count does not advance. Script holes do NOT make a day
+unclean: they are our instructions being wrong, not Zuri being wrong, even
+though Jerry pays for them. The question this rule answers is "is Zuri
+sound", not "did the testers earn".
+
+**Never let a tester run dry.** They are paid by the week, not the task, and
+they have asked for more work rather than less. There is no day gating:
+finish a script and the next one is on your screen immediately, so anyone
+who wants tomorrow's work tonight can have it. When even the six are gone,
+the end-of-list card sends them into Zuri to use it as a normal working day
+and report what they find in the group — which is where the best finds of
+the first week came from, none of them on any script.
+
 ## Where the testers' work shows up
 
 - `tester_log` and `script_answers` in the training Supabase project —
