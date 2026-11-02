@@ -116,11 +116,11 @@
 </script>
 <script src="../js/config.js"></script>
 <script src="../js/selfcheck.js?v=3"></script>
-<script src="../js/gate.js?v=53"></script>
+<script src="../js/gate.js?v=55"></script>
 <script src="../js/checklist_data.js?v=54"></script>
 <script>
 (function () {
-  const VERSION = 'v2.18 · 2026-11-01';
+  const VERSION = 'v2.20 · 2026-11-02';
   // v2.14 (30 Oct): the four script holes the squad found on 29 Oct — the Qty box on parts, the Category the expense form demands, the real wording of the offline badge, and laptops (tabs on the left, not the bottom). Also a 💬 Say something box on every step, so a tester can speak up without having to mark the step failed (Emmanuel asked; it is open to all five).
   // v2.13 (29 Oct): one short link for the squad (/preview/t/) and names tapped, not typed — the log held "Kevin ngugi" and "kevin ngugi" as two people.
   // v2.12 (29 Oct): ?script=day — one customer followed from the phone call to the books, across all four jobs (scripts/day.json).
@@ -580,21 +580,53 @@
                       callcenter: '\ud83d\udcde Call centre', finance: '\ud83d\udcb0 Finance (office)', day: '\ud83c\udfe2 A whole business day' };
   const ROT_START = { 'Emmanuel Koki': 0, 'Kevin Ngugi': 1, 'Veronicah Kimani': 2, 'Brian Maina Kamau': 3, 'Fredrick Nganga': 5 };
   const rotDone = (sc) => { const st = get('sx_' + sc, null); return !!(st && st.reported); };
-  const rotLeft = (name) => { const off = ROT_START[name] || 0;
+  // v2.19 (2 Nov): a phone may hold "Emmanuel" where the roster says "Emmanuel Koki", so match on the
+  // first name too rather than losing the rotation over a spelling.
+  const rotName = (n) => { const t = String(n || '').trim().toLowerCase(); if (!t) return null;
+    const ks = Object.keys(ROT_START);
+    return ks.find((k) => k.toLowerCase() === t) || ks.find((k) => k.toLowerCase().split(' ')[0] === t.split(' ')[0]) || null; };
+  const rotLeft = (name) => { const k = rotName(name); const off = k ? ROT_START[k] : 0;
     return ROT.map((_, i) => ROT[(off + i) % ROT.length]).filter((sc) => !rotDone(sc)); };
   const rotLink = (sc, name) => location.pathname + ((sc === 'projects' || sc === 'day')
     ? withCode('?script=' + sc + '&n=' + encodeURIComponent(name))
     : withCode('?n=' + encodeURIComponent(name) + '&role=' + sc));
+  // v2.19 (2 Nov): the ROTATION decides today's job now, not the link Jerry sends. On 2 Nov the squad
+  // lost a whole day: Monday's message carrying their five links never went out, so Emmanuel opened the
+  // app, saw the checklist for whatever job his phone last held, and had to ask for a link — by which
+  // time it was evening in Kenya. The page knew his name and knew the rotation. It works it out itself
+  // from here, so a day no longer depends on a message being relayed.
+  // v2.20 (2 Nov, Jerry): show the WHOLE WEEK, not one job at a time. Jerry's call, and he is right —
+  // handing out one script at a time is a drip feed, a drip feed needs a tap, and on 2 Nov the tap was
+  // him: the message carrying their links never went out and five people lost a day waiting. They are
+  // paid 3,000 for the week, not per task, so there is nothing to ration. Anyone who wants to do three
+  // scripts on Tuesday should be able to see them and take them.
+  // The staggered starting points stay as the SUGGESTED order, because that is what puts several pairs
+  // of eyes on each script instead of one — last week's biggest fault only became undeniable because
+  // four people hit it separately. Everyone can see all six and take any of them.
   function rotCard(name) {
-    if (!rotDone(SID())) return '';            // still mid-script: do not nag them to leave it
-    const left = rotLeft(name); const nxt = left.find((sc) => sc !== SID());
-    if (!nxt) return `<div class="card" style="border-left:4px solid var(--now)"><b>\ud83c\udfc1 That is the whole list \u2014 all six.</b>
-      <div class="why" style="margin:6px 0 10px">Two things. <b>Tell Emmanuel</b> so he can sign you off: that is what your pay turns on. And if you would rather keep going, there is still work \u2014 go and use Zuri as if it were a normal working day of your own, and tell us in the group anything that is slow, confusing or wrong. That is how the two best finds of last week turned up, and neither was on any script.</div>
-      <a class="big" id="rot-roam" style="display:block;text-align:center;text-decoration:none" href="${esc(APP + withCode('?practice&role=' + me.role))}">Open Zuri and have a look round \u2192</a></div>`;
-    const more = left.length - 1;
-    return `<div class="card" style="border-left:4px solid var(--now)"><b>Your next job: ${esc(ROT_LABEL[nxt])}</b>
-      <div class="why" style="margin:6px 0 10px">${more ? more + (more === 1 ? ' more job' : ' more jobs') + ' after this one.' : 'This is your last one.'} Nothing to type \u2014 it remembers who you are.</div>
-      <a class="big" id="rot-next" data-next="${esc(nxt)}" style="display:block;text-align:center;text-decoration:none" href="${esc(rotLink(nxt, name))}">Start ${esc(ROT_LABEL[nxt])} \u2192</a></div>`;
+    const k = rotName(name); const off = k ? ROT_START[k] : 0;
+    const mine = ROT.map((_, i) => ROT[(off + i) % ROT.length]);          // their order, starting where the plan puts them
+    const left = mine.filter((sc) => !rotDone(sc));
+    const nxt = left[0] || null;
+    const rows = mine.map((sc) => {
+      const done = rotDone(sc), here = sc === SID() && !done;
+      const mark = done ? '\u2705' : here ? '\u25b6' : '\u25cb';
+      const label = esc(ROT_LABEL[sc]) + (done ? ' \u2014 sent' : here ? ' \u2014 you are on this' : '');
+      return done
+        ? `<div style="padding:6px 0;color:var(--soft)">${mark} ${label}</div>`
+        : `<a href="${esc(rotLink(sc, name))}" data-week="${esc(sc)}" style="display:block;padding:6px 0;text-decoration:none;color:inherit;font-weight:${here ? '800' : '600'}">${mark} ${label}</a>`;
+    }).join('');
+    const head = !left.length
+      ? '\ud83c\udfc1 That is the whole list \u2014 all six.'
+      : `Your week: ${mine.length - left.length} of ${mine.length} sent`;
+    const why = !left.length
+      ? 'Two things. <b>Tell Emmanuel</b> so he can sign you off: that is what your pay turns on. And if you would rather keep going, go and use Zuri as if it were a normal working day of your own, and tell us in the group anything that is slow, confusing or wrong. That is how the two best finds of last week turned up, and neither was on any script.'
+      : 'This is everything for the week, not just today. Take them in any order and go as far as you like \u2014 your pay is for the week, not for each one, so finishing early costs you nothing and helps us a lot. It is not a race though: a step answered in a few seconds has not been tested, and that rule still counts.';
+    return `<div class="card" style="border-left:4px solid var(--now)"><b>${head}</b>
+      <div class="why" style="margin:6px 0 10px">${why}</div>
+      <div style="margin:0 0 10px">${rows}</div>
+      ${nxt ? `<a class="big" id="rot-next" data-next="${esc(nxt)}" style="display:block;text-align:center;text-decoration:none" href="${esc(rotLink(nxt, name))}">${rotDone(SID()) || SID() !== nxt ? 'Start' : 'Carry on with'} ${esc(ROT_LABEL[nxt])} \u2192</a>`
+            : `<a class="big" id="rot-roam" style="display:block;text-align:center;text-decoration:none" href="${esc(APP + withCode('?practice&role=' + me.role))}">Open Zuri and have a look round \u2192</a>`}</div>`;
   }
 
   // ---------- finished: the report ----------
