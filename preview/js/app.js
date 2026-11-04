@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.57 · 2026-10-28';
+  Z.version = 'v2.58 · 2026-11-04';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -66,7 +66,13 @@
     return hit ? hit[1] : m;
   };
   Z.fail = (err) => { console.error(err); Z.toast(Z.errText(err)); };
-  window.addEventListener('error', (e) => Z.toast('Something went wrong: ' + (e.message || 'unknown')));
+  // 4 Nov: a file served from the CDN that throws arrives with its message hidden, so this used to toast the browser's
+  // own words at a tester: Veronicah, on the field script, "it doesn't say my jobs and hi Peter instead it says
+  // something went wrong script error". Neither "Script error." nor "unknown" tells her anything, so say what to do.
+  const OPAQUE = (m) => !m || /^script error\.?$/i.test(m);
+  window.addEventListener('error', (e) => Z.toast(OPAQUE(e.message)
+    ? "Zuri hit a snag and part of this screen did not open. Close Zuri and open it again — nothing you sent is lost."
+    : 'Something went wrong: ' + e.message));
   window.addEventListener('unhandledrejection', (e) => Z.toast('Something went wrong: ' + Z.errText(e.reason)));
 
   // A panel that slides up from the bottom — instead of the phone's pop-up boxes, which are easy to mis-tap.
