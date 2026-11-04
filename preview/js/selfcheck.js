@@ -1,4 +1,4 @@
-// Zuri System · self-check: problems report themselves to the testers' board · v1.1 · 2026-10-18 (v1: 2026-10-06)
+// Zuri System · self-check: problems report themselves to the testers' board · v1.2 · 2026-11-04 (v1: 2026-10-06)
 // Jerry: "How can you check on your own if there is an issue?" Until now Claude only heard about a problem when a
 // tester wrote. Now any crash, any file that fails to load, the "Zuri didn't finish loading" card and the invite-code
 // screen each post one line to tester_log (kind 'note', step 'auto:…', note starts with 🤖), with the phone type and version.
@@ -44,7 +44,7 @@
   function report(where, msg) {
     msg = clean(msg); if (!msg || /ResizeObserver loop/i.test(msg) || NOT_ZURI.test(msg)) return;
     /* 8 Oct: Veronica's Firefox (iPhone) injects its own scripts into every page and they throw on their own — not Zuri's fault, not worth a report */
-    if (/window\.ethereum|selectedAddress|__firefox__|user-script:|webkit-masked-url|^Script error\.?$/i.test(msg)) return;
+    if (/window\.ethereum|selectedAddress|__firefox__|user-script:|webkit-masked-url/i.test(msg)) return;
     const day = new Date().toISOString().slice(0, 10), key = day + '|' + where + '|' + msg.slice(0, 120);
     const seen = json('zsc_seen', {}); if (seen[key] || mem.has(key) || sent >= 5) return; mem.add(key);
     Object.keys(seen).forEach((k) => { if (k.slice(0, 10) !== day) delete seen[k]; }); seen[key] = 1; put('zsc_seen', JSON.stringify(seen)); sent++;
@@ -61,7 +61,16 @@
   addEventListener('error', (e) => {
     const t = e.target;
     if (t && t !== window && (t.src || t.href)) { report('load', 'A file did not arrive: ' + String(t.src || t.href).split('?')[0].replace(/.*\//, '')); return; } 
-    report('error', (e.message || 'error') + (e.filename ? ' @ ' + e.filename.replace(/.*\//, '') + ':' + e.lineno : ''));
+    const m = e.message || 'error';
+    // v1.2 (4 Nov): Veronicah saw "Something went wrong: Script error." on the field script and NOTHING reached the
+    // board, because this used to be thrown away as one of Veronica's Firefox add-on crashes. A file served from the
+    // CDN that throws reaches us with the message hidden and no filename — that is a real Zuri failure and must be
+    // reported. An add-on's crash still names its own file (user-script:, webkit-masked-url:) and is still dropped.
+    if (/^script error\.?$/i.test(m) && !e.filename) {
+      report('opaque', 'An error inside a file served from the CDN — the browser hides the message');
+      return;
+    }
+    report('error', m + (e.filename ? ' @ ' + e.filename.replace(/.*\//, '') + ':' + e.lineno : ''));
   }, true);
   addEventListener('unhandledrejection', (e) => { const r = e.reason; report('error', 'Unhandled: ' + ((r && (r.message || r.error_description)) || r)); });
   addEventListener('online', flush); setTimeout(flush, 4000);
