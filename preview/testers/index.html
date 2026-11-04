@@ -335,8 +335,19 @@
   const mmss = (s) => Math.floor(s / 60) + ':' + pad2(Math.floor(s % 60));
   const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); }));
   const ANS = { ok: ['✅', 'It worked'], fail: ['❌', "It didn't"], unsure: ['🤷', 'Not sure'] };
+  // 🙋 v2.23 (4 Nov): a step marked "only" belongs to one person. Session 8 of the business day is Emmanuel's —
+  // it says "EMMANUEL ONLY — everyone else, you are finished, skip to the end" — but there was no way to skip, and
+  // only the FIRST of its five steps even said so. Brian walked the whole day script this evening and marked all
+  // five failed, writing "The admin needs to activate my account" on each. Five failures that were not Zuri's and
+  // not his. Every tester who is not Emmanuel would have done the same. Now those steps are not shown to anyone
+  // else and do not count towards their total, so the script simply ends where it ends for them.
+  const onlyMine = (st) => { if (!st || !st.only) return true;
+    const n = String((me && me.name) || '').trim().toLowerCase(); if (!n) return false;
+    const o = String(st.only).trim().toLowerCase();
+    return n === o || n.split(/\s+/)[0] === o.split(/\s+/)[0]; };
   // The steps that count: pending sessions (e.g. Receipts, until it is switched on) are left out everywhere.
-  const liveSessions = (sc) => (sc ? sc.sessions.filter((s) => !s.pending) : []);
+  const liveSessions = (sc) => (sc ? sc.sessions.filter((s) => !s.pending)
+    .map((s) => ({ ...s, steps: (s.steps || []).filter(onlyMine) })).filter((s) => s.steps.length) : []);
   const liveSteps = (sc) => liveSessions(sc).flatMap((s) => s.steps.map((st) => ({ ...st, sid: s.id })));
   const coinValue = (sc, rw) => { const n = liveSteps(sc).length + 10; return n ? Math.round((rw || SX.reward).kes_per_script / n) : 0; };
   const isMissing = (err) => !!err && (err.code === 'PGRST205' || err.code === '42P01' || /does not exist|could not find the table|schema cache/i.test(err.message || ''));
