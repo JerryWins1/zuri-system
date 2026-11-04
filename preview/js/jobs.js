@@ -433,7 +433,10 @@
       <div class="card">
         <div class="photos" id="jd-photos">${photos.length ? '<span class="muted">Loading photos…</span>' : localPhotos.length ? '' : '<span class="muted">No photos yet.</span>'}</div>
         <div class="photos" id="jd-lphotos"></div>
-        ${canWork ? `<label class="btn sec" style="margin-top:10px">📷 Add photo<input type="file" accept="image/*" capture="environment" id="jd-photo" hidden></label>` : ''}
+        ${canWork ? `<div class="row" style="margin-top:10px;gap:8px">
+          <label class="btn sec" style="flex:1 1 140px">📷 Take a photo<input type="file" accept="image/*" capture="environment" id="jd-photo" hidden></label>
+          <label class="btn sec" style="flex:1 1 140px">🖼️ From my photos<input type="file" accept="image/*" id="jd-photo-lib" hidden></label>
+        </div>` : ''}
       </div>
       ${canWork ? `<div class="card row" id="jd-receipt-card" style="border-left:4px solid var(--accent)"><span style="font-size:24px">🧾</span><div class="grow"><b>Spent money on this job?</b><div class="hint" style="margin:0">Fuel, cable, connectors… Snap the receipt — it is linked to this job.</div></div><a class="btn small" id="jd-receipt" href="#receipt/job/${Z.esc(t.id)}">📸 Snap the receipt</a></div>` : ''}
 
@@ -579,9 +582,14 @@
       window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
     };
 
-    const ph = Z.$('#jd-photo', el);
+    // 📷 v2.59 (4 Nov): there used to be ONE button here, carrying capture="environment". On a phone that opens the
+    // camera and nothing else — there is no way to choose a photo already taken, and no way back if the camera will
+    // not open. Veronicah reported "It could not take a picture or upload option" twice, on 30 Oct and again on
+    // 4 Nov; the missing upload option was this attribute. Her first report was ruled not-a-problem because she was
+    // inside the broken-job cascade that day. The receipts screen has had two buttons for this very reason since it
+    // was built; the job photo never got them. Now it does, and they share one handler.
     // Photos wait on the phone (no signal is fine) and upload with the rest of the queue.
-    if (ph) ph.onchange = async () => {
+    const addPhoto = async (ph) => {
       const file = ph.files[0]; if (!file) return;
       try {
         const blob = await shrink(file);
@@ -593,6 +601,7 @@
         Z.route();
       } catch (e) { Z.toast('This phone couldn\'t keep the photo (storage may be full).'); console.error(e); }
     };
+    [Z.$('#jd-photo', el), Z.$('#jd-photo-lib', el)].forEach((inp) => { if (inp) inp.onchange = () => addPhoto(inp); });
     if (Z.alertCabinetBox && c && c.id) Z.alertCabinetBox(Z.$('#jd-cab', el), c); // 📣 v2.39: which cabinet this home is wired to
     if (localPhotos.length) {
       const box = Z.$('#jd-lphotos', el);
