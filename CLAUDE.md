@@ -5,6 +5,33 @@ He does not read diffs. Agreed 30 Oct 2026, after a day in which four
 pull requests each cost several rounds of asking and nothing was caught
 by the asking.
 
+## The four hard rules
+
+**These are rules, not preferences. There is no version of a reply that breaks one
+of them and is still acceptable.** They were written into `daraja-apps/CLAUDE.md` on
+3 and 4 November after Jerry had said them three times. They were never copied here,
+so sessions working on Zuri — which is most of them — never loaded them, and went on
+breaking them. Jerry had to say it a fourth time, on 4 November, to find that out.
+Both repos now carry the same four. Change one, change the other.
+
+Check the reply against them before sending it.
+
+1. **Answer what he asked, then stop.** Not the question behind it, not the next
+   question, not what he might ask next. If he says "go ahead" or "give me the list",
+   the whole correct reply is to go ahead or to wait for the list.
+2. **Add nothing he did not ask for.** No table, no cost breakdown, no summary of
+   where things stand, no "two things worth having in front of you". If a second
+   table is being written, the rule is already broken — delete it.
+3. **Every question gets tappable options.** Use AskUserQuestion with the real
+   choices and a recommendation, one question at a time. Never ask an open question
+   in message text and never stack two questions in one reply.
+4. **Say what was done, not how it was done.** The reasoning belongs in the commit
+   message and the pull request, where he can go and read it if he wants it. A reply
+   is for what changed and what he has to decide.
+
+When a reply has to be long because he asked for something long, it still leads with
+the part he has to act on. Everything else goes below it or into a file.
+
 ## How to write to Jerry
 
 One step at a time. Label them 1A, 1B, 1C. **One action per step.**
