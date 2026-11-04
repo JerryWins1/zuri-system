@@ -510,6 +510,18 @@
       later: {}, stuck: { '3.1': { by: 'Dickson', at: at(-1), note: 'We have no spare phone for the company SIM yet.' } }, who: {} } }); } }
   if (!D._pj) projSeed(D, D._mode === 'empty'); // v2.34 // v2.33: phones that started practice before the time savers
   if (!D._rc) { const f = build(D._mode); D.expenses = D.expenses.concat(f.expenses.filter((e) => String(e.id).startsWith('e-'))); if (!D.settings.some((x) => x.key === 'receipts_ai')) D.settings.push({ key: 'receipts_ai', value: { on: false } }); D._rc = 1; } // v2.32
+  // 🗓️ v2.58 (4 Nov): the morning nudges are written fresh each morning, like the manager that writes them.
+  // Practice data is built once and kept, so every nudge stayed stamped with the day the phone FIRST opened
+  // practice, while Tasks → WhatsApp nudges only shows today's. From the second day on that screen was empty on
+  // every phone, for good. Its empty words blame the clock — "No nudges for today yet. They're written at 6:30am
+  // Kenya time" — so Emmanuel (31 Oct, 6:25am) read it as arriving early, and Fredrick (4 Nov, 11:35am) marked
+  // step m3-06 failed with nothing to say. Both were right; the screen was broken, not them.
+  (function rollNudges() {
+    if (!D.nudges || !D.nudges.length) return; // the 'empty' practice app has none, and must stay that way
+    const day = new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10); // Kenya's day, as build() stamps it
+    if (D.nudges[0].day === day) return;       // already today: leave 'Sent' marks from this morning alone
+    D.nudges.forEach((n) => { n.day = day; n.sent_at = null; n.sent_by = null; });
+  })();
   let saveT;
   const save = () => { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) { /* full: practice still works this visit */ } }, 150); };
   // v2.34: a change made just before the page closes or reloads is written at once, not lost with the 150 ms wait

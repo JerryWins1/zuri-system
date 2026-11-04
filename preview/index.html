@@ -266,11 +266,11 @@
   // ?practice → pretend data on this phone only (practice.js stands in for the database). Same-site file, so slow networks don't block it.
   window.ZURI_PRACTICE = /[?&]practice\b/.test(location.search);
   window.ZURI_TRAINING = !window.ZURI_PRACTICE && /[?&]training\b/.test(location.search);
-  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=78"><\/script>');
+  if (window.ZURI_PRACTICE) document.write('<script src="js/practice.js?v=81"><\/script>');
 </script>
 <script>
   // Weak signal can drop one file. Practice can't run without practice.js, so try once more with a fresh address (v2.23, 5 Oct).
-  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=78&retry=' + Date.now() + '"><\/script>');
+  if (window.ZURI_PRACTICE && !window.ZP) document.write('<script src="js/practice.js?v=81&retry=' + Date.now() + '"><\/script>');
 </script>
 <script src="js/app.js?v=81"></script>
 <script src="js/home.js?v=78"></script>
