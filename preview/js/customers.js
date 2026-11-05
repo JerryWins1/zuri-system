@@ -107,7 +107,7 @@
     const [cr, tr, pr] = await Promise.all([
       Z.sb.from('v_customers').select(COLS).eq('id', id).maybeSingle(),
       Z.sb.from('tickets').select('id,ticket_no,kind,status,summary,opened_at,closed_at,amount_collected').eq('customer_id', id).order('opened_at', { ascending: false }).limit(30),
-      Z.sb.from('payments').select('date,amount,method,source,mpesa_ref').eq('customer_id', id).order('date', { ascending: false }).limit(24),
+      Z.sb.from('payments').select('date,amount,method,source,mpesa_ref').eq('customer_id', id).order('date', { ascending: false }).limit(400),
     ]);
     if (cr.error) throw cr.error;
     const c = cr.data;
@@ -117,6 +117,9 @@
     const custom = Z.ref.cfd.filter((d) => d.entity === 'customer' && c.custom && c.custom[d.key] != null && c.custom[d.key] !== '');
     const pin = c.lat != null ? `https://maps.google.com/?q=${c.lat},${c.lng}` : null;
 
+    // A customer past their paid date owes one month, which is exactly what Home and the Friday report count.
+    const owingDays = c.paid_until ? Math.floor((Date.now() - new Date(c.paid_until).getTime()) / 864e5) : 0;
+    const owingNow = c.status === 'active' && owingDays > 0 ? Number(c.monthly_rate || 0) : 0;
     el.innerHTML = `
       <p style="margin:0 0 6px"><a class="back" href="#customers">← Customers</a></p>
       <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:2px">${Z.esc(c.full_name)}</h2>${statusPill(c.status)}</div>
@@ -134,8 +137,21 @@
         ${!shown.length && !custom.length ? '<tr><td class="muted">No other details yet.</td></tr>' : ''}</table></div>
 
       <div id="cp-alerts"></div>
+      ${/* 💳 v2.66 (5 Nov, Jerry: "build it on the customer's page"): there was nowhere in Zuri to see what ONE
+           customer owes. Veronicah, Emmanuel and Kevin all went looking for it on the same step and all three
+           were sent to Statements, which is the bank and M-Pesa import and cannot answer the question.
+           The owing rule is NOT invented here: it is the one Home and the Friday report already use — a customer
+           past their paid date owes one month's rate. Same rule, shown for one person instead of all of them. */ ''}
+      <h3>Account</h3>
+      <div class="card"><table class="t">
+        <tr><th style="width:52%">Monthly rate</th><td>${c.monthly_rate ? Z.kes(c.monthly_rate) : '<span class="muted">not set</span>'}</td></tr>
+        <tr><th>Paid until</th><td>${c.paid_until ? Z.day(c.paid_until) + (owingDays > 0 ? ` <span class="pill bad">${owingDays} day${owingDays === 1 ? '' : 's'} ago</span>` : ` <span class="pill ok">${-owingDays} day${owingDays === -1 ? '' : 's'} left</span>`) : '<span class="muted">never paid</span>'}</td></tr>
+        <tr><th>Paid in, all time</th><td class="num">${Z.kes(pays.reduce((t, x) => t + Number(x.amount || 0), 0))}</td></tr>
+        <tr><th>Owing now</th><td class="num"><b style="color:var(--${owingNow > 0 ? 'bad' : 'ok'})">${Z.kes(owingNow)}</b>${owingNow > 0 ? '<div class="m">one month’s rate — the same rule Home and the Friday report use</div>' : ''}</td></tr>
+      </table></div>
+
       <h3>Payments</h3>
-      <div class="card">${pays.length ? `<table class="t"><tr><th>Date</th><th class="r">KES</th><th>How</th><th>Ref</th></tr>${pays.map((p) => `<tr><td>${Z.day(p.date)}</td><td class="r num">${Z.fmt(p.amount)}</td><td>${Z.esc(p.method)}${p.source === 'field' ? ' (on a job)' : ''}</td><td>${Z.esc(p.mpesa_ref || '')}</td></tr>`).join('')}</table>` : '<div class="muted">No payments recorded yet.</div>'}</div>
+      <div class="card">${pays.length ? `<table class="t"><tr><th>Date</th><th class="r">KES</th><th>How</th><th>Ref</th></tr>${pays.slice(0, 24).map((p) => `<tr><td>${Z.day(p.date)}</td><td class="r num">${Z.fmt(p.amount)}</td><td>${Z.esc(p.method)}${p.source === 'field' ? ' (on a job)' : ''}</td><td>${Z.esc(p.mpesa_ref || '')}</td></tr>`).join('')}</table>${pays.length > 24 ? `<div class="m">Showing the last 24 of ${pays.length} payments. The total above counts them all.</div>` : ''}` : '<div class="muted">No payments recorded yet.</div>'}</div>
 
       <h3>Jobs</h3>
       <div class="card list">${tickets.length ? tickets.map((t) => `<a class="item" href="#jobs/${t.id}"><div class="grow"><div class="t">#${t.ticket_no} · ${Z.esc(t.summary)}</div><div class="m">${Z.when(t.opened_at)}${t.closed_at ? ' → done ' + Z.when(t.closed_at) : ''}</div></div><span class="pill ${t.status === 'done' ? 'ok' : t.status === 'cancelled' ? '' : 'warn'}">${Z.esc(t.status.replace('_', ' '))}</span></a>`).join('') : '<div class="muted">No jobs yet.</div>'}</div>`;
