@@ -356,7 +356,19 @@
           options: { maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: css.getPropertyValue('--ink-soft').trim(), boxWidth: 12 } },
             tooltip: { callbacks: { label: (c) => `${c.label}: KES ${Z.fmt(c.raw)} (${Math.round((c.raw / pie.reduce((t, p) => t + p[1], 0)) * 100)}%)` } } } },
         });
-      } catch (e) { /* chart is a bonus; the table has the numbers */ }
+      } catch (e) {
+        // 📉 v2.62 (5 Nov): this used to swallow the failure and leave a 260px box with a heading and nothing in it.
+        // The chart library comes from the internet the first time, so on weak signal — normal in Maai Mahiu — the
+        // box just sat there empty. Kevin reached this screen on 29 Oct and reported "there's no table bellow the
+        // profit": the table IS below, but this blank box sits between the Profit figure and it, so it reads as the
+        // end of the screen. Money's own chart has said "Chart needs a connection the first time." all along; this
+        // one never did. The numbers are all in the table either way.
+        // Replace the whole .chart-box, not just the canvas: the box is a fixed 260px tall, so swapping only the
+        // canvas would leave the same wall of empty space with one line stranded at the top of it.
+        const c = Z.$('#bk-pie', el);
+        const box = c && c.closest('.chart-box');
+        if (box) box.replaceWith(Object.assign(document.createElement('p'), { className: 'hint', textContent: 'Chart needs a connection the first time — the table below has all the numbers.' }));
+      }
     } else Z.$('#bk-pie', el).replaceWith(Object.assign(document.createElement('p'), { className: 'hint', textContent: 'No sorted expenses this month yet.' }));
   };
 

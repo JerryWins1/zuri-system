@@ -530,8 +530,8 @@
         {
           "id": "m3-03",
           "link": "#money/books",
-          "do": "Open Profit by month. Read Income, Expenses and Profit for last month, and the table under it.",
-          "see": "Three boxes (Income, Expenses, Profit) and a month-by-month table. Tell us if last month makes sense to you.",
+          "do": "Open Profit by month. Read the three boxes at the top — Income, Expenses and Profit for last month. Then scroll PAST the “Where the money went” picture to the big table underneath it.",
+          "see": "Three boxes at the top, then a picture of where the money went, then a table with the months running ACROSS the top and Income, Expenses and Profit down the side. In the “Say something” box below, tell us whether last month's profit looks right to you.",
           "look": [
             "Profit by month",
             "Income",
