@@ -885,8 +885,8 @@
         {
           "id": "d8-01",
           "link": "https://jerrywins1.github.io/zuri-system/preview/testers/?board&code=ZURI-SQUAD",
-          "do": "EMMANUEL ONLY — everyone else, you are finished, skip to the end. Emmanuel: tap Open the board above. It shows every answer, tick and note from all five of you, newest first. You need to be signed in to the training copy as a partner on this phone; if it says Partners only, tell Jerry and he will sort it.",
-          "see": "Everyone's notes in one place. If you get Partners only instead, say so — that is Jerry's to fix, not yours.",
+          "do": "EMMANUEL ONLY — everyone else, you are finished, skip to the end.\n\nEmmanuel: the board is for partners, so it will ask you to sign in FIRST. Tap Open the board above. If it says “Partners only”, tap 🟠 Sign in to the training copy on that same screen, sign in with your partner account, then come back and tap Open the board again. It shows every answer, tick and note from all five of you, newest first.",
+          "see": "After signing in, the board lists everyone's answers newest first. If you still see “Partners only” after signing in, tell us — that means your partner access is not working and Jerry needs to fix it.",
           "look": [
             "board"
           ],
