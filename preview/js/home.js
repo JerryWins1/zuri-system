@@ -11,12 +11,51 @@
   Z.CASH_STALE_DAYS = STALE_DAYS;
   const tile = (k, v, f, cls = '', href) => `<${href ? `a href="${href}" style="text-decoration:none;color:inherit"` : 'div'} class="kpi"><div class="k">${k}</div><div class="v num ${cls}">${v}</div>${f ? `<div class="f">${f}</div>` : ''}</${href ? 'a' : 'div'}>`;
 
+  // 👥 v2.72 (5 Nov). Emmanuel Koki, 30 Oct, step d5-02 — the step that asks "name one thing you wish
+  // Home said and does not". He wrote four words: "Individual Task completion rate". He runs the squad, and
+  // Home could tell him what the COMPANY did and nothing at all about what each person finished.
+  // dashboard_snapshot is a function in the database and not in this repo, so this is counted here instead,
+  // from the tasks and jobs themselves.
+  const WORK_DAYS = 7;
+  async function peopleWork(area) {
+    const since = new Date(Date.now() - WORK_DAYS * 864e5).toISOString();
+    const today = new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10); // Kenya's day
+    const safe = (q, d) => q.then((r) => (r.error ? d : r.data || d), () => d);
+    const [tasks, jobs] = await Promise.all([
+      safe(Z.sb.from('tasks').select('status,assigned_to,assigned_group,done_by,done_at,due_date').limit(2000), []),
+      safe(Z.sb.from('tickets').select('status,assigned_to,closed_at,scheduled_for,area').limit(2000), []),
+    ]);
+    const by = {};
+    const row = (id) => (by[id] = by[id] || { id, taskDone: 0, taskOpen: 0, jobDone: 0, jobOpen: 0, late: 0 });
+    let unclaimed = 0;
+    tasks.forEach((t) => {
+      if (t.status === 'done') { if (t.done_by && t.done_at && t.done_at >= since) row(t.done_by).taskDone++; return; }
+      if (t.status !== 'open') return;
+      if (!t.assigned_to) { if (t.assigned_group) unclaimed++; return; }   // on a group list, nobody's name on it
+      const r = row(t.assigned_to); r.taskOpen++;
+      if (t.due_date && t.due_date < today) r.late++;
+    });
+    jobs.forEach((j) => {
+      if (area && j.area && j.area !== area) return;
+      if (j.status === 'done') { if (j.assigned_to && j.closed_at && j.closed_at >= since) row(j.assigned_to).jobDone++; return; }
+      if (j.status === 'cancelled' || !j.assigned_to) return;
+      const r = row(j.assigned_to); r.jobOpen++;
+      if (j.scheduled_for && j.scheduled_for < today) r.late++;
+    });
+    const people = Object.values(by).map((r) => {
+      const done = r.taskDone + r.jobDone, open = r.taskOpen + r.jobOpen;
+      return { ...r, done, open, rate: done + open ? Math.round((done / (done + open)) * 100) : null };
+    }).filter((r) => r.done || r.open).sort((a, b) => b.done - a.done || a.open - b.open);
+    return { people, unclaimed };
+  }
+
   Z.routes.home = async (_, el) => {
-    const [{ data: s, error }, mgr, appr, proj] = await Promise.all([
+    const [{ data: s, error }, mgr, appr, proj, work] = await Promise.all([
       Z.sb.rpc('dashboard_snapshot', { p_area: Z.area || null }),
       Z.managerSummary ? Z.managerSummary().catch(() => null) : Promise.resolve(null),
       Z.approvalsHomeCard ? Z.approvalsHomeCard().catch(() => '') : Promise.resolve(''), // ⏱ v2.33: 👥 waiting for your OK
       Z.projectsHomeCard ? Z.projectsHomeCard().catch(() => '') : Promise.resolve(''), // 📈 v2.34: one line per project
+      Z.isFinance() ? peopleWork(Z.area || null).catch(() => null) : Promise.resolve(null), // 👥 v2.72: who finished what
     ]);
     if (error) throw error;
     const c = s.customers, j = s.jobs, m = s.money;
@@ -91,6 +130,18 @@
       </div>
       <div class="card list">${(s.upcoming || []).length ? s.upcoming.map((u) => `<a class="item" href="#jobs/${u.id}"><div class="grow"><div class="t">${u.priority === 'urgent' ? '🔴 ' : ''}${Z.esc(u.customer || 'No customer')} <span class="m">#${u.no} · ${KIND[u.kind] || u.kind}</span></div>
           <div class="m">${Z.esc(u.summary)}</div></div><div style="text-align:right" class="m">${u.day ? Z.day(u.day) : 'no date'}<br>${u.tech ? '👷 ' + Z.esc(u.tech) : '<span style="color:var(--warn-ink)">no tech</span>'}</div></a>`).join('') : '<div class="muted">No service jobs open.</div>'}</div>
+
+      ${work && work.people.length ? `
+      <h3>People</h3>
+      <div class="card">
+        <table class="t"><tr><th style="width:44%">Who</th><th class="r">Finished</th><th class="r">Still open</th><th class="r">Rate</th></tr>
+        ${work.people.map((r) => `<tr><td>${Z.esc(Z.personName(r.id) || 'Someone no longer on the team')}
+            <div class="m">${[r.taskDone + r.taskOpen ? (r.taskDone + r.taskOpen) + ' task' + (r.taskDone + r.taskOpen === 1 ? '' : 's') : '', r.jobDone + r.jobOpen ? (r.jobDone + r.jobOpen) + ' job' + (r.jobDone + r.jobOpen === 1 ? '' : 's') : ''].filter(Boolean).join(' · ')}${r.late ? ` · <span style="color:var(--bad)">${r.late} past the day</span>` : ''}</div></td>
+          <td class="r num">${r.done}</td><td class="r num">${r.open}</td>
+          <td class="r num"><b style="color:var(--${r.rate >= 80 ? 'ok' : r.rate >= 50 ? 'warn-ink' : 'bad'})">${r.rate == null ? '—' : r.rate + '%'}</b></td></tr>`).join('')}
+        </table>
+        <p class="hint">Tasks and jobs together, over the last ${WORK_DAYS} days. Finished counts who actually did it, so a task picked up off a group list counts to the person who picked it up. Still open counts what has their name on it now.${work.unclaimed ? ` <b>${work.unclaimed}</b> task${work.unclaimed === 1 ? ' is' : 's are'} on a group list with nobody's name on ${work.unclaimed === 1 ? 'it' : 'them'} — ${work.unclaimed === 1 ? 'it counts' : 'they count'} to no one.` : ''}</p>
+      </div>` : ''}
 
       ${m ? `
       <h3>Money</h3>
