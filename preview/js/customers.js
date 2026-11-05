@@ -120,7 +120,16 @@
 
     // A customer past their paid date owes one month, which is exactly what Home and the Friday report count.
     const owingDays = c.paid_until ? Math.floor((Date.now() - new Date(c.paid_until).getTime()) / 864e5) : 0;
-    const owingNow = c.status === 'active' && owingDays > 0 ? Number(c.monthly_rate || 0) : 0;
+    // 💵 v2.68 (5 Nov, Jerry: "count it against what they owe"). Emmanuel, 30 Oct, d7-01: "A customer paid
+    // wrong amount." Zuri recorded a payment and had nothing for one that was short or over — no part payment,
+    // no credit. On M-Pesa people pay the wrong figure constantly. So what she has paid SINCE her paid-until date
+    // is set against the month she owes: short and she still owes the difference, over and the rest is credit.
+    // Everything dated before paid_until is what bought the time up to paid_until, so it is not counted again.
+    const monthDue = c.status === 'active' && owingDays > 0 ? Number(c.monthly_rate || 0) : 0;
+    const sinceDay = c.paid_until ? String(c.paid_until).slice(0, 10) : null;
+    const paidSince = sinceDay ? pays.filter((x) => String(x.date || '').slice(0, 10) >= sinceDay).reduce((t, x) => t + Number(x.amount || 0), 0) : 0;
+    const owingNow = Math.max(0, monthDue - paidSince);
+    const creditNow = monthDue > 0 ? Math.max(0, paidSince - monthDue) : 0;
     // 💲 v2.67 (5 Nov, Jerry: "ask why, and show it"). Veronicah, 30 Oct, d5-05: "Grace is paying 2500 for
     // 10 mbps but on the price list it says 2000 for 10 mbps". Nothing on her record said why, so anyone looking
     // later just saw a customer being charged 500 more than the list with no reason given. Now the reason is asked
@@ -155,7 +164,11 @@
         <tr><th style="width:52%">Monthly rate</th><td>${c.monthly_rate ? Z.kes(c.monthly_rate) : '<span class="muted">not set</span>'}${offList ? `<div class="m" style="color:var(--warn-ink)">Not the price-list rate — ${Z.esc(listed.name)} is ${Z.kes(listed.monthly_rate)}. ${rateWhy ? Z.esc(rateWhy) : '<b>No reason was given.</b>'}</div>` : ''}</td></tr>
         <tr><th>Paid until</th><td>${c.paid_until ? Z.day(c.paid_until) + (owingDays > 0 ? ` <span class="pill bad">${owingDays} day${owingDays === 1 ? '' : 's'} ago</span>` : ` <span class="pill ok">${-owingDays} day${owingDays === -1 ? '' : 's'} left</span>`) : '<span class="muted">never paid</span>'}</td></tr>
         <tr><th>Paid in, all time</th><td class="num">${Z.kes(pays.reduce((t, x) => t + Number(x.amount || 0), 0))}</td></tr>
-        <tr><th>Owing now</th><td class="num"><b style="color:var(--${owingNow > 0 ? 'bad' : 'ok'})">${Z.kes(owingNow)}</b>${owingNow > 0 ? '<div class="m">one month’s rate — the same rule Home and the Friday report use</div>' : ''}</td></tr>
+        <tr><th>Owing now</th><td class="num"><b style="color:var(--${owingNow > 0 ? 'bad' : 'ok'})">${Z.kes(owingNow)}</b>${creditNow > 0 ? ` <span class="pill ok">${Z.kes(creditNow)} in credit</span>` : ''}${
+          owingNow > 0 && paidSince > 0 ? `<div class="m">One month is ${Z.kes(monthDue)}, less ${Z.kes(paidSince)} paid since ${Z.day(c.paid_until)}. Home counts the whole month until billing is imported.</div>`
+          : owingNow > 0 ? '<div class="m">one month’s rate — the same rule Home and the Friday report use</div>'
+          : monthDue > 0 ? `<div class="m">${Z.kes(paidSince)} paid since ${Z.day(c.paid_until)}${creditNow > 0 ? ` — ${Z.kes(monthDue)} for the month and ${Z.kes(creditNow)} over` : ' covers the month'}. Her paid-until date moves when billing is next imported.</div>`
+          : ''}</td></tr>
       </table></div>
 
       <h3>Payments</h3>
