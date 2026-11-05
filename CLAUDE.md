@@ -126,6 +126,24 @@ the end-of-list card sends them into Zuri to use it as a normal working day
 and report what they find in the group — which is where the best finds of
 the first week came from, none of them on any script.
 
+## The Zuri squad has its own chat
+
+Jerry's decision, 5 Nov: **the five Zuri testers stay in their own WhatsApp chat**,
+separate from the wider Kenyan testers group.
+
+Veronicah Kimani, Kevin Ngugi, Fredrick Nganga, Brian Maina Kamau, and Emmanuel Koki
+who leads them. They are paid by the week to test Zuri against the six scripts.
+
+That is not the same job as the Daraja app rounds, which are run from a different
+chat (`Daraja · testing rounds`, see `daraja-apps/control/apps.json`), pay per app
+tested, and may involve the same people. Put both in one room and a tester cannot
+tell which job they are being asked to do, and two chats end up writing to the same
+group.
+
+So: anything for the squad is written here for Jerry to send to the squad's own
+chat. Nothing about the Daraja rounds is written here, and nothing about Zuri goes
+into the wider group.
+
 ## Where the testers' work shows up
 
 - `tester_log` and `script_answers` in the training Supabase project —
