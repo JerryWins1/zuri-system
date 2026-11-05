@@ -122,7 +122,7 @@
       <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:2px">${Z.esc(c.full_name)}</h2>${statusPill(c.status)}</div>
       <p class="hint" style="margin-top:0">${Z.esc(Z.areaName(c.area))}${c.landmark ? ' · 📍 ' + Z.esc(c.landmark) : ''}</p>
       <div class="row" style="margin-bottom:12px">
-        ${c.phone ? `<a class="btn sec" href="tel:${Z.esc(c.phone)}">📞 Call</a>` : ''}
+        ${c.phone ? `<a class="btn sec" href="tel:${Z.esc(c.phone)}" title="On a computer this hands the number to whatever app handles calls there">📞 Call ${Z.esc(c.phone)}</a>` : ''}
         ${pin ? `<a class="btn sec" href="${pin}" target="_blank" rel="noopener">🗺️ Map</a><button class="btn sec" id="cp-send">📤 Send pin</button>` : ''}
         <button class="btn sec" id="cp-pin">📍 ${pin ? 'Move pin to here' : 'Drop pin here'}</button>
         <a class="btn" href="#jobs/new/${c.id}">＋ New job</a>
