@@ -35,15 +35,25 @@
     report: (extra) => { const g = get(); if (g && g.code && navigator.onLine) ask(g.code, extra).then((j) => { if (j && j.ok) put({ ...g, until: j.until, checked: today() }); }).catch(() => {}); } };
   if (!here || !C) { resolve(true); return; }
 
-  // v5 (2 Nov, Jerry: "take the door off"): the Testers' List has no door any more.
-  // It never really had one. The gate always drew a green "I am on Jerry's test squad" button that
+  // v6 (5 Nov, Jerry: "take the door off practice too"): the Testers' List and PRACTICE have no door.
+  // The gate never really was one. It always drew a green "I am on Jerry's test squad" button that
   // admitted anyone who tapped it, with no server check — so the screen protected nothing and was
   // pure friction. It cost Veronicah two working days: twice she met it on her iPhone, typed a code
   // from memory rather than tapping the button, was told "That code is not known", and stopped.
-  // This grants nothing the button did not already grant to anyone who reached the screen. It is tied
-  // to the same squad code, so it lapses with it on 2026-12-31, and it is the testers' list ONLY —
-  // the training copy and practice keep their gate, because those hold real and disguised-real data.
-  if (here === 'testers') { const lc = localOk(SQUAD); if (lc) { put({ code: SQUAD, until: lc.until, label: lc.label, checked: today() }); resolve(true); return; } }
+  //
+  // Practice is added because it kept producing the same lockouts after the testers' list stopped:
+  // 17 of the 34 since 28 Oct were on practice links. Every step of every script opens practice, so
+  // a tester who arrives on a link without ?code= is stopped at the thing they are supposed to test.
+  //
+  // What this gives away: nothing. Practice is a sandbox built in the phone's own storage from
+  // made-up names — Grace Njeri, Lucy Atieno — and it never reads a customer, a job or a shilling
+  // from any database. The earlier comment here called it "disguised-real" and that was wrong.
+  //
+  // TRAINING KEEPS ITS DOOR. That one is a real shared system on Supabase with real accounts, where
+  // what one person does the others see. Different thing entirely, and not what Jerry asked for.
+  //
+  // Tied to the same squad code, so both lapse with it on 2026-12-31.
+  if (here === 'testers' || here === 'practice') { const lc = localOk(SQUAD); if (lc) { put({ code: SQUAD, until: lc.until, label: lc.label, checked: today() }); resolve(true); return; } }
 
   if (!ALLOWED.includes(location.hostname)) { block('This copy of Zuri is not allowed to run here.', false); return; }
 
