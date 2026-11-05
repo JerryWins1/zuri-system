@@ -661,7 +661,7 @@
           "id": "c2-10",
           "link": "#jobs",
           "do": "Turn on airplane mode. Open Daniel Mutua #118 and tap 📵 No answer. Turn airplane mode off and wait a few seconds.",
-          "see": "With no signal Zuri still saves it (“⏳ not sent” and a yellow badge at the top). When signal is back, the badge clears by itself.",
+          "see": "With no signal Zuri still saves it (“⏳ not sent”), and a small amber badge appears in the top bar. It STAYS there — not a pop-up that flashes by — and reads 📴 Offline, then ⏳ 1 waiting to send. When signal is back it clears by itself.",
           "look": [
             "Daniel Mutua #118"
           ],
@@ -696,7 +696,7 @@
           "id": "c2-11",
           "link": "#me",
           "do": "On Me, under SCREEN, tap ☀️ Light. Then tap 📱 Like my phone.",
-          "see": "The screen turns light. Then \u201cLike my phone\u201d hands the choice back to your phone's own setting \u2014 so if your phone is already set to light, the screen stays exactly as it is. That is correct, not a fault. It only changes back if your phone is set to dark. Tell us which is easier to read.",
+          "see": "The screen turns light. Then “Like my phone” hands the choice back to your phone's own setting — so if your phone is already set to light, the screen stays exactly as it is. That is correct, not a fault. It only changes back if your phone is set to dark. Tell us which is easier to read.",
           "look": [
             "☀️ Light"
           ],
@@ -798,7 +798,7 @@
           "link": "#receipt",
           "do": "Turn on airplane mode. Tap 🖼️ From my photos and pick any photo (or 📸 Take a photo of any paper). Type Paid to: Total Energies, Amount: 500, What was it for: Transport / Fuel. Tap ✅ Save. Then turn airplane mode off.",
           "copy": "Total Energies",
-          "see": "With no signal Zuri says “No signal — type it, the photo will upload later.” After Save: “✅ Saved on this phone — it sends when you have signal.” With signal back, the yellow badge clears.",
+          "see": "With no signal Zuri says “No signal — type it, the photo will upload later.” After Save: “✅ Saved on this phone — it sends when you have signal.” A small amber badge sits in the top bar the whole time — it STAYS, it does not flash by. With signal back it clears by itself.",
           "look": [
             "Snap a receipt"
           ],

@@ -606,7 +606,7 @@
           "link": "#jobs",
           "do": "Turn on airplane mode. Open Lucy Atieno #103 (tap To do at the top if you can't see it) and add the note “Testing with no signal”. Then turn airplane mode off and wait a few seconds.",
           "copy": "Testing with no signal",
-          "see": "With no signal the note shows “⏳ not sent” and a yellow badge appears at the top. When signal is back, the badge clears by itself.",
+          "see": "With no signal the note shows “⏳ not sent”, and a small amber badge appears in the top bar. It STAYS there — it is not a pop-up that flashes by. It reads 📴 Offline, then ⏳ 1 waiting to send once the note is in. When signal is back it clears by itself.",
           "look": [
             "Lucy Atieno #103"
           ],
