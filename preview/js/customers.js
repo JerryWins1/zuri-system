@@ -204,7 +204,20 @@
     const input = ([k, label, type, req]) => {
       const v = c[k] ?? '';
       if (type === 'textarea') return `<div style="grid-column:1/-1"><label>${label}</label><textarea name="${k}">${Z.esc(v)}</textarea></div>`;
-      return `<div><label>${label}</label><input name="${k}" type="${type === 'number' ? 'text' : type}" ${type === 'number' ? 'inputmode="decimal"' : ''} ${k === 'plan' && pk.length ? 'list="pkg-list" autocomplete="off"' : ''} value="${Z.esc(v)}" ${req ? 'required' : ''}></div>`;
+      // 📦 v2.60 (5 Nov): Package was a text box with type-ahead suggestions. Suggestions only show what matches what
+      // is already typed, so once a package was chosen the list had exactly one thing left to offer — the one already
+      // chosen — and tapping it again looked frozen. You had to EMPTY the box before it would show the others.
+      // Brian reported it that way on 30 Oct ("the drop-down becomes unresponsive once a package has been selected.
+      // i must first delete the existing selection"). Emmanuel reported the same control from the other end the same
+      // morning. Now it is a real dropdown: tap it, see all four, change your mind any time.
+      // "Something else…" keeps the old free-typing for a customer who is not on the price list.
+      if (k === 'plan' && pk.length) {
+        const known = pk.some((x) => x.name === v);
+        return `<div><label>${label}</label>
+          <select id="plan-pick">${Z.opts([['', '—']].concat(pk.map((x) => [x.name, x.name + ' · KES ' + Z.fmt(x.monthly_rate)])).concat([['__other', 'Something else…']]), v ? (known ? v : '__other') : '')}</select>
+          <input name="plan" id="plan-free" type="text" placeholder="Type the package" value="${Z.esc(v)}" ${known || !v ? 'hidden' : ''} style="margin-top:6px"></div>`;
+      }
+      return `<div><label>${label}</label><input name="${k}" type="${type === 'number' ? 'text' : type}" ${type === 'number' ? 'inputmode="decimal"' : ''} value="${Z.esc(v)}" ${req ? 'required' : ''}></div>`;
     };
     const customInput = (d) => {
       const v = (c.custom || {})[d.key] ?? '';
@@ -226,8 +239,20 @@
         </div>
         <p class="hint">GPS pin: use "Drop pin here" on the customer's page while standing at the house.</p>
         <button class="btn block" type="submit">Save customer</button>
-      </form>${pk.length ? `<datalist id="pkg-list">${pk.map((x) => `<option value="${Z.esc(x.name)}">KES ${Z.fmt(x.monthly_rate)}</option>`).join('')}</datalist>` : ''}`;
+      </form>`;
     const cf = Z.$('#ce', el);
+    // Picking a package fills the monthly rate, as before. "Something else…" reveals the free-text box and leaves the
+    // rate alone, because a customer off the price list has no price list rate to copy.
+    const pick = Z.$('#plan-pick', el), free = Z.$('#plan-free', el);
+    if (pick && free) {
+      const sync = () => {
+        const other = pick.value === '__other';
+        free.hidden = !other;
+        if (other) { if (pk.some((x) => x.name === free.value)) free.value = ''; free.focus(); }
+        else { free.value = pick.value; const m = pk.find((x) => x.name === pick.value); if (m && cf.monthly_rate) cf.monthly_rate.value = m.monthly_rate; }
+      };
+      pick.addEventListener('change', sync);
+    }
     if (cf.plan && cf.monthly_rate && pk.length) cf.plan.addEventListener('input', () => { const m = pk.find((x) => x.name.toLowerCase() === cf.plan.value.trim().toLowerCase()); if (m) cf.monthly_rate.value = m.monthly_rate; });
 
     Z.$('#ce', el).onsubmit = async (e) => {
