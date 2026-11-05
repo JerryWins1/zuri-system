@@ -544,8 +544,8 @@
         {
           "id": "d4-04",
           "link": "#money",
-          "do": "Open that expense again and open More details — approval, VAT, note. Put 331 in VAT included and P051234567X in Supplier KRA PIN. Save.",
-          "see": "The VAT and the PIN save against the expense.",
+          "do": "Find the Mama Njeri Hardware expense you just saved in the list below the form. Tap the ✏️ button on its row. The form fills with that expense. Put 384 in VAT and A001234567X in Supplier KRA PIN, then tap Save changes.",
+          "see": "“Change saved, and signed with your name.” A new line appears on that expense saying who changed it, when, and what changed — VAT and KRA PIN, old value → new value. Tell us if the old values are wrong, or if the line does not appear.",
           "look": [
             "VAT included",
             "Supplier KRA PIN"

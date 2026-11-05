@@ -226,9 +226,49 @@
       </form>
       <h3>${monthName(ym)} · ${Z.kes(rows.reduce((t, r) => t + Number(r.amount), 0))}</h3>
       <div class="card list" id="me-list">${rows.map((r) => `<div class="item"><div class="grow"><div class="t">${Z.esc(r.payee)} ${Z.receiptPill ? Z.receiptPill(r) : `<span class="pill ${r.receipt === 'No — chase it' ? 'bad' : 'ok'}">${r.receipt === 'No — chase it' ? 'no receipt' : 'receipt'}</span>`} ${Z.approvalPill ? Z.approvalPill(r) : ''}</div>
-        <div class="m">${Z.day(r.date)} · ${Z.esc(Z.areaName(r.area))} · ${Z.esc(r.category || '')} · ${Z.esc(r.paid_from)}${r.ref ? ' · ' + Z.esc(r.ref) : ''}${r.approved_by && r.approval !== 'approved' ? ' · ok ' + Z.esc(r.approved_by) : ''}${r.recorded_by ? ' · by ' + Z.esc(r.recorded_by) : ''}</div></div>
-        <b class="num">−${Z.fmt(r.amount)}</b>${r.receipt_path ? `<button class="btn sec small me-photo" data-path="${Z.esc(r.receipt_path)}" data-label="${Z.esc(r.payee)}" aria-label="See the receipt photo for ${Z.esc(r.payee)}">📷</button>` : ''}<button class="btn sec small" data-del="${r.id}" aria-label="Delete ${Z.esc(r.payee)}">×</button></div>`).join('') || '<div class="muted">No expenses this month.</div>'}</div>`;
+        <div class="m">${Z.day(r.date)} · ${Z.esc(Z.areaName(r.area))} · ${Z.esc(r.category || '')} · ${Z.esc(r.paid_from)}${r.ref ? ' · ' + Z.esc(r.ref) : ''}${r.approved_by && r.approval !== 'approved' ? ' · ok ' + Z.esc(r.approved_by) : ''}${r.recorded_by ? ' · by ' + Z.esc(r.recorded_by) : ''}</div>
+        ${/* ✏️ v2.65 (5 Nov, Jerry: "let it be edited, and keep a trail"): a saved expense could not be reopened at all.
+             Brian hit it on 30 Oct trying to add a VAT figure and a KRA PIN, Kevin again on 31 Oct asking for exactly
+             this button. The step that asks for it was impossible. Every change writes who and when into the note, so
+             a money record cannot be quietly rewritten. */ ''}
+        ${String(r.note || '').includes('✏️ ') ? `<div class="m" style="white-space:normal;color:var(--warn)">${Z.esc(String(r.note).slice(String(r.note).indexOf('✏️ ')))}</div>` : ''}</div>
+        <b class="num">−${Z.fmt(r.amount)}</b>${r.receipt_path ? `<button class="btn sec small me-photo" data-path="${Z.esc(r.receipt_path)}" data-label="${Z.esc(r.payee)}" aria-label="See the receipt photo for ${Z.esc(r.payee)}">📷</button>` : ''}<button class="btn sec small" data-edit="${r.id}" aria-label="Change ${Z.esc(r.payee)}">✏️</button><button class="btn sec small" data-del="${r.id}" aria-label="Delete ${Z.esc(r.payee)}">×</button></div>`).join('') || '<div class="muted">No expenses this month.</div>'}</div>`;
     Z.$$('.me-photo', el).forEach((b) => (b.onclick = () => Z.receiptPhoto(b.dataset.path, b.dataset.label)));
+
+    // Reopen a saved expense. The trail lives in the note, so this needs no new column and cannot break
+    // the shared training copy, whose schema is not in this repo and cannot be migrated from here.
+    let editing = null, editKeep = {};
+    const TRAIL = '\n✏️ ';
+    Z.$$('[data-edit]', el).forEach((b) => (b.onclick = () => {
+      const r = rows.find((x) => String(x.id) === b.dataset.edit);
+      if (!r) return;
+      editing = r;
+      f.payee.value = r.payee || ''; if (f.payee.onchange) f.payee.onchange();
+      f.category.value = r.category || ''; f.amount.value = r.amount == null ? '' : r.amount;
+      f.date.value = String(r.date || '').slice(0, 10);
+      f.area.value = r.area || f.area.value; f.paid_from.value = r.paid_from || f.paid_from.value;
+      f.ref.value = r.ref || ''; f.receipt.value = r.receipt || f.receipt.value;
+      if (f.approved_by) f.approved_by.value = r.approved_by || '';
+      if (f.vat_amount) f.vat_amount.value = r.vat_amount || '';
+      if (f.supplier_pin) f.supplier_pin.value = r.supplier_pin || '';
+      if (f.note) f.note.value = String(r.note || '').split(TRAIL)[0];
+      // A saved value the form cannot hold — a receipt of "Photo saved", which is not one of the dropdown's
+      // choices — would otherwise be silently rewritten to whatever the control fell back to, just by opening
+      // the editor. Caught in testing: it turned a receipt into "no receipt" without anyone touching it.
+      // Anything the form cannot represent is kept exactly as it was.
+      editKeep = {};
+      ['payee', 'category', 'area', 'paid_from', 'receipt'].forEach((k) => {
+        if (!f[k]) return;
+        const want = r[k] == null ? '' : String(r[k]);
+        if (want && String(f[k].value) !== want) editKeep[k] = r[k];
+      });
+      const more = Z.$('details', f); if (more) more.open = true;
+      const sub = f.querySelector('button[type=submit]'); if (sub) sub.textContent = 'Save changes';
+      const hint = Z.$('#me-hint', el);
+      if (hint) hint.textContent = 'Changing ' + r.payee + ', ' + Z.kes(r.amount) + '. Every change is signed with your name and the time.';
+      f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+
 
     const f = Z.$('#me', el);
     let parsedBalance = null;
@@ -269,6 +309,34 @@
         ref: d.ref.trim().toUpperCase() || null, approved_by: d.approved_by.trim() || null, receipt: d.receipt, note: d.note.trim() || null,
         vat_amount: Z.num(d.vat_amount) || 0, supplier_pin: d.supplier_pin.trim().toUpperCase() || null, recorded_by: Z.me.full_name, ...(Z.projectTagFields ? Z.projectTagFields(d) : {}) };
       if (!row.amount || row.amount <= 0) return Z.toast('Enter the amount.');
+
+      // Saving a change rather than a new expense. What changed is written into the note with who and when, so a
+      // money record carries its own history: nothing can be altered without the alteration showing on the row.
+      if (editing) {
+        const was = editing;
+        Object.keys(editKeep).forEach((k) => { row[k] = editKeep[k]; });
+        const LABEL = { payee: 'Paid to', category: 'Category', amount: 'Amount', date: 'Date', area: 'Area',
+          paid_from: 'Paid from', ref: 'Code', receipt: 'Receipt', vat_amount: 'VAT', supplier_pin: 'KRA PIN', note: 'Note' };
+        const shown = (k, v) => (v == null || v === '' ? '—' : k === 'amount' || k === 'vat_amount' ? Z.fmt(Z.num(v) || 0) : String(v));
+        const changes = Object.keys(LABEL).filter((k) => {
+          const a = k === 'note' ? String(was[k] || '').split(TRAIL)[0] : was[k];
+          const b = row[k];
+          if (k === 'amount' || k === 'vat_amount') return (Z.num(a) || 0) !== (Z.num(b) || 0);
+          return String(a == null ? '' : a) !== String(b == null ? '' : b);
+        });
+        if (!changes.length) { editing = null; editKeep = {}; Z.toast('Nothing was changed.'); return Z.route(); }
+        const when = new Date().toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        const line = TRAIL + when + ' ' + Z.me.full_name + ': '
+          + changes.map((k) => LABEL[k] + ' ' + shown(k, k === 'note' ? String(was[k] || '').split(TRAIL)[0] : was[k]) + ' → ' + shown(k, row[k])).join(' · ');
+        const keptTrail = String(was.note || '').slice(String(was.note || '').split(TRAIL)[0].length);
+        row.note = (row.note || '') + keptTrail + line;
+        const { error: upErr } = await Z.sb.from('expenses').update(row).eq('id', was.id);
+        if (upErr) return Z.fail(upErr);
+        editing = null; editKeep = {};
+        Z.toast('Change saved, and signed with your name.');
+        return Z.route();
+      }
+
       if (matchedBill && d.as_bill) {
         // 7 Oct deep check #2: the bill payment keeps the typed date, approval, VAT, PIN, note and receipt.
         const { error } = await Z.payBill(matchedBill.id, row.amount, row.paid_from, row.ref,
