@@ -273,7 +273,7 @@
           "id": "d2-04",
           "link": "#home",
           "do": "Go to Home and read NEEDS ATTENTION.",
-          "see": "Does the count of jobs with no tech go down now Brian is booked? Tell us the number before and after if you can.",
+          "see": "The line “1 job has no tech yet” should drop to zero and disappear. Tell us the number before and after if you can. Needs attention is a list of what still needs DOING, so it will never name Brian or anyone else — the job simply leaves the list once it has a tech. That is correct, not a fault.",
           "look": [
             "NEEDS ATTENTION",
             "no tech"

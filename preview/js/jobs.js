@@ -558,7 +558,8 @@
     if (pinB) pinB.onclick = () => {
       if (!navigator.geolocation) return Z.toast('This phone can\'t share its location.');
       pinB.disabled = true; pinB.textContent = '📍 Finding you…';
-      if (lat != null && !confirm('Move this customer\'s pin to where you are standing now?')) { pinB.disabled = false; pinB.textContent = '📍 Move pin to here'; return; }
+      // Saying no here used to leave the screen completely silent, which reads as a dead button. Say what happened.
+      if (lat != null && !confirm('Move this customer\'s pin to where you are standing now?')) { pinB.disabled = false; pinB.textContent = '📍 Move pin to here'; Z.toast('The pin was left where it was.'); return; }
       navigator.geolocation.getCurrentPosition((pos) => {
         const acc = Math.round(pos.coords.accuracy);
         // A phone indoors can be 100 m+ off — that sends the next tech to the wrong house.
@@ -572,7 +573,13 @@
         }
         Z.toast(`Pin saved (accurate to about ${Math.round(pos.coords.accuracy)} m).`);
         Z.route();
-      }, (err) => { pinB.disabled = false; pinB.textContent = '📍 Drop pin here'; Z.toast(err.code === 1 ? 'Allow location for this app in the phone settings.' : 'Couldn\'t get a location — step outside and try again.'); },
+      }, (err) => { pinB.disabled = false;
+        // 📍 v2.64 (5 Nov): this used to relabel the button "Drop pin here" on EVERY failure, even for a customer who
+        // already has a pin — so after one refused location the button told you the house had no pin at all. Fredrick
+        // reported the map asking for permission and the pin not moving, on the same morning; this is what he would
+        // have been left looking at. The label now matches what the button actually does.
+        pinB.textContent = lat != null ? '📍 Move pin to here' : '📍 Drop pin here';
+        Z.toast(err.code === 1 ? 'Allow location for this app in the phone settings.' : 'Couldn\'t get a location — step outside and try again.'); },
       { enableHighAccuracy: true, timeout: 25000, maximumAge: 0 });
     };
     const sendB = Z.$('#jd-send', el);
