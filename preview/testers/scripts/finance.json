@@ -3,7 +3,7 @@
   "title": "Finance test script",
   "version": "1.2",
   "date": "2026-10-12",
-  "who": "You are Kelvin in finance. Everything is pretend and stays on your phone — no money moves.",
+  "who": "You are Kelvin in finance. Everything is pretend and stays on your phone — no money moves. Job numbers like #103 are what a brand-new phone shows. If yours are different, GO BY THE CUSTOMER'S NAME — the names are the same on every phone. If a job is not in To do, look under All.",
   "sessions": [
     {
       "id": "m1",

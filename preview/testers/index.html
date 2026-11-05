@@ -541,7 +541,10 @@
     $('#main').innerHTML = `<div class="now"><div class="lbl"><span>Session ${si + 1} of ${n}</span><span>about ${sess.mins} minutes</span></div>
       <h2>${esc(sess.title)}</h2><div class="why">${esc(sess.intro || '')}</div>
       <ol><li>Each step says what to <b>do</b> in practice, and what you <b>should see</b>.</li><li>Tap 🎓 <b>Open practice at this screen</b> — it opens in a new tab. Come back here to answer.</li><li>Answer every step: ✅ It worked, ❌ It didn't, or 🤷 Not sure. Wrong is useful — tell us what happened.</li><li>The timer is a guide, not a limit. Take your time; stop any time — this phone remembers where you are.</li></ol>
-      ${SX.script.who && si === 0 ? `<p style="margin:0 0 10px;color:var(--soft)">🙂 ${esc(SX.script.who)}</p>` : ''}
+      ${/* 🧭 v2.24 (5 Nov): this used to show only on the FIRST session, so anyone starting at session 3 never saw it.
+            It now carries the line about job numbers drifting, which is the thing that cost Kevin seven of his eight
+            failures on 3 Nov, so it has to be in front of them on every session, not just the one they may never open. */ ''}
+      ${SX.script.who ? `<p style="margin:0 0 10px;color:var(--soft)">🙂 ${esc(SX.script.who)}</p>` : ''}
       <button class="big" id="sx-start">▶ Start session ${si + 1}</button></div>
       <div class="nav2"><button type="button" id="sx-list">☰ My list</button></div>`;
     $('#sx-start').onclick = () => { const s = get('sx_intro_' + SID(), {}); s[sess.id] = Date.now(); set('sx_intro_' + SID(), s); sxPlay(); };
