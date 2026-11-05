@@ -131,8 +131,8 @@
         {
           "id": "d1-05",
           "link": "#customers/new",
-          "do": "Try ＋ New customer once more. This time put a phone number that is obviously wrong — type abc in Phone — and a Monthly rate of -500. Try to save.",
-          "see": "TELL US WHAT HAPPENS. Does it save nonsense, or stop you? Either answer is useful.",
+          "do": "Try ＋ New customer once more. Fill in Full name (any name) and Directions / landmark — Zuri will not let you save without those two. Then put a phone number that is obviously wrong — type abc in Phone — and a Monthly rate of -500. Try to save.",
+          "see": "TELL US WHAT HAPPENS. Does it save nonsense, or stop you? Either answer is useful. If it stops you, say WHICH box it complains about — that tells us whether it is checking the phone number or just asking for something you left empty.",
           "look": [
             "Phone",
             "Monthly rate"
