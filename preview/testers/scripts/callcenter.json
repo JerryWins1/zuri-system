@@ -255,55 +255,16 @@
         {
           "id": "c1-09",
           "link": "#jobs",
-          "do": "Open Stephen Omondi #114. He says his internet drops every evening: tap 🛠 Service problem — open a fault job. Type of job: Fault / no internet. What's wrong: “Internet drops every evening”. Send to tech: Peter Kamau. Tap Save job.",
+          "do": "Open Stephen OMONDI — type the whole surname, there is also a Stephen Muthoni. He says his internet drops every evening: tap 🛠 Service problem.",
           "copy": "Internet drops every evening",
-          "see": "A new job form opens with Stephen Omondi already filled in. After Save job: “Job saved.” and the new job opens, Assigned to Peter Kamau.",
+          "see": "Zuri should STOP you and say his package has run out, so a technician will not help and he needs to pay first. That is Zuri being right, not a fault — tell us exactly what it said. If it lets you open a fault job with no warning at all, THAT is the problem: tell us that instead.",
           "look": [
             "Stephen Omondi #114"
           ],
           "auto": [
             [
-              "tap",
-              "a.item:has-text('#114')"
-            ],
-            [
-              "tap",
-              "button:has-text('Service problem')"
-            ],
-            [
               "see",
-              "Stephen Omondi"
-            ],
-            [
-              "select",
-              "[name=kind]",
-              "Fault / no internet"
-            ],
-            [
-              "fill",
-              "[name=summary]",
-              "Internet drops every evening"
-            ],
-            [
-              "select",
-              "[name=assigned_to]",
-              "Peter Kamau"
-            ],
-            [
-              "tap",
-              "button:has-text('Save job')"
-            ],
-            [
-              "see",
-              "Job saved"
-            ],
-            [
-              "see",
-              "Internet drops every evening"
-            ],
-            [
-              "see",
-              "Assigned"
+              "Stephen"
             ]
           ]
         },
