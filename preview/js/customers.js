@@ -129,8 +129,15 @@
     const monthDue = c.status === 'active' && owingDays > 0 ? Number(c.monthly_rate || 0) : 0;
     const sinceDay = c.paid_until ? String(c.paid_until).slice(0, 10) : null;
     const paidSince = sinceDay ? pays.filter((x) => String(x.date || '').slice(0, 10) >= sinceDay).reduce((t, x) => t + Number(x.amount || 0), 0) : 0;
-    const owingNow = Math.max(0, monthDue - paidSince);
-    const creditNow = monthDue > 0 ? Math.max(0, paidSince - monthDue) : 0;
+    // 🔁 v2.70 (5 Nov, Jerry: "credit, not cash"). Veronicah, 30 Oct, d7-01: "Incase a customer is not
+    // satisfied with your internet service and wants their refund back mid-month, is that possible?" It was not.
+    // A credit is money owed back that comes off what they pay next, and it follows the SAME boundary rule as a
+    // payment: one dated before their paid-until date is already spent on the time they had, so it stops counting
+    // on its own when billing moves the date. Nothing has to remember to use a credit up.
+    const credits = Array.isArray((c.custom || {}).credits) ? (c.custom || {}).credits : [];
+    const creditSince = sinceDay ? credits.filter((x) => String(x.date || '').slice(0, 10) >= sinceDay).reduce((t, x) => t + Number(x.amount || 0), 0) : credits.reduce((t, x) => t + Number(x.amount || 0), 0);
+    const owingNow = Math.max(0, monthDue - paidSince - creditSince);
+    const creditNow = monthDue > 0 ? Math.max(0, paidSince + creditSince - monthDue) : creditSince;
     // 💲 v2.67 (5 Nov, Jerry: "ask why, and show it"). Veronicah, 30 Oct, d5-05: "Grace is paying 2500 for
     // 10 mbps but on the price list it says 2000 for 10 mbps". Nothing on her record said why, so anyone looking
     // later just saw a customer being charged 500 more than the list with no reason given. Now the reason is asked
@@ -157,6 +164,7 @@
         <a class="btn" href="#jobs/new/${c.id}">＋ New job</a>
         <a class="btn sec" href="#customers/${c.id}/edit">✏️ Edit</a>
         ${c.phone && !Z.isField() ? '<button class="btn sec" id="cp-quote">💬 Send a quote</button>' : ''}
+        ${Z.isFinance() ? '<button class="btn sec" id="cp-credit">🔁 Give credit</button>' : ''}
       </div>
       <div class="card"><table class="t">${shown.map(([k, label, type]) => `<tr><th style="width:40%">${label}</th><td>${type === 'number' ? Z.kes(c[k]) : type === 'date' ? Z.day(c[k]) : type === 'readonly' ? Z.when(c[k]) + (new Date(c[k]) < new Date() ? ' <span class="pill bad">ran out</span>' : '') : Z.esc(c[k])}</td></tr>`).join('')}
         ${custom.map((d) => `<tr><th>${Z.esc(d.label)}</th><td>${d.kind === 'yesno' ? (c.custom[d.key] ? 'Yes' : 'No') : Z.esc(c.custom[d.key])}</td></tr>`).join('')}
@@ -174,10 +182,12 @@
         <tr><th>Paid until</th><td>${c.paid_until ? Z.day(c.paid_until) + (owingDays > 0 ? ` <span class="pill bad">${owingDays} day${owingDays === 1 ? '' : 's'} ago</span>` : ` <span class="pill ok">${-owingDays} day${owingDays === -1 ? '' : 's'} left</span>`) : '<span class="muted">never paid</span>'}</td></tr>
         ${c.status === 'suspended' ? `<tr><th>Paused</th><td>${pauseLabel ? Z.esc(pauseLabel) : '<span class="muted">no reason was recorded</span>'}${pauseUntil ? ` · back on ${Z.day(pauseUntil)} ${backDays < 0 ? `<span class="pill bad">due back ${-backDays} day${backDays === -1 ? '' : 's'} ago</span>` : backDays === 0 ? '<span class="pill warn">due back today</span>' : `<span class="pill ok">in ${backDays} day${backDays === 1 ? '' : 's'}</span>`}` : ''}</td></tr>` : ''}
         <tr><th>Paid in, all time</th><td class="num">${Z.kes(pays.reduce((t, x) => t + Number(x.amount || 0), 0))}</td></tr>
+        ${credits.length ? `<tr><th>Credit on account</th><td class="num"><b style="color:var(--ok)">${Z.kes(creditSince)}</b>${credits.map((x) => { const spent = sinceDay && String(x.date || '').slice(0, 10) < sinceDay;
+          return `<div class="m"${spent ? ' style="opacity:.6"' : ''}>${Z.day(x.date)} ${Z.esc(x.by || '')}: ${Z.kes(x.amount)} — ${Z.esc(x.why || '')}${spent ? ' <i>(already used)</i>' : ''}</div>`; }).join('')}</td></tr>` : ''}
         <tr><th>Owing now</th><td class="num"><b style="color:var(--${owingNow > 0 ? 'bad' : 'ok'})">${Z.kes(owingNow)}</b>${creditNow > 0 ? ` <span class="pill ok">${Z.kes(creditNow)} in credit</span>` : ''}${
-          owingNow > 0 && paidSince > 0 ? `<div class="m">One month is ${Z.kes(monthDue)}, less ${Z.kes(paidSince)} paid since ${Z.day(c.paid_until)}. Home counts the whole month until billing is imported.</div>`
+          owingNow > 0 && (paidSince > 0 || creditSince > 0) ? `<div class="m">One month is ${Z.kes(monthDue)}, less ${Z.kes(paidSince)} paid${creditSince > 0 ? ` and ${Z.kes(creditSince)} credit` : ''} since ${Z.day(c.paid_until)}. Home counts the whole month until billing is imported.</div>`
           : owingNow > 0 ? '<div class="m">one month’s rate — the same rule Home and the Friday report use</div>'
-          : monthDue > 0 ? `<div class="m">${Z.kes(paidSince)} paid since ${Z.day(c.paid_until)}${creditNow > 0 ? ` — ${Z.kes(monthDue)} for the month and ${Z.kes(creditNow)} over` : ' covers the month'}. Her paid-until date moves when billing is next imported.</div>`
+          : monthDue > 0 ? `<div class="m">${Z.kes(paidSince)} paid${creditSince > 0 ? ` and ${Z.kes(creditSince)} credit` : ''} since ${Z.day(c.paid_until)}${creditNow > 0 ? ` — ${Z.kes(monthDue)} for the month and ${Z.kes(creditNow)} over` : ' covers the month'}. Her paid-until date moves when billing is next imported.</div>`
           : ''}</td></tr>
       </table></div>
 
@@ -229,6 +239,33 @@
       Z.$$('#cq-wa, #cq-sms', sh.el).forEach((a) => a.addEventListener('click', () => { if (Z.num(f.fee.value)) Z.set('quote_install_fee', f.fee.value.trim()); Z.toast('Quote ready — press send in the message app.'); }));
       links();
     };
+    // 🔁 v2.70: money owed back, recorded against the customer instead of taken out of the till. Every credit
+    // is signed with the name and the day, and shows on this page, so one cannot be given quietly.
+    const crb = Z.$('#cp-credit', el);
+    if (crb) crb.onclick = () => {
+      const sh = Z.sheet('🔁 Give credit to ' + c.full_name, `<form id="cc" autocomplete="off">
+          <label>How much (KES)</label><input name="amount" inputmode="decimal" placeholder="e.g. 500">
+          <label>Why</label><input name="why" maxlength="120" placeholder="e.g. three days with no internet in October">
+          <p class="hint" style="margin:4px 0 8px">This is not cash out of the till. It comes off what ${Z.esc(String(c.full_name).split(/\s+/)[0])} owes next, and it shows on this page with your name on it.</p>
+          <button class="btn block" type="submit">Give the credit</button></form>`);
+      const f = Z.$('#cc', sh.el);
+      f.onsubmit = async (e) => {
+        e.preventDefault();
+        const amount = Z.num(f.amount.value), why = String(f.why.value || '').trim();
+        if (!amount || amount <= 0) return Z.toast('How much credit? Put an amount above zero.');
+        if (!why) return Z.toast('Say why the credit is being given.');
+        const btn = e.submitter; btn.disabled = true;
+        const row = { date: new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10), by: Z.me.full_name, amount, why, at: new Date().toISOString() };
+        const custom = { ...(c.custom || {}), credits: credits.concat([row]) };   // the whole object, so nothing else in it is lost
+        const { error } = await Z.sb.rpc('save_customer', { p: { id, custom } });
+        btn.disabled = false;
+        if (error) return Z.toast(Z.errText(error));
+        sh.close();
+        Z.toast(Z.kes(amount) + ' credit given. It comes off what ' + String(c.full_name).split(/\s+/)[0] + ' owes next.');
+        Z.route();
+      };
+    };
+
     const sb = Z.$('#cp-send', el);
     if (sb) sb.onclick = async () => {
       const text = `${c.full_name}${c.phone ? ' (' + c.phone + ')' : ''}${c.landmark ? '\n📍 ' + c.landmark : ''}\n${pin}`;
