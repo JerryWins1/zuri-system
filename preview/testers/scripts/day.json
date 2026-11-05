@@ -610,18 +610,18 @@
         },
         {
           "id": "d4-08",
-          "link": "#customers/c1",
-          "do": "Open Grace Njeri and scroll down to ACCOUNT.",
-          "see": "It shows her monthly rate, the date she is paid until, and OWING NOW. Say whether the owing figure makes sense to you.",
+          "link": "#customers",
+          "do": "Open Customers, find Grace Mwende, and scroll down to ACCOUNT.",
+          "see": "Four lines: her monthly rate, the date she is paid until, what she has paid in all time, and OWING NOW. Say whether they match what you did with her today.",
           "look": [
             "Account",
             "Owing now",
-            "Grace Njeri"
+            "Grace Mwende"
           ],
           "auto": [
             [
               "go",
-              "#customers/c1"
+              "#customers"
             ]
           ]
         }
