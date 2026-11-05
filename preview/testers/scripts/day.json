@@ -610,17 +610,18 @@
         },
         {
           "id": "d4-08",
-          "link": "#money",
-          "do": "Open the statements and find Grace Mwende.",
-          "see": "Her statement shows her 2500. If a brand new customer has no statement, say so.",
+          "link": "#customers/c1",
+          "do": "Open Grace Njeri and scroll down to ACCOUNT.",
+          "see": "It shows her monthly rate, the date she is paid until, and OWING NOW. Say whether the owing figure makes sense to you.",
           "look": [
-            "statement",
-            "Grace"
+            "Account",
+            "Owing now",
+            "Grace Njeri"
           ],
           "auto": [
             [
               "go",
-              "#money"
+              "#customers/c1"
             ]
           ]
         }
