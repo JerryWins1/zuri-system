@@ -164,7 +164,7 @@
         <a class="btn" href="#jobs/new/${c.id}">＋ New job</a>
         <a class="btn sec" href="#customers/${c.id}/edit">✏️ Edit</a>
         ${c.phone && !Z.isField() ? '<button class="btn sec" id="cp-quote">💬 Send a quote</button>' : ''}
-        ${Z.isFinance() ? '<button class="btn sec" id="cp-credit">🔁 Give credit</button>' : ''}
+        ${Z.isOffice() && visible('monthly_rate') ? '<button class="btn sec" id="cp-credit">🔁 Give credit</button>' : ''}
       </div>
       <div class="card"><table class="t">${shown.map(([k, label, type]) => `<tr><th style="width:40%">${label}</th><td>${type === 'number' ? Z.kes(c[k]) : type === 'date' ? Z.day(c[k]) : type === 'readonly' ? Z.when(c[k]) + (new Date(c[k]) < new Date() ? ' <span class="pill bad">ran out</span>' : '') : Z.esc(c[k])}</td></tr>`).join('')}
         ${custom.map((d) => `<tr><th>${Z.esc(d.label)}</th><td>${d.kind === 'yesno' ? (c.custom[d.key] ? 'Yes' : 'No') : Z.esc(c.custom[d.key])}</td></tr>`).join('')}
@@ -176,6 +176,7 @@
            were sent to Statements, which is the bank and M-Pesa import and cannot answer the question.
            The owing rule is NOT invented here: it is the one Home and the Friday report already use — a customer
            past their paid date owes one month's rate. Same rule, shown for one person instead of all of them. */ ''}
+      ${!visible('monthly_rate') ? '' : `
       <h3>Account</h3>
       <div class="card"><table class="t">
         <tr><th style="width:52%">Monthly rate</th><td>${c.monthly_rate ? Z.kes(c.monthly_rate) : '<span class="muted">not set</span>'}${offList ? `<div class="m" style="color:var(--warn-ink)">Not the price-list rate — ${Z.esc(listed.name)} is ${Z.kes(listed.monthly_rate)}. ${rateWhy ? Z.esc(rateWhy) : '<b>No reason was given.</b>'}</div>` : ''}</td></tr>
@@ -189,7 +190,7 @@
           : owingNow > 0 ? '<div class="m">one month’s rate — the same rule Home and the Friday report use</div>'
           : monthDue > 0 ? `<div class="m">${Z.kes(paidSince)} paid${creditSince > 0 ? ` and ${Z.kes(creditSince)} credit` : ''} since ${Z.day(c.paid_until)}${creditNow > 0 ? ` — ${Z.kes(monthDue)} for the month and ${Z.kes(creditNow)} over` : ' covers the month'}. Her paid-until date moves when billing is next imported.</div>`
           : ''}</td></tr>
-      </table></div>
+      </table></div>`}
 
       <h3>Payments</h3>
       <div class="card">${pays.length ? `<table class="t"><tr><th>Date</th><th class="r">KES</th><th>How</th><th>Ref</th></tr>${pays.slice(0, 24).map((p) => `<tr><td>${Z.day(p.date)}</td><td class="r num">${Z.fmt(p.amount)}</td><td>${Z.esc(p.method)}${p.source === 'field' ? ' (on a job)' : ''}</td><td>${Z.esc(p.mpesa_ref || '')}</td></tr>`).join('')}</table>${pays.length > 24 ? `<div class="m">Showing the last 24 of ${pays.length} payments. The total above counts them all.</div>` : ''}` : '<div class="muted">No payments recorded yet.</div>'}</div>
