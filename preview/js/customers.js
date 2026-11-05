@@ -104,10 +104,11 @@
   };
 
   async function profile(id, el) {
-    const [cr, tr, pr] = await Promise.all([
+    const [cr, tr, pr, pkr] = await Promise.all([
       Z.sb.from('v_customers').select(COLS).eq('id', id).maybeSingle(),
       Z.sb.from('tickets').select('id,ticket_no,kind,status,summary,opened_at,closed_at,amount_collected').eq('customer_id', id).order('opened_at', { ascending: false }).limit(30),
       Z.sb.from('payments').select('date,amount,method,source,mpesa_ref').eq('customer_id', id).order('date', { ascending: false }).limit(400),
+      Z.sb.from('packages').select('name,monthly_rate').then((r) => r.data || [], () => []),  // a phone whose copy has no price list still works
     ]);
     if (cr.error) throw cr.error;
     const c = cr.data;
@@ -120,6 +121,13 @@
     // A customer past their paid date owes one month, which is exactly what Home and the Friday report count.
     const owingDays = c.paid_until ? Math.floor((Date.now() - new Date(c.paid_until).getTime()) / 864e5) : 0;
     const owingNow = c.status === 'active' && owingDays > 0 ? Number(c.monthly_rate || 0) : 0;
+    // 💲 v2.67 (5 Nov, Jerry: "ask why, and show it"). Veronicah, 30 Oct, d5-05: "Grace is paying 2500 for
+    // 10 mbps but on the price list it says 2000 for 10 mbps". Nothing on her record said why, so anyone looking
+    // later just saw a customer being charged 500 more than the list with no reason given. Now the reason is asked
+    // for when the rate is typed, and shown here beside the rate.
+    const listed = (pkr || []).find((x) => x.name === c.plan);
+    const offList = !!listed && c.monthly_rate != null && Number(c.monthly_rate) !== Number(listed.monthly_rate);
+    const rateWhy = String((c.custom || {}).rate_why || '').trim();
     el.innerHTML = `
       <p style="margin:0 0 6px"><a class="back" href="#customers">← Customers</a></p>
       <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:2px">${Z.esc(c.full_name)}</h2>${statusPill(c.status)}</div>
@@ -144,7 +152,7 @@
            past their paid date owes one month's rate. Same rule, shown for one person instead of all of them. */ ''}
       <h3>Account</h3>
       <div class="card"><table class="t">
-        <tr><th style="width:52%">Monthly rate</th><td>${c.monthly_rate ? Z.kes(c.monthly_rate) : '<span class="muted">not set</span>'}</td></tr>
+        <tr><th style="width:52%">Monthly rate</th><td>${c.monthly_rate ? Z.kes(c.monthly_rate) : '<span class="muted">not set</span>'}${offList ? `<div class="m" style="color:var(--warn-ink)">Not the price-list rate — ${Z.esc(listed.name)} is ${Z.kes(listed.monthly_rate)}. ${rateWhy ? Z.esc(rateWhy) : '<b>No reason was given.</b>'}</div>` : ''}</td></tr>
         <tr><th>Paid until</th><td>${c.paid_until ? Z.day(c.paid_until) + (owingDays > 0 ? ` <span class="pill bad">${owingDays} day${owingDays === 1 ? '' : 's'} ago</span>` : ` <span class="pill ok">${-owingDays} day${owingDays === -1 ? '' : 's'} left</span>`) : '<span class="muted">never paid</span>'}</td></tr>
         <tr><th>Paid in, all time</th><td class="num">${Z.kes(pays.reduce((t, x) => t + Number(x.amount || 0), 0))}</td></tr>
         <tr><th>Owing now</th><td class="num"><b style="color:var(--${owingNow > 0 ? 'bad' : 'ok'})">${Z.kes(owingNow)}</b>${owingNow > 0 ? '<div class="m">one month’s rate — the same rule Home and the Friday report use</div>' : ''}</td></tr>
@@ -242,6 +250,12 @@
       if (d.kind === 'choice') return `<div><label>${Z.esc(d.label)}</label><select name="${name}"><option value="">—</option>${Z.opts(d.choices || [], v)}</select></div>`;
       return `<div><label>${Z.esc(d.label)}</label><input name="${name}" type="${d.kind === 'date' ? 'date' : 'text'}" ${d.kind === 'number' ? 'inputmode="decimal"' : ''} value="${Z.esc(v)}"></div>`;
     };
+    // 💲 v2.67: asked for right under the rate it is about, so it is seen the moment the rate is typed over.
+    const whyHtml = `<div id="rate-why-box" style="grid-column:1/-1" hidden>
+            <label>Why is this not the price-list rate?</label>
+            <input name="rate_why" type="text" placeholder="e.g. old price, agreed before the rise" value="${Z.esc((c.custom || {}).rate_why || '')}">
+            <p class="hint" id="rate-why-hint"></p>
+          </div>`;
     el.innerHTML = `
       <p style="margin:0 0 6px"><a href="#customers${id ? '/' + id : ''}">← Back</a></p>
       <h2>${id ? 'Edit ' + Z.esc(c.full_name) : 'New customer'}</h2>
@@ -250,7 +264,7 @@
           ${input(FIELDS[0])}
           <div><label>Area</label><select name="area">${Z.opts(Z.ref.areas.filter((a) => a.active || a.code === c.area).map((a) => [a.code, a.name]), c.area)}</select></div>
           <div><label>Status</label><select name="status">${Z.opts(STATUSES, c.status)}</select></div>
-          ${FIELDS.slice(1).filter(([k, , type]) => visible(k) && type !== 'readonly').map(input).join('')}
+          ${FIELDS.slice(1).filter(([k, , type]) => visible(k) && type !== 'readonly').map((f) => input(f) + (f[0] === 'monthly_rate' ? whyHtml : '')).join('')}
           ${defs.map(customInput).join('')}
         </div>
         <p class="hint">GPS pin: use "Drop pin here" on the customer's page while standing at the house.</p>
@@ -269,7 +283,22 @@
       };
       pick.addEventListener('change', sync);
     }
-    if (cf.plan && cf.monthly_rate && pk.length) cf.plan.addEventListener('input', () => { const m = pk.find((x) => x.name.toLowerCase() === cf.plan.value.trim().toLowerCase()); if (m) cf.monthly_rate.value = m.monthly_rate; });
+    if (cf.plan && cf.monthly_rate && pk.length) cf.plan.addEventListener('input', () => { const m = pk.find((x) => x.name.toLowerCase() === cf.plan.value.trim().toLowerCase()); if (m) cf.monthly_rate.value = m.monthly_rate; syncWhy(); });
+
+    // The reason box only appears when the rate typed is not the package's price-list rate. A customer who is on
+    // the list price, or on a package that is not on the list at all, is never asked to explain anything.
+    const whyBox = Z.$('#rate-why-box', el), whyHint = Z.$('#rate-why-hint', el);
+    const listedNow = () => (cf.plan ? pk.find((x) => x.name === String(cf.plan.value).trim()) : null);
+    function syncWhy() {
+      if (!whyBox || !cf.monthly_rate) return;
+      const m = listedNow(), typed = String(cf.monthly_rate.value).trim();
+      const off = !!m && typed !== '' && Number(Z.num(typed)) !== Number(m.monthly_rate);
+      whyBox.hidden = !off;
+      if (off && whyHint) whyHint.textContent = m.name + ' is KES ' + Z.fmt(m.monthly_rate) + ' on the price list. What you write here shows on the customer\u2019s page.';
+    }
+    if (cf.monthly_rate) cf.monthly_rate.addEventListener('input', syncWhy);
+    if (pick) pick.addEventListener('change', syncWhy);
+    syncWhy();
 
     Z.$('#ce', el).onsubmit = async (e) => {
       e.preventDefault();
@@ -277,6 +306,7 @@
       const p = { custom: {} };
       if (id) p.id = id;
       for (const [k, v] of Object.entries(d)) {
+        if (k === 'rate_why') continue;   // it lives in custom, handled below — there is no such column
         if (k.startsWith('cf__')) {
           const def = defs.find((x) => x.key === k.slice(4));
           p.custom[def.key] = v === '' ? null : def.kind === 'yesno' ? v === 'yes' : def.kind === 'number' ? Z.num(v) : v;
@@ -293,6 +323,14 @@
         }
       }
       if (p.monthly_rate != null && p.monthly_rate < 0) return Z.toast('The monthly rate cannot be less than zero.');
+      // 💲 v2.67: a rate that is not the price-list rate has to say why, and the reason travels with the customer.
+      const listedP = pk.find((x) => x.name === (p.plan || ''));
+      if (listedP && p.monthly_rate != null && Number(p.monthly_rate) !== Number(listedP.monthly_rate)) {
+        const why = String(d.rate_why || '').trim();
+        if (!why) return Z.toast('KES ' + Z.fmt(p.monthly_rate) + ' is not the price-list rate for ' + listedP.name + ' (KES ' + Z.fmt(listedP.monthly_rate) + '). Say why in one line.');
+        p.custom.rate_why = why;
+      } else if (listedP) p.custom.rate_why = null;   // back on the list price: there is nothing left to explain
+      else p.custom.rate_why = String((c.custom || {}).rate_why || '') || null;   // off-list package: no list rate to differ from
       const btn = e.submitter; btn.disabled = true;
       const { data, error } = await Z.sb.rpc('save_customer', { p });
       btn.disabled = false;

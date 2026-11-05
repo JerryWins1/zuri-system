@@ -3667,7 +3667,7 @@
      "t": "Change a price, then change it back",
      "do": "Me → ⚙️ Admin → Price list → Home 5 Mbps → change 1500 to 1700 → Save package. Open John Kamau's customer page. Then set Home 5 Mbps back to 1500 → Save package.",
      "where": "Me → ⚙️ Admin → Price list",
-     "end": "While it was 1700, John Kamau still paid 1500 (old customers keep their price). It is back to 1500 now.",
+     "end": "While it was 1700, John Kamau still paid 1500 (old customers keep their price) — and his page said so: \u201cNot the price-list rate — Home 5 Mbps is KES 1,700. No reason was given.\u201d It is back to 1500 now, and that line is gone.",
      "route": "admin/prices",
      "feat": [
       "admin.prices"
@@ -5066,8 +5066,8 @@
      "kind": "scenario",
      "t": "🧠 Real-world problem: A 6-month deal for the hotel",
      "do": "Daniel of the hotel calls you: “Give me Business 50 Mbps for 6,000 a month instead of 7,000, and I pay 6 months now — 36,000.” Is it a good deal for Zuri? Decide. If yes, make sure Zuri shows the deal, and that Finance knows how the 36,000 comes in. What do you do?",
-     "hint": "Think: 6 × 1,000 = 6,000 less, but 36,000 cash now. Optional: Money → 👥 Customers → Next 30 days → One-off +36000 tomorrow to see the effect (remove it after). If YES: Customers → Daniel Kiprono (Longonot View Hotel) → ✏️ Edit → Package Business 50 Mbps, Monthly rate 6000, Notes “6-month deal from 1 Nov, 36,000 paid up front — Partner” → Save customer. Tasks → ＋ Add a task for Finance: “Hotel pays 36,000 for 6 months to the paybill — check it on the billing website, expiry 1 May” → Add task. If NO: a note on the hotel with your reason.",
-     "end": "The hotel's page shows the package, the rate and a note with the deal (or your reason for no), and Finance has a task. The price list still says 7,000.",
+     "hint": "Think: 6 × 1,000 = 6,000 less, but 36,000 cash now. Optional: Money → 👥 Customers → Next 30 days → One-off +36000 tomorrow to see the effect (remove it after). If YES: Customers → Daniel Kiprono (Longonot View Hotel) → ✏️ Edit → Package Business 50 Mbps, Monthly rate 6000. Zuri will ask why that is not the price-list rate — put the deal there: “6-month deal from 1 Nov, 36,000 paid up front — Partner”. Save customer. Tasks → ＋ Add a task for Finance: “Hotel pays 36,000 for 6 months to the paybill — check it on the billing website, expiry 1 May” → Add task. If NO: a note on the hotel with your reason.",
+     "end": "The hotel's page shows the package, the rate, and beside the rate why it is 6,000 and not the 7,000 on the price list (or your reason for saying no), and Finance has a task. The price list still says 7,000.",
      "route": "customers/:id/edit",
      "feat": [
       "customers.edit",
