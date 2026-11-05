@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.60 · 2026-11-05';
+  Z.version = 'v2.61 · 2026-11-05';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -39,6 +39,16 @@
   // A plain text message: opens the phone's own SMS app with the number and the words filled in (works without WhatsApp or data).
   Z.phone254 = (p) => { let d = String(p || '').replace(/\D/g, ''); if (d.startsWith('0')) d = '254' + d.slice(1); else if (d.length === 9) d = '254' + d; return d; };
   Z.smsHref = (phone, text) => 'sms:+' + Z.phone254(phone) + '?body=' + encodeURIComponent(text);
+  // 📵 v2.61 (5 Nov): is this a Kenyan mobile number? Kevin typed letters into the phone box on 30 Oct and Zuri saved
+  // them; Veronicah and Fredrick found the same thing separately, and Emmanuel ruled it real AND serious. Until now
+  // nothing checked. Accepts every shape the squad actually types — 0722 456 789, +254722456789, 254722456789,
+  // 722456789 — and the 01xx range as well as 07xx. An empty box is still fine: a phone number is not required.
+  // An EMPTY box is fine — a phone number is not required. A box with something in it that has no digits at all is
+  // not: that is exactly what Kevin typed, and an early version of this check let it through by treating it as empty.
+  Z.isKePhone = (p) => { const raw = String(p == null ? '' : p).trim(); if (!raw) return true;
+    const d = raw.replace(/\D/g, ''); if (!d) return false;
+    const nine = d.startsWith('254') ? d.slice(3) : d.startsWith('0') ? d.slice(1) : d;
+    return nine.length === 9 && /^[17]/.test(nine); };
   Z.formData = (form) => Object.fromEntries(new FormData(form).entries());
   Z.opts = (arr, sel) => arr.map((o) => { const [v, t] = Array.isArray(o) ? o : [o, o]; return `<option value="${Z.esc(v)}"${String(v) === String(sel ?? '') ? ' selected' : ''}>${Z.esc(t)}</option>`; }).join('');
   let toastT;
