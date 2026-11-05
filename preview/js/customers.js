@@ -3,6 +3,7 @@
   const Z = window.Z;
   const COLS = 'id,full_name,area,landmark,lat,lng,status,account_no,phone,phone2,email,national_id,plan,monthly_rate,billnasi_id,install_date,notes,custom,created_at,updated_at,paid_until';
   const STATUSES = [['active', 'Active'], ['lead', 'Lead (not installed yet)'], ['suspended', 'Suspended'], ['disconnected', 'Disconnected']];
+  const PAUSE_WHY = [['away', 'Away for a while'], ['unpaid', 'Has not paid'], ['other', 'Something else']];
   const statusPill = (s) => `<span class="pill ${s === 'active' ? 'ok' : s === 'suspended' ? 'warn' : s === 'disconnected' ? 'bad' : ''}">${Z.esc((STATUSES.find((x) => x[0] === s) || [s, s])[1].split(' (')[0])}</span>`;
   // Fields an admin can hide per role (the rest are always shown).
   const FIELDS = [
@@ -137,6 +138,14 @@
     const listed = (pkr || []).find((x) => x.name === c.plan);
     const offList = !!listed && c.monthly_rate != null && Number(c.monthly_rate) !== Number(listed.monthly_rate);
     const rateWhy = String((c.custom || {}).rate_why || '').trim();
+    // ⏸ v2.69 (5 Nov, Jerry: "a reason and a return date"). Kevin, 31 Oct, d7-01: "Zuri should be able to freeze
+    // temporarily a user's service for like 3-4 months while they are away without fully cancelling their contract."
+    // Suspended existed and already stopped her owing — what was missing was WHY and WHEN SHE IS BACK. The billing
+    // import also stamps Suspended for "overdue" and "unpaid", so a woman on holiday and a non-payer looked identical.
+    const pauseWhy = String((c.custom || {}).pause_why || '');
+    const pauseUntil = String((c.custom || {}).pause_until || '');
+    const pauseLabel = (PAUSE_WHY.find((x) => x[0] === pauseWhy) || [])[1];
+    const backDays = pauseUntil ? Math.ceil((new Date(pauseUntil + 'T00:00:00').getTime() - Date.now()) / 864e5) : null;
     el.innerHTML = `
       <p style="margin:0 0 6px"><a class="back" href="#customers">← Customers</a></p>
       <div class="row" style="justify-content:space-between"><h2 style="margin-bottom:2px">${Z.esc(c.full_name)}</h2>${statusPill(c.status)}</div>
@@ -163,6 +172,7 @@
       <div class="card"><table class="t">
         <tr><th style="width:52%">Monthly rate</th><td>${c.monthly_rate ? Z.kes(c.monthly_rate) : '<span class="muted">not set</span>'}${offList ? `<div class="m" style="color:var(--warn-ink)">Not the price-list rate — ${Z.esc(listed.name)} is ${Z.kes(listed.monthly_rate)}. ${rateWhy ? Z.esc(rateWhy) : '<b>No reason was given.</b>'}</div>` : ''}</td></tr>
         <tr><th>Paid until</th><td>${c.paid_until ? Z.day(c.paid_until) + (owingDays > 0 ? ` <span class="pill bad">${owingDays} day${owingDays === 1 ? '' : 's'} ago</span>` : ` <span class="pill ok">${-owingDays} day${owingDays === -1 ? '' : 's'} left</span>`) : '<span class="muted">never paid</span>'}</td></tr>
+        ${c.status === 'suspended' ? `<tr><th>Paused</th><td>${pauseLabel ? Z.esc(pauseLabel) : '<span class="muted">no reason was recorded</span>'}${pauseUntil ? ` · back on ${Z.day(pauseUntil)} ${backDays < 0 ? `<span class="pill bad">due back ${-backDays} day${backDays === -1 ? '' : 's'} ago</span>` : backDays === 0 ? '<span class="pill warn">due back today</span>' : `<span class="pill ok">in ${backDays} day${backDays === 1 ? '' : 's'}</span>`}` : ''}</td></tr>` : ''}
         <tr><th>Paid in, all time</th><td class="num">${Z.kes(pays.reduce((t, x) => t + Number(x.amount || 0), 0))}</td></tr>
         <tr><th>Owing now</th><td class="num"><b style="color:var(--${owingNow > 0 ? 'bad' : 'ok'})">${Z.kes(owingNow)}</b>${creditNow > 0 ? ` <span class="pill ok">${Z.kes(creditNow)} in credit</span>` : ''}${
           owingNow > 0 && paidSince > 0 ? `<div class="m">One month is ${Z.kes(monthDue)}, less ${Z.kes(paidSince)} paid since ${Z.day(c.paid_until)}. Home counts the whole month until billing is imported.</div>`
@@ -277,6 +287,16 @@
           ${input(FIELDS[0])}
           <div><label>Area</label><select name="area">${Z.opts(Z.ref.areas.filter((a) => a.active || a.code === c.area).map((a) => [a.code, a.name]), c.area)}</select></div>
           <div><label>Status</label><select name="status">${Z.opts(STATUSES, c.status)}</select></div>
+          <div id="pause-box" style="grid-column:1/-1" hidden>
+            <label>Why is this customer suspended?</label>
+            <select name="pause_why"><option value="">— choose —</option>${Z.opts(PAUSE_WHY, (c.custom || {}).pause_why || '')}</select>
+            <p class="hint">Zuri needs this to tell someone who is away from someone who has not paid. The billing import cannot.</p>
+            <div id="pause-back" hidden style="margin-top:8px">
+              <label>Coming back on</label>
+              <input name="pause_until" type="date" value="${Z.esc((c.custom || {}).pause_until || '')}">
+              <p class="hint">A task goes to the call centre for that day, so nobody forgets to switch them on again.</p>
+            </div>
+          </div>
           ${FIELDS.slice(1).filter(([k, , type]) => visible(k) && type !== 'readonly').map((f) => input(f) + (f[0] === 'monthly_rate' ? whyHtml : '')).join('')}
           ${defs.map(customInput).join('')}
         </div>
@@ -309,6 +329,16 @@
       whyBox.hidden = !off;
       if (off && whyHint) whyHint.textContent = m.name + ' is KES ' + Z.fmt(m.monthly_rate) + ' on the price list. What you write here shows on the customer\u2019s page.';
     }
+    const pauseBox = Z.$('#pause-box', el), pauseBack = Z.$('#pause-back', el);
+    function syncPause() {
+      if (!pauseBox || !cf.status) return;
+      pauseBox.hidden = cf.status.value !== 'suspended';
+      if (pauseBack) pauseBack.hidden = pauseBox.hidden || cf.pause_why.value !== 'away';
+    }
+    if (cf.status) cf.status.addEventListener('change', syncPause);
+    if (cf.pause_why) cf.pause_why.addEventListener('change', syncPause);
+    syncPause();
+
     if (cf.monthly_rate) cf.monthly_rate.addEventListener('input', syncWhy);
     if (pick) pick.addEventListener('change', syncWhy);
     syncWhy();
@@ -319,7 +349,7 @@
       const p = { custom: {} };
       if (id) p.id = id;
       for (const [k, v] of Object.entries(d)) {
-        if (k === 'rate_why') continue;   // it lives in custom, handled below — there is no such column
+        if (k === 'rate_why' || k === 'pause_why' || k === 'pause_until') continue;   // these live in custom, handled below — there are no such columns
         if (k.startsWith('cf__')) {
           const def = defs.find((x) => x.key === k.slice(4));
           p.custom[def.key] = v === '' ? null : def.kind === 'yesno' ? v === 'yes' : def.kind === 'number' ? Z.num(v) : v;
@@ -344,11 +374,31 @@
         p.custom.rate_why = why;
       } else if (listedP) p.custom.rate_why = null;   // back on the list price: there is nothing left to explain
       else p.custom.rate_why = String((c.custom || {}).rate_why || '') || null;   // off-list package: no list rate to differ from
+
+      // ⏸ v2.69: a suspended customer has to say why, and a pause has to say when they are back.
+      if (p.status === 'suspended') {
+        const why = String(d.pause_why || '').trim();
+        if (!why) return Z.toast('Say why this customer is suspended — away, or has not paid.');
+        p.custom.pause_why = why;
+        if (why === 'away') {
+          const until = String(d.pause_until || '').trim();
+          if (!until) return Z.toast('When is this customer coming back? Put the date.');
+          p.custom.pause_until = until;
+        } else p.custom.pause_until = null;
+      } else { p.custom.pause_why = null; p.custom.pause_until = null; }
       const btn = e.submitter; btn.disabled = true;
       const { data, error } = await Z.sb.rpc('save_customer', { p });
       btn.disabled = false;
       if (error) return Z.toast(/unique/i.test(error.message) ? 'That account number or billing ID is already used by another customer.' : Z.errText(error));
-      Z.toast('Customer saved.');
+      // The reminder is made once, when the pause is set or its date moved — not again on every later save.
+      const wasWhy = String((c.custom || {}).pause_why || ''), wasUntil = String((c.custom || {}).pause_until || '');
+      if (p.custom.pause_why === 'away' && p.custom.pause_until && (p.custom.pause_until !== wasUntil || wasWhy !== 'away')) {
+        const who = p.full_name || c.full_name;
+        Z.enqueue('task_insert', { row: { id: Z.uuid(), title: 'Switch ' + who + ' back on — the pause ends today',
+          details: who + ' was paused because they are away. Set Status back to Active and check billing has restarted.',
+          due_date: p.custom.pause_until, priority: 'normal', visibility: 'team', assigned_group: 'callcenter', created_by: Z.me.id } });
+        Z.toast('Customer saved. The call centre has a task for ' + Z.day(p.custom.pause_until) + '.');
+      } else Z.toast('Customer saved.');
       Z.go('customers/' + data);
     };
   }
