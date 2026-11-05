@@ -341,7 +341,7 @@
           "id": "d3-03",
           "link": "#jobs",
           "do": "Open the job and tap 📍 Drop pin here to put the location pin on it.",
-          "see": "The job shows a pin instead of 'No map pin yet'.",
+          "see": "The map opens on the customer's house. Your phone will ASK permission to use your location the first time — say yes, or the pin buttons cannot work. That question comes from the phone, not from Zuri.",
           "look": [
             "📍 Drop pin here"
           ],
@@ -507,7 +507,7 @@
         {
           "id": "d4-02",
           "link": "#money",
-          "do": "Open Money and find today's takings. Look for Grace's 2500.",
+          "do": "Open 💵 Today. Read what came in and what went out today.",
           "see": "Her payment is in today's money. If it is not, say so loudly — that is money that has gone missing between the tech and the books.",
           "look": [
             "Money",
@@ -636,7 +636,7 @@
           "id": "d5-01",
           "link": "#me",
           "do": "On Me, tap 🔄 Try another job and pick ⭐ Partner / manager.",
-          "see": "The top says Partner.",
+          "see": "You are now the partner. The name at the top reads “Jerry (owner)” — that is the pretend partner you are standing in for, and it is correct.",
           "look": [
             "🔄 Try another job",
             "Partner"

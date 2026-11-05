@@ -52,7 +52,7 @@
         {
           "id": "pj-03",
           "link": "#projects",
-          "do": "Read the green box at the top. Then look at the two example projects.",
+          "do": "Read the white card at the top that explains how a project works. Then look at the two example projects below it — each is a white card with a green edge down its left side.",
           "see": "Suswa (example) is under 🚀 Live. Narok (example) is under 📝 Planning. Each card has one line saying how it is doing.",
           "look": [
             "Plan a new area",
@@ -292,7 +292,7 @@
           "id": "pj-10",
           "link": "#projects/compare",
           "do": "Read the table. Which town gives the money back sooner?",
-          "see": "Kijabe test, Suswa (example) and Narok (example) side by side. The quickest Payback has a ⭐ (Kijabe test, month 14).",
+          "see": "Kijabe test, Suswa (example) and Narok (example) side by side, with a ⭐ on the quickest Payback. Kijabe test is the one YOU built, so its payback month depends on the numbers you typed — tell us which town won and which month it says, whatever the number is.",
           "look": [
             "Compare projects",
             "Payback"

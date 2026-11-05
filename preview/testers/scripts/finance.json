@@ -552,7 +552,7 @@
           "id": "m3-04",
           "link": "#money/collections",
           "do": "On 👥 Customers → Who paid, tap Late. On Grace Njeri tap 💬. WhatsApp opens with a message written for her — come back without sending.",
-          "see": "A list of late customers, each with 📞 📩 💬. The WhatsApp message names Grace and says how to pay.",
+          "see": "WhatsApp opens with the message ready. It will say the number is not on WhatsApp — that is right and not a fault: the practice customers carry made-up numbers like 0700100100.",
           "look": [
             "Who paid",
             "Late"
