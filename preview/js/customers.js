@@ -267,6 +267,16 @@
         } else if (k === 'monthly_rate') p[k] = Z.num(v);
         else p[k] = v.trim() === '' ? null : v.trim();
       }
+      // 🛑 v2.61 (5 Nov): Zuri used to save whatever was typed. Kevin put letters in the phone box on 30 Oct and it
+      // saved; Veronicah and Fredrick hit the same thing independently, and Emmanuel ruled it real AND SERIOUS —
+      // the most-confirmed finding of that week. Jerry's call, 5 Nov: Kenyan mobile numbers only.
+      // A negative monthly rate is refused too. Nobody had to rule on that one; a customer cannot be billed -500.
+      for (const [k, label] of [['phone', 'Phone'], ['phone2', 'Second phone']]) {
+        if (p[k] && !Z.isKePhone(p[k])) {
+          return Z.toast(label + ': that does not look like a Kenyan phone number. Try 0722 456 789.');
+        }
+      }
+      if (p.monthly_rate != null && p.monthly_rate < 0) return Z.toast('The monthly rate cannot be less than zero.');
       const btn = e.submitter; btn.disabled = true;
       const { data, error } = await Z.sb.rpc('save_customer', { p });
       btn.disabled = false;
