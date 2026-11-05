@@ -388,8 +388,8 @@
         {
           "id": "f2-02",
           "link": "#jobs",
-          "do": "In job #103: tap 📷 Add photo. Take a photo of anything (or pick one) and use it.",
-          "see": "“Photo saved” flashes and the photo shows under PHOTOS.",
+          "do": "In job #103: tap 📷 Take a photo and use any photo. Then try 🖼️ From my photos and pick one you already have. Both should work.",
+          "see": "“Photo saved” flashes and the photo shows under PHOTOS — for both buttons.",
           "look": [
             "Lucy Atieno #103"
           ],

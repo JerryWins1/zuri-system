@@ -696,7 +696,7 @@
           "id": "c2-11",
           "link": "#me",
           "do": "On Me, under SCREEN, tap ☀️ Light. Then tap 📱 Like my phone.",
-          "see": "The screen turns light, then goes back. Tell us which is easier to read.",
+          "see": "The screen turns light. Then \u201cLike my phone\u201d hands the choice back to your phone's own setting \u2014 so if your phone is already set to light, the screen stays exactly as it is. That is correct, not a fault. It only changes back if your phone is set to dark. Tell us which is easier to read.",
           "look": [
             "☀️ Light"
           ],
