@@ -186,8 +186,8 @@
         {
           "id": "m1-07",
           "link": "#money/expense",
-          "do": "Now try a mistake: type “Test shop” in Paid to, leave Amount empty, and tap Save expense.",
-          "see": "The phone points at Amount and asks you to fill it in. Nothing is saved.",
+          "do": "Now try a mistake. Type “Test shop” in Paid to and pick any Category — Zuri will not let you save without one. Leave Amount empty and tap Save expense.",
+          "see": "The phone points at Amount and asks you to fill it in. Nothing is saved. If it points at a different box instead, tell us WHICH one.",
           "look": [
             "Paid to",
             "Amount (KES)"
