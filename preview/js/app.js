@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.72 · 2026-11-05';
+  Z.version = 'v2.73 · 2026-11-06';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -557,7 +557,28 @@
       <div class="card"><button class="btn sec" id="me-out">Sign out</button> <span class="hint">Zuri System ${Z.version}</span></div>`;
     if (Z.practice) {
       Z.$('#pr-role', el).onclick = () => Z.logout();
-      Z.$('#pr-reset', el).onclick = () => { if (!confirm('Throw away all practice changes and start again with the pretend company?')) return; window.ZP.reset(); window.ZP.fresh('running'); location.reload(); };
+      // 🧹 v2.73 (6 Nov): this warning never said what it was actually throwing away, and six of the six
+      // scripts TELL a tester to tap it. So Fredrick made Grace Mwende on 30 Oct, tapped Start over at step pj-02
+      // on 5 Nov, and from 18:20 that evening failed five day-script steps in a row — "No Grace in the list",
+      // "Couldn't see Grace", "Grace is not appearing on the jobs". Brian lost her the same way on 3 Nov and
+      // worked it out himself; Kevin and Veronicah reported the same thing in October.
+      // The cruelty is that nothing looks wrong afterwards: the pretend company's own 46 customers come back, so
+      // the list is full and the one person missing is the one you spent an hour building.
+      Z.$('#pr-reset', el).onclick = () => {
+        let mine = 0, jobs = 0;
+        try {
+          const d = JSON.parse(localStorage.getItem('zuri_practice_db_v1')) || {};
+          const made = (d.v_customers || []).filter((c) => !/^c\d+$/.test(String(c.id)));   // seeded ones are c1..c46
+          mine = made.length;
+          const ids = new Set(made.map((c) => c.id));
+          jobs = (d.tickets || []).filter((t) => ids.has(t.customer_id)).length;
+        } catch (e) { /* no practice data yet: the plain warning is right */ }
+        const lost = mine ? '\n\nTHIS ALSO REMOVES the ' + mine + ' customer' + (mine === 1 ? '' : 's') + ' you made yourself'
+          + (jobs ? ' and ' + jobs + ' job' + (jobs === 1 ? '' : 's') + ' on them' : '')
+          + ' — Grace Mwende included, if you made her for the business-day script.\n\nThe pretend company\'s own customers come back, so the list will look normal and nothing will tell you she has gone.' : '';
+        if (!confirm('Throw away all practice changes and start again with the pretend company?' + lost)) return;
+        window.ZP.reset(); window.ZP.fresh('running'); location.reload();
+      };
       Z.$('#pr-empty', el).onclick = () => { if (!confirm('Throw away all practice changes and start with an EMPTY company — you enter the areas, staff, customers and bills yourself?')) return; window.ZP.reset(); window.ZP.fresh('empty'); location.reload(); };
     }
     Z.$$('#me-theme [data-theme]', el).forEach((b) => (b.onclick = () => { Z.set('theme', b.dataset.theme); Z.applyTheme(); Z.route(); }));
