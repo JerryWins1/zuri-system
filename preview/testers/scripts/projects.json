@@ -461,8 +461,8 @@
     },
     {
      "id": "pj-16",
-     "do": "On Suswa (example). Tap the orange line “… aren't confirmed yet”. Customers: keep 86 and tap Save. Then Money collected: keep 163800 and tap Save.",
-     "see": "The orange line goes away. In the table, the last month no longer has a “?”.",
+     "do": "On Suswa (example). Tap the orange line “… aren't confirmed yet”. A box opens: “Step 1 of 2 · Customers” with 86 already in it — tap Save. THE SAME BOX THEN BECOMES “Step 2 of 2 · Money collected” with 163800 in it. Tap Save again. Both saves are needed.",
+     "see": "After the SECOND save the box closes, the orange line goes away, and the last month in the table no longer has a “?”. After only the first save the orange line is still right to be there, because the money is not confirmed yet — tell us if it disappears too early.",
      "look": [
       "aren't confirmed yet"
      ],
