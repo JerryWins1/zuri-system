@@ -5,14 +5,14 @@ He does not read diffs. Agreed 30 Oct 2026, after a day in which four
 pull requests each cost several rounds of asking and nothing was caught
 by the asking.
 
-## The four hard rules
+## The five hard rules
 
 **These are rules, not preferences. There is no version of a reply that breaks one
 of them and is still acceptable.** They were written into `daraja-apps/CLAUDE.md` on
 3 and 4 November after Jerry had said them three times. They were never copied here,
 so sessions working on Zuri — which is most of them — never loaded them, and went on
 breaking them. Jerry had to say it a fourth time, on 4 November, to find that out.
-Both repos now carry the same four. Change one, change the other.
+Both repos now carry the same set. Change one, change the other.
 
 Check the reply against them before sending it.
 
@@ -28,6 +28,16 @@ Check the reply against them before sending it.
 4. **Say what was done, not how it was done.** The reasoning belongs in the commit
    message and the pull request, where he can go and read it if he wants it. A reply
    is for what changed and what he has to decide.
+
+5. **Every link, every time.** If a reply names a page, a chat, a pull request or a
+   board, the full link goes in that same reply. Never "open the Test Desk", never "it is
+   in the To send box" — he is on a phone and has to go hunting, which is the one thing
+   these rules exist to prevent. This was written as guidance further down this file on
+   30 October and broken repeatedly on 6 November, which is why it is a hard rule now.
+   The links used most:
+   · Test Desk — https://claude.ai/artifact/Bsjf9a7sqK7YbVAuDAuqpE
+   · The testers' own link — https://jerrywins1.github.io/zuri-system/preview/t/
+   · Zuri itself — https://jerrywins1.github.io/zuri-system/preview/
 
 When a reply has to be long because he asked for something long, it still leads with
 the part he has to act on. Everything else goes below it or into a file.
