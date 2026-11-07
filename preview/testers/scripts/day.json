@@ -1,12 +1,13 @@
 {
  "role": "admin",
  "title": "A whole business day",
- "version": "1.1",
- "date": "2026-10-29",
+ "version": "1.2",
+ "date": "2026-11-07",
  "who": "Everyone does the whole day. You are not stuck in one job: you will be the call centre, then the technician, then finance, then the partner, all on your own phone — switch with 🔄 Try another job on the Me page, and the script tells you when. Emmanuel leads: he says where to start and he decides which problems are real. Between you, you follow ONE customer — Grace Mwende — from her phone call to the books. Everything is pretend and stays on your phone, and you need no account for any of it. IF GRACE MWENDE IS NOT IN CUSTOMERS when a step asks for her, you have tapped 🧹 Start over (pretend company) since you made her — that wipes customers you made yourself, and nothing says so. Go back to session 1 and make her again. That is our fault, not yours, and the step you were on still counts.",
  "sessions": [
   {
    "id": "d1",
+   "role": "callcenter",
    "title": "A new customer buys",
    "mins": 25,
    "intro": "▶ Start here if you are on the call centre. Everyone should do this part — it makes the customer the rest of the day follows. Someone rings wanting internet. Everything that happens from that call until a tech has a job to go to. Use the SAME customer all the way through today — write their name down.",
@@ -214,6 +215,7 @@
   },
   {
    "id": "d2",
+   "role": "callcenter",
    "title": "Stock, and getting a tech there",
    "mins": 15,
    "intro": "▶ Follows straight on from the sale. Before you send anyone you want to know there is a router on the shelf. Then you book the tech.",
@@ -237,11 +239,11 @@
     {
      "id": "d2-02",
      "link": "#jobs",
-     "do": "Open Grace's install job. Find WHO'S GOING, AND WHEN. Pick Tech: Brian Otieno. Pick a Visit day of tomorrow. Leave Priority on Normal. Tap Save.",
-     "see": "The job now shows Brian and the day instead of 'Waiting for a tech'.",
+     "do": "Open Grace's install job. Find WHO'S GOING, AND WHEN. Pick Tech: Peter Kamau. Pick a Visit day of tomorrow. Leave Priority on Normal. Tap Save.",
+     "see": "The job now shows Peter and the day instead of 'Waiting for a tech'.",
      "look": [
       "WHO'S GOING, AND WHEN",
-      "Brian Otieno",
+      "Peter Kamau",
       "Save"
      ],
      "auto": [
@@ -298,6 +300,7 @@
   },
   {
    "id": "d3",
+   "role": "field",
    "title": "The install",
    "mins": 30,
    "intro": "▶ Start here if you are the field tech. Now be the technician. On Me tap 🔄 Try another job and pick 🛠️ Field tech. Same pretend company, different pair of eyes.",
@@ -481,6 +484,7 @@
   },
   {
    "id": "d4",
+   "role": "finance",
    "title": "The money",
    "mins": 30,
    "intro": "▶ Start here if you are on finance. Be finance now. On Me tap 🔄 Try another job and pick 💰 Finance.",
@@ -634,6 +638,7 @@
   },
   {
    "id": "d5",
+   "role": "admin",
    "title": "Watching the whole business",
    "mins": 20,
    "intro": "▶ The owner’s view — worth everyone seeing once. What would Jerry look at on a Monday morning?",
@@ -732,6 +737,7 @@
   },
   {
    "id": "d6",
+   "role": "callcenter",
    "title": "When it breaks",
    "mins": 20,
    "intro": "▶ Needs the call centre and the field tech — do both yourself, they are two taps apart. Two weeks later Grace rings: her internet is down. Back to the call center — Me, 🔄 Try another job, 📞 Call center.",

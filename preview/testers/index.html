@@ -486,9 +486,19 @@
     // to the testers' BOARD instead, which is a different page altogether — so a link starting http is
     // taken as it stands. Without this, d8 pointed at the practice home and nobody could find the board;
     // Veronicah and Emmanuel each lost time to it on 30 Oct.
+    // 🔄 v2.74 (7 Nov): a session may be meant for a DIFFERENT job from the tester's own, and then
+    // its practice link has to open in THAT job. The business day walks one customer through four
+    // pairs of eyes — call centre, tech, finance, partner — and says so at the top of each session.
+    // But 🔄 Try another job only logs you out inside the practice app; it never reaches this page.
+    // So every step's button kept rebuilding the link with the tester's pinned role and dropped them
+    // straight back where they started. Emmanuel was told at d3-01 to become the field tech, did it,
+    // tapped Open practice on d3-02 and was Mary Wanjiku on the call centre again — where #jobs lists
+    // all 14 of today's jobs and nothing is "assigned to you", so Grace's install job was not findable.
+    // Five of his eight failures on 7 Nov hang off that one step, and he hit the same wall on 30 Oct.
+    const role = sess.role || me.role;
     const link = /^https?:/.test(cur.link || '') ? cur.link
-      : cur.link ? APP + withCode('?practice&role=' + me.role) + cur.link
-      : APP + withCode('?practice&role=' + me.role);
+      : cur.link ? APP + withCode('?practice&role=' + role) + cur.link
+      : APP + withCode('?practice&role=' + role);
     const idx = all.findIndex((s) => s.id === cur.id);
     $('#main').innerHTML = `
       <div class="chips"><span class="chip timer" id="sx-timer">⏱</span><span class="chip coin" id="sx-coins">🪙 ${c.coins} ≈ KES ${c.kes.toLocaleString('en-GB')}</span>${fb ? `<span class="chip ${late ? 'late' : ''}">${late ? '⏰ Overdue' : '📅 by ' + fmtDay(fb)}</span>` : ''}</div>
