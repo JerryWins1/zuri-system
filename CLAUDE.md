@@ -51,9 +51,12 @@ Check the reply against them before sending it.
    either "**Your next step:** <the one thing>" or "**Nothing on you.**" Never leave him
    working out whether a reply was a handover or just information — if a reply ends
    without one of those two lines, the rule is broken. When several things are waiting
-   on him, the last line still names only the ONE to do next; the rest go in a list
-   above it. He asked for this on 7 November: "when you stop tell me what my next step
-   is, if nothing say it."
+   on him, he still gets ONE — not the one plus a list of the others. A list is a wall
+   of steps wearing a different hat, and rule 6 already forbids it. The others are held
+   and offered one at a time as each is finished. He asked for this on 7 November:
+   "when you stop tell me what my next step is, if nothing say it" — and had to say it
+   again the same day, because the reply that announced this rule ended with a list of
+   four things and two open decisions. Give him a list only if he asks for one.
 
 When a reply has to be long because he asked for something long, it still leads with
 the part he has to act on. Everything else goes below it or into a file.
