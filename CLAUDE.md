@@ -5,7 +5,7 @@ He does not read diffs. Agreed 30 Oct 2026, after a day in which four
 pull requests each cost several rounds of asking and nothing was caught
 by the asking.
 
-## The six hard rules
+## The seven hard rules
 
 **These are rules, not preferences. There is no version of a reply that breaks one
 of them and is still acceptable.** They were written into `daraja-apps/CLAUDE.md` on
@@ -46,6 +46,14 @@ Check the reply against them before sending it.
    "Step 2 of 4" so the end is in sight. Then stop and wait for his reply. He asked for
    this as standard procedure on 6 November, after a deploy was handed to him three
    actions at a time.
+
+7. **End every reply with his next step, or say there is none.** The last line is
+   either "**Your next step:** <the one thing>" or "**Nothing on you.**" Never leave him
+   working out whether a reply was a handover or just information — if a reply ends
+   without one of those two lines, the rule is broken. When several things are waiting
+   on him, the last line still names only the ONE to do next; the rest go in a list
+   above it. He asked for this on 7 November: "when you stop tell me what my next step
+   is, if nothing say it."
 
 When a reply has to be long because he asked for something long, it still leads with
 the part he has to act on. Everything else goes below it or into a file.
