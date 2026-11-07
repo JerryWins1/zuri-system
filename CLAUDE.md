@@ -5,7 +5,7 @@ He does not read diffs. Agreed 30 Oct 2026, after a day in which four
 pull requests each cost several rounds of asking and nothing was caught
 by the asking.
 
-## The five hard rules
+## The six hard rules
 
 **These are rules, not preferences. There is no version of a reply that breaks one
 of them and is still acceptable.** They were written into `daraja-apps/CLAUDE.md` on
@@ -38,6 +38,14 @@ Check the reply against them before sending it.
    · Test Desk — https://claude.ai/artifact/Bsjf9a7sqK7YbVAuDAuqpE
    · The testers' own link — https://jerrywins1.github.io/zuri-system/preview/t/
    · Zuri itself — https://jerrywins1.github.io/zuri-system/preview/
+
+6. **One screen at a time, and the step says which screen.** A step is ONE action in
+   ONE place. "Open this page", "paste this in", and "save it" are three steps, not one,
+   and they do not get bundled because they feel small. Every step opens with where he
+   is — the page, the tab, the app — then the single thing to do there, headed
+   "Step 2 of 4" so the end is in sight. Then stop and wait for his reply. He asked for
+   this as standard procedure on 6 November, after a deploy was handed to him three
+   actions at a time.
 
 When a reply has to be long because he asked for something long, it still leads with
 the part he has to act on. Everything else goes below it or into a file.
