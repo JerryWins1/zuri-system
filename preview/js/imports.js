@@ -31,13 +31,21 @@
   };
   const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
+  /* Every exact heading match is claimed first, across ALL columns, and only then the
+     loose "contains" matches. Doing both passes per column let an earlier column take a
+     heading that a later one matched exactly: with a file whose headings are USERNAME and
+     FULLNAME, Customer name grabbed USERNAME on "contains name", and Customer ID — which
+     matches USERNAME exactly — was left unmapped, so a default import rejected every row.
+     A file with a plain NAME column never showed it. Found 8 Nov 2026. */
   function guess(targets, headers) {
     const used = new Set(), out = {};
+    const claim = (key, idx) => { out[key] = idx; used.add(idx); };
     for (const [key, , , syn] of targets) {
-      let idx = -1;
-      for (const s of syn) { idx = headers.findIndex((h, i) => !used.has(i) && norm(h) === s); if (idx >= 0) break; }
-      if (idx < 0) for (const s of syn) { idx = headers.findIndex((h, i) => !used.has(i) && norm(h).includes(s)); if (idx >= 0) break; }
-      if (idx >= 0) { out[key] = idx; used.add(idx); }
+      for (const s of syn) { const i = headers.findIndex((h, j) => !used.has(j) && norm(h) === s); if (i >= 0) { claim(key, i); break; } }
+    }
+    for (const [key, , , syn] of targets) {
+      if (out[key] != null) continue;
+      for (const s of syn) { const i = headers.findIndex((h, j) => !used.has(j) && norm(h).includes(s)); if (i >= 0) { claim(key, i); break; } }
     }
     return out;
   }
