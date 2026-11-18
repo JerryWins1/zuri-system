@@ -45,29 +45,32 @@
 
 ## 2. The monthly export for QuickBooks
 
-**Assumption: QuickBooks Online.** QuickBooks Desktop uses a different file type (IIF). **JERRY** to confirm which one Zuri uses.
+**Settled 18 Nov by Jerry: QuickBooks Desktop** (not Online). That changes the file type. The earlier version of this plan assumed Online and CSV files; Desktop does not work that way.
 
-**What QuickBooks Online accepts (Intuit pages below):**
-- **Bank transactions:** a CSV with Date, Description and Amount (payments negative), or Date, Description, Credit and Debit. A header row, blank cells instead of zeros, and one file per account.
-- **Other imports:** customers, vendors, chart of accounts, products and services, invoices, bills, expenses and sales receipts, from CSV or Excel. Intuit advises about 100 transactions per import, and imports cannot be undone in bulk.
+**What QuickBooks Desktop accepts (Intuit pages below):**
+- **IIF files:** tab-separated text, with header rows that start with `!`. A transaction is a `TRNS` row for the main amount, one `SPL` row for each split, and an `ENDTRNS` row. Intuit publishes an IIF import kit with sample files, and the exact columns differ a little between Desktop versions, so the file must be matched to the version Zuri uses.
+- **Bank transactions:** sources conflict on CSV. Intuit's own answers say Desktop cannot import a bank CSV directly. Bank lines come in as a QBO (Web Connect) file or as IIF.
+- **Lists:** customers, vendors and the chart of accounts can be imported as IIF as well.
+- **Back up the company file before every import.** An IIF import cannot be undone in bulk, and an account name that does not exist yet is created as a new bank account.
 
-**What I would build:** an **Export for QuickBooks** button beside the existing CSV, making a small set of files for the month:
-1. **One bank-format file per money account** (M-Pesa Paybill, bank, cash). Columns: Date, Description, Amount. The description carries the M-Pesa code, then the payer name and the account reference. Customer payments are the money-in lines, expenses the money-out lines.
-2. **An expenses file** for the accountant to import or keyboard from: Date, Payee, Category (mapped, see below), Amount, VAT, Supplier PIN, Reference, Paid from, Area.
-3. **A sales summary file** with one line per day per area: Date, Area, Total received, VAT portion. A month of customer payments is likely to be hundreds of lines, which is over the size Intuit recommends per import. **Customer-level detail stays in Zuri and Billnasi.**
+**What I would build:** an **Export for QuickBooks** button beside the existing CSV, making one **IIF file for the month**, plus a plain CSV copy of the same lines for checking:
+1. **Money in:** one transaction per day per area, from customer payments (M-Pesa, bank, cash). The memo carries the M-Pesa codes and the number of payments. Customer-level detail stays in Zuri and BillNasi.
+2. **Money out:** one transaction per expense: date, payee, the QuickBooks account for its category, amount, the VAT part, and the receipt or M-Pesa reference in the memo.
+3. **M-Pesa and bank fees:** their own expense lines, in the "M-Pesa and bank charges" category.
 
-**How M-Pesa receipts map in:** `mpesa_ref` goes into the description (and the Ref column of the expenses file), so QuickBooks can match a bank-feed line to a payment. `payer_name` and `account_ref` go next to it. Paybill and Till fees are a separate expense line with category "M-Pesa and bank charges".
+**How M-Pesa receipts map in:** `mpesa_ref` goes in the memo and the document-number column, so a line can be found again from the M-Pesa statement. `payer_name` and `account_ref` stay in Zuri.
 
 **What needs doing first (ACCOUNTANT):**
-- The chart of accounts in QuickBooks, and a mapping from Zuri's expense categories to it (Zuri has a category list; the mapping is one table).
-- The QuickBooks tax codes for 16% VAT, zero-rated, exempt and out of scope.
-- Whether areas become QuickBooks classes or locations.
+- The QuickBooks chart of accounts, and a mapping from Zuri's expense categories to it (one table).
+- The QuickBooks Desktop year/version, so the IIF headers match, and one test import on a **copy** of the company file.
+- The VAT / sales tax items for 16%, zero-rated and exempt.
+- Whether areas become QuickBooks classes.
 
-**Size:** the three files and the mapping screen are **medium** (about a week). A direct link to QuickBooks, with no files, would be **large** and I would not start there.
+**Size:** the IIF export and the mapping screen are **medium** (about a week), plus the accountant's test import. Nothing here touches the QuickBooks file until a person imports it.
 
 ## Suggested order
 
-1. Answer decisions A and B and confirm QuickBooks Online (Jerry, accountant, Billnasi). No code needed.
+1. Answer decisions A and B (Jerry, accountant, Billnasi). No code needed.
 2. Receipt form changes, so purchases are captured properly from now on. This is the part that loses money if it waits, because VAT can only be claimed on invoices with the right details.
 3. The VAT worksheet.
 4. The QuickBooks export.
@@ -82,5 +85,5 @@ I did not log in to iTax, to Billnasi or to QuickBooks. KRA and Intuit pages wer
 - KRA, [FAQs for the VAT autopopulated return](https://www.kra.go.ke/images/publications/FAQS-FOR-THE-VAT-AUTOPOPULATED-RETURN-090724.pdf)
 - VAT Update, [KRA moves VAT filing to the direct iTax web system](https://www.vatupdate.com/2026/08/20/kra-moves-vat-filing-to-direct-itax-web-system/)
 - Commenda, [Kenya VAT returns](https://www.commenda.io/kenya/vat-returns/)
-- Intuit, [Format CSV files in Excel to get bank transactions into QuickBooks](https://quickbooks.intuit.com/learn-support/en-za/help-article/import-transactions/manually-upload-transactions-quickbooks-online/L4BjLWckq_ZA_en_ZA)
-- Intuit, [Common questions about importing data to QuickBooks Online](https://quickbooks.intuit.com/learn-support/global/importing-and-exporting-data/common-questions-about-importing-data-to-quickbooks-online/00/385658)
+- Intuit, [IIF overview: import kit, sample files, and headers](https://quickbooks.intuit.com/learn-support/en-us/help-articles/iif-overview-import-kit-sample-files-and-headers/00/262115)
+- Intuit community, [Importing transactions via IIF file](https://quickbooks.intuit.com/learn-support/en-us/banking/importing-transactions-via-iif-file-for-past-years/00/193809)
