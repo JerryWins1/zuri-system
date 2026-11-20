@@ -39,9 +39,16 @@
 - The worksheet page and its CSV, replacing the estimate card. (Size: **medium**.)
 - A customer KRA PIN field. (Size: **small**.)
 
-**Decisions (JERRY):**
-- **A. How do customer invoices reach eTIMS?** Zuri's billing runs through Billnasi. If Billnasi can issue eTIMS invoices, Zuri reads them and the sales work is small. If not, Zuri either has to issue them through a KRA-approved eTIMS integration, which is a large job, or Jerry uses a separate invoicing tool. **I do not know what Billnasi can do. Someone needs to ask them.**
-- **B. Is Zuri VAT-registered, and are all packages standard-rated at 16%?** The existing card assumes yes to both. **ACCOUNTANT** to confirm, including whether any item is exempt or zero-rated.
+**Answers so far (Jerry, 20 Nov):**
+- **A. Can BillNasi issue eTIMS invoices to customers? No.** So the sales side cannot just read invoices from BillNasi. Someone has to produce the eTIMS invoices, and that is now the biggest decision in this plan (see below).
+- **B. Is Zuri VAT-registered? Yes.** So VAT returns and eTIMS invoices are required. **ACCOUNTANT** still to confirm that every package is standard-rated at 16%, and whether any item is exempt or zero-rated.
+
+**New decision (JERRY, with ACCOUNTANT): how do customer eTIMS invoices get made?** KRA describes these options (sources below):
+1. **Zuri connects straight to KRA (VSCU or OSCU).** KRA's system-to-system route for businesses with many invoices. A system that does this must be certified: built, tested in KRA's sandbox, and given an interim approval certificate. **Size: large**, weeks to months, and every customer's monthly invoice would then be issued from Zuri.
+2. **A KRA-approved third-party eTIMS provider issues the invoices.** Zuri (or the billing data) feeds sales to the provider, which sends them to KRA and gives back the invoice numbers. **Size: medium**, plus the provider's fee. The accountant or KRA can name approved providers. **I do not know which providers can take about a thousand small monthly invoices, or what they charge.**
+3. **eTIMS Lite (KRA's web tool).** Meant for minimal volumes. One third-party source puts the limit for the non-VAT version at 10 invoices a month, which I could not confirm with KRA. **Not workable for about a thousand customers.**
+
+**I recommend option 2**, because option 1 means Zuri carries KRA certification and upkeep. **Still not confirmed:** whether KRA lets a consumer subscription be covered by a daily or monthly summary invoice instead of one invoice per customer. **ACCOUNTANT** or KRA to confirm. If a summary is allowed, the work is much smaller.
 
 ## 2. The monthly export for QuickBooks
 
@@ -70,7 +77,7 @@
 
 ## Suggested order
 
-1. Answer decisions A and B (Jerry, accountant, Billnasi). No code needed.
+1. Decide how the eTIMS invoices are made (above), with the accountant. Ask whether a summary invoice is allowed (Jerry, accountant, Billnasi). No code needed.
 2. Receipt form changes, so purchases are captured properly from now on. This is the part that loses money if it waits, because VAT can only be claimed on invoices with the right details.
 3. The VAT worksheet.
 4. The QuickBooks export.
@@ -84,6 +91,9 @@ I did not log in to iTax, to Billnasi or to QuickBooks. KRA and Intuit pages wer
 - KRA, [What is the auto populated VAT return?](https://www.kra.go.ke/helping-tax-payers/faqs/the-vat-auto-populated-return)
 - KRA, [FAQs for the VAT autopopulated return](https://www.kra.go.ke/images/publications/FAQS-FOR-THE-VAT-AUTOPOPULATED-RETURN-090724.pdf)
 - VAT Update, [KRA moves VAT filing to the direct iTax web system](https://www.vatupdate.com/2026/08/20/kra-moves-vat-filing-to-direct-itax-web-system/)
+- KRA, [Types of eTIMS solutions](https://www.kra.go.ke/business/etims-electronic-tax-invoice-management-system/learn-about-etims/types-of-etims-solutions)
+- KRA, [eTIMS system-to-system integration](https://www.kra.go.ke/business/etims-electronic-tax-invoice-management-system/learn-about-etims/etims-system-to-system-integration)
+- KRA, [OSCU and VSCU step-by-step sign-up guide](https://www.kra.go.ke/images/publications/OSCU_VSCU_Step-by-Step_Guide-on-how-to-sign-up.pdf)
 - Commenda, [Kenya VAT returns](https://www.commenda.io/kenya/vat-returns/)
 - Intuit, [IIF overview: import kit, sample files, and headers](https://quickbooks.intuit.com/learn-support/en-us/help-articles/iif-overview-import-kit-sample-files-and-headers/00/262115)
 - Intuit community, [Importing transactions via IIF file](https://quickbooks.intuit.com/learn-support/en-us/banking/importing-transactions-via-iif-file-for-past-years/00/193809)
