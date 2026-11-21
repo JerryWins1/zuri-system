@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.74 · 2026-11-21';
+  Z.version = 'v2.75 · 2026-11-21';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -135,7 +135,8 @@
     ]);
     const err = a.error || p.error || v.error || c.error;
     if (err) { if (Z.isNet(err)) return; throw err; }
-    Z.ref = { areas: a.data, people: p.data, vis: v.data, cfd: c.data };
+    // tied to one area (not admin): every area list in the app holds just that one, so no form can save into another area
+    Z.ref = { areas: (Z.me && Z.me.area && Z.me.role !== 'admin') ? a.data.filter((x) => x.code === Z.me.area) : a.data, people: p.data, vis: v.data, cfd: c.data };
     Z.set('ref', Z.ref);
   };
   Z.areaName = (code) => (Z.ref.areas.find((a) => a.code === code) || {}).name || (code ? 'Zuri ' + code : '');

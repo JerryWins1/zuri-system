@@ -24,6 +24,8 @@
     { id: 'p-peter', full_name: 'Peter Kamau', role: 'field', dept: null, area: 'A', phone: '0722500500' },
     { id: 'p-brian', full_name: 'Brian Otieno', role: 'field', dept: null, area: 'A', phone: '0733600600' },
     { id: 'p-faith', full_name: 'Faith Achieng', role: 'field', dept: null, area: 'B', phone: '0744700700' },
+    { id: 'p-anne', full_name: 'Anne Wairimu (Zuri A office)', role: 'internal', dept: 'finance', area: 'A', phone: '0755800800' },
+    { id: 'p-baraka', full_name: 'Baraka Mutua (Zuri B office)', role: 'internal', dept: 'finance', area: 'B', phone: '0766900900' },
   ];
   const ROLES = {
     admin: { id: 'p-jerry', label: '⭐ Partner / admin', who: 'Jerry', does: 'Set up staff and areas · sees everything' },
@@ -31,6 +33,8 @@
     technical: { id: 'p-dickson', label: '🔧 Technical office', who: 'Dickson', does: 'Jobs, customers, sending techs out' },
     callcenter: { id: 'p-mary', label: '📞 Call center', who: 'Mary', does: 'Customer calls, new jobs, payment calls' },
     field: { id: 'p-peter', label: '🛠️ Field tech', who: 'Peter', does: 'Jobs at customers\' houses' },
+    officeA: { id: 'p-anne', label: '🅰️ Zuri A office', who: 'Anne', does: 'Runs the money for Zuri A only · cannot see Zuri B' },
+    officeB: { id: 'p-baraka', label: '🅱️ Zuri B office', who: 'Baraka', does: 'Runs the money for Zuri B only · cannot see Zuri A' },
   };
   // Every fresh open starts at "who are you today?" — practice is for trying different jobs.
   // (A training video switching person keeps its choice, so it can carry on playing.)

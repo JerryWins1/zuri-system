@@ -1,0 +1,379 @@
+{
+ "role": "admin",
+ "title": "Zuri A, Zuri B and Corporate",
+ "version": "1.0",
+ "date": "2026-11-21",
+ "who": "You will be three people in turn, all on your own phone: the Zuri A office, the Zuri B office, and Corporate (the head office). Switch with 🔄 Try another job on the Me page; the script tells you when. Everything is pretend and stays on your phone. The big question: can Zuri A see Zuri B's numbers? It should not. If you tap 🧹 Start over (pretend company) in the middle, the bill and cash you made are wiped — go back to session 1. That is our fault, not yours.",
+ "sessions": [
+  {
+   "id": "r1",
+   "title": "You are Zuri A",
+   "mins": 10,
+   "intro": "Zuri A's office. Enter some money and check you only ever see A.",
+   "steps": [
+    {
+     "id": "r1-01",
+     "link": "#me",
+     "do": "Open the Me page. Tap 🧹 Start over (pretend company), then OK. Then tap 🔄 Try another job and pick 🅰️ Zuri A office.",
+     "see": "The top of the page says Anne Wairimu (Zuri A office). A small badge says Zuri A.",
+     "look": [
+      "Anne Wairimu",
+      "Zuri A"
+     ],
+     "auto": [
+      [
+       "go",
+       "#me"
+      ],
+      [
+       "tap",
+       "button:has-text('Start over (pretend company)')"
+      ],
+      [
+       "waitme"
+      ],
+      [
+       "see",
+       "Start over"
+      ]
+     ]
+    },
+    {
+     "id": "r1-02",
+     "link": "#home",
+     "do": "Look at the area box at the top, next to the name. Tap it.",
+     "see": "It shows ONLY Zuri A and it is locked. There is no 'All areas' and no Zuri B. If you can pick Zuri B or All areas, that is a real fault — tell us.",
+     "look": [
+      "Zuri A",
+      "All areas"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ],
+      [
+       "js",
+       "document.querySelectorAll('#h-area option').length===1"
+      ]
+     ],
+     "tip": "This is the main promise of the three positions."
+    },
+    {
+     "id": "r1-03",
+     "link": "#money/in",
+     "do": "Tap 💰 Money, then ✍️ Record, then record cash coming in. Area is Zuri A. Amount 12000. From: Test cash A. Tap Save cash in.",
+     "see": "It saves. The Area box offered only Zuri A.",
+     "look": [
+      "Save cash in",
+      "Zuri A"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money/in"
+      ],
+      [
+       "js",
+       "document.querySelectorAll('#mi [name=area] option').length===1"
+      ]
+     ]
+    },
+    {
+     "id": "r1-04",
+     "link": "#money/expense",
+     "do": "Record an expense. Payee: ZZ Test Hardware A. Amount 3500. Tap Save expense.",
+     "see": "It saves under Zuri A. Again the Area box offered only Zuri A.",
+     "look": [
+      "Save expense",
+      "Zuri A"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money/expense"
+      ],
+      [
+       "js",
+       "document.querySelectorAll('#me [name=area] option').length===1"
+      ]
+     ]
+    },
+    {
+     "id": "r1-05",
+     "link": "#money/bills",
+     "do": "Open Bills. Add a bill: name ZZ Test Bill A, amount 5000, due day 28. Tap Add bill.",
+     "see": "The bill appears in the list. Look at the other bills: every one is a Zuri A bill. You should see no Zuri B bills such as Pole rent or Bayobab backhaul. If you do, tell us — that is a real fault.",
+     "look": [
+      "ZZ Test Bill A",
+      "Add bill"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money/bills"
+      ],
+      [
+       "tap",
+       "button:has-text('Add bill')"
+      ],
+      [
+       "see",
+       "ZZ Test Bill A"
+      ]
+     ]
+    },
+    {
+     "id": "r1-06",
+     "link": "#money",
+     "do": "Go to the Money page and read the figures at the top. Write down the cash-in total.",
+     "see": "The heading says Money · Zuri A. The numbers are Zuri A's alone.",
+     "look": [
+      "Money · Zuri A"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ],
+      [
+       "see",
+       "Money · Zuri A"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "r2",
+   "title": "You are Zuri B",
+   "mins": 8,
+   "intro": "Zuri B's office. Check A's things are hidden from you.",
+   "steps": [
+    {
+     "id": "r2-01",
+     "link": "#me",
+     "do": "Tap 🔄 Try another job and pick 🅱️ Zuri B office.",
+     "see": "The top of the page says Baraka Mutua (Zuri B office), and Zuri B. It is a different company view from A.",
+     "look": [
+      "Baraka Mutua",
+      "Zuri B"
+     ],
+     "auto": [
+      [
+       "go",
+       "#me"
+      ]
+     ]
+    },
+    {
+     "id": "r2-02",
+     "link": "#money/bills",
+     "do": "Open Money, then Bills.",
+     "see": "You see only Zuri B bills. ZZ Test Bill A is NOT there. If Zuri A's bill shows here, that is a real fault — tell us.",
+     "look": [
+      "Bills",
+      "ZZ Test Bill A"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money/bills"
+      ],
+      [
+       "js",
+       "!document.body.innerText.includes('ZZ Test Bill A')"
+      ]
+     ],
+     "tip": "Check the bill you made as A is hidden."
+    },
+    {
+     "id": "r2-03",
+     "link": "#money/in",
+     "do": "Record cash in. Amount 9000. From: Test cash B. Tap Save cash in. The Area box should offer only Zuri B.",
+     "see": "It saves under Zuri B.",
+     "look": [
+      "Save cash in",
+      "Zuri B"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money/in"
+      ],
+      [
+       "js",
+       "document.querySelectorAll('#mi [name=area] option').length===1"
+      ]
+     ]
+    },
+    {
+     "id": "r2-04",
+     "link": "#money",
+     "do": "Read the figures at the top of Money.",
+     "see": "The heading says Money · Zuri B. The cash-in total does NOT include Zuri A's 12000.",
+     "look": [
+      "Money · Zuri B"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ],
+      [
+       "see",
+       "Money · Zuri B"
+      ]
+     ]
+    },
+    {
+     "id": "r2-05",
+     "link": "#customers",
+     "do": "Tap 👥 Customers.",
+     "see": "You see Zuri B customers only. If you can find a Zuri A customer, tell us.",
+     "look": [
+      "Customers"
+     ],
+     "auto": [
+      [
+       "go",
+       "#customers"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "r3",
+   "title": "You are Corporate",
+   "mins": 12,
+   "intro": "The head office. See both areas added together, and pay a bill.",
+   "steps": [
+    {
+     "id": "r3-01",
+     "link": "#me",
+     "do": "Tap 🔄 Try another job and pick ⭐ Partner / admin. This is Corporate, the head office.",
+     "see": "The top of the page says Jerry (owner) · Admin.",
+     "look": [
+      "Jerry (owner)",
+      "Admin"
+     ],
+     "auto": [
+      [
+       "go",
+       "#me"
+      ]
+     ]
+    },
+    {
+     "id": "r3-02",
+     "link": "#home",
+     "do": "Look at the area box at the top. Tap it.",
+     "see": "It offers All areas, Zuri A and Zuri B. Choose All areas.",
+     "look": [
+      "All areas"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ],
+      [
+       "js",
+       "document.querySelectorAll('#h-area option').length>=3"
+      ]
+     ]
+    },
+    {
+     "id": "r3-03",
+     "link": "#money",
+     "do": "Open Money with All areas chosen.",
+     "see": "The heading says Money · all areas. The page shows a section for Zuri A and one for Zuri B, side by side.",
+     "look": [
+      "Money · all areas",
+      "ZURI A"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ],
+      [
+       "see",
+       "Money · all areas"
+      ]
+     ]
+    },
+    {
+     "id": "r3-04",
+     "link": "#money/bills",
+     "do": "Open Bills.",
+     "see": "You see ZZ Test Bill A (from Zuri A) AND the Zuri B bills, all in one list.",
+     "look": [
+      "ZZ Test Bill A"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money/bills"
+      ],
+      [
+       "see",
+       "ZZ Test Bill A"
+      ]
+     ]
+    },
+    {
+     "id": "r3-05",
+     "link": "#money/bills",
+     "do": "Pay a bill from here. Tap 💸 Pay on ZZ Test Bill A and pay the whole 5000. Choose how it was paid and save.",
+     "see": "The bill shows paid 5,000 and owing 0. Corporate paid it for Zuri A.",
+     "look": [
+      "💸 Pay",
+      "owing"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money/bills"
+      ]
+     ],
+     "tip": "Corporate pays the bills, so this must work for an area that is not 'yours'."
+    },
+    {
+     "id": "r3-06",
+     "link": "#money",
+     "do": "Now choose Zuri A only in the area box, then Zuri B only, then All areas again.",
+     "see": "Zuri A shows A's figures, Zuri B shows B's, and All areas is the two together. Add A and B by hand — does it match All areas?",
+     "look": [
+      "Zuri A",
+      "Zuri B",
+      "all areas"
+     ],
+     "auto": [
+      [
+       "go",
+       "#money"
+      ]
+     ],
+     "tip": "Tell us the three cash-in numbers you saw."
+    },
+    {
+     "id": "r3-07",
+     "link": "#home",
+     "do": "Look at Home with All areas chosen. Is there a plain picture of how the company is doing?",
+     "see": "You can see what matters across both areas without opening each one. Tell us what you wish it showed that it does not.",
+     "look": [
+      "Home"
+     ],
+     "auto": [
+      [
+       "go",
+       "#home"
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}
