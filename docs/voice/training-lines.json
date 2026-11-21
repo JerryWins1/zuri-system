@@ -1315,5 +1315,60 @@
    "And the whole list prints on paper, with tick boxes, for the office wall.",
    "One step at a time, a little each week, and Zuri starts on a true foundation. Be patient with each other. You will get there."
   ]
+ },
+ {
+  "video": "ar-who",
+  "group": "🅰️🅱️ Three areas",
+  "title": "1 · Three positions: A, B and Corporate",
+  "lines": [
+   "Zuri now runs as three positions. Zuri A and Zuri B are the two working areas. Corporate is the head office.",
+   "This is Jerry, a partner, at the head office. Under Admin, People, every person has an area box.",
+   "Anne works for Zuri A. So her area is Zuri A. Baraka works for Zuri B, so his is Zuri B.",
+   "A person with an area stays in that area. They cannot switch to the other one. Corporate is the partner with no area. Only Corporate sees all areas together."
+  ]
+ },
+ {
+  "video": "ar-a",
+  "group": "🅰️🅱️ Three areas",
+  "title": "2 · Zuri A: Anne enters the money",
+  "lines": [
+   "This is Anne, in the Zuri A office. Look at the area box at the top. It says Zuri A, and it is locked. She cannot switch to Zuri B.",
+   "She records money that came in today. The Area box offers only Zuri A.",
+   "Twelve thousand shillings, from hotspot takings.",
+   "She says who it came from.",
+   "Save.",
+   "Now an expense. Again only Zuri A is offered.",
+   "She picks what it was for.",
+   "Three thousand five hundred shillings.",
+   "Save.",
+   "The Money page says Zuri A. These numbers are Zuri A's alone. Anne never sees Zuri B's."
+  ]
+ },
+ {
+  "video": "ar-b",
+  "group": "🅰️🅱️ Three areas",
+  "title": "3 · Zuri B: Baraka sees only his own",
+  "lines": [
+   "This is Baraka, in the Zuri B office. His area box says Zuri B, and it is locked too.",
+   "Zuri A has a bill: hardware shop. Baraka cannot see it. His list has only Zuri B's bills.",
+   "He records his own money. Only Zuri B is offered.",
+   "Nine thousand shillings from installation fees.",
+   "And who it came from.",
+   "Save.",
+   "His Money page says Zuri B. It does not include the twelve thousand that Zuri A took in."
+  ]
+ },
+ {
+  "video": "ar-corp",
+  "group": "🅰️🅱️ Three areas",
+  "title": "4 · Corporate: both areas, and pay a bill",
+  "lines": [
+   "Now Corporate. This is Jerry, the head office. His area box offers All areas, Zuri A and Zuri B.",
+   "With All areas chosen, the Money page says all areas. Zuri A and Zuri B sit side by side, and the totals are the two added together.",
+   "Bills from both areas are in one list. Hardware shop is Zuri A's. Tower rent is Zuri B's. Corporate pays them from here.",
+   "Tap Pay on the hardware shop.",
+   "Pay and record it. Zuri wants two people for every payment, so now it waits for a second person to say yes, under Approvals. Then the bill counts as paid, in the right area.",
+   "That is the head office view: both areas, one dashboard, and the bills paid from one place. Zuri A and Zuri B only ever see their own."
+  ]
  }
 ]

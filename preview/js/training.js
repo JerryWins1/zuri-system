@@ -254,7 +254,7 @@
      Clips come through fetch(), so the offline shell keeps every clip once watched. A line changed since the recording
      has no clip and uses the phone's voice, as before. */
   let CLIPS = null;
-  fetch('voice/index.json?v=4').then((r) => (r.ok ? r.json() : null)).then((j) => { CLIPS = j; }).catch(() => {});
+  fetch('voice/index.json?v=4x').then((r) => (r.ok ? r.json() : null)).then((j) => { CLIPS = j; }).catch(() => {});
   const audio = typeof Audio === 'function' ? new Audio() : null;
   const SILENT = 'data:audio/wav;base64,UklGRiwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQgAAACAgICAgICAgA==';
   function unlockAudio() { // inside a tap: after this the phone lets the same player play by itself
@@ -471,7 +471,7 @@
   Z.routes.learn = async (_, el) => {
     const done = Z.get('learn_done', {});
     const mine = GROUP_FOR();
-    const groups = ['Everyone', '🚀 Getting ready', 'A day in the life', '⏱ Time savers', '📣 Alerts', '📈 Projects', '🧾 Receipts', 'Field techs', 'Call center', 'Finance', 'Partners & admin', 'Every screen, every field'];
+    const groups = ['Everyone', '🚀 Getting ready', 'A day in the life', '⏱ Time savers', '📣 Alerts', '🅰️🅱️ Three areas', '📈 Projects', '🧾 Receipts', 'Field techs', 'Call center', 'Finance', 'Partners & admin', 'Every screen, every field'];
     const order = [ 'Everyone', ...(Z.isStaff() ? ['🚀 Getting ready'] : []), mine, '⏱ Time savers', ...(Z.isOffice() ? ['📣 Alerts'] : []), ...(['Finance', 'Partners & admin'].includes(mine) ? ['📈 Projects'] : []), ...(['Field techs', 'Finance', 'Partners & admin'].includes(mine) ? ['🧾 Receipts'] : []), ...groups.filter((g) => g !== 'Everyone' && g !== mine)];
     const uniq = [...new Set(order)];
     const n = LESSONS.filter((l) => done[l.id]).length;
@@ -491,11 +491,12 @@
         if (g === '🚀 Getting ready' && !Z.isStaff()) return ''; // 🚀 v2.48: the partners' go-live list
         const blurb = { 'Every screen, every field': '📖 The whole system, one chapter per screen — explains every field.', 'A day in the life': '🌅 One working day through four people: Kelvin, Mary, Peter and a partner. The story carries from one chapter to the next.',
           '🧾 Receipts': '🧾 Receipts, start to finish: why they matter, snapping one on a job, checking it, M-Pesa messages, repeats, no signal, the AI setting, missing receipts and the Friday report.',
+          '🅰️🅱️ Three areas': '🅰️🅱️ Three areas: Zuri A, Zuri B and Corporate. Who sees what, entering money in each area, and the head office seeing both and paying a bill.',
           '📣 Alerts': '📣 Alerts: one message to a whole area or one cabinet. An outage texted before the phones ring, a partner\'s yes, the list for the bulk-SMS website, service-back to the same people, planned work, free email to customers who said yes, and each customer\'s language and yes to offers.',
           '🚀 Getting ready': '🚀 Getting ready (partners & office): why we don\'t just switch Zuri on, the ten parts of the go-live list, doing it one step at a time (Done, Later, I\'m stuck), and who does what.',
           '📈 Projects': '📈 Projects (finance & partners): what payback and break-even mean, planning a new area in three parts, the what-ifs, a loan, comparing two areas, saying “we\'re doing it” with a second OK, updating the forecast, and tracking actual against the plan.',
           '⏱ Time savers': '⏱ Time savers: Today\'s texts, the Friday report that writes itself, expired packages on fault calls, map pins and nearest-first, outage spotting, and two people for every payment.' }[g];
-        const chain = ['🧾 Receipts', '⏱ Time savers', '📈 Projects', '🚀 Getting ready', '📣 Alerts'].includes(g) ? g : ''; // chapters with their own "Your turn" chain via sessionStorage
+        const chain = ['🧾 Receipts', '⏱ Time savers', '📈 Projects', '🚀 Getting ready', '📣 Alerts', '🅰️🅱️ Three areas'].includes(g) ? g : ''; // chapters with their own "Your turn" chain via sessionStorage
         const all = blurb ? `<div class="card row" id="${chain ? ({ '🧾 Receipts': 'ln-rc-all', '📈 Projects': 'ln-pj-all', '🚀 Getting ready': 'ln-gl-all' }[g] || 'ln-ts-all') : ''}" style="border-left:4px solid var(--brand)"><div class="grow"><b>${blurb}</b><div class="hint" style="margin:0">About ${ls.reduce((n, l) => n + l.mins, 0)} minutes. Chapters play one after another; ✕ stops.${chain ? ' Each one also has its own “Your turn” when you watch it alone.' : ''}</div></div><button class="btn small" data-learn="${ls[0].id}" ${chain ? `data-chain="${Z.esc(chain)}"` : ''}>▶ Play all</button></div>` : '';
         return `<h3>${g}${g === mine && g !== 'Everyone' ? ' · your job' : ''}</h3>${all}<div class="card list">${ls.map((l) => `
           <div class="item"><span style="font-size:24px">${done[l.id] ? '✅' : '▶️'}</span><div class="grow"><div class="t">${l.star ? '⭐ ' : ''}${Z.esc(l.title)}${l.star && !done[l.id] ? ' <span class="pill warn">start here</span>' : ''}</div><div class="m">${l.mins} min · ${l.steps.length} steps</div></div>
