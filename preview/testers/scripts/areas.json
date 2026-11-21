@@ -1,7 +1,7 @@
 {
  "role": "admin",
  "title": "Zuri A, Zuri B and Corporate",
- "version": "1.0",
+ "version": "1.1",
  "date": "2026-11-21",
  "who": "You will be three people in turn, all on your own phone: the Zuri A office, the Zuri B office, and Corporate (the head office). Switch with 🔄 Try another job on the Me page; the script tells you when. Everything is pretend and stays on your phone. The big question: can Zuri A see Zuri B's numbers? It should not. If you tap 🧹 Start over (pretend company) in the middle, the bill and cash you made are wiped — go back to session 1. That is our fault, not yours.",
  "sessions": [
@@ -326,11 +326,11 @@
     {
      "id": "r3-05",
      "link": "#money/bills",
-     "do": "Pay a bill from here. Tap 💸 Pay on ZZ Test Bill A and pay the whole 5000. Choose how it was paid and save.",
-     "see": "The bill shows paid 5,000 and owing 0. Corporate paid it for Zuri A.",
+     "do": "Tap 💸 Pay on ZZ Test Bill A. Leave the amount as it is, choose how it was paid, and tap Pay and record it.",
+     "see": "A message says it is recorded and waiting for a second person's OK (Approvals). That is correct: Zuri wants two people for every payment. Corporate could pay a bill for an area that is not 'its own'.",
      "look": [
       "💸 Pay",
-      "owing"
+      "Pay and record it"
      ],
      "auto": [
       [
@@ -338,7 +338,7 @@
        "#money/bills"
       ]
      ],
-     "tip": "Corporate pays the bills, so this must work for an area that is not 'yours'."
+     "tip": "Corporate pays the bills, so this must work for either area."
     },
     {
      "id": "r3-06",
