@@ -2,7 +2,7 @@
 (function () {
   const Z = (window.Z = {});
   const C = window.ZURI_CONFIG || {};
-  Z.version = 'v2.73 · 2026-11-06';
+  Z.version = 'v2.74 · 2026-11-21';
   // Practice mode (?practice) runs on pretend data and keeps everything under its own names on the phone,
   // so practice work can never mix with — or be sent as — real work.
   Z.practice = !!window.ZURI_PRACTICE;
@@ -183,7 +183,9 @@
     Z.$('#nav').innerHTML = navTabs().map((t) => `<a href="#${t.id}" data-tab="${t.id}"><span class="ic">${t.ic}</span>${t.label}</a>`).join('');
     const sel = Z.$('#h-area');
     sel.hidden = Z.isField();
-    sel.innerHTML = '<option value="">All areas</option>' + Z.opts(Z.ref.areas.filter((a) => a.active).map((a) => [a.code, a.name]), Z.area);
+    const tied = Z.me.area && !Z.isAdmin(); // tied to one area: no All areas, no other area
+    sel.innerHTML = (tied ? '' : '<option value="">All areas</option>') + Z.opts(Z.ref.areas.filter((a) => a.active && (!tied || a.code === Z.me.area)).map((a) => [a.code, a.name]), Z.area);
+    sel.disabled = !!tied;
     sel.onchange = () => { Z.area = sel.value; Z.set('area', Z.area); Z.route(); };
     Z.$('#h-sync').onclick = () => Z.go('me');
   }
@@ -239,6 +241,8 @@
     loadQueue(prof.id);
     Z.pruneCache();
     Z.area = Z.get('area', prof.area || '');
+    // 21 Nov: a person tied to an area (and not an admin) stays in that area. Only admin / Corporate sees All areas.
+    if (prof.area && prof.role !== 'admin') Z.area = prof.area;
     await Z.loadRef();
     buildChrome();
     show('app');
