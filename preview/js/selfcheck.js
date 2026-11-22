@@ -42,6 +42,7 @@
   }
   let sent = 0; const mem = new Set(); // memory too, in case this phone won't store anything
   function report(where, msg) {
+    if (navigator.webdriver) return; // 22 Nov: a browser driven by a script (a cloud chat's checks) is not a tester; its runs were landing in the real log
     msg = clean(msg); if (!msg || /ResizeObserver loop/i.test(msg) || NOT_ZURI.test(msg)) return;
     /* 8 Oct: Veronica's Firefox (iPhone) injects its own scripts into every page and they throw on their own — not Zuri's fault, not worth a report */
     if (/window\.ethereum|selectedAddress|__firefox__|user-script:|webkit-masked-url/i.test(msg)) return;
